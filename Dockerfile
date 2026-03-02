@@ -140,6 +140,11 @@ RUN mkdir -p .next/cache
 # Copiar codigo fonte por ultimo (muda mais frequentemente)
 COPY . .
 
+# Copiar PDF.js worker para public/ (postinstall nao roda com --ignore-scripts)
+# O browser precisa deste arquivo para renderizar PDFs no cliente
+RUN mkdir -p public/pdfjs && \
+    cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdfjs/pdf.worker.min.mjs
+
 # Build da aplicacao com cache persistente entre builds
 # --mount=type=cache persiste o diretorio .next/cache entre builds
 # uid/gid=1001 corresponde ao usuario nextjs no stage runner
