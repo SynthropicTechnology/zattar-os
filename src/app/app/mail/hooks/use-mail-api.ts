@@ -39,6 +39,7 @@ export function useMailMessages() {
     setMessages,
     setTotalMessages,
     setHasMore,
+    setCurrentPage,
     setIsLoading,
     setError,
     setServiceUnavailable,
@@ -63,13 +64,14 @@ export function useMailMessages() {
         setMessages(data.data);
         setTotalMessages(data.total);
         setHasMore(data.hasMore);
+        setCurrentPage(1);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Erro ao carregar mensagens");
       } finally {
         setIsLoading(false);
       }
     },
-    [selectedFolder, setMessages, setTotalMessages, setHasMore, setIsLoading, setError, setServiceUnavailable]
+    [selectedFolder, setMessages, setTotalMessages, setHasMore, setCurrentPage, setIsLoading, setError, setServiceUnavailable]
   );
 
   useEffect(() => {
@@ -80,8 +82,17 @@ export function useMailMessages() {
 }
 
 export function useMailActions() {
-  const { selectedFolder, setMessages, setTotalMessages, setHasMore, setError } =
-    useMailStore();
+  const {
+    selectedFolder,
+    setMessages,
+    setTotalMessages,
+    setHasMore,
+    appendMessages,
+    currentPage,
+    setCurrentPage,
+    setIsLoadingMore,
+    setFullMessage,
+  } = useMailStore();
 
   const refreshMessages = useCallback(async () => {
     try {
@@ -93,41 +104,71 @@ export function useMailActions() {
       setMessages(data.data);
       setTotalMessages(data.total);
       setHasMore(data.hasMore);
+      setCurrentPage(1);
     } catch {
       // Silent refresh failure
     }
-  }, [selectedFolder, setMessages, setTotalMessages, setHasMore]);
+  }, [selectedFolder, setMessages, setTotalMessages, setHasMore, setCurrentPage]);
+
+  const loadMoreMessages = useCallback(async () => {
+    const nextPage = currentPage + 1;
+    setIsLoadingMore(true);
+    try {
+      const res = await fetch(
+        `/api/mail/messages?folder=${encodeURIComponent(selectedFolder)}&page=${nextPage}&limit=50`
+      );
+      if (!res.ok) return;
+      const data = await res.json();
+      appendMessages(data.data);
+      setTotalMessages(data.total);
+      setHasMore(data.hasMore);
+      setCurrentPage(nextPage);
+    } catch {
+      // Silent
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [selectedFolder, currentPage, appendMessages, setTotalMessages, setHasMore, setCurrentPage, setIsLoadingMore]);
+
+  const fetchMessage = useCallback(
+    async (uid: number, folder: string) => {
+      try {
+        const res = await fetch(
+          `/api/mail/messages/${uid}?folder=${encodeURIComponent(folder)}`
+        );
+        if (!res.ok) throw new Error("Erro ao carregar mensagem");
+        const data = await res.json();
+        setFullMessage(data);
+        return data;
+      } catch {
+        return null;
+      }
+    },
+    [setFullMessage]
+  );
 
   const deleteMessage = useCallback(
     async (uid: number, folder: string) => {
-      try {
-        const res = await fetch(`/api/mail/messages/${uid}?folder=${encodeURIComponent(folder)}`, {
-          method: "DELETE",
-        });
-        if (!res.ok) throw new Error("Erro ao deletar mensagem");
-        await refreshMessages();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erro ao deletar");
-      }
+      const res = await fetch(`/api/mail/messages/${uid}?folder=${encodeURIComponent(folder)}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Erro ao deletar mensagem");
+      await refreshMessages();
     },
-    [refreshMessages, setError]
+    [refreshMessages]
   );
 
   const moveMessage = useCallback(
     async (uid: number, fromFolder: string, toFolder: string) => {
-      try {
-        const res = await fetch(`/api/mail/messages/${uid}/move`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fromFolder, toFolder }),
-        });
-        if (!res.ok) throw new Error("Erro ao mover mensagem");
-        await refreshMessages();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erro ao mover");
-      }
+      const res = await fetch(`/api/mail/messages/${uid}/move`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fromFolder, toFolder }),
+      });
+      if (!res.ok) throw new Error("Erro ao mover mensagem");
+      await refreshMessages();
     },
-    [refreshMessages, setError]
+    [refreshMessages]
   );
 
   const markRead = useCallback(
@@ -148,70 +189,65 @@ export function useMailActions() {
 
   const markUnread = useCallback(
     async (uid: number, folder: string) => {
-      try {
-        await fetch(`/api/mail/messages/${uid}/flags`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ folder, remove: ["\\Seen"] }),
-        });
-        await refreshMessages();
-      } catch {
-        // Silent
-      }
+      await fetch(`/api/mail/messages/${uid}/flags`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folder, remove: ["\\Seen"] }),
+      });
+      await refreshMessages();
     },
     [refreshMessages]
   );
 
   const starMessage = useCallback(
     async (uid: number, folder: string) => {
-      try {
-        await fetch(`/api/mail/messages/${uid}/flags`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ folder, add: ["\\Flagged"] }),
-        });
-        await refreshMessages();
-      } catch {
-        // Silent
-      }
+      await fetch(`/api/mail/messages/${uid}/flags`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folder, add: ["\\Flagged"] }),
+      });
+      await refreshMessages();
     },
     [refreshMessages]
   );
 
   const reply = useCallback(
     async (uid: number, folder: string, text: string, replyAll: boolean = false) => {
-      try {
-        const res = await fetch("/api/mail/messages/reply", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ uid, folder, text, replyAll }),
-        });
-        if (!res.ok) throw new Error("Erro ao enviar resposta");
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erro ao responder");
-        throw err;
-      }
+      const res = await fetch("/api/mail/messages/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid, folder, text, replyAll }),
+      });
+      if (!res.ok) throw new Error("Erro ao enviar resposta");
     },
-    [setError]
+    []
+  );
+
+  const forwardMessage = useCallback(
+    async (uid: number, folder: string, to: string[], text: string) => {
+      const res = await fetch("/api/mail/messages/forward", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid, folder, to, text }),
+      });
+      if (!res.ok) throw new Error("Erro ao encaminhar mensagem");
+    },
+    []
   );
 
   const searchMessages = useCallback(
     async (query: string, folder?: string) => {
-      try {
-        const targetFolder = folder ?? selectedFolder;
-        const res = await fetch(
-          `/api/mail/messages/search?q=${encodeURIComponent(query)}&folder=${encodeURIComponent(targetFolder)}`
-        );
-        if (!res.ok) throw new Error("Erro na busca");
-        const data = await res.json();
-        setMessages(data.messages);
-        setTotalMessages(data.total);
-        setHasMore(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erro na busca");
-      }
+      const targetFolder = folder ?? selectedFolder;
+      const res = await fetch(
+        `/api/mail/messages/search?q=${encodeURIComponent(query)}&folder=${encodeURIComponent(targetFolder)}`
+      );
+      if (!res.ok) throw new Error("Erro na busca");
+      const data = await res.json();
+      setMessages(data.messages);
+      setTotalMessages(data.total);
+      setHasMore(false);
     },
-    [selectedFolder, setMessages, setTotalMessages, setHasMore, setError]
+    [selectedFolder, setMessages, setTotalMessages, setHasMore]
   );
 
   return {
@@ -221,7 +257,10 @@ export function useMailActions() {
     markUnread,
     starMessage,
     reply,
+    forwardMessage,
     searchMessages,
     refreshMessages,
+    loadMoreMessages,
+    fetchMessage,
   };
 }

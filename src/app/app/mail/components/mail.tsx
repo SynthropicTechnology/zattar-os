@@ -123,20 +123,20 @@ export function Mail({
         <ResizablePanel id="middle-panel" defaultSize={defaultLayout[1]} minSize={20}>
           <Tabs
             defaultValue="all"
-            className="flex h-full flex-col gap-0"
+            className="flex h-full flex-col"
             onValueChange={(value) => setTab(value)}>
-            <div className="flex items-center px-4 py-2">
+            <div className="flex h-13 shrink-0 items-center px-4">
               <div className="flex items-center gap-2">
                 {isMobile && <NavMobile />}
-                <h1 className="text-xl font-bold">{folderDisplay}</h1>
+                <h1 className="text-sm font-semibold">{folderDisplay}</h1>
               </div>
-              <TabsList className="ml-auto">
-                <TabsTrigger value="all">Todos</TabsTrigger>
-                <TabsTrigger value="unread">Não lidos</TabsTrigger>
+              <TabsList className="ml-auto h-8">
+                <TabsTrigger value="all" className="text-xs px-2.5">Todos</TabsTrigger>
+                <TabsTrigger value="unread" className="text-xs px-2.5">Não lidos</TabsTrigger>
               </TabsList>
             </div>
             <Separator />
-            <div className="bg-background/59 p-4 backdrop-blur-md">
+            <div className="p-4">
               <form onSubmit={handleSearch}>
                 <InputGroup>
                   <InputGroupAddon>
@@ -150,7 +150,8 @@ export function Mail({
                 </InputGroup>
               </form>
             </div>
-            <div className="min-h-0">
+            <Separator />
+            <div className="min-h-0 flex-1 overflow-hidden">
               <MailList items={filteredMessages} />
             </div>
           </Tabs>

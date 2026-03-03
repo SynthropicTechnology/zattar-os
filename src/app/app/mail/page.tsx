@@ -21,7 +21,7 @@ export default async function MailPage() {
   const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
 
   return (
-    <div className="h-(--content-full-height) rounded-md border">
+    <div className="flex-1 min-h-0 overflow-hidden rounded-md border">
       <Mail defaultLayout={defaultLayout} cookieID={cookieID} defaultCollapsed={defaultCollapsed} collapsedCookieID={collapsedCookieID} />
     </div>
   );

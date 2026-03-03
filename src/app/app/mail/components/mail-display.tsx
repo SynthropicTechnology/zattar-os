@@ -8,6 +8,7 @@ import {
   ArchiveX,
   Clock,
   Forward,
+  MailOpen,
   MoreVertical,
   Reply,
   ReplyAll,
@@ -74,7 +75,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2 p-2">
+      <div className="flex h-13 shrink-0 items-center gap-2 px-2">
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -201,7 +202,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
         </div>
 
-        <Separator orientation="vertical" className="mx-2 h-6" />
+        <Separator orientation="vertical" className="mx-1 h-6" />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -226,8 +227,8 @@ export function MailDisplay({ mail }: MailDisplayProps) {
       <Separator />
 
       {mail ? (
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <div className="flex items-start p-4">
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex shrink-0 items-start p-4">
             <div className="flex items-start gap-4 text-sm">
               <Avatar>
                 <AvatarFallback>{senderInitials}</AvatarFallback>
@@ -247,13 +248,13 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
           <Separator />
 
-          <div className="flex-1 overflow-auto p-4 text-sm whitespace-pre-wrap">
+          <div className="min-h-0 flex-1 overflow-auto p-4 text-sm whitespace-pre-wrap">
             {mail.preview}
           </div>
 
-          <Separator className="mt-auto" />
+          <Separator />
 
-          <div className="p-4">
+          <div className="shrink-0 p-4">
             <form onSubmit={handleReply}>
               <div className="grid gap-4">
                 <Textarea
@@ -272,8 +273,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </div>
         </div>
       ) : (
-        <div className="text-muted-foreground flex flex-1 items-center justify-center p-8 text-sm">
-          Selecione um e-mail para visualizar
+        <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center gap-2 p-8">
+          <MailOpen className="h-10 w-10 opacity-40" />
+          <p className="text-sm">Selecione um e-mail para visualizar</p>
         </div>
       )}
     </div>

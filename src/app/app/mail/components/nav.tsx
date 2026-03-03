@@ -28,18 +28,21 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
     <div
       data-collapsed={isCollapsed}
       className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2">
-      <nav className="grid gap-1 px-2 group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2">
-        {links.map((link, index) =>
+      <nav
+        role="navigation"
+        aria-label="Pastas de e-mail"
+        className="grid gap-1 px-2 group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2">
+        {links.map((link) =>
           isCollapsed ? (
-            <Tooltip key={index} delayDuration={0}>
+            <Tooltip key={link.folder ?? link.title} delayDuration={0}>
               <TooltipTrigger asChild>
                 <button
                   onClick={() => link.folder && onSelect?.(link.folder)}
+                  aria-current={link.variant === "default" ? "page" : undefined}
                   className={cn(
-                    buttonVariants({ variant: link.variant, size: "icon" }),
+                    buttonVariants({ variant: link.variant === "default" ? "secondary" : "ghost", size: "icon" }),
                     "size-9",
-                    link.variant === "default" &&
-                      "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                    link.variant === "default" && "font-semibold"
                   )}>
                   {link.dot ?? <link.icon className="size-4" />}
                   <span className="sr-only">{link.title}</span>
@@ -52,19 +55,19 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
             </Tooltip>
           ) : (
             <button
-              key={index}
+              key={link.folder ?? link.title}
               onClick={() => link.folder && onSelect?.(link.folder)}
+              aria-current={link.variant === "default" ? "page" : undefined}
               className={cn(
-                buttonVariants({ variant: link.variant, size: "sm" }),
-                link.variant === "default" &&
-                  "dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white",
+                buttonVariants({ variant: link.variant === "default" ? "secondary" : "ghost", size: "sm" }),
+                link.variant === "default" && "font-semibold",
                 "flex justify-start gap-3"
               )}>
               {link.dot ?? <link.icon className="size-4" />}
               {link.title}
               {link.label && (
                 <Badge
-                  variant={link.variant === "default" ? "default" : "outline"}
+                  variant="secondary"
                   className="ml-auto">
                   {link.label}
                 </Badge>
