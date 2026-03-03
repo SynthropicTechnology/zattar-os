@@ -235,6 +235,69 @@ export type Database = {
         }
         Relationships: []
       }
+      agenda_eventos: {
+        Row: {
+          cor: string
+          created_at: string
+          criado_por: number
+          data_fim: string
+          data_inicio: string
+          deletado_em: string | null
+          descricao: string | null
+          dia_inteiro: boolean
+          id: number
+          local: string | null
+          responsavel_id: number | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          cor?: string
+          created_at?: string
+          criado_por: number
+          data_fim: string
+          data_inicio: string
+          deletado_em?: string | null
+          descricao?: string | null
+          dia_inteiro?: boolean
+          id?: never
+          local?: string | null
+          responsavel_id?: number | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          cor?: string
+          created_at?: string
+          criado_por?: number
+          data_fim?: string
+          data_inicio?: string
+          deletado_em?: string | null
+          descricao?: string | null
+          dia_inteiro?: boolean
+          id?: never
+          local?: string | null
+          responsavel_id?: number | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenda_eventos_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenda_eventos_responsavel_id_fkey"
+            columns: ["responsavel_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agendamentos: {
         Row: {
           advogado_id: number | null
@@ -2838,6 +2901,62 @@ export type Database = {
             columns: ["advogado_id"]
             isOneToOne: false
             referencedRelation: "advogados"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credenciais_email: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: number
+          imap_host: string
+          imap_pass: string
+          imap_port: number
+          imap_user: string
+          smtp_host: string
+          smtp_pass: string
+          smtp_port: number
+          smtp_user: string
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: never
+          imap_host?: string
+          imap_pass: string
+          imap_port?: number
+          imap_user: string
+          smtp_host?: string
+          smtp_pass: string
+          smtp_port?: number
+          smtp_user: string
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: never
+          imap_host?: string
+          imap_pass?: string
+          imap_port?: number
+          imap_user?: string
+          smtp_host?: string
+          smtp_pass?: string
+          smtp_port?: number
+          smtp_user?: string
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credenciais_email_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: true
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
