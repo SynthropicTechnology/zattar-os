@@ -39,6 +39,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import { useMailDisplay } from "../hooks/use-mail-display";
@@ -51,13 +52,16 @@ function MailBodyMobile({ mail }: { mail: MailMessagePreview }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { fullMessage } = useMailStore();
   const { fetchMessage } = useMailActions();
+  const [isLoadingBody, setIsLoadingBody] = React.useState(true);
 
   useEffect(() => {
-    fetchMessage(mail.uid, mail.folder);
+    setIsLoadingBody(true);
+    fetchMessage(mail.uid, mail.folder).finally(() => setIsLoadingBody(false));
   }, [mail.uid, mail.folder, fetchMessage]);
 
-  const htmlContent = fullMessage?.uid === mail.uid ? fullMessage.html : null;
-  const textContent = fullMessage?.uid === mail.uid ? fullMessage.text : mail.preview;
+  const isLoaded = fullMessage?.uid === mail.uid;
+  const htmlContent = isLoaded ? fullMessage.html : null;
+  const textContent = isLoaded ? (fullMessage.text || mail.preview) : mail.preview;
 
   useEffect(() => {
     if (!htmlContent || !iframeRef.current) return;
@@ -101,6 +105,17 @@ function MailBodyMobile({ mail }: { mail: MailMessagePreview }) {
     if (doc.body) resizeObserver.observe(doc.body);
     return () => resizeObserver.disconnect();
   }, [htmlContent]);
+
+  if (isLoadingBody && !isLoaded) {
+    return (
+      <div className="flex flex-col gap-3">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+        <Skeleton className="h-4 w-4/6" />
+        <Skeleton className="h-4 w-full" />
+      </div>
+    );
+  }
 
   if (htmlContent) {
     return (

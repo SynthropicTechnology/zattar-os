@@ -2914,6 +2914,7 @@ export type Database = {
           imap_pass: string
           imap_port: number
           imap_user: string
+          nome_conta: string
           smtp_host: string
           smtp_pass: string
           smtp_port: number
@@ -2929,6 +2930,7 @@ export type Database = {
           imap_pass: string
           imap_port?: number
           imap_user: string
+          nome_conta?: string
           smtp_host?: string
           smtp_pass: string
           smtp_port?: number
@@ -2944,6 +2946,7 @@ export type Database = {
           imap_pass?: string
           imap_port?: number
           imap_user?: string
+          nome_conta?: string
           smtp_host?: string
           smtp_pass?: string
           smtp_port?: number
@@ -2955,7 +2958,7 @@ export type Database = {
           {
             foreignKeyName: "credenciais_email_usuario_id_fkey"
             columns: ["usuario_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },

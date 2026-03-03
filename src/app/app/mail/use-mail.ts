@@ -1,7 +1,19 @@
 import { create } from "zustand";
 import type { MailMessagePreview, MailFolder, MailMessage } from "@/lib/mail/types";
 
+export type MailAccount = {
+  id: number;
+  nome_conta: string;
+  email: string;
+  imapHost: string;
+  active: boolean;
+};
+
 type MailStore = {
+  accounts: MailAccount[];
+  setAccounts: (accounts: MailAccount[]) => void;
+  selectedAccountId: number | null;
+  setSelectedAccountId: (id: number | null) => void;
   selectedMail: MailMessagePreview | null;
   setSelectedMail: (mail: MailMessagePreview | null) => void;
   fullMessage: MailMessage | null;
@@ -32,6 +44,19 @@ type MailStore = {
 };
 
 export const useMailStore = create<MailStore>((set) => ({
+  accounts: [],
+  setAccounts: (accounts) => set({ accounts }),
+  selectedAccountId: null,
+  setSelectedAccountId: (id) =>
+    set({
+      selectedAccountId: id,
+      selectedMail: null,
+      fullMessage: null,
+      messages: [],
+      folders: [],
+      currentPage: 1,
+      selectedFolder: "INBOX",
+    }),
   selectedMail: null,
   setSelectedMail: (mail) => set({ selectedMail: mail }),
   fullMessage: null,

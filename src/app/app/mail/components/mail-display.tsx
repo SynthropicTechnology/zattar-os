@@ -40,6 +40,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { MailMessagePreview } from "@/lib/mail/types";
@@ -56,13 +57,16 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { fullMessage } = useMailStore();
   const { fetchMessage } = useMailActions();
+  const [isLoadingBody, setIsLoadingBody] = useState(true);
 
   useEffect(() => {
-    fetchMessage(mail.uid, mail.folder);
+    setIsLoadingBody(true);
+    fetchMessage(mail.uid, mail.folder).finally(() => setIsLoadingBody(false));
   }, [mail.uid, mail.folder, fetchMessage]);
 
-  const htmlContent = fullMessage?.uid === mail.uid ? fullMessage.html : null;
-  const textContent = fullMessage?.uid === mail.uid ? fullMessage.text : mail.preview;
+  const isLoaded = fullMessage?.uid === mail.uid;
+  const htmlContent = isLoaded ? fullMessage.html : null;
+  const textContent = isLoaded ? (fullMessage.text || mail.preview) : mail.preview;
 
   useEffect(() => {
     if (!htmlContent || !iframeRef.current) return;
@@ -98,7 +102,6 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
     `);
     doc.close();
 
-    // Auto-resize iframe to content height
     const resizeObserver = new ResizeObserver(() => {
       if (iframeRef.current && doc.body) {
         iframeRef.current.style.height = doc.body.scrollHeight + "px";
@@ -107,6 +110,18 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
     if (doc.body) resizeObserver.observe(doc.body);
     return () => resizeObserver.disconnect();
   }, [htmlContent]);
+
+  if (isLoadingBody && !isLoaded) {
+    return (
+      <div className="flex flex-col gap-3">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+        <Skeleton className="h-4 w-4/6" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/6" />
+      </div>
+    );
+  }
 
   if (htmlContent) {
     return (

@@ -1,4 +1,5 @@
 import { ImapFlow } from "imapflow";
+import { simpleParser } from "mailparser";
 import type { MailConfig } from "./config";
 import type {
   MailFolder,
@@ -179,37 +180,23 @@ export async function getMessage(
       const env = msg.envelope!;
       const flags = Array.from(msg.flags ?? []);
 
-      // Parse body text from source
       let text = "";
       let html: string | undefined;
 
+      // Parse MIME content using mailparser for proper HTML/text extraction
       if (msg.source) {
-        const raw = msg.source.toString();
-        // Simple extraction: find the text after headers (double newline)
-        const bodyStart = raw.indexOf("\r\n\r\n");
-        if (bodyStart !== -1) {
-          text = raw.substring(bodyStart + 4);
-        }
-      }
-
-      // Also try to get parsed body
-      try {
-        const downloaded = await client.download(String(uid), undefined, {
-          uid: true,
-        });
-        if (downloaded?.content) {
-          const chunks: Buffer[] = [];
-          for await (const chunk of downloaded.content) {
-            chunks.push(Buffer.from(chunk));
-          }
-          const fullBody = Buffer.concat(chunks).toString("utf-8");
-          // Use full body if we got it
-          if (fullBody) {
-            text = fullBody;
+        try {
+          const parsed = await simpleParser(msg.source);
+          text = parsed.text ?? "";
+          html = parsed.html || undefined;
+        } catch {
+          // Fallback: raw extraction
+          const raw = msg.source.toString();
+          const bodyStart = raw.indexOf("\r\n\r\n");
+          if (bodyStart !== -1) {
+            text = raw.substring(bodyStart + 4);
           }
         }
-      } catch {
-        // Keep the text we already parsed
       }
 
       // Mark as seen

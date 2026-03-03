@@ -64,20 +64,21 @@ export default function ConfigurarEmailPage() {
   const [error, setError] = useState<string | null>(null);
   const [isConfigured, setIsConfigured] = useState(false);
 
-  // Load existing credentials
+  // Load existing credentials (uses first account for backward compat)
   useEffect(() => {
     async function loadCredentials() {
       try {
         const res = await fetch("/api/mail/credentials");
         if (!res.ok) return;
         const data = await res.json();
-        if (data.configured) {
+        if (data.configured && data.accounts?.length > 0) {
+          const first = data.accounts[0];
           setIsConfigured(true);
-          setEmail(data.credentials.imap_user);
-          setImapHost(data.credentials.imap_host);
-          setImapPort(String(data.credentials.imap_port));
-          setSmtpHost(data.credentials.smtp_host);
-          setSmtpPort(String(data.credentials.smtp_port));
+          setEmail(first.imap_user);
+          setImapHost(first.imap_host);
+          setImapPort(String(first.imap_port));
+          setSmtpHost(first.smtp_host);
+          setSmtpPort(String(first.smtp_port));
         } else if (user?.emailCorporativo) {
           setEmail(user.emailCorporativo);
         }

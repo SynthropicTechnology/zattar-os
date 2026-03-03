@@ -10,6 +10,7 @@ export interface MailAuthResult {
 
 /**
  * Autentica a request e busca as credenciais de e-mail do usuário.
+ * Aceita ?accountId=N para selecionar conta específica.
  * Retorna { usuarioId, config } se ok, ou NextResponse de erro.
  */
 export async function authenticateMailRequest(
@@ -21,7 +22,10 @@ export async function authenticateMailRequest(
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
-  const config = await getUserMailConfig(auth.usuarioId);
+  const accountIdParam = request.nextUrl.searchParams.get("accountId");
+  const accountId = accountIdParam ? Number(accountIdParam) : undefined;
+
+  const config = await getUserMailConfig(auth.usuarioId, accountId);
 
   if (!config) {
     return NextResponse.json(
