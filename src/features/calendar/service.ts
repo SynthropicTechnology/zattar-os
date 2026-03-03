@@ -11,6 +11,12 @@ import { listarExpedientes } from "@/features/expedientes";
 import type { AcordoComParcelas } from "@/features/obrigacoes";
 import { listarAcordos } from "@/features/obrigacoes/service";
 
+import type { Pericia, ListarPericiasParams } from "@/features/pericias";
+import { listarPericias, SituacaoPericiaCodigo } from "@/features/pericias";
+
+import type { AgendaEvento } from "@/features/agenda-eventos";
+import * as agendaEventosRepo from "@/features/agenda-eventos/repository";
+
 import {
   buildUnifiedEventId,
   type CalendarSource,
@@ -266,17 +272,116 @@ async function fetchObrigacoes(start: Date, end: Date): Promise<UnifiedCalendarE
   return acordos.flatMap(acordoParcelaToEvents);
 }
 
+function periciaToUnifiedEvent(pericia: Pericia): UnifiedCalendarEvent | null {
+  const prazo = pericia.prazoEntrega;
+  if (!prazo) return null;
+
+  const dt = new Date(prazo);
+  if (Number.isNaN(dt.getTime())) return null;
+
+  const situacao = pericia.situacaoCodigo;
+  const color =
+    situacao === SituacaoPericiaCodigo.FINALIZADA || situacao === SituacaoPericiaCodigo.LAUDO_JUNTADO
+      ? "emerald"
+      : situacao === SituacaoPericiaCodigo.CANCELADA || situacao === SituacaoPericiaCodigo.REDESIGNADA
+        ? "rose"
+        : "violet";
+
+  const normalizedDate = toAllDayISOString(dt);
+
+  return {
+    id: buildUnifiedEventId("pericias", pericia.id),
+    title: `Perícia - ${pericia.numeroProcesso}`,
+    startAt: normalizedDate,
+    endAt: normalizedDate,
+    allDay: true,
+    source: "pericias",
+    sourceEntityId: pericia.id,
+    url: `/app/pericias?periciaId=${pericia.id}`,
+    responsavelId: pericia.responsavelId ?? null,
+    color,
+    metadata: {
+      processoId: pericia.processoId,
+      numeroProcesso: pericia.numeroProcesso,
+      trt: pericia.trt,
+      grau: pericia.grau,
+      situacao: pericia.situacaoCodigo,
+    },
+  };
+}
+
+async function fetchPericias(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
+  const events: UnifiedCalendarEvent[] = [];
+
+  const limite = 100;
+  let pagina = 1;
+  let hasMore = true;
+
+  while (hasMore && pagina <= 10) {
+    const params: ListarPericiasParams = {
+      pagina,
+      limite,
+      prazoEntregaInicio: start.toISOString(),
+      prazoEntregaFim: end.toISOString(),
+      ordenarPor: "prazo_entrega",
+      ordem: "asc",
+    };
+
+    const result = await listarPericias(params);
+    if (!result.success) {
+      return [];
+    }
+
+    for (const pericia of result.data.data) {
+      const mapped = periciaToUnifiedEvent(pericia);
+      if (mapped) events.push(mapped);
+    }
+
+    hasMore = result.data.pagination.hasMore;
+    pagina += 1;
+  }
+
+  return events;
+}
+
+function agendaEventoToUnifiedEvent(evento: AgendaEvento): UnifiedCalendarEvent {
+  return {
+    id: buildUnifiedEventId("agenda", evento.id),
+    title: evento.titulo,
+    startAt: evento.dataInicio,
+    endAt: evento.dataFim,
+    allDay: evento.diaInteiro,
+    source: "agenda",
+    sourceEntityId: evento.id,
+    url: "",
+    responsavelId: evento.responsavelId,
+    color: evento.cor,
+    metadata: {
+      descricao: evento.descricao,
+      local: evento.local,
+    },
+  };
+}
+
+async function fetchAgendaEventos(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
+  const result = await agendaEventosRepo.findByPeriodo(start.toISOString(), end.toISOString());
+  if (!result.success) return [];
+  return result.data.map(agendaEventoToUnifiedEvent);
+}
+
 export async function listarEventosPorPeriodo(
   input: ListarEventosCalendarInput
 ): Promise<UnifiedCalendarEvent[]> {
   try {
     const { start, end } = normalizeDateRange(input);
-    const sources: CalendarSource[] = input.sources?.length ? input.sources : ["audiencias", "expedientes", "obrigacoes"];
+    const sources: CalendarSource[] = input.sources?.length ? input.sources : ["audiencias", "expedientes", "obrigacoes", "pericias", "agenda"];
 
     const fetchers: Record<CalendarSource, SourceFetch> = {
       audiencias: () => fetchAudiencias(start, end),
       expedientes: () => fetchExpedientes(start, end),
       obrigacoes: () => fetchObrigacoes(start, end),
+      pericias: () => fetchPericias(start, end),
+      agenda: () => fetchAgendaEventos(start, end),
     };
 
     const selectedFetches = sources.map((s) => fetchers[s]());

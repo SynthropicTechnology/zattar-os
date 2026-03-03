@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CALENDAR_SOURCES = ["audiencias", "expedientes", "obrigacoes"] as const;
+export const CALENDAR_SOURCES = ["audiencias", "expedientes", "obrigacoes", "pericias", "agenda"] as const;
 export type CalendarSource = (typeof CALENDAR_SOURCES)[number];
 
 export const calendarSourceSchema = z.enum(CALENDAR_SOURCES);

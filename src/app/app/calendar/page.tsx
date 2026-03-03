@@ -26,5 +26,5 @@ export default async function Page() {
 
   const events: UnifiedCalendarEvent[] = result.success ? result.data : [];
 
-  return <EventCalendarApp initialEvents={events} readOnly />;
+  return <EventCalendarApp initialEvents={events} />;
 }

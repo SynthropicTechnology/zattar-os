@@ -26,6 +26,7 @@ import {
   Eye,
   List,
   LoaderCircle,
+  PlusIcon,
   SearchIcon
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -33,10 +34,16 @@ import { useRouter } from "next/navigation";
 import {
   AgendaDaysToShow,
   EventCalendar,
+  EventDialog,
   type CalendarEvent,
   type CalendarView
 } from "./";
 import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/features/calendar";
+import {
+  actionCriarAgendaEvento,
+  actionAtualizarAgendaEvento,
+  actionDeletarAgendaEvento,
+} from "@/features/agenda-eventos";
 import { FilterPopoverMulti, type FilterOption } from "@/features/partes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,9 +54,11 @@ import { cn } from "@/lib/utils";
 const capitalizeFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const SOURCE_FILTER_OPTIONS: readonly FilterOption[] = [
+  { value: "agenda", label: "Agenda" },
   { value: "audiencias", label: "Audiências" },
   { value: "expedientes", label: "Expedientes" },
-  { value: "obrigacoes", label: "Obrigações" }
+  { value: "obrigacoes", label: "Obrigações" },
+  { value: "pericias", label: "Perícias" }
 ];
 
 const CALENDAR_VIEW_OPTIONS = [
@@ -93,24 +102,28 @@ function formatEventDescription(
 }
 
 function adaptUnifiedEvent(e: UnifiedCalendarEvent): CalendarEvent {
+  const metadata = e.metadata as Record<string, unknown> | null | undefined;
   return {
     id: e.id,
     title: e.title,
-    description: formatEventDescription(e.metadata),
+    description: e.source === "agenda"
+      ? (metadata?.descricao as string) || undefined
+      : formatEventDescription(metadata),
     start: new Date(e.startAt),
     end: new Date(e.endAt),
     allDay: e.allDay,
     color: (e.color as CalendarEvent["color"]) || "sky",
-    location: undefined
+    location: e.source === "agenda" ? (metadata?.local as string) || undefined : undefined,
+    source: e.source,
+    sourceEntityId: typeof e.sourceEntityId === "number" ? e.sourceEntityId : undefined,
+    responsavelId: e.responsavelId,
   };
 }
 
 export default function EventCalendarApp({
   initialEvents,
-  readOnly = false
 }: {
   initialEvents: UnifiedCalendarEvent[];
-  readOnly?: boolean;
 }) {
   const router = useRouter();
 
@@ -121,6 +134,11 @@ export default function EventCalendarApp({
   const [view, setView] = useState<CalendarView>("month");
   const [searchQuery, setSearchQuery] = useState("");
   const [sourceFilter, setSourceFilter] = useState<string[]>([]);
+
+  // Dialog state for creating/editing agenda events
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [dialogReadOnly, setDialogReadOnly] = useState(false);
 
   // Filter server events by source, then adapt to CalendarEvent
   const filteredServerEvents = useMemo(() => {
@@ -235,16 +253,126 @@ export default function EventCalendarApp({
     return fmt(currentDate, "MMMM yyyy");
   }, [currentDate, view]);
 
+  // Refetch events for current range
+  const refetchEvents = useCallback(async () => {
+    const [year, month] = fetchRangeKey.split("-").map(Number);
+    const center = new Date(year, month - 1, 1);
+    const rangeStart = subMonths(center, 1);
+    const rangeEnd = endOfMonth(addMonths(center, 1));
+
+    setIsLoading(true);
+    try {
+      const result = await actionListarEventosCalendar({
+        startAt: rangeStart.toISOString(),
+        endAt: rangeEnd.toISOString()
+      });
+      if (result.success) {
+        setServerEvents(result.data);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchRangeKey]);
+
   const handleEventSelect = (event: CalendarEvent) => {
-    const url = eventUrlById.get(event.id);
-    if (url) router.push(url);
+    if (event.source === "agenda") {
+      // Open dialog for editing agenda events
+      setSelectedEvent(event);
+      setDialogReadOnly(false);
+      setDialogOpen(true);
+    } else {
+      const url = eventUrlById.get(event.id);
+      if (url) {
+        // Events from other sources: open dialog in read-only mode
+        setSelectedEvent(event);
+        setDialogReadOnly(true);
+        setDialogOpen(true);
+      }
+    }
+  };
+
+  const handleCreateClick = () => {
+    setSelectedEvent(null);
+    setDialogReadOnly(false);
+    setDialogOpen(true);
+  };
+
+  const handleDialogSave = async (event: CalendarEvent) => {
+    try {
+      if (selectedEvent?.source === "agenda" && selectedEvent.sourceEntityId) {
+        // Update existing agenda event
+        await actionAtualizarAgendaEvento({
+          id: selectedEvent.sourceEntityId,
+          titulo: event.title,
+          descricao: event.description || null,
+          dataInicio: event.start.toISOString(),
+          dataFim: event.end.toISOString(),
+          diaInteiro: event.allDay || false,
+          local: event.location || null,
+          cor: event.color || "sky",
+          responsavelId: event.responsavelId ?? null,
+        });
+      } else {
+        // Create new agenda event
+        await actionCriarAgendaEvento({
+          titulo: event.title,
+          descricao: event.description || null,
+          dataInicio: event.start.toISOString(),
+          dataFim: event.end.toISOString(),
+          diaInteiro: event.allDay || false,
+          local: event.location || null,
+          cor: event.color || "sky",
+          responsavelId: event.responsavelId ?? null,
+        });
+      }
+      setDialogOpen(false);
+      setSelectedEvent(null);
+      await refetchEvents();
+    } catch {
+      // Error is handled by the action (toast/error in ActionResult)
+    }
+  };
+
+  const handleDialogDelete = async (eventId: string) => {
+    // Extract sourceEntityId from the unified event id (format: "agenda:123")
+    const parts = eventId.split(":");
+    const entityId = Number(parts[1]);
+    if (!entityId || Number.isNaN(entityId)) return;
+
+    try {
+      await actionDeletarAgendaEvento({ id: entityId });
+      setDialogOpen(false);
+      setSelectedEvent(null);
+      await refetchEvents();
+    } catch {
+      // Error handled by action
+    }
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setSelectedEvent(null);
+  };
+
+  // Navigate to source entity URL
+  const handleNavigateToSource = () => {
+    if (!selectedEvent) return;
+    const url = eventUrlById.get(selectedEvent.id);
+    if (url) {
+      router.push(url);
+      handleDialogClose();
+    }
   };
 
   return (
     <div className="flex min-h-[calc(100vh-var(--header-height)-2rem)] flex-col gap-4">
-      {/* Row 1: Title */}
+      {/* Row 1: Title + Create button */}
       <div className="flex items-center justify-between">
         <h1 className="font-heading text-2xl font-bold tracking-tight">Agenda</h1>
+        <Button onClick={handleCreateClick}>
+          <PlusIcon size={16} aria-hidden="true" />
+          <span className="max-sm:sr-only">Novo evento</span>
+        </Button>
       </div>
 
       {/* Row 2: Search (left) + Navigation controls + View selector (right) */}
@@ -311,13 +439,23 @@ export default function EventCalendarApp({
       {/* Calendar (no internal toolbar) */}
       <EventCalendar
         events={filteredEvents}
-        readOnly={readOnly}
         onEventSelect={handleEventSelect}
         currentDate={currentDate}
         onCurrentDateChange={setCurrentDate}
         view={view}
         onViewChange={setView}
         hideToolbar
+      />
+
+      {/* Event Dialog for creating/editing agenda events */}
+      <EventDialog
+        event={selectedEvent}
+        isOpen={dialogOpen}
+        readOnly={dialogReadOnly}
+        onClose={handleDialogClose}
+        onSave={handleDialogSave}
+        onDelete={handleDialogDelete}
+        onNavigateToSource={selectedEvent?.source && selectedEvent.source !== "agenda" ? handleNavigateToSource : undefined}
       />
     </div>
   );

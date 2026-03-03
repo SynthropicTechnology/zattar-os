@@ -9,6 +9,9 @@ export interface CalendarEvent {
   allDay?: boolean;
   color?: EventColor;
   location?: string;
+  source?: string;
+  sourceEntityId?: number;
+  responsavelId?: number | null;
 }
 
 export type EventColor = "sky" | "amber" | "violet" | "rose" | "emerald" | "orange";
