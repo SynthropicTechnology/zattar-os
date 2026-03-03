@@ -33,10 +33,6 @@ import {
   MessagesRepository,
   CallsRepository,
   MembersRepository,
-  createRoomsRepository,
-  createMessagesRepository,
-  createCallsRepository,
-  createMembersRepository,
 } from './repositories';
 
 // =============================================================================

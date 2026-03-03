@@ -7,7 +7,7 @@ import { ptBR } from "date-fns/locale/pt-BR";
 
 import type { CalendarEvent, EventColor } from "./";
 import { DefaultEndHour, DefaultStartHour, EndHour, StartHour } from "../constants";
-import { useUsuarios } from "@/features/usuarios/hooks/use-usuarios";
+import { useUsuarios } from "@/features/usuarios";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";

@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { MailWarning, Search, Settings } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { type Layout } from "react-resizable-panels";
 import { useMailStore } from "../use-mail";
 import { useMailFolders, useMailMessages, useMailActions } from "../hooks/use-mail-api";
 
@@ -22,11 +21,7 @@ import { NavMobile } from "./nav-mobile";
 import { MailDisplayMobile } from "./mail-display-mobile";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_LAYOUT: Layout = {
-  "left-panel": 16,
-  "middle-panel": 30,
-  "right-panel": 54
-};
+const DEFAULT_LAYOUT = [16, 30, 54];
 
 export function Mail({
   defaultLayout = DEFAULT_LAYOUT,
@@ -34,14 +29,14 @@ export function Mail({
   defaultCollapsed,
   collapsedCookieID
 }: {
-  defaultLayout?: Layout;
+  defaultLayout?: number[];
   cookieID: string;
   defaultCollapsed: boolean;
   collapsedCookieID: string;
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const isMobile = useIsMobile();
-  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable } = useMailStore();
+  const { selectedMail, messages, selectedFolder, setSearchQuery, serviceUnavailable } = useMailStore();
   const [tab, setTab] = React.useState("all");
   const [searchInput, setSearchInput] = React.useState("");
 
@@ -98,22 +93,22 @@ export function Mail({
   return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
-        orientation="horizontal"
-        defaultLayout={defaultLayout}
+        direction="horizontal"
         id={cookieID}
-        onLayoutChange={(layout) => {
+        onLayout={(layout: number[]) => {
           document.cookie = `${cookieID}=${JSON.stringify(layout)}; path=/;`;
         }}
         className="items-stretch">
         <ResizablePanel
           id="left-panel"
           hidden={isMobile}
-          collapsedSize={`4%`}
+          collapsedSize={4}
           collapsible={true}
-          minSize="15%"
-          maxSize="20%"
-          onResize={(panelSize) => {
-            if (panelSize.asPercentage < 14) {
+          defaultSize={defaultLayout[0]}
+          minSize={15}
+          maxSize={20}
+          onResize={(size: number) => {
+            if (size < 14) {
               setIsCollapsed(true);
               document.cookie = `${collapsedCookieID}=${JSON.stringify(true)}`;
             } else {
@@ -125,7 +120,7 @@ export function Mail({
           <NavDesktop isCollapsed={isCollapsed} />
         </ResizablePanel>
         <ResizableHandle hidden={isMobile} withHandle />
-        <ResizablePanel id="middle-panel" minSize="20%">
+        <ResizablePanel id="middle-panel" defaultSize={defaultLayout[1]} minSize={20}>
           <Tabs
             defaultValue="all"
             className="flex h-full flex-col gap-0"
@@ -161,7 +156,7 @@ export function Mail({
           </Tabs>
         </ResizablePanel>
         <ResizableHandle hidden={isMobile} withHandle />
-        <ResizablePanel id="right-panel" hidden={isMobile} minSize="30%">
+        <ResizablePanel id="right-panel" hidden={isMobile} defaultSize={defaultLayout[2]} minSize={30}>
           {isMobile ? (
             <MailDisplayMobile mail={currentMail} />
           ) : (

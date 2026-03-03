@@ -99,7 +99,8 @@ export async function listMessages(
   return withImapConnection(config, async (client) => {
     const lock = await client.getMailboxLock(folder);
     try {
-      const total = client.mailbox?.exists ?? 0;
+      const mailbox = client.mailbox;
+      const total = (mailbox && typeof mailbox === "object" && "exists" in mailbox) ? mailbox.exists : 0;
 
       if (total === 0) {
         return { data: [], total: 0, page, limit, hasMore: false };
@@ -122,7 +123,7 @@ export async function listMessages(
         bodyStructure: true,
         headers: ["message-id"],
       })) {
-        const env = msg.envelope;
+        const env = msg.envelope!;
         const flags = Array.from(msg.flags ?? []);
 
         messages.push({
@@ -175,7 +176,7 @@ export async function getMessage(
 
       if (!msg) return null;
 
-      const env = msg.envelope;
+      const env = msg.envelope!;
       const flags = Array.from(msg.flags ?? []);
 
       // Parse body text from source
@@ -304,7 +305,7 @@ export async function searchMessages(
         flags: true,
         uid: true,
       })) {
-        const env = msg.envelope;
+        const env = msg.envelope!;
         const flags = Array.from(msg.flags ?? []);
 
         messages.push({
