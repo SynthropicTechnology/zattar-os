@@ -172,8 +172,7 @@ export async function getMessage(
         envelope: true,
         source: true,
         flags: true,
-        uid: true,
-      });
+      }, { uid: true });
 
       if (!msg) return null;
 

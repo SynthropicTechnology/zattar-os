@@ -66,7 +66,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
             value={timeRange}
             onValueChange={setTimeRange}
             variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
+            className="hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex"
           >
             <ToggleGroupItem value="12m">12 meses</ToggleGroupItem>
             <ToggleGroupItem value="6m">6 meses</ToggleGroupItem>
@@ -97,7 +97,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[200px] w-full lg:h-[250px]"
+          className="aspect-auto h-50 w-full lg:h-62.5"
         >
           <AreaChart data={filteredData}>
             <defs>

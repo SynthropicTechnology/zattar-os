@@ -99,7 +99,7 @@ export function ChartProjectOverview() {
             value={timeRange}
             onValueChange={setTimeRange}
             variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex">
+            className="hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex">
             <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
             <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
             <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
@@ -126,7 +126,7 @@ export function ChartProjectOverview() {
         </CardAction>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[200px] w-full lg:h-[250px]">
+        <ChartContainer config={chartConfig} className="aspect-auto h-50 w-full lg:h-62.5">
           <AreaChart data={filteredData}>
             <defs>
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">

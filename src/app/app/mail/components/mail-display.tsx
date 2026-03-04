@@ -58,58 +58,104 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
   const { fullMessage } = useMailStore();
   const { fetchMessage } = useMailActions();
   const [isLoadingBody, setIsLoadingBody] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     setIsLoadingBody(true);
-    fetchMessage(mail.uid, mail.folder).finally(() => setIsLoadingBody(false));
+    setFetchError(false);
+
+    fetchMessage(mail.uid, mail.folder)
+      .then((data) => {
+        if (!cancelled && !data) setFetchError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingBody(false);
+      });
+
+    return () => { cancelled = true; };
   }, [mail.uid, mail.folder, fetchMessage]);
 
   const isLoaded = fullMessage?.uid === mail.uid;
   const htmlContent = isLoaded ? fullMessage.html : null;
   const textContent = isLoaded ? (fullMessage.text || mail.preview) : mail.preview;
 
+  // Build srcdoc for HTML emails
+  const srcdoc = htmlContent
+    ? `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #1a1a1a;
+      margin: 0;
+      padding: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    img { max-width: 100%; height: auto; }
+    a { color: #2563eb; }
+    pre { overflow-x: auto; }
+    table { max-width: 100%; }
+  </style>
+</head>
+<body>${htmlContent}</body>
+</html>`
+    : null;
+
+  // Auto-resize iframe to fit content (including after images load)
   useEffect(() => {
-    if (!htmlContent || !iframeRef.current) return;
-    const doc = iframeRef.current.contentDocument;
-    if (!doc) return;
+    const iframe = iframeRef.current;
+    if (!srcdoc || !iframe) return;
 
-    doc.open();
-    doc.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #1a1a1a;
-            margin: 0;
-            padding: 0;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-          }
-          img { max-width: 100%; height: auto; }
-          a { color: #2563eb; }
-          pre { overflow-x: auto; }
-          table { max-width: 100%; }
-        </style>
-      </head>
-      <body>${htmlContent}</body>
-      </html>
-    `);
-    doc.close();
+    let resizeObserver: ResizeObserver | null = null;
+    const imgCleanups: (() => void)[] = [];
 
-    const resizeObserver = new ResizeObserver(() => {
-      if (iframeRef.current && doc.body) {
-        iframeRef.current.style.height = doc.body.scrollHeight + "px";
+    const updateHeight = () => {
+      const doc = iframe.contentDocument;
+      if (doc?.body) {
+        iframe.style.height = doc.body.scrollHeight + "px";
       }
-    });
-    if (doc.body) resizeObserver.observe(doc.body);
-    return () => resizeObserver.disconnect();
-  }, [htmlContent]);
+    };
+
+    const handleLoad = () => {
+      updateHeight();
+      const doc = iframe.contentDocument;
+      if (!doc) return;
+
+      // Listen for image loads that affect layout height
+      doc.querySelectorAll("img").forEach((img) => {
+        if (!img.complete) {
+          const onImgLoad = () => updateHeight();
+          img.addEventListener("load", onImgLoad);
+          img.addEventListener("error", onImgLoad);
+          imgCleanups.push(() => {
+            img.removeEventListener("load", onImgLoad);
+            img.removeEventListener("error", onImgLoad);
+          });
+        }
+      });
+
+      // ResizeObserver for any other layout changes
+      if (doc.body) {
+        resizeObserver = new ResizeObserver(updateHeight);
+        resizeObserver.observe(doc.body);
+      }
+    };
+
+    iframe.addEventListener("load", handleLoad);
+
+    return () => {
+      iframe.removeEventListener("load", handleLoad);
+      resizeObserver?.disconnect();
+      imgCleanups.forEach((fn) => fn());
+    };
+  }, [srcdoc]);
 
   if (isLoadingBody && !isLoaded) {
     return (
@@ -123,10 +169,17 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
     );
   }
 
-  if (htmlContent) {
+  if (fetchError && !isLoaded) {
+    return (
+      <div className="text-sm whitespace-pre-wrap">{mail.preview || "Não foi possível carregar o conteúdo do e-mail."}</div>
+    );
+  }
+
+  if (srcdoc) {
     return (
       <iframe
         ref={iframeRef}
+        srcDoc={srcdoc}
         className="w-full border-0"
         sandbox="allow-same-origin"
         title="Conteúdo do e-mail"
