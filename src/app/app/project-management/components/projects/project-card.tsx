@@ -28,15 +28,15 @@ function formatDeadline(dataPrevisaoFim: string | null): string | null {
 }
 
 function getDeadlineColor(dataPrevisaoFim: string | null): string {
-  if (!dataPrevisaoFim) return "bg-gray-500";
+  if (!dataPrevisaoFim) return "bg-muted text-muted-foreground";
   const prazo = new Date(dataPrevisaoFim);
   const hoje = new Date();
   const diffDias = Math.ceil(
     (prazo.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24)
   );
-  if (diffDias < 0) return "bg-red-500";
-  if (diffDias <= 7) return "bg-yellow-500";
-  return "bg-green-500";
+  if (diffDias < 0) return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+  if (diffDias <= 7) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+  return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
 }
 
 export function ProjectCard({ projeto }: ProjectCardProps) {
@@ -61,7 +61,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
 
           <div className="mb-6">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm opacity-90">Progresso</span>
+              <span className="text-sm text-muted-foreground">Progresso</span>
               <span className="text-sm font-semibold">
                 {projeto.progresso}%
               </span>
@@ -84,7 +84,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
               <ProjectStatusBadge status={projeto.status} />
               {deadlineText && (
                 <span
-                  className={`${deadlineColor} rounded-full px-2 py-0.5 text-xs text-white`}
+                  className={`${deadlineColor} rounded-full px-2 py-0.5 text-xs`}
                 >
                   {deadlineText}
                 </span>

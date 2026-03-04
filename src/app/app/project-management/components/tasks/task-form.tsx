@@ -43,6 +43,7 @@ import {
   actionCriarTarefa,
   actionAtualizarTarefa,
 } from "../../lib/actions";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   titulo: z.string().min(1, "Título é obrigatório").max(255),
@@ -136,15 +137,20 @@ export function TaskFormDialog({
       }
 
       if (result.success) {
+        toast.success(
+          isEditing ? "Tarefa atualizada com sucesso!" : "Tarefa criada com sucesso!"
+        );
         onOpenChange(false);
         onSuccess?.();
+      } else {
+        toast.error(result.error?.message ?? "Erro ao salvar tarefa. Tente novamente.");
       }
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-125">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Editar Tarefa" : "Nova Tarefa"}

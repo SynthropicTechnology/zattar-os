@@ -23,6 +23,7 @@ import {
   type PapelProjeto,
 } from "../../lib/domain";
 import { actionAdicionarMembro } from "../../lib/actions";
+import { toast } from "sonner";
 
 interface AddMemberDialogProps {
   projetoId: string;
@@ -60,14 +61,17 @@ export function AddMemberDialog({
       });
 
       if (result.success) {
+        toast.success("Membro adicionado com sucesso!");
         onOpenChange(false);
+      } else {
+        toast.error(result.error?.message ?? "Erro ao adicionar membro. Tente novamente.");
       }
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-100">
         <DialogHeader>
           <DialogTitle>Adicionar Membro</DialogTitle>
         </DialogHeader>

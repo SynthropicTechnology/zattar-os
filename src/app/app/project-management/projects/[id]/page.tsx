@@ -10,8 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings } from "lucide-react";
+import {
+  ClipboardList,
+  FileText,
+  Pencil,
+  Settings,
+  Users,
+} from "lucide-react";
 import * as projectService from "../../lib/services/project.service";
 import * as taskService from "../../lib/services/task.service";
 import * as teamService from "../../lib/services/team.service";
@@ -58,6 +63,14 @@ export default async function ProjectDetailPage({ params }: Props) {
     (t) => t.status !== "concluido" && t.status !== "cancelado"
   ).length;
 
+  const basePath = `/app/project-management/projects/${projeto.id}`;
+
+  const navLinks = [
+    { href: `${basePath}/tasks`, label: "Tarefas", count: tarefas.length, icon: ClipboardList },
+    { href: `${basePath}/team`, label: "Equipe", count: membros.length, icon: Users },
+    { href: `${basePath}/files`, label: "Arquivos", icon: FileText },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -73,250 +86,179 @@ export default async function ProjectDetailPage({ params }: Props) {
             )}
           </div>
         </div>
-        <Button variant="outline" asChild>
-          <Link
-            href={`/app/project-management/projects/${projeto.id}/settings`}
-          >
-            <Settings className="mr-1 size-4" />
-            Configurações
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" asChild>
+            <Link href={`${basePath}/edit`}>
+              <Pencil className="mr-1 size-4" />
+              Editar
+            </Link>
+          </Button>
+          <Button variant="outline" size="icon" asChild>
+            <Link href={`${basePath}/settings`}>
+              <Settings className="size-4" />
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="tasks">
-            Tarefas ({tarefas.length})
-          </TabsTrigger>
-          <TabsTrigger value="team">
-            Equipe ({membros.length})
-          </TabsTrigger>
-        </TabsList>
+      {/* Links de navegação para sub-rotas */}
+      <nav className="flex gap-2">
+        {navLinks.map((link) => (
+          <Button key={link.href} variant="outline" size="sm" asChild>
+            <Link href={link.href}>
+              <link.icon className="mr-1 size-4" />
+              {link.label}
+              {link.count != null && (
+                <span className="bg-muted text-muted-foreground ml-1 rounded-full px-1.5 py-0.5 text-xs">
+                  {link.count}
+                </span>
+              )}
+            </Link>
+          </Button>
+        ))}
+      </nav>
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader>
-                <CardDescription>Progresso</CardDescription>
-                <CardTitle className="text-2xl">
-                  {projeto.progresso}%
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ProgressIndicator
-                  value={projeto.progresso}
-                  showLabel={false}
-                  size="md"
-                />
-              </CardContent>
-            </Card>
+      {/* Visão Geral — conteúdo principal */}
+      <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardDescription>Progresso</CardDescription>
+              <CardTitle className="text-2xl">
+                {projeto.progresso}%
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ProgressIndicator
+                value={projeto.progresso}
+                showLabel={false}
+                size="md"
+              />
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardHeader>
-                <CardDescription>Tarefas</CardDescription>
-                <CardTitle className="text-2xl">
-                  {tarefasConcluidas}/{tarefas.length}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-sm">
-                  {tarefasPendentes} pendentes
-                </p>
-              </CardContent>
-            </Card>
+          <Card>
+            <CardHeader>
+              <CardDescription>Tarefas</CardDescription>
+              <CardTitle className="text-2xl">
+                {tarefasConcluidas}/{tarefas.length}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground text-sm">
+                {tarefasPendentes} pendentes
+              </p>
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardHeader>
-                <CardDescription>Orçamento</CardDescription>
-                <CardTitle className="text-2xl">
-                  {projeto.orcamento != null
-                    ? new Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      }).format(projeto.orcamento)
-                    : "—"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {projeto.valorGasto != null && (
-                  <p className="text-muted-foreground text-sm">
-                    Gasto:{" "}
-                    {new Intl.NumberFormat("pt-BR", {
+          <Card>
+            <CardHeader>
+              <CardDescription>Orçamento</CardDescription>
+              <CardTitle className="text-2xl">
+                {projeto.orcamento != null
+                  ? new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",
-                    }).format(projeto.valorGasto)}
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardDescription>Equipe</CardDescription>
-                <CardTitle className="text-2xl">
-                  {membros.length} membros
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <MemberAvatarGroup membros={membros} max={5} />
-              </CardContent>
-            </Card>
-          </div>
-
-          {projeto.descricao && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Descrição</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground whitespace-pre-wrap">
-                  {projeto.descricao}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Informações</CardTitle>
+                    }).format(projeto.orcamento)
+                  : "—"}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <dl className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <dt className="text-muted-foreground">Responsável</dt>
-                  <dd>{projeto.responsavelNome ?? "—"}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Data de Início</dt>
-                  <dd>
-                    {projeto.dataInicio
-                      ? new Date(projeto.dataInicio).toLocaleDateString(
-                          "pt-BR"
-                        )
-                      : "—"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">
-                    Previsão de Conclusão
-                  </dt>
-                  <dd>
-                    {projeto.dataPrevisaoFim
-                      ? new Date(
-                          projeto.dataPrevisaoFim
-                        ).toLocaleDateString("pt-BR")
-                      : "—"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Criado em</dt>
-                  <dd>
-                    {new Date(projeto.createdAt).toLocaleDateString("pt-BR")}
-                  </dd>
-                </div>
-                {projeto.tags.length > 0 && (
-                  <div className="col-span-2">
-                    <dt className="text-muted-foreground">Tags</dt>
-                    <dd className="flex gap-1 flex-wrap mt-1">
-                      {projeto.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="bg-muted rounded-md px-2 py-0.5 text-xs"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="tasks">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Tarefas do Projeto</CardTitle>
-              <Button asChild size="sm">
-                <Link
-                  href={`/app/project-management/projects/${projeto.id}/tasks`}
-                >
-                  Ver Quadro Kanban
-                </Link>
-              </Button>
-            </CardHeader>
-            <CardContent>
-              {tarefas.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                  Nenhuma tarefa criada.
+              {projeto.valorGasto != null && (
+                <p className="text-muted-foreground text-sm">
+                  Gasto:{" "}
+                  {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(projeto.valorGasto)}
                 </p>
-              ) : (
-                <div className="divide-y">
-                  {tarefas.map((tarefa) => (
-                    <div
-                      key={tarefa.id}
-                      className="flex items-center justify-between py-3"
-                    >
-                      <div>
-                        <p className="font-medium">{tarefa.titulo}</p>
-                        <p className="text-muted-foreground text-sm">
-                          {tarefa.responsavelNome ?? "Sem responsável"}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <PriorityIndicator
-                          prioridade={tarefa.prioridade}
-                          showLabel={false}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
               )}
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="team">
           <Card>
             <CardHeader>
-              <CardTitle>Membros da Equipe</CardTitle>
+              <CardDescription>Equipe</CardDescription>
+              <CardTitle className="text-2xl">
+                {membros.length} membros
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              {membros.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                  Nenhum membro na equipe.
-                </p>
-              ) : (
-                <div className="divide-y">
-                  {membros.map((membro) => (
-                    <div
-                      key={membro.id}
-                      className="flex items-center justify-between py-3"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <p className="font-medium">
-                            {membro.usuarioNome ?? "Usuário"}
-                          </p>
-                          <p className="text-muted-foreground text-sm">
-                            {membro.usuarioEmail}
-                          </p>
-                        </div>
-                      </div>
-                      <span className="bg-muted rounded-md px-2 py-0.5 text-xs capitalize">
-                        {membro.papel}
+              <MemberAvatarGroup membros={membros} max={5} />
+            </CardContent>
+          </Card>
+        </div>
+
+        {projeto.descricao && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Descrição</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground whitespace-pre-wrap">
+                {projeto.descricao}
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Informações</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="text-muted-foreground">Responsável</dt>
+                <dd>{projeto.responsavelNome ?? "—"}</dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground">Data de Início</dt>
+                <dd>
+                  {projeto.dataInicio
+                    ? new Date(projeto.dataInicio).toLocaleDateString(
+                        "pt-BR"
+                      )
+                    : "—"}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground">
+                  Previsão de Conclusão
+                </dt>
+                <dd>
+                  {projeto.dataPrevisaoFim
+                    ? new Date(
+                        projeto.dataPrevisaoFim
+                      ).toLocaleDateString("pt-BR")
+                    : "—"}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground">Criado em</dt>
+                <dd>
+                  {new Date(projeto.createdAt).toLocaleDateString("pt-BR")}
+                </dd>
+              </div>
+              {projeto.tags.length > 0 && (
+                <div className="col-span-full">
+                  <dt className="text-muted-foreground">Tags</dt>
+                  <dd className="flex gap-1 flex-wrap mt-1">
+                    {projeto.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="bg-muted rounded-md px-2 py-0.5 text-xs"
+                      >
+                        {tag}
                       </span>
-                    </div>
-                  ))}
+                    ))}
+                  </dd>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </dl>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

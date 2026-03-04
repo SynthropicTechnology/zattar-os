@@ -12,6 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -35,6 +45,7 @@ import {
   actionAlterarPapel,
 } from "../../../lib/actions";
 import { AddMemberDialog } from "../../../components/team/add-member-dialog";
+import { toast } from "sonner";
 
 interface TeamViewProps {
   projeto: Projeto;
@@ -44,6 +55,7 @@ interface TeamViewProps {
 
 export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
   const [formOpen, setFormOpen] = React.useState(false);
+  const [membroToRemove, setMembroToRemove] = React.useState<string | null>(null);
   const [isPending, startTransition] = React.useTransition();
 
   const grouped = React.useMemo(() => {
@@ -63,13 +75,23 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
 
   const handleRemove = (membroId: string) => {
     startTransition(async () => {
-      await actionRemoverMembro(membroId, projeto.id);
+      const result = await actionRemoverMembro(membroId, projeto.id);
+      if (result.success) {
+        toast.success("Membro removido da equipe.");
+      } else {
+        toast.error(result.error?.message ?? "Erro ao remover membro. Tente novamente.");
+      }
     });
   };
 
   const handleChangeRole = (membroId: string, papel: PapelProjeto) => {
     startTransition(async () => {
-      await actionAlterarPapel(membroId, papel);
+      const result = await actionAlterarPapel(membroId, papel);
+      if (result.success) {
+        toast.success("Papel atualizado com sucesso.");
+      } else {
+        toast.error(result.error?.message ?? "Erro ao alterar papel. Tente novamente.");
+      }
     });
   };
 
@@ -173,7 +195,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive"
-                            onClick={() => handleRemove(membro.id)}
+                            onClick={() => setMembroToRemove(membro.id)}
                           >
                             <UserMinus className="mr-2 size-4" />
                             Remover
@@ -199,6 +221,32 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
           </CardContent>
         </Card>
       )}
+
+      <AlertDialog
+        open={!!membroToRemove}
+        onOpenChange={(open) => !open && setMembroToRemove(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover membro da equipe?</AlertDialogTitle>
+            <AlertDialogDescription>
+              O membro será removido do projeto. Esta ação pode ser revertida
+              adicionando-o novamente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (membroToRemove) handleRemove(membroToRemove);
+                setMembroToRemove(null);
+              }}
+            >
+              Sim, remover
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AddMemberDialog
         projetoId={projeto.id}

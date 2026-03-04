@@ -15,6 +15,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
+import { cn } from "@/lib/utils";
 import {
   KANBAN_COLUMNS,
   STATUS_TAREFA_LABELS,
@@ -48,9 +49,11 @@ function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col rounded-lg border border-t-4 ${
-        columnColors[status]
-      } bg-muted/30 ${isOver ? "ring-2 ring-primary/20" : ""}`}
+      className={cn(
+        "flex min-w-70 flex-1 flex-col rounded-lg border border-t-4 bg-muted/30",
+        columnColors[status],
+        isOver && "ring-2 ring-primary/20"
+      )}
     >
       <div className="flex items-center justify-between px-3 py-2">
         <h3 className="text-sm font-semibold">
@@ -65,7 +68,7 @@ function KanbanColumn({
         items={tarefas.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-2 p-2 min-h-[100px]">
+        <div className="flex flex-col gap-2 p-2 min-h-25">
           {tarefas.map((tarefa) => (
             <TaskCard key={tarefa.id} tarefa={tarefa} />
           ))}
@@ -101,7 +104,7 @@ export function TaskBoard({ tarefas }: TaskBoardProps) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="flex gap-4 overflow-x-auto pb-4">
         {KANBAN_COLUMNS.map((status) => (
           <KanbanColumn
             key={status}

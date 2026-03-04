@@ -2,7 +2,6 @@
 
 import { useTransition } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -85,7 +84,7 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
 
 export function Reminders({ lembretes, usuarioId }: RemindersProps) {
   return (
-    <Card className="xl:col-span-2">
+    <Card className="lg:col-span-2">
       <CardHeader>
         <CardTitle>Lembretes</CardTitle>
         <CardAction>
@@ -98,20 +97,10 @@ export function Reminders({ lembretes, usuarioId }: RemindersProps) {
             Nenhum lembrete pendente.
           </p>
         ) : (
-          <div className="grid gap-4 lg:grid-cols-3">
-            {lembretes.slice(0, 3).map((lembrete) => (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {lembretes.map((lembrete) => (
               <ReminderCard key={lembrete.id} lembrete={lembrete} />
             ))}
-          </div>
-        )}
-        {lembretes.length > 3 && (
-          <div className="mt-4 text-end">
-            <Button
-              variant="link"
-              className="text-muted-foreground hover:text-primary"
-            >
-              Ver todos os {lembretes.length} lembretes
-            </Button>
           </div>
         )}
       </CardContent>

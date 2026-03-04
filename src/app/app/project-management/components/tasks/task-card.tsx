@@ -9,7 +9,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import { PriorityIndicator } from "../shared/priority-indicator";
 import type { Tarefa } from "../../lib/domain";
 
@@ -53,9 +53,10 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
       {...(isDragOverlay ? {} : attributes)}
     >
       <Card
-        className={`cursor-grab active:cursor-grabbing ${
-          isDragOverlay ? "shadow-lg ring-2 ring-primary/20" : ""
-        }`}
+        className={cn(
+          "cursor-grab active:cursor-grabbing",
+          isDragOverlay && "shadow-lg ring-2 ring-primary/20"
+        )}
       >
         <CardContent className="p-3">
           <div className="flex items-start gap-2">

@@ -171,10 +171,10 @@ export async function saveEmailCredentials(
     return data as EmailCredentials;
   }
 
-  // Senão, faz upsert por (usuario_id, imap_user) para evitar duplicata
+  // Senão, insere novo registro (constraint unique previne duplicatas)
   const { data, error } = await supabase
     .from("credenciais_email")
-    .upsert(payload, { onConflict: "usuario_id,imap_user" })
+    .insert(payload)
     .select()
     .single();
 

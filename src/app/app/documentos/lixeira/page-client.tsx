@@ -115,7 +115,7 @@ function LoadingState() {
 
 function EmptyState({ onVoltar }: { onVoltar: () => void }) {
   return (
-    <div className="flex h-[400px] items-center justify-center">
+    <div className="flex h-100 items-center justify-center">
       <div className="text-center">
         <Trash2 className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-4 text-lg font-semibold">Lixeira vazia</h3>

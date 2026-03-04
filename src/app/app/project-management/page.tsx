@@ -66,7 +66,7 @@ export default async function ProjectManagementDashboard() {
 
   return (
     <>
-      <div className="mb-4 flex flex-row items-center justify-between space-y-2">
+      <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">
           Gestão de Projetos
         </h1>
@@ -88,7 +88,7 @@ export default async function ProjectManagementDashboard() {
             <SuccessMetrics membros={membros} resumo={resumo} />
           </div>
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-2 2xl:grid-cols-4">
+          <div className="mt-4 grid gap-4 grid-cols-1 lg:grid-cols-4">
             <Reminders lembretes={lembretes} usuarioId={user.id} />
             <AchievementByYear data={comparativo} />
             <ChartProjectEfficiency data={distribuicao} />

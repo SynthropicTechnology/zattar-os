@@ -48,7 +48,7 @@ function ProjectRowActions({ projeto }: { projeto: Projeto }) {
         <DropdownMenuItem
           onClick={() =>
             router.push(
-              `/app/project-management/projects/${projeto.id}/settings`
+              `/app/project-management/projects/${projeto.id}/edit`
             )
           }
         >

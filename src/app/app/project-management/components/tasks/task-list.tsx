@@ -1,31 +1,19 @@
 "use client";
 
 import * as React from "react";
-import {
-  type ColumnDef,
-  type SortingState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+import {
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+} from "@/components/shared/data-shell";
 import { getInitials } from "@/lib/utils";
 import { TaskStatusBadge } from "../shared/project-status-badge";
 import { PriorityIndicator } from "../shared/priority-indicator";
@@ -48,11 +36,6 @@ const columns: ColumnDef<Tarefa>[] = [
         <ArrowUpDown className="size-3" />
       </Button>
     ),
-  },
-  {
-    accessorKey: "projetoNome",
-    header: "Projeto",
-    cell: ({ row }) => row.original.projetoNome ?? "—",
   },
   {
     accessorKey: "status",
@@ -108,93 +91,35 @@ const columns: ColumnDef<Tarefa>[] = [
 ];
 
 export function TaskList({ tarefas }: TaskListProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
-
-  const table = useReactTable({
-    data: tarefas,
-    columns,
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: { sorting, globalFilter },
-    initialState: { pagination: { pageSize: 20 } },
-  });
+  const [table, setTable] = React.useState<TanstackTable<Tarefa> | null>(null);
+  const [density, setDensity] = React.useState<"compact" | "standard" | "relaxed">("standard");
+  const filteredCount = table?.getFilteredRowModel().rows.length ?? tarefas.length;
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Nenhuma tarefa encontrada.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="flex items-center justify-between">
+    <DataShell
+      header={
+        table ? (
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchPlaceholder="Buscar tarefas..."
+          />
+        ) : null
+      }
+      footer={
         <div className="text-muted-foreground text-sm">
-          {table.getFilteredRowModel().rows.length} tarefas
+          {filteredCount} {filteredCount === 1 ? "tarefa" : "tarefas"}
         </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Próximo
-          </Button>
-        </div>
-      </div>
-    </div>
+      }
+    >
+      <DataTable
+        columns={columns}
+        data={tarefas}
+        density={density}
+        onTableReady={setTable}
+        emptyMessage="Nenhuma tarefa encontrada."
+      />
+    </DataShell>
   );
 }
