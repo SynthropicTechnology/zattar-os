@@ -131,6 +131,7 @@ export function Mail({
             }
           }}
           className={cn(
+            "bg-card",
             isCollapsed && "max-w-12.5 transition-all duration-300 ease-in-out"
           )}>
           <NavDesktop isCollapsed={isCollapsed} />
@@ -139,7 +140,7 @@ export function Mail({
         <ResizablePanel id="middle-panel" defaultSize={defaultLayout[1]} minSize={20}>
           <Tabs
             defaultValue="all"
-            className="flex h-full flex-col gap-0 bg-muted/30"
+            className="flex h-full flex-col gap-0 bg-card"
             onValueChange={(value) => setTab(value)}>
             <div className="flex h-13 shrink-0 items-center gap-2 px-4">
               {isMobile && <NavMobile />}
@@ -193,7 +194,7 @@ export function Mail({
           hidden={isMobile}
           defaultSize={defaultLayout[2]}
           minSize={30}
-          className="bg-background">
+          className="bg-card">
           <MailDisplay mail={currentMail} />
         </ResizablePanel>
       </ResizablePanelGroup>
