@@ -8,6 +8,8 @@ import {
   uploadToSupabase,
   deleteFromSupabase,
 } from "@/lib/storage/supabase-storage.service";
+import { getCurrentUser } from "@/lib/auth/server";
+import { ALLOWED_MIME_TYPES } from "@/lib/storage/utils";
 
 const PM_PATH = "/app/project-management";
 const TABLE = "pm_anexos";
@@ -56,16 +58,36 @@ export async function actionUploadAnexo(
   formData: FormData
 ): Promise<Result<Anexo>> {
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return err(appError("UNAUTHORIZED", "Usuário não autenticado"));
+    }
+
     const file = formData.get("file") as File;
     const projetoId = formData.get("projetoId") as string;
-    const usuarioId = Number(formData.get("usuarioId"));
 
     if (!file) {
       return err(appError("VALIDATION_ERROR", "Nenhum arquivo enviado"));
     }
 
+    // File size validation (50MB max)
+    if (file.size > 50 * 1024 * 1024) {
+      return err(
+        appError("VALIDATION_ERROR", "Arquivo muito grande. Máximo permitido: 50MB.")
+      );
+    }
+
+    // MIME type validation (warn but allow for project files)
+    const allAllowedMimes = Object.values(ALLOWED_MIME_TYPES).flat();
+    if (!allAllowedMimes.includes(file.type)) {
+      console.warn(
+        `[file.actions] Tipo MIME não reconhecido: "${file.type}" para arquivo "${file.name}". Permitindo upload de arquivo de projeto.`
+      );
+    }
+
+    const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
     const buffer = Buffer.from(await file.arrayBuffer());
-    const key = `${STORAGE_FOLDER}/${projetoId}/${Date.now()}-${file.name}`;
+    const key = `${STORAGE_FOLDER}/${projetoId}/${Date.now()}-${sanitizedName}`;
 
     const uploadResult = await uploadToSupabase({
       buffer,
@@ -78,7 +100,7 @@ export async function actionUploadAnexo(
       .from(TABLE)
       .insert({
         projeto_id: projetoId,
-        usuario_id: usuarioId,
+        usuario_id: user.id,
         nome_arquivo: file.name,
         url: uploadResult.url,
         tamanho_bytes: file.size,
@@ -134,10 +156,9 @@ export async function actionExcluirAnexo(
     if (anexo?.url) {
       try {
         const url = new URL(anexo.url as string);
-        const pathParts = url.pathname.split("/storage/v1/object/public/");
-        if (pathParts[1]) {
-          const [, ...keyParts] = pathParts[1].split("/");
-          await deleteFromSupabase(keyParts.join("/"));
+        const match = url.pathname.match(/\/storage\/v1\/object\/public\/[^/]+\/(.+)/);
+        if (match?.[1]) {
+          await deleteFromSupabase(decodeURIComponent(match[1]));
         }
       } catch {
         // Deleção do storage é best-effort

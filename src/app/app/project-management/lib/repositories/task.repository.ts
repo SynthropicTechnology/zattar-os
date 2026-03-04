@@ -8,6 +8,7 @@ import {
   type ListarTarefasParams,
   converterParaTarefa,
 } from "../domain";
+import { escapeIlike, validateSortColumn } from "./utils";
 
 const TABLE = "pm_tarefas";
 
@@ -68,7 +69,8 @@ export async function listTarefasGlobal(
     let query = db.from(TABLE).select(SELECT_WITH_JOINS, { count: "exact" });
 
     if (params.busca) {
-      query = query.or(`titulo.ilike.%${params.busca}%,descricao.ilike.%${params.busca}%`);
+      const search = escapeIlike(params.busca);
+      query = query.or(`titulo.ilike.%${search}%,descricao.ilike.%${search}%`);
     }
     if (params.projetoId) {
       query = query.eq("projeto_id", params.projetoId);
@@ -89,7 +91,8 @@ export async function listTarefasGlobal(
       query = query.lte("data_prazo", params.dataPrazoAte);
     }
 
-    const sortColumn = params.ordenarPor ?? "created_at";
+    const ALLOWED_SORT_COLUMNS = ["created_at", "titulo", "status", "prioridade", "data_prazo"] as const;
+    const sortColumn = validateSortColumn(params.ordenarPor, ALLOWED_SORT_COLUMNS, "created_at");
     const ascending = params.ordem === "asc";
     query = query.order(sortColumn, { ascending }).range(offset, offset + limit - 1);
 

@@ -89,7 +89,7 @@ export default async function ProjectManagementDashboard() {
           </div>
 
           <div className="mt-4 grid gap-4 grid-cols-1 lg:grid-cols-4">
-            <Reminders lembretes={lembretes} usuarioId={user.id} />
+            <Reminders lembretes={lembretes} />
             <AchievementByYear data={comparativo} />
             <ChartProjectEfficiency data={distribuicao} />
           </div>

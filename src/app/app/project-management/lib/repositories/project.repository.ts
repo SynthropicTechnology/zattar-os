@@ -7,6 +7,7 @@ import {
   type ListarProjetosParams,
   converterParaProjeto,
 } from "../domain";
+import { escapeIlike, validateSortColumn } from "./utils";
 
 const TABLE = "pm_projetos";
 
@@ -30,7 +31,8 @@ export async function listProjetos(
 
     // Filtros
     if (params.busca) {
-      query = query.or(`nome.ilike.%${params.busca}%,descricao.ilike.%${params.busca}%`);
+      const search = escapeIlike(params.busca);
+      query = query.or(`nome.ilike.%${search}%,descricao.ilike.%${search}%`);
     }
     if (params.status) {
       query = query.eq("status", params.status);
@@ -52,7 +54,8 @@ export async function listProjetos(
     }
 
     // Ordenação
-    const sortColumn = params.ordenarPor ?? "created_at";
+    const ALLOWED_SORT_COLUMNS = ["created_at", "nome", "status", "prioridade", "data_inicio", "data_previsao_fim", "orcamento"] as const;
+    const sortColumn = validateSortColumn(params.ordenarPor, ALLOWED_SORT_COLUMNS, "created_at");
     const ascending = params.ordem === "asc";
     query = query.order(sortColumn, { ascending }).range(offset, offset + limit - 1);
 

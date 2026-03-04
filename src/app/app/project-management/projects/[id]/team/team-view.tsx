@@ -86,7 +86,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
 
   const handleChangeRole = (membroId: string, papel: PapelProjeto) => {
     startTransition(async () => {
-      const result = await actionAlterarPapel(membroId, papel);
+      const result = await actionAlterarPapel(membroId, papel, projeto.id);
       if (result.success) {
         toast.success("Papel atualizado com sucesso.");
       } else {

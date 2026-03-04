@@ -26,11 +26,12 @@ export async function criarLembrete(
 
 export async function concluirLembrete(
   id: string,
-  concluido: boolean
+  concluido: boolean,
+  usuarioId: number
 ): Promise<Result<void>> {
-  return reminderRepo.toggleLembreteComplete(id, concluido);
+  return reminderRepo.toggleLembreteComplete(id, concluido, usuarioId);
 }
 
-export async function excluirLembrete(id: string): Promise<Result<void>> {
-  return reminderRepo.deleteLembrete(id);
+export async function excluirLembrete(id: string, usuarioId: number): Promise<Result<void>> {
+  return reminderRepo.deleteLembrete(id, usuarioId);
 }

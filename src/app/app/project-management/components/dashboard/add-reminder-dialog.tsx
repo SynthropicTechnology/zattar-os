@@ -17,11 +17,7 @@ import { DateTimePicker } from "@/components/layout/pickers/date-time-picker";
 import { actionCriarLembrete } from "../../lib/actions";
 import type { Prioridade } from "../../lib/domain";
 
-interface AddReminderDialogProps {
-  usuarioId: number;
-}
-
-export function AddReminderDialog({ usuarioId }: AddReminderDialogProps) {
+export function AddReminderDialog() {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date>();
   const [texto, setTexto] = React.useState("");
@@ -32,14 +28,11 @@ export function AddReminderDialog({ usuarioId }: AddReminderDialogProps) {
     if (!texto.trim() || !date) return;
 
     startTransition(async () => {
-      const result = await actionCriarLembrete(
-        {
-          texto: texto.trim(),
-          dataHora: date.toISOString(),
-          prioridade,
-        },
-        usuarioId
-      );
+      const result = await actionCriarLembrete({
+        texto: texto.trim(),
+        dataHora: date.toISOString(),
+        prioridade,
+      });
       if (result.success) {
         setTexto("");
         setDate(undefined);

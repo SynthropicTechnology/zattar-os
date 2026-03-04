@@ -50,6 +50,21 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
     return data.slice(-meses);
   }, [data, timeRange]);
 
+  if (filteredData.length === 0) {
+    return (
+      <Card className="@container/card">
+        <CardHeader>
+          <CardTitle>Visão Geral dos Projetos</CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-12">
+          <p className="text-muted-foreground text-sm">
+            Nenhum dado disponível para o período.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="@container/card">
       <CardHeader>
@@ -64,7 +79,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
           <ToggleGroup
             type="single"
             value={timeRange}
-            onValueChange={setTimeRange}
+            onValueChange={(v) => v && setTimeRange(v)}
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex"
           >

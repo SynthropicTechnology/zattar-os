@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import type { DragEndEvent, DragStartEvent, DragOverEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
+import { toast } from "sonner";
 import {
   KANBAN_COLUMNS,
   type StatusTarefa,
@@ -41,6 +42,16 @@ function findColumnOfTask(
   return null;
 }
 
+function buildUpdates(cols: ColumnMap) {
+  return KANBAN_COLUMNS.flatMap((status) =>
+    cols[status].map((tarefa, index) => ({
+      tarefaId: tarefa.id,
+      status,
+      ordemKanban: index,
+    }))
+  );
+}
+
 export function useTaskBoard(initialTarefas: Tarefa[]) {
   const [columns, setColumns] = useState<ColumnMap>(() =>
     buildColumns(initialTarefas)
@@ -56,6 +67,18 @@ export function useTaskBoard(initialTarefas: Tarefa[]) {
     return null;
   }, [activeId, columns]);
 
+  const persistKanbanOrder = useCallback(
+    async (newCols: ColumnMap, prevCols: ColumnMap) => {
+      const updates = buildUpdates(newCols);
+      const result = await actionReordenarKanban(updates);
+      if (!result.success) {
+        setColumns(prevCols);
+        toast.error("Erro ao salvar ordenação. Revertendo...");
+      }
+    },
+    []
+  );
+
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   }, []);
@@ -67,16 +90,15 @@ export function useTaskBoard(initialTarefas: Tarefa[]) {
     const activeIdStr = active.id as string;
     const overIdStr = over.id as string;
 
-    const activeColumn = findColumnOfTask(columns, activeIdStr);
-    // over can be a task id or a column id (status)
-    let overColumn = findColumnOfTask(columns, overIdStr);
-    if (!overColumn && KANBAN_COLUMNS.includes(overIdStr as StatusTarefa)) {
-      overColumn = overIdStr as StatusTarefa;
-    }
-
-    if (!activeColumn || !overColumn || activeColumn === overColumn) return;
-
     setColumns((prev) => {
+      const activeColumn = findColumnOfTask(prev, activeIdStr);
+      let overColumn = findColumnOfTask(prev, overIdStr);
+      if (!overColumn && KANBAN_COLUMNS.includes(overIdStr as StatusTarefa)) {
+        overColumn = overIdStr as StatusTarefa;
+      }
+
+      if (!activeColumn || !overColumn || activeColumn === overColumn) return prev;
+
       const activeItems = [...prev[activeColumn]];
       const overItems = [...prev[overColumn]];
 
@@ -99,7 +121,7 @@ export function useTaskBoard(initialTarefas: Tarefa[]) {
         [overColumn]: overItems,
       };
     });
-  }, [columns]);
+  }, []);
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
@@ -111,40 +133,35 @@ export function useTaskBoard(initialTarefas: Tarefa[]) {
       const activeIdStr = active.id as string;
       const overIdStr = over.id as string;
 
-      const activeColumn = findColumnOfTask(columns, activeIdStr);
-      let overColumn = findColumnOfTask(columns, overIdStr);
-      if (!overColumn && KANBAN_COLUMNS.includes(overIdStr as StatusTarefa)) {
-        overColumn = overIdStr as StatusTarefa;
-      }
-
-      if (!activeColumn || !overColumn) return;
-
-      if (activeColumn === overColumn) {
-        // Reorder within same column
-        const items = columns[activeColumn];
-        const oldIndex = items.findIndex((t) => t.id === activeIdStr);
-        const newIndex = items.findIndex((t) => t.id === overIdStr);
-
-        if (oldIndex !== newIndex && newIndex >= 0) {
-          setColumns((prev) => ({
-            ...prev,
-            [activeColumn]: arrayMove(prev[activeColumn], oldIndex, newIndex),
-          }));
+      setColumns((prev) => {
+        const activeColumn = findColumnOfTask(prev, activeIdStr);
+        let overColumn = findColumnOfTask(prev, overIdStr);
+        if (!overColumn && KANBAN_COLUMNS.includes(overIdStr as StatusTarefa)) {
+          overColumn = overIdStr as StatusTarefa;
         }
-      }
 
-      // Persist all positions
-      const updates = KANBAN_COLUMNS.flatMap((status) =>
-        columns[status].map((tarefa, index) => ({
-          tarefaId: tarefa.id,
-          status,
-          ordemKanban: index,
-        }))
-      );
+        if (!activeColumn || !overColumn) return prev;
 
-      actionReordenarKanban(updates);
+        let next = prev;
+        if (activeColumn === overColumn) {
+          const items = prev[activeColumn];
+          const oldIndex = items.findIndex((t) => t.id === activeIdStr);
+          const newIndex = items.findIndex((t) => t.id === overIdStr);
+
+          if (oldIndex !== newIndex && newIndex >= 0) {
+            next = {
+              ...prev,
+              [activeColumn]: arrayMove(prev[activeColumn], oldIndex, newIndex),
+            };
+          }
+        }
+
+        // Persist with the NEW state (not stale closure)
+        persistKanbanOrder(next, prev);
+        return next;
+      });
     },
-    [columns]
+    [persistKanbanOrder]
   );
 
   return {

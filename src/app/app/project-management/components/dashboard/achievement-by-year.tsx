@@ -22,7 +22,23 @@ const chartColors = [
 ];
 
 export function AchievementByYear({ data }: AchievementByYearProps) {
-  if (data.length === 0) return null;
+  if (data.length === 0) {
+    return (
+      <Card className="xl:col-span-1">
+        <CardHeader>
+          <CardTitle>Conclusões por Ano</CardTitle>
+          <CardDescription>
+            Comparativo de projetos concluídos nos últimos anos.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-12">
+          <p className="text-muted-foreground text-sm">
+            Nenhum dado disponível.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const maxValue = Math.max(...data.map((d) => d.totalConcluidos), 1);
 

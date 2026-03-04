@@ -1,5 +1,5 @@
-import { ArrowUpRight } from "lucide-react";
-import { getInitials } from "@/lib/utils";
+import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { cn, getInitials } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -19,6 +19,23 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { MembroAtivo, DashboardSummary } from "../../lib/domain";
+
+function TrendIndicator({
+  value,
+  variacao,
+}: {
+  value: React.ReactNode;
+  variacao: number;
+}) {
+  const isPositive = variacao >= 0;
+  const Icon = isPositive ? ArrowUpRight : ArrowDownRight;
+  return (
+    <span className="flex items-center gap-1">
+      <Icon className={cn("size-4", isPositive ? "text-green-600" : "text-red-600")} />
+      {value}
+    </span>
+  );
+}
 
 interface SuccessMetricsProps {
   membros: MembroAtivo[];
@@ -69,24 +86,24 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
         <div className="divide-y *:py-3">
           <div className="flex justify-between text-sm">
             <span>Projetos Ativos</span>
-            <span className="flex items-center gap-1">
-              <ArrowUpRight className="size-4 text-green-600" />
-              {resumo.projetosAtivos}
-            </span>
+            <TrendIndicator
+              value={resumo.projetosAtivos}
+              variacao={resumo.projetosAtivosVariacao}
+            />
           </div>
           <div className="flex justify-between text-sm">
             <span>Taxa de Conclusão</span>
-            <span className="flex items-center gap-1">
-              <ArrowUpRight className="size-4 text-green-600" />
-              {resumo.taxaConclusao}%
-            </span>
+            <TrendIndicator
+              value={`${resumo.taxaConclusao}%`}
+              variacao={resumo.taxaConclusaoVariacao}
+            />
           </div>
           <div className="flex justify-between text-sm">
             <span>Horas este Mês</span>
-            <span className="flex items-center gap-1">
-              <ArrowUpRight className="size-4 text-green-600" />
-              {resumo.horasRegistradas}h
-            </span>
+            <TrendIndicator
+              value={`${resumo.horasRegistradas}h`}
+              variacao={resumo.horasRegistradasVariacao}
+            />
           </div>
         </div>
       </CardContent>

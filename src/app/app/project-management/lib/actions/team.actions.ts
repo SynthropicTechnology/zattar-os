@@ -40,7 +40,14 @@ export async function actionRemoverMembro(
 
 export async function actionAlterarPapel(
   membroId: string,
-  papel: PapelProjeto
+  papel: PapelProjeto,
+  projetoId?: string
 ): Promise<Result<MembroProjeto>> {
-  return teamService.alterarPapel(membroId, papel);
+  const result = await teamService.alterarPapel(membroId, papel);
+
+  if (result.success && projetoId) {
+    revalidatePath(`${PM_PATH}/projects/${projetoId}`);
+  }
+
+  return result;
 }

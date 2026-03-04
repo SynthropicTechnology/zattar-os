@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zattar Advogados | Arquitetura Legal na Era Algorítmica</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#09090B', /* Zinc 950 */
+                        surface: '#18181B',    /* Zinc 900 */
+                        border: '#27272A',     /* Zinc 800 */
+                        primary: '#623CEA',    /* Roxo Zattar */
+                        accent: '#F97316',     /* Laranja Tech */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body
+    class="bg-background text-zinc-50 font-sans antialiased selection:bg-primary/30 selection:text-white overflow-x-hidden">
+
+    <header
+        class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
+            <div class="flex flex-col justify-center leading-none select-none cursor-pointer">
+                <span class="text-[28px] font-bold tracking-tighter text-zinc-50">
+                    zattar<span class="text-primary">.</span>
+                </span>
+                <span class="text-[9px] font-light tracking-[0.35em] text-zinc-400 mt-1 ml-0.5">ADVOGADOS</span>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+                <a href="#teses" class="hover:text-zinc-50 transition-colors duration-200">Teses e Atuação</a>
+                <a href="#manifesto" class="hover:text-zinc-50 transition-colors duration-200">Manifesto</a>
+                <a href="#inteligencia" class="hover:text-zinc-50 transition-colors duration-200">Inteligência</a>
+                <a href="#dialogo"
+                    class="px-5 py-2.5 bg-surface border border-border rounded-lg hover:border-primary/50 hover:text-zinc-50 transition-all duration-300">
+                    Iniciar Diálogo
+                </a>
+            </nav>
+
+            <button class="md:hidden text-zinc-400 hover:text-zinc-50">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="relative min-h-screen flex flex-col justify-center items-center pt-20">
+
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-primary/10 rounded-full blur-[100px] md:blur-[150px] pointer-events-none">
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center mt-[-5vh]">
+
+            <div
+                class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_#F97316]"></span>
+                <span class="font-mono text-[10px] md:text-xs uppercase tracking-widest text-zinc-300">Advocacia
+                    Trabalhista de Vanguarda</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-zinc-50 leading-[1.1] mb-6">
+                A Defesa do Trabalhador <br class="hidden md:block" />
+                na <span class="text-transparent bg-clip-text bg-gradient-to-r from-zinc-50 to-zinc-500">Era
+                    Algorítmica.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-zinc-400 font-light max-w-3xl mb-12 leading-relaxed">
+                Atuamos na linha de frente contra a uberização e a precarização digital. Há mais de uma década, nossa
+                inteligência jurídica é dedicada a decodificar plataformas e garantir que a tecnologia jamais
+                invisibilize os direitos fundamentais de quem produz.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                <button
+                    class="w-full sm:w-auto px-8 py-3.5 bg-primary hover:bg-[#724CF0] text-zinc-50 text-sm font-medium rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(98,60,234,0.2)] hover:shadow-[0_0_30px_rgba(98,60,234,0.4)] flex items-center justify-center gap-2 group">
+                    <span class="font-mono tracking-widest">[</span>
+                    O Nosso Manifesto
+                    <span class="font-mono tracking-widest">]</span>
+                </button>
+
+                <button
+                    class="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-border hover:border-zinc-500 hover:text-zinc-50 text-zinc-400 text-sm font-medium rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                    <span class="font-mono tracking-widest">[</span>
+                    Explorar Nossas Teses
+                    <span class="font-mono tracking-widest">]</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 w-full px-6">
+            <div
+                class="max-w-7xl mx-auto border-t border-border/50 pt-6 flex flex-col md:flex-row justify-center lg:justify-between items-center gap-3 lg:gap-0 font-mono text-[9px] md:text-[10px] text-zinc-500 uppercase tracking-[0.2em]">
+
+                <div class="flex items-center gap-2">
+                    <span class="text-primary">></span>
+                    <span>SYSTEM.UPTIME: <span class="text-zinc-300">+10 ANOS DE LUTA</span></span>
+                </div>
+
+                <span class="hidden lg:block text-border">|</span>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-primary">></span>
+                    <span>FOCO: <span class="text-zinc-300">DIREITOS DO TRABALHADOR & GIG ECONOMY</span></span>
+                </div>
+
+                <span class="hidden lg:block text-border">|</span>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-primary">></span>
+                    <span>STATUS: <span class="text-[#0bda6f] drop-shadow-[0_0_4px_rgba(11,218,111,0.5)]">JURISPRUDÊNCIA
+                            ATIVA</span></span>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>

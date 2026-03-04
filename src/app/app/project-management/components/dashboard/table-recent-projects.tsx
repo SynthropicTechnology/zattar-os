@@ -123,6 +123,7 @@ const columns: ColumnDef<Projeto>[] = [
 ];
 
 export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
@@ -163,7 +164,15 @@ export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      router.push(
+                        `/app/project-management/projects/${row.original.id}`
+                      )
+                    }
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(
@@ -189,7 +198,8 @@ export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
         </div>
         <div className="flex items-center justify-end space-x-2 pt-4">
           <div className="text-muted-foreground flex-1 text-sm">
-            {table.getRowModel().rows.length} de {projetos.length} projetos
+            Página {table.getState().pagination.pageIndex + 1} de{" "}
+            {table.getPageCount()} ({projetos.length} projetos)
           </div>
           <div className="space-x-2">
             <Button

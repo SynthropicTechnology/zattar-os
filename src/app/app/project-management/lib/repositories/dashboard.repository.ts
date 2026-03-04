@@ -203,32 +203,39 @@ export async function getProjetosPorPeriodo(
   try {
     const db = createDbClient();
     const now = new Date();
-    const results: ProjetosPorPeriodo[] = [];
 
-    for (let i = meses - 1; i >= 0; i--) {
+    // Build month ranges
+    const months = Array.from({ length: meses }, (_, idx) => {
+      const i = meses - 1 - idx;
       const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59);
+      return { monthStart, monthEnd };
+    });
 
-      const [criados, concluidos] = await Promise.all([
-        db
-          .from("pm_projetos")
-          .select("id", { count: "exact", head: true })
-          .gte("created_at", monthStart.toISOString())
-          .lte("created_at", monthEnd.toISOString()),
-        db
-          .from("pm_projetos")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "concluido")
-          .gte("data_conclusao", monthStart.toISOString())
-          .lte("data_conclusao", monthEnd.toISOString()),
-      ]);
+    // Execute all 2*meses queries in parallel (instead of sequential loop)
+    const allResults = await Promise.all(
+      months.map(({ monthStart, monthEnd }) =>
+        Promise.all([
+          db
+            .from("pm_projetos")
+            .select("id", { count: "exact", head: true })
+            .gte("created_at", monthStart.toISOString())
+            .lte("created_at", monthEnd.toISOString()),
+          db
+            .from("pm_projetos")
+            .select("id", { count: "exact", head: true })
+            .eq("status", "concluido")
+            .gte("data_conclusao", monthStart.toISOString())
+            .lte("data_conclusao", monthEnd.toISOString()),
+        ])
+      )
+    );
 
-      results.push({
-        data: monthStart.toISOString().split("T")[0],
-        criados: criados.count ?? 0,
-        concluidos: concluidos.count ?? 0,
-      });
-    }
+    const results: ProjetosPorPeriodo[] = allResults.map(([criados, concluidos], idx) => ({
+      data: months[idx].monthStart.toISOString().split("T")[0],
+      criados: criados.count ?? 0,
+      concluidos: concluidos.count ?? 0,
+    }));
 
     return ok(results);
   } catch (error) {
@@ -250,7 +257,8 @@ export async function getMembrosAtivos(limite: number = 6): Promise<Result<Membr
         responsavel:usuarios!pm_tarefas_responsavel_id_fkey(nome_completo, avatar_url)`
       )
       .eq("status", "concluido")
-      .not("responsavel_id", "is", null);
+      .not("responsavel_id", "is", null)
+      .limit(1000);
 
     if (error) {
       return err(appError("DATABASE_ERROR", error.message));

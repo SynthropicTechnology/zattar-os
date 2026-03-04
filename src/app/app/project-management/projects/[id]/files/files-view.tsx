@@ -10,8 +10,19 @@ import {
   Download,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { Anexo, Projeto } from "../../../lib/domain";
 import {
   actionUploadAnexo,
@@ -43,18 +54,47 @@ export function FilesView({
 }: FilesViewProps) {
   const [isPending, startTransition] = React.useTransition();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [deleteAnexoId, setDeleteAnexoId] = React.useState<string | null>(null);
+
+  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    const fileList = Array.from(files);
+    const oversized = fileList.filter((f) => f.size > MAX_FILE_SIZE);
+    if (oversized.length > 0) {
+      toast.error(
+        `Arquivo(s) excede(m) o limite de 50MB: ${oversized.map((f) => f.name).join(", ")}`
+      );
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
     startTransition(async () => {
-      for (const file of Array.from(files)) {
+      let successCount = 0;
+      let errorCount = 0;
+      for (const file of fileList) {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("projetoId", projeto.id);
-        formData.append("usuarioId", String(usuarioAtualId));
-        await actionUploadAnexo(formData);
+        const result = await actionUploadAnexo(formData);
+        if (result.success) {
+          successCount++;
+        } else {
+          errorCount++;
+          toast.error(
+            result.error?.message ?? `Erro ao enviar ${file.name}.`
+          );
+        }
+      }
+      if (successCount > 0) {
+        toast.success(
+          successCount === 1
+            ? "Arquivo enviado com sucesso."
+            : `${successCount} arquivos enviados com sucesso.`
+        );
       }
     });
 
@@ -65,7 +105,13 @@ export function FilesView({
 
   const handleDelete = (anexoId: string) => {
     startTransition(async () => {
-      await actionExcluirAnexo(anexoId, projeto.id);
+      const result = await actionExcluirAnexo(anexoId, projeto.id);
+      if (result.success) {
+        toast.success("Arquivo excluído com sucesso.");
+      } else {
+        toast.error(result.error?.message ?? "Erro ao excluir arquivo.");
+      }
+      setDeleteAnexoId(null);
     });
   };
 
@@ -89,6 +135,7 @@ export function FilesView({
             ref={fileInputRef}
             type="file"
             multiple
+            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.rar"
             className="hidden"
             onChange={handleUpload}
           />
@@ -155,7 +202,7 @@ export function FilesView({
                       variant="ghost"
                       size="icon"
                       className="text-destructive"
-                      onClick={() => handleDelete(anexo.id)}
+                      onClick={() => setDeleteAnexoId(anexo.id)}
                       disabled={isPending}
                     >
                       <Trash2 className="size-4" />
@@ -167,6 +214,31 @@ export function FilesView({
           </CardContent>
         </Card>
       )}
+
+      <AlertDialog
+        open={!!deleteAnexoId}
+        onOpenChange={(open) => !open && setDeleteAnexoId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir arquivo?</AlertDialogTitle>
+            <AlertDialogDescription>
+              O arquivo será removido permanentemente do projeto. Esta ação não
+              pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deleteAnexoId) handleDelete(deleteAnexoId);
+              }}
+            >
+              Sim, excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

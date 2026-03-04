@@ -48,8 +48,10 @@ export async function actionAtualizarTarefa(
 ): Promise<Result<Tarefa>> {
   const result = await taskService.atualizarTarefa(id, input, projetoId);
 
-  if (result.success && projetoId) {
-    revalidatePath(`${PM_PATH}/projects/${projetoId}`);
+  if (result.success) {
+    if (projetoId) {
+      revalidatePath(`${PM_PATH}/projects/${projetoId}`);
+    }
     revalidatePath(`${PM_PATH}/tasks`);
     revalidatePath(PM_PATH);
   }
@@ -57,10 +59,16 @@ export async function actionAtualizarTarefa(
   return result;
 }
 
-export async function actionExcluirTarefa(id: string): Promise<Result<void>> {
+export async function actionExcluirTarefa(
+  id: string,
+  projetoId?: string
+): Promise<Result<void>> {
   const result = await taskService.excluirTarefa(id);
 
   if (result.success) {
+    if (projetoId) {
+      revalidatePath(`${PM_PATH}/projects/${projetoId}`);
+    }
     revalidatePath(`${PM_PATH}/tasks`);
     revalidatePath(PM_PATH);
   }
@@ -71,5 +79,11 @@ export async function actionExcluirTarefa(id: string): Promise<Result<void>> {
 export async function actionReordenarKanban(
   items: UpdateKanbanOrderInput[]
 ): Promise<Result<void>> {
-  return taskService.reordenarKanban(items);
+  const result = await taskService.reordenarKanban(items);
+
+  if (result.success) {
+    revalidatePath(`${PM_PATH}/tasks`);
+  }
+
+  return result;
 }

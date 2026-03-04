@@ -17,7 +17,6 @@ import { AddReminderDialog } from "./add-reminder-dialog";
 
 interface RemindersProps {
   lembretes: Lembrete[];
-  usuarioId: number;
 }
 
 const PRIORIDADE_DOT_COLORS: Record<string, string> = {
@@ -82,13 +81,13 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
   );
 }
 
-export function Reminders({ lembretes, usuarioId }: RemindersProps) {
+export function Reminders({ lembretes }: RemindersProps) {
   return (
     <Card className="lg:col-span-2">
       <CardHeader>
         <CardTitle>Lembretes</CardTitle>
         <CardAction>
-          <AddReminderDialog usuarioId={usuarioId} />
+          <AddReminderDialog />
         </CardAction>
       </CardHeader>
       <CardContent>

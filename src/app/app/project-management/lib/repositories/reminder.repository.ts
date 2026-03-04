@@ -80,11 +80,12 @@ export async function saveLembrete(
 
 export async function toggleLembreteComplete(
   id: string,
-  concluido: boolean
+  concluido: boolean,
+  usuarioId: number
 ): Promise<Result<void>> {
   try {
     const db = createDbClient();
-    const { error } = await db.from(TABLE).update({ concluido }).eq("id", id);
+    const { error } = await db.from(TABLE).update({ concluido }).eq("id", id).eq("usuario_id", usuarioId);
 
     if (error) {
       return err(appError("DATABASE_ERROR", error.message));
@@ -98,10 +99,10 @@ export async function toggleLembreteComplete(
   }
 }
 
-export async function deleteLembrete(id: string): Promise<Result<void>> {
+export async function deleteLembrete(id: string, usuarioId: number): Promise<Result<void>> {
   try {
     const db = createDbClient();
-    const { error } = await db.from(TABLE).delete().eq("id", id);
+    const { error } = await db.from(TABLE).delete().eq("id", id).eq("usuario_id", usuarioId);
 
     if (error) {
       return err(appError("DATABASE_ERROR", error.message));

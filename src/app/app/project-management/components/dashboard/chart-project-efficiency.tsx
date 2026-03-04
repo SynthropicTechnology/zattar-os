@@ -64,7 +64,23 @@ export function ChartProjectEfficiency({
     [data]
   );
 
-  if (data.length === 0) return null;
+  if (data.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardDescription>Distribuição por Status</CardDescription>
+          <CardTitle className="font-display text-xl">
+            Eficiência dos Projetos
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-12">
+          <p className="text-muted-foreground text-sm">
+            Nenhum dado disponível.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card data-chart={id}>
