@@ -46,6 +46,7 @@ export default function ConfigurarEmailPage() {
   const user = useUser();
 
   // Form state
+  const [nomeConta, setNomeConta] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -74,6 +75,7 @@ export default function ConfigurarEmailPage() {
         if (data.configured && data.accounts?.length > 0) {
           const first = data.accounts[0];
           setIsConfigured(true);
+          setNomeConta(first.nome_conta || "");
           setEmail(first.imap_user);
           setImapHost(first.imap_host);
           setImapPort(String(first.imap_port));
@@ -93,6 +95,7 @@ export default function ConfigurarEmailPage() {
 
   const buildPayload = useCallback(() => {
     return {
+      nome_conta: nomeConta.trim() || undefined,
       imap_host: imapHost || CLOUDRON_DEFAULTS.imap_host,
       imap_port: Number(imapPort) || CLOUDRON_DEFAULTS.imap_port,
       imap_user: email,
@@ -102,7 +105,7 @@ export default function ConfigurarEmailPage() {
       smtp_user: email,
       smtp_pass: password,
     };
-  }, [email, password, imapHost, imapPort, smtpHost, smtpPort]);
+  }, [nomeConta, email, password, imapHost, imapPort, smtpHost, smtpPort]);
 
   const handleTest = useCallback(async () => {
     if (!email || !password) {
@@ -213,6 +216,19 @@ export default function ConfigurarEmailPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="nome-conta">Nome da conta</Label>
+            <Input
+              id="nome-conta"
+              placeholder="Ex: Pessoal, Trabalho, Escritório"
+              value={nomeConta}
+              onChange={(e) => setNomeConta(e.target.value)}
+            />
+            <p className="text-muted-foreground text-xs">
+              Nome exibido na sidebar para identificar esta caixa de entrada.
+            </p>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>
             <Input
