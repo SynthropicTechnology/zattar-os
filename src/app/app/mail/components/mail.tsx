@@ -112,7 +112,7 @@ export function Mail({
         onLayout={(layout: number[]) => {
           document.cookie = `${cookieID}=${JSON.stringify(layout)}; path=/;`;
         }}
-        className="items-stretch">
+        className="h-full items-stretch">
         <ResizablePanel
           id="left-panel"
           hidden={isMobile}
