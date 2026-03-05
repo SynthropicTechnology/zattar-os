@@ -17,34 +17,10 @@ interface AudienciasParams {
   credencial_ids: number[];
   dataInicio?: string;
   dataFim?: string;
-  /** @deprecated Use statusAudiencias */
-  status?: StatusAudiencia;
-  statusAudiencias?: StatusAudiencia[];
+  statusAudiencias: StatusAudiencia[];
 }
 
 const STATUS_VALIDOS: StatusAudiencia[] = ['C', 'M', 'F'];
-
-/**
- * Normaliza os status de audiência: aceita tanto o campo legado `status` (string)
- * quanto o novo `statusAudiencias` (array). Retorna array ordenado e validado.
- */
-function normalizarStatusAudiencias(
-  statusAudiencias?: StatusAudiencia[],
-  statusUnico?: StatusAudiencia
-): StatusAudiencia[] {
-  const candidatos = statusAudiencias && Array.isArray(statusAudiencias)
-    ? statusAudiencias
-    : (statusUnico ? [statusUnico] : []);
-  const valores: StatusAudiencia[] = candidatos.length > 0 ? candidatos : ['M'];
-  const invalidos = valores.filter((v) => !STATUS_VALIDOS.includes(v));
-
-  if (invalidos.length > 0) {
-    throw new Error(`status/statusAudiencias inválido(s): ${invalidos.join(', ')}`);
-  }
-
-  const unicos = Array.from(new Set(valores));
-  return unicos.sort((a, b) => STATUS_VALIDOS.indexOf(a) - STATUS_VALIDOS.indexOf(b));
-}
 
 /**
  * @swagger
@@ -67,9 +43,8 @@ function normalizarStatusAudiencias(
  *       - Formato das datas: YYYY-MM-DD
  *
  *       **Status de audiência:**
- *       - Aceita `statusAudiencias` (array) para capturar múltiplos status sequencialmente na mesma sessão
- *       - Aceita `status` (string) para compatibilidade com chamadas anteriores
- *       - Se nenhum informado, usa 'M' (Designada) como padrão
+ *       - `statusAudiencias` (array) permite capturar múltiplos status sequencialmente na mesma sessão
+ *       - Valores: C (Cancelada), M (Designada), F (Realizada)
  *     tags:
  *       - Captura TRT
  *     security:
@@ -102,10 +77,6 @@ function normalizarStatusAudiencias(
  *                 type: string
  *                 format: date
  *                 description: Data final do período de busca (YYYY-MM-DD). Se não fornecida, usa hoje + 365 dias.
- *               status:
- *                 type: string
- *                 enum: [M, C, F]
- *                 description: (Legado) Status único da audiência. Use statusAudiencias de preferência.
  *               statusAudiencias:
  *                 type: array
  *                 items:
@@ -223,7 +194,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const { advogado_id, credencial_ids, dataInicio, dataFim, status, statusAudiencias } = body as AudienciasParams;
+    const { advogado_id, credencial_ids, dataInicio, dataFim, statusAudiencias } = body as AudienciasParams;
 
     // Validações básicas
     if (!advogado_id || !credencial_ids || !Array.isArray(credencial_ids) || credencial_ids.length === 0) {
@@ -233,16 +204,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Normalizar status de audiências (permite campo legado ou lista)
-    let statusParaExecutar: StatusAudiencia[];
-    try {
-      statusParaExecutar = normalizarStatusAudiencias(statusAudiencias, status);
-    } catch (error) {
+    if (!statusAudiencias || !Array.isArray(statusAudiencias) || statusAudiencias.length === 0) {
       return NextResponse.json(
-        { error: { code: 'BAD_REQUEST', message: error instanceof Error ? error.message : 'Status de audiência inválido' } },
+        { error: { code: 'BAD_REQUEST', message: 'Missing required parameter: statusAudiencias (array não vazio)' } },
         { status: 400 }
       );
     }
+
+    const invalidos = statusAudiencias.filter((v) => !STATUS_VALIDOS.includes(v));
+    if (invalidos.length > 0) {
+      return NextResponse.json(
+        { error: { code: 'BAD_REQUEST', message: `statusAudiencias inválido(s): ${invalidos.join(', ')}` } },
+        { status: 400 }
+      );
+    }
+
+    const statusParaExecutar = [...new Set(statusAudiencias)].sort(
+      (a, b) => STATUS_VALIDOS.indexOf(a) - STATUS_VALIDOS.indexOf(b)
+    );
 
     // 3. Buscar credenciais completas por IDs
     const credenciaisCompletas = await Promise.all(

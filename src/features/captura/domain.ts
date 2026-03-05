@@ -337,21 +337,12 @@ export interface CapturaPartesParams extends BaseCapturaParams {
   numeros_processo?: string[];
 }
 
-/**
- * Código de situação de audiência: M=Designada, C=Cancelada, F=Realizada
- */
 export type StatusAudiencia = 'M' | 'C' | 'F';
 
-/**
- * Parâmetros para captura de audiências
- */
 export interface AudienciasParams extends BaseCapturaParams {
   dataInicio?: string;
   dataFim?: string;
-  /** @deprecated Use statusAudiencias */
-  status?: StatusAudiencia;
-  /** Lista de status para capturar sequencialmente */
-  statusAudiencias?: StatusAudiencia[];
+  statusAudiencias: StatusAudiencia[];
 }
 
 /**
