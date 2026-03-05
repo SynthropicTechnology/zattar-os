@@ -41,44 +41,37 @@ export class CallsRepository {
    */
   async saveChamada(input: Partial<Chamada>): Promise<Result<Chamada, Error>> {
     try {
-      const snakeInput = fromCamelToSnake(input);
-      console.log("[DEBUG saveChamada] payload:", JSON.stringify(snakeInput));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const snakeInput = fromCamelToSnake(input) as any;
+      const meetingIdValue = snakeInput.meeting_id as string;
 
-      // Teste 1: INSERT sem RETURNING (testa só a INSERT policy)
-      const { error: insertOnlyError } = await this.supabase
+      // INSERT sem RETURNING para evitar conflito com SELECT RLS policy
+      const { error: insertError } = await this.supabase
         .from("chamadas")
         .insert(snakeInput);
 
-      if (insertOnlyError) {
-        console.error("[DEBUG saveChamada] INSERT puro falhou:", JSON.stringify({
-          message: insertOnlyError.message,
-          code: insertOnlyError.code,
-          details: insertOnlyError.details,
-          hint: insertOnlyError.hint,
+      if (insertError) {
+        console.error("Erro saveChamada INSERT:", JSON.stringify({
+          message: insertError.message,
+          code: insertError.code,
+          details: insertError.details,
+          hint: insertError.hint,
         }, null, 2));
         return err(
           new Error(
-            `Erro ao criar chamada: ${insertOnlyError.message || "Erro desconhecido"}`
+            `Erro ao criar chamada: ${insertError.message || "Erro desconhecido"}`
           )
         );
       }
 
-      console.log("[DEBUG saveChamada] INSERT puro OK! Buscando row...");
-
-      // Se INSERT puro funcionar, buscar a row pelo meeting_id
+      // Buscar a row inserida pelo meeting_id (unique index)
       const { data, error: selectError } = await this.supabase
         .from("chamadas")
         .select()
-        .eq("meeting_id", snakeInput.meeting_id)
+        .eq("meeting_id", meetingIdValue)
         .single();
 
       if (selectError) {
-        console.error("[DEBUG saveChamada] SELECT após INSERT falhou:", JSON.stringify({
-          message: selectError.message,
-          code: selectError.code,
-          details: selectError.details,
-          hint: selectError.hint,
-        }, null, 2));
         return err(new Error(`Chamada criada mas erro ao recuperar: ${selectError.message}`));
       }
 

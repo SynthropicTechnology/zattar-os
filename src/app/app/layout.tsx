@@ -30,6 +30,10 @@ const AUTH_ROUTES = [
   "/app/error",
 ]
 
+const MINIMAL_ROUTES = [
+  "/app/chat/call",
+]
+
 function DashboardHeader() {
   const { open, setOpen } = useChatContext()
 
@@ -79,6 +83,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (isAuthRoute) {
     return <div className="min-h-svh bg-background">{children}</div>
+  }
+
+  const isMinimalRoute = MINIMAL_ROUTES.some(route => pathname?.startsWith(route))
+  if (isMinimalRoute) {
+    return <>{children}</>
   }
 
   return (

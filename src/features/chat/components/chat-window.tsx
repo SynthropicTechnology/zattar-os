@@ -1,21 +1,11 @@
 "use client";
 
-import { useEffect, useState, Suspense, lazy, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import useChatStore from "./useChatStore";
 import { ChatHeader } from "./chat-header";
 import { ChatContent } from "./chat-content";
 import { ChatFooter } from "./chat-footer";
 import { IncomingCallDialog } from "./incoming-call-dialog";
-import { MeetingSkeleton } from "./meeting-skeleton";
-
-// Lazy load heavy call components
-const VideoCallDialog = lazy(() =>
-  import('./video-call-dialog').then(m => ({ default: m.VideoCallDialog }))
-);
-
-const CallDialog = lazy(() =>
-  import('./call-dialog').then(m => ({ default: m.CallDialog }))
-);
 import { CallSetupDialog } from "./call-setup-dialog";
 import { UserDetailSheet } from "./user-detail-sheet";
 import { useChatSubscription } from "../hooks/use-chat-subscription";
@@ -23,7 +13,7 @@ import { useTypingIndicator } from "../hooks/use-typing-indicator";
 import { useCallNotifications } from "../hooks/use-call-notifications";
 import { actionEnviarMensagem, actionBuscarHistorico } from "../actions/chat-actions";
 import { actionIniciarChamada } from "../actions/chamadas-actions";
-import type { MensagemComUsuario, MensagemChat, ChatMessageData, SelectedDevices, PaginatedResponse, UsuarioChat } from "../domain";
+import type { MensagemComUsuario, MensagemChat, ChatMessageData, PaginatedResponse, UsuarioChat, SelectedDevices } from "../domain";
 import { TipoChamada } from "../domain";
 import { useUsuarios } from "@/features/usuarios/hooks/use-usuarios";
 import { toast } from "sonner";
@@ -31,13 +21,6 @@ import { toast } from "sonner";
 interface ChatWindowProps {
   currentUserId: number;
   currentUserName: string;
-}
-
-interface ActiveCallState {
-  chamadaId: number;
-  authToken: string;
-  type: TipoChamada;
-  isInitiator?: boolean;
 }
 
 export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) {
@@ -66,15 +49,10 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
     return usuariosMap.get(userId);
   }, [usuariosMap]);
 
-  // States for Call Dialogs
-  const [videoCallOpen, setVideoCallOpen] = useState(false);
-  const [audioCallOpen, setAudioCallOpen] = useState(false);
-  const [activeCall, setActiveCall] = useState<ActiveCallState | null>(null);
-
   // States for Setup Dialog
   const [setupDialogOpen, setSetupDialogOpen] = useState(false);
   const [setupCallType, setSetupCallType] = useState<TipoChamada>(TipoChamada.Video);
-  const [selectedDevices, setSelectedDevices] = useState<SelectedDevices | undefined>(undefined);
+  const callWindowRef = useRef<Window | null>(null);
 
   // Notifications Hook
   const {
@@ -83,8 +61,6 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
     rejectCall,
     notifyCallStart,
     notifyCallEnded,
-    notifyScreenshareStart,
-    notifyScreenshareStop
   } = useCallNotifications({
     salaId: selectedChat?.id || 0,
     currentUserId,
@@ -212,35 +188,80 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
     setSetupDialogOpen(true);
   };
 
+  const openCallWindow = useCallback((params: {
+    chamadaId: number;
+    authToken: string;
+    tipo: TipoChamada;
+    salaNome: string;
+    isInitiator: boolean;
+    devices?: SelectedDevices;
+  }) => {
+    // Store sensitive data in sessionStorage (not URL)
+    sessionStorage.setItem("call_auth_token", params.authToken);
+    if (params.devices) {
+      sessionStorage.setItem("call_selected_devices", JSON.stringify(params.devices));
+    }
+
+    const searchParams = new URLSearchParams({
+      chamadaId: String(params.chamadaId),
+      tipo: params.tipo,
+      salaNome: params.salaNome,
+      isInitiator: String(params.isInitiator),
+    });
+
+    const width = params.tipo === TipoChamada.Video ? 1024 : 480;
+    const height = params.tipo === TipoChamada.Video ? 720 : 640;
+    const left = Math.round((screen.width - width) / 2);
+    const top = Math.round((screen.height - height) / 2);
+
+    const callWindow = window.open(
+      `/app/chat/call?${searchParams.toString()}`,
+      `call_${params.chamadaId}`,
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,status=no`
+    );
+
+    callWindowRef.current = callWindow;
+  }, []);
+
+  // Listen for call_ended messages from the call window
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === "call_ended") {
+        const { chamadaId, isInitiator } = event.data;
+        if (isInitiator && chamadaId) {
+          notifyCallEnded(chamadaId);
+        }
+        callWindowRef.current = null;
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [notifyCallEnded]);
+
   const handleJoinFromSetup = async (devices: SelectedDevices) => {
     if (!selectedChat) return;
-    
-    setSelectedDevices(devices);
-    // Setup dialog will be closed by its onOpenChange prop logic or here if needed, 
-    // but usually we close it after success or let the dialog handle it.
-    // The dialog logic calls this then closes itself via prop or we close it here.
-    // Let's close it here to be sure.
     setSetupDialogOpen(false);
 
     const tipo = setupCallType;
 
     try {
       const result = await actionIniciarChamada(selectedChat.id, tipo);
-      
+
       if (result.success && result.data) {
         const { chamadaId, meetingId, authToken } = result.data;
-        
-        // Broadcast notification
+
         await notifyCallStart(chamadaId, tipo, meetingId);
-        
-        // Set active call state
-        setActiveCall({ chamadaId, authToken, type: tipo, isInitiator: true });
-        
-        if (tipo === TipoChamada.Video) {
-          setVideoCallOpen(true);
-        } else {
-          setAudioCallOpen(true);
-        }
+
+        openCallWindow({
+          chamadaId,
+          authToken,
+          tipo,
+          salaNome: selectedChat.name || "Chat",
+          isInitiator: true,
+          devices,
+        });
       } else if (!result.success) {
         console.error("Erro ao iniciar chamada:", result.error || result.message);
         toast.error("Erro ao iniciar chamada", {
@@ -253,22 +274,17 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
   };
 
   const handleAcceptIncomingCall = async () => {
-    if (!incomingCall) return;
-    
+    if (!incomingCall || !selectedChat) return;
+
     const result = await acceptCall();
     if (result) {
-      setActiveCall({
+      openCallWindow({
         chamadaId: incomingCall.chamadaId,
         authToken: result.authToken,
-        type: incomingCall.tipo,
-        isInitiator: false
+        tipo: incomingCall.tipo,
+        salaNome: selectedChat.name || "Chat",
+        isInitiator: false,
       });
-      
-      if (incomingCall.tipo === TipoChamada.Video) {
-        setVideoCallOpen(true);
-      } else {
-        setAudioCallOpen(true);
-      }
     }
   };
 
@@ -311,38 +327,6 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         salaNome={selectedChat.name || "Chat"}
         onJoinCall={handleJoinFromSetup}
       />
-
-      <Suspense fallback={<MeetingSkeleton />}>
-        <VideoCallDialog 
-          open={videoCallOpen} 
-          onOpenChange={setVideoCallOpen}
-          salaId={selectedChat.id}
-          salaNome={selectedChat.name || "Chat"}
-          chamadaId={activeCall?.chamadaId}
-          initialAuthToken={activeCall?.type === TipoChamada.Video ? activeCall.authToken : undefined}
-          isInitiator={activeCall?.isInitiator}
-          selectedDevices={selectedDevices}
-          onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
-          onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
-          onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
-        />
-      </Suspense>
-
-      <Suspense fallback={<MeetingSkeleton />}>
-        <CallDialog 
-          open={audioCallOpen} 
-          onOpenChange={setAudioCallOpen}
-          salaId={selectedChat.id}
-          salaNome={selectedChat.name || "Chat"}
-          chamadaId={activeCall?.chamadaId}
-          initialAuthToken={activeCall?.type === TipoChamada.Audio ? activeCall.authToken : undefined}
-          isInitiator={activeCall?.isInitiator}
-          selectedDevices={selectedDevices}
-          onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
-          onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
-          onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
-        />
-      </Suspense>
 
       <IncomingCallDialog 
         open={!!incomingCall}

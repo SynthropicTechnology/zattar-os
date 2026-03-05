@@ -23,18 +23,6 @@ export async function actionIniciarChamada(
 
     const service = await createChatService();
 
-    // DEBUG: Verificar estado do auth no client Supabase usado pelo service
-    {
-      const { createClient } = await import('@/lib/supabase/server');
-      const debugClient = await createClient();
-      const { data: { user: authUser } } = await debugClient.auth.getUser();
-      const { data: dbUserId } = await debugClient.rpc('get_current_user_id');
-      console.log('[DEBUG chamada] auth.getUser():', authUser?.id ?? 'NULL');
-      console.log('[DEBUG chamada] get_current_user_id():', dbUserId);
-      console.log('[DEBUG chamada] user.id from getCurrentUser():', user.id);
-      console.log('[DEBUG chamada] Match?', dbUserId === user.id);
-    }
-
     // Buscar sala para usar nome
     const salaResult = await service.buscarSala(salaId);
     if (salaResult.isErr()) return { success: false, message: 'Sala não encontrada', error: salaResult.error.message };
