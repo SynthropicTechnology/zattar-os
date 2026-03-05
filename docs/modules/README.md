@@ -8,9 +8,9 @@ Este documento acompanha o estado real de `src/features/` e da documentação em
 ## Resumo (2026-02-26)
 
 <!-- AUTO-GENERATED:START -->
-- Módulos em `src/features`: **37**
+- Módulos em `src/features`: **38**
 - Pastas em `docs/modules`: **38**
-- Módulos sem pasta em `docs/modules`: nenhum
+- Módulos sem pasta em `docs/modules`: `agenda-eventos`
 - Pasta sem módulo correspondente em `src/features`: `assinatura-digital`
 
 ## Classificação estrutural dos módulos
@@ -18,21 +18,21 @@ Este documento acompanha o estado real de `src/features/` e da documentação em
 Critério de módulo **completo**: `domain.ts` + `service.ts` + `repository.ts` + `index.ts` + `actions/` + `components/`.
 
 - ✅ **Completos (18)**: `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios`
-- ⚠️ **Parciais (13)**: `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`
+- ⚠️ **Parciais (14)**: `agenda-eventos`, `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`
 - 🧩 **Iniciais (6)**: `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`
 
 ## Cobertura de artefatos por módulo
 
 | Artefato              | Cobertura |
 | --------------------- | --------- |
-| `index.ts`            | 36/37     |
-| `components/`         | 31/37     |
-| `domain.ts`           | 29/37     |
-| `actions/`            | 28/37     |
-| `service.ts`          | 27/37     |
-| `repository.ts`       | 24/37     |
-| `RULES.md`            | 9/37      |
-| `README.md` no módulo | 6/37      |
+| `index.ts`            | 37/38     |
+| `components/`         | 30/38     |
+| `domain.ts`           | 30/38     |
+| `actions/`            | 29/38     |
+| `service.ts`          | 28/38     |
+| `repository.ts`       | 25/38     |
+| `RULES.md`            | 9/38      |
+| `README.md` no módulo | 6/38      |
 
 ## Documentação funcional disponível
 
@@ -91,5 +91,6 @@ Scripts úteis (quando aplicável) no `package.json`:
 - `npm run test:pericias`
 
 E2E (Playwright): `npm run test:e2e` (docs: `../../src/testing/e2e/README.md`).
+
 
 

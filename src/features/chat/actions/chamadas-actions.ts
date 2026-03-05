@@ -119,8 +119,9 @@ export async function actionResponderChamada(
     };
 
   } catch (error) {
-    console.error('Erro actionResponderChamada:', error);
-    return { success: false, message: 'Erro ao responder chamada', error: String(error) };
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Erro actionResponderChamada:', errorMessage, error);
+    return { success: false, message: `Erro ao responder chamada: ${errorMessage}`, error: errorMessage };
   }
 }
 

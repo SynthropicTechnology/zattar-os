@@ -112,18 +112,34 @@ export async function addParticipant(meetingId: string, name: string, preset_nam
     finalPresetName = 'group_call_with_transcription';
   }
 
-  const response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
+  const participantData = {
+    name,
+    preset_name: finalPresetName,
+    custom_participant_id: name.replace(/\s+/g, '_').toLowerCase() + '_' + Date.now(),
+  };
+
+  let response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': await getAuthHeader(),
     },
-    body: JSON.stringify({
-      name,
-      preset_name: finalPresetName,
-      custom_participant_id: name.replace(/\s+/g, '_').toLowerCase() + '_' + Date.now(),
-    }),
+    body: JSON.stringify(participantData),
   });
+
+  // Fallback: if transcription preset fails, retry with default preset
+  if (!response.ok && finalPresetName !== preset_name) {
+    console.warn(`Dyte preset '${finalPresetName}' failed (${response.status}), falling back to '${preset_name}'`);
+    participantData.preset_name = preset_name;
+    response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': await getAuthHeader(),
+      },
+      body: JSON.stringify(participantData),
+    });
+  }
 
   if (!response.ok) {
     const errorText = await response.text();

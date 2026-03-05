@@ -21,6 +21,54 @@ interface IncomingCallDialogProps {
   onReject: () => Promise<void>;
 }
 
+// Generates a ringtone pattern using Web Audio API (no external file needed)
+function createRingtone(audioCtx: AudioContext): { start: () => void; stop: () => void } {
+  let intervalId: ReturnType<typeof setInterval> | null = null;
+  let currentOscillator: OscillatorNode | null = null;
+  let currentGain: GainNode | null = null;
+
+  const playTone = () => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    // Two-tone ring pattern (similar to phone ring)
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(480, audioCtx.currentTime + 0.2);
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.8);
+
+    currentOscillator = osc;
+    currentGain = gain;
+  };
+
+  return {
+    start: () => {
+      playTone();
+      // Ring pattern: 0.8s tone, 1.2s silence (2s cycle)
+      intervalId = setInterval(playTone, 2000);
+    },
+    stop: () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      if (currentOscillator) {
+        try { currentOscillator.stop(); } catch { /* already stopped */ }
+        currentOscillator = null;
+      }
+      if (currentGain) {
+        currentGain.disconnect();
+        currentGain = null;
+      }
+    },
+  };
+}
+
 export function IncomingCallDialog({
   open,
   callData,
@@ -28,24 +76,36 @@ export function IncomingCallDialog({
   onReject,
 }: IncomingCallDialogProps) {
   const [isProcessing, setIsProcessing] = React.useState(false);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const audioCtxRef = React.useRef<AudioContext | null>(null);
+  const ringtoneRef = React.useRef<{ start: () => void; stop: () => void } | null>(null);
 
   // Play ringtone when open
   React.useEffect(() => {
-    if (open && !audioRef.current) {
-      audioRef.current = new Audio('/sounds/ringtone.mp3'); // Ensure this file exists or use a default URL
-      audioRef.current.loop = true;
-      audioRef.current.play().catch(err => console.error('Error playing ringtone:', err));
-    } else if (!open && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      audioRef.current = null;
+    if (open) {
+      try {
+        const ctx = new AudioContext();
+        audioCtxRef.current = ctx;
+        const ringtone = createRingtone(ctx);
+        ringtoneRef.current = ringtone;
+        ringtone.start();
+      } catch (err) {
+        console.error('Error creating ringtone:', err);
+      }
+    } else {
+      ringtoneRef.current?.stop();
+      ringtoneRef.current = null;
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {});
+        audioCtxRef.current = null;
+      }
     }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      ringtoneRef.current?.stop();
+      ringtoneRef.current = null;
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {});
+        audioCtxRef.current = null;
       }
     };
   }, [open]);
@@ -63,14 +123,14 @@ export function IncomingCallDialog({
 
   const handleAccept = async () => {
     setIsProcessing(true);
-    if (audioRef.current) audioRef.current.pause();
+    ringtoneRef.current?.stop();
     await onAccept();
     setIsProcessing(false);
   };
 
   const handleReject = async () => {
     setIsProcessing(true);
-    if (audioRef.current) audioRef.current.pause();
+    ringtoneRef.current?.stop();
     await onReject();
     setIsProcessing(false);
   };
