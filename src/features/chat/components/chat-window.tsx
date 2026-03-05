@@ -276,15 +276,46 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
   const handleAcceptIncomingCall = async () => {
     if (!incomingCall || !selectedChat) return;
 
+    // Capturar dados antes de qualquer operação async (clearCall() vai limpar incomingCall)
+    const callData = { ...incomingCall };
+    const salaNome = selectedChat.name || "Chat";
+
+    // Abrir janela IMEDIATAMENTE no contexto do clique do usuário
+    // para evitar bloqueio de popup pelo navegador
+    const tipo = callData.tipo;
+    const width = tipo === TipoChamada.Video ? 1024 : 480;
+    const height = tipo === TipoChamada.Video ? 720 : 640;
+    const left = Math.round((screen.width - width) / 2);
+    const top = Math.round((screen.height - height) / 2);
+
+    const searchParams = new URLSearchParams({
+      chamadaId: String(callData.chamadaId),
+      tipo,
+      salaNome,
+      isInitiator: "false",
+    });
+
+    const callWindow = window.open(
+      `/app/chat/call?${searchParams.toString()}`,
+      `call_${callData.chamadaId}`,
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,status=no`
+    );
+    callWindowRef.current = callWindow;
+
+    // Agora fazer a operação async (sem risco de popup blocker)
     const result = await acceptCall();
-    if (result) {
-      openCallWindow({
-        chamadaId: incomingCall.chamadaId,
-        authToken: result.authToken,
-        tipo: incomingCall.tipo,
-        salaNome: selectedChat.name || "Chat",
-        isInitiator: false,
-      });
+
+    if (result && callWindow && !callWindow.closed) {
+      // Enviar token para a janela de chamada via postMessage
+      callWindow.postMessage(
+        { type: "call_auth_token", authToken: result.authToken },
+        window.location.origin
+      );
+    } else if (callWindow && !callWindow.closed) {
+      // Falhou - fechar a janela
+      callWindow.close();
+      callWindowRef.current = null;
+      toast.error("Erro ao aceitar chamada");
     }
   };
 

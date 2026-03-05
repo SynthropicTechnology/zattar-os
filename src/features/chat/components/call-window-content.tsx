@@ -38,8 +38,9 @@ export function CallWindowContent({
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [selectedDevices, setSelectedDevices] = useState<SelectedDevices | undefined>(undefined);
 
-  // Read authToken and devices from sessionStorage on mount
+  // Read authToken from sessionStorage (initiator flow) or postMessage (acceptor flow)
   useEffect(() => {
+    // Tentar ler do sessionStorage primeiro (fluxo do iniciador)
     const token = sessionStorage.getItem("call_auth_token");
     const devicesJson = sessionStorage.getItem("call_selected_devices");
 
@@ -54,8 +55,19 @@ export function CallWindowContent({
       sessionStorage.removeItem("call_selected_devices");
     }
 
+    // Escutar postMessage para receber token (fluxo de quem aceita a chamada)
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === "call_auth_token" && event.data.authToken) {
+        setAuthToken(event.data.authToken);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+
     // Update page title
     document.title = `${tipo === "video" ? "Video" : "Audio"} - ${salaNome}`;
+
+    return () => window.removeEventListener("message", handleMessage);
   }, [tipo, salaNome]);
 
   const isVideo = tipo === "video";
@@ -251,13 +263,12 @@ export function CallWindowContent({
 
   if (!authToken && !error) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
-        <div className="text-center space-y-4">
-          <p className="text-lg text-gray-400">Token de autenticação não encontrado.</p>
-          <Button variant="outline" onClick={() => window.close()}>
-            Fechar
-          </Button>
-        </div>
+      <div className="h-screen w-screen bg-black text-white relative">
+        <CallLoadingState
+          stage="connecting"
+          message="Aguardando conexão..."
+          onCancel={() => window.close()}
+        />
       </div>
     );
   }

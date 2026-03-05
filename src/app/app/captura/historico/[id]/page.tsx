@@ -1,10 +1,21 @@
 import { notFound } from 'next/navigation';
 
 import { CapturaResult, type CapturaResultData } from '@/features/captura';
-import { buscarCapturaLog } from '@/features/captura/server';
+import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/features/captura/server';
+import { CapturaErrosFormatados } from '@/features/captura/components/captura-erros-formatados';
+import { CapturaRawLogs } from '@/features/captura/components/captura-raw-logs';
 import { PageShell } from '@/components/shared/page-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  ArrowLeft,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Timer,
+} from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -12,6 +23,51 @@ interface PageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+function StatusBadge({ status }: { status: string }) {
+  switch (status) {
+    case 'completed':
+      return (
+        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 hover:bg-green-100">
+          <CheckCircle2 className="mr-1 h-3 w-3" /> Concluida
+        </Badge>
+      );
+    case 'failed':
+      return (
+        <Badge variant="destructive">
+          <XCircle className="mr-1 h-3 w-3" /> Falhou
+        </Badge>
+      );
+    case 'in_progress':
+      return (
+        <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-100">
+          <Loader2 className="mr-1 h-3 w-3 animate-spin" /> Em Progresso
+        </Badge>
+      );
+    case 'pending':
+      return (
+        <Badge variant="secondary">
+          <Clock className="mr-1 h-3 w-3" /> Pendente
+        </Badge>
+      );
+    default:
+      return <Badge variant="outline">{status}</Badge>;
+  }
+}
+
+function calcularDuracao(inicio: string, fim: string | null): string | null {
+  if (!fim) return null;
+  const ms = new Date(fim).getTime() - new Date(inicio).getTime();
+  if (ms < 1000) return `${ms}ms`;
+  const segundos = Math.floor(ms / 1000);
+  if (segundos < 60) return `${segundos}s`;
+  const minutos = Math.floor(segundos / 60);
+  const segsRestantes = segundos % 60;
+  if (minutos < 60) return `${minutos}m ${segsRestantes}s`;
+  const horas = Math.floor(minutos / 60);
+  const minsRestantes = minutos % 60;
+  return `${horas}h ${minsRestantes}m ${segsRestantes}s`;
 }
 
 export default async function CapturaDetalhesPage({ params }: PageProps) {
@@ -22,11 +78,18 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
     notFound();
   }
 
-  const captura = await buscarCapturaLog(capturaId);
+  const [captura, rawLogs] = await Promise.all([
+    buscarCapturaLog(capturaId),
+    buscarLogsBrutoPorCapturaId(capturaId),
+  ]);
 
   if (!captura) {
     notFound();
   }
+
+  const duracao = calcularDuracao(captura.iniciado_em, captura.concluido_em);
+  const isFailed = captura.status === 'failed';
+  const isCompleted = captura.status === 'completed';
 
   return (
     <PageShell
@@ -40,45 +103,90 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
         </Button>
       }
     >
+      {/* Informacoes da Captura */}
       <Card>
         <CardHeader>
-          <CardTitle>Informações da Captura</CardTitle>
+          <CardTitle>Informacoes da Captura</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-1">
               <span className="text-sm font-medium text-muted-foreground">Status</span>
-              <p className="text-sm font-medium">{captura.status}</p>
+              <div><StatusBadge status={captura.status} /></div>
             </div>
             <div className="space-y-1">
               <span className="text-sm font-medium text-muted-foreground">Iniciado em</span>
               <p className="text-sm">{new Date(captura.iniciado_em).toLocaleString('pt-BR')}</p>
             </div>
             <div className="space-y-1">
-              <span className="text-sm font-medium text-muted-foreground">Concluído em</span>
+              <span className="text-sm font-medium text-muted-foreground">Concluido em</span>
               <p className="text-sm">
                 {captura.concluido_em ? new Date(captura.concluido_em).toLocaleString('pt-BR') : '-'}
               </p>
             </div>
+            {duracao && (
+              <div className="space-y-1">
+                <span className="text-sm font-medium text-muted-foreground">Duracao</span>
+                <p className="text-sm flex items-center gap-1">
+                  <Timer className="h-3.5 w-3.5 text-muted-foreground" />
+                  {duracao}
+                </p>
+              </div>
+            )}
           </div>
-
-          <CapturaResult
-            success={captura.status === 'completed'}
-            error={captura.erro || undefined}
-            data={captura.resultado as CapturaResultData}
-            captureId={captura.id}
-          />
-
-          {captura.resultado && (
-            <div className="mt-6">
-              <h3 className="text-lg font-medium mb-2">Dados Brutos</h3>
-              <pre className="p-4 rounded-lg bg-muted overflow-auto max-h-125 text-xs">
-                {JSON.stringify(captura.resultado, null, 2)}
-              </pre>
-            </div>
-          )}
         </CardContent>
       </Card>
+
+      {/* Resultado / Erros */}
+      {isCompleted && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Resultado</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CapturaResult
+              success={true}
+              data={captura.resultado as CapturaResultData}
+              captureId={captura.id}
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      {isFailed && captura.erro && (
+        <CapturaErrosFormatados erro={captura.erro} />
+      )}
+
+      {/* Tabs: Logs Detalhados + Dados Brutos */}
+      <Tabs defaultValue="logs" className="w-full">
+        <TabsList>
+          <TabsTrigger value="logs">
+            Logs Detalhados
+            {rawLogs.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">
+                {rawLogs.length}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="dados-brutos">Dados Brutos</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="logs" className="mt-4">
+          <CapturaRawLogs rawLogs={rawLogs} />
+        </TabsContent>
+
+        <TabsContent value="dados-brutos" className="mt-4">
+          {captura.resultado ? (
+            <pre className="p-4 rounded-lg bg-muted overflow-auto max-h-125 text-xs">
+              {JSON.stringify(captura.resultado, null, 2)}
+            </pre>
+          ) : (
+            <div className="rounded-md border p-6 text-center text-sm text-muted-foreground">
+              Nenhum dado disponivel.
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </PageShell>
   );
 }

@@ -43,6 +43,9 @@ export { capturarPartesProcesso, type ProcessoParaCaptura } from './services/par
 // Log Persistence Service (Supabase service key)
 export { buscarCapturaLog } from './services/persistence/captura-log-persistence.service';
 
+// Raw Log Persistence Service (logs brutos por tribunal/grau)
+export { buscarLogsBrutoPorCapturaId, contarLogsBrutoPorStatus } from './services/persistence/captura-raw-log.service';
+
 // Comunica CNJ (server-only)
 export * from './comunica-cnj/domain';
 export * from './comunica-cnj/cnj-client';

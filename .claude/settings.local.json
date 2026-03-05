@@ -29,7 +29,8 @@
       "WebFetch(domain:www.answeroverflow.com)",
       "WebFetch(domain:docs.cloudron.io)",
       "WebFetch(domain:blog.cloudron.io)",
-      "WebFetch(domain:cloudron.io)"
+      "WebFetch(domain:cloudron.io)",
+      "WebSearch"
     ]
   },
   "enableAllProjectMcpServers": true,
