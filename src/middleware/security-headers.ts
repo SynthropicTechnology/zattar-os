@@ -39,7 +39,7 @@ const TRUSTED_DOMAINS = {
   // AI Services
   ai: ["https://api.openai.com", "https://api.cohere.ai"],
   // Dyte - Video Calls
-  dyte: ["https://api.dyte.io", "https://dyte.io", "https://*.dyte.io"],
+  dyte: ["https://api.dyte.io", "https://dyte.io", "https://*.dyte.io", "wss://*.dyte.io"],
   // Images
   images: ["https://images.unsplash.com"],
   // Chatwoot

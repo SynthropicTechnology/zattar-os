@@ -65,7 +65,7 @@ export function CustomMeetingUI({
   audioOnly = false,
   canRecord = false,
 }: CustomMeetingUIProps) {
-  const [layout, setLayout] = useLocalStorage<LayoutType>('call-layout', 'grid');
+  const [layout, setLayout] = useLocalStorage<LayoutType>('call-layout-pref', 'grid');
   const [showParticipants, setShowParticipants] = useState(false);
   const [showConsentDialog, setShowConsentDialog] = useState(false);
 
