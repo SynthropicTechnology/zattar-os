@@ -25,15 +25,6 @@ import {
   ItalicIcon,
   UnderlineIcon,
   StrikethroughIcon,
-  ListIcon,
-  ListOrderedIcon,
-  LinkIcon,
-  AlignLeftIcon,
-  AlignCenterIcon,
-  AlignRightIcon,
-  QuoteIcon,
-  Undo2Icon,
-  Redo2Icon,
 } from 'lucide-react';
 
 import { ParagraphElement } from '@/components/editor/plate-ui/paragraph-node';
@@ -196,9 +187,9 @@ function MailEditorContent({
     () => ({
       getHtml: () => {
         // Serialize editor content to simple HTML
-        const serializeNode = (node: any): string => {
+        const serializeNode = (node: Record<string, unknown>): string => {
           if ('text' in node) {
-            let text = node.text || '';
+            let text = (node.text as string) || '';
             if (!text) return '';
             // Escape HTML
             text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -209,7 +200,7 @@ function MailEditorContent({
             return text;
           }
 
-          const children = (node.children || []).map(serializeNode).join('');
+          const children = ((node.children as Record<string, unknown>[]) || []).map(serializeNode).join('');
 
           switch (node.type) {
             case 'p': {
@@ -231,9 +222,9 @@ function MailEditorContent({
       },
       getText: () => {
         // Extract plain text
-        const extractText = (node: any): string => {
-          if ('text' in node) return node.text || '';
-          return (node.children || []).map(extractText).join('');
+        const extractText = (node: Record<string, unknown>): string => {
+          if ('text' in node) return (node.text as string) || '';
+          return ((node.children as Record<string, unknown>[]) || []).map(extractText).join('');
         };
         return editor.children.map(extractText).join('\n');
       },
@@ -242,10 +233,10 @@ function MailEditorContent({
       },
       isEmpty: () => {
         const text = editor.children
-          .map((node: any) => {
-            const extractText = (n: any): string => {
-              if ('text' in n) return n.text || '';
-              return (n.children || []).map(extractText).join('');
+          .map((node: Record<string, unknown>) => {
+            const extractText = (n: Record<string, unknown>): string => {
+              if ('text' in n) return (n.text as string) || '';
+              return ((n.children as Record<string, unknown>[]) || []).map(extractText).join('');
             };
             return extractText(node);
           })
@@ -262,7 +253,7 @@ function MailEditorContent({
   return (
     <Editor
       variant="none"
-      className="min-h-[120px] max-h-[300px] overflow-y-auto px-3 py-2 text-sm"
+      className="min-h-30 max-h-75 overflow-y-auto px-3 py-2 text-sm"
       placeholder={placeholder}
     />
   );
@@ -272,7 +263,7 @@ export function MailEditor({
   placeholder = 'Escreva sua mensagem...',
   className,
   editorRef,
-  autoFocus = false,
+  autoFocus: _autoFocus = false,
 }: MailEditorProps) {
   const editor = usePlateEditor({
     plugins: MailEditorKit,
