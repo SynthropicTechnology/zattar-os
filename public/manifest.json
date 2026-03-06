@@ -1,6 +1,6 @@
 {
-  "name": "Zattar Advogados - Sistema de Gestão Jurídica",
-  "short_name": "Zattar",
+  "name": "ZattarOS",
+  "short_name": "ZattarOS",
   "id": "/app",
   "description": "Sistema de gestão de processos jurídicos da Zattar Advogados",
   "start_url": "/app/login",

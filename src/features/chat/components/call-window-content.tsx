@@ -189,6 +189,19 @@ export function CallWindowContent({
     }
   }, [authToken, initialized, startCall]);
 
+  // Join the Dyte room after SDK initialization
+  // initMeeting() only configures the client; joinRoom() actually connects to the meeting.
+  const roomJoinedRef = useRef(false);
+  useEffect(() => {
+    if (meeting && initialized && !roomJoinedRef.current) {
+      roomJoinedRef.current = true;
+      meeting.joinRoom().catch((err: unknown) => {
+        handleCallError(err);
+        setError(err instanceof Error ? err.message : "Erro ao entrar na sala.");
+      });
+    }
+  }, [meeting, initialized]);
+
   const handleExit = useCallback(async () => {
     if (isRecording) {
       try {
