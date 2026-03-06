@@ -99,8 +99,8 @@ export function buildCSPDirectives(nonce?: string): string {
   // Chatwoot requires stricter script-src if we want to be safe, but it loads dynamic scripts.
   // Adding trusted domain to script-src allows the initial loader to fetch the SDK.
   const scriptSrc = nonce
-    ? `'self' 'nonce-${nonce}' 'strict-dynamic' ${TRUSTED_DOMAINS.chatwoot[0]}`
-    : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.chatwoot[0]}`;
+    ? `'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval' ${TRUSTED_DOMAINS.chatwoot[0]}`
+    : `'self' 'unsafe-inline' 'unsafe-eval' ${TRUSTED_DOMAINS.chatwoot[0]}`;
 
   const styleSrc = nonce
     ? `'self' 'nonce-${nonce}' ${TRUSTED_DOMAINS.fonts[0]} ${TRUSTED_DOMAINS.chatwoot[0]}`
