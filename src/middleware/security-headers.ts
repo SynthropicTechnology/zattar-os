@@ -45,7 +45,7 @@ const TRUSTED_DOMAINS = {
   // Chatwoot
   chatwoot: ["https://chatwoot-web.platform.sinesys.app"],
   // CopilotKit
-  copilotkit: ["https://api.cloud.copilotkit.ai"],
+  copilotkit: ["https://api.cloud.copilotkit.ai", "https://cdn.copilotkit.ai"],
 } as const;
 
 /**
@@ -135,7 +135,7 @@ export function buildCSPDirectives(nonce?: string): string {
       " "
     )} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(
       " "
-    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]} ${TRUSTED_DOMAINS.copilotkit[0]}`,
+    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]} ${TRUSTED_DOMAINS.copilotkit.join(" ")}`,
 
     "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")} ${
       TRUSTED_DOMAINS.chatwoot[0]

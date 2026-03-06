@@ -149,8 +149,9 @@ export function CallWindowContent({
       await initMeeting({
         authToken,
         defaults: {
-          audio: isVideo ? !!selectedDevices?.audioInput : true,
-          video: isVideo ? !!selectedDevices?.videoDevice : false,
+          // Quando selectedDevices não está definido (ex: receiver), usar true como padrão
+          audio: selectedDevices ? !!selectedDevices.audioInput : true,
+          video: isVideo ? (selectedDevices ? !!selectedDevices.videoDevice : true) : false,
         },
       });
 

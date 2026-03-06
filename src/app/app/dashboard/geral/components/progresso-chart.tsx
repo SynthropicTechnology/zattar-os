@@ -32,7 +32,7 @@ export function ProgressoChart({ percentual }: ProgressoChartProps) {
   ];
 
   return (
-    <ChartContainer config={chartConfig} className="mx-auto aspect-square h-15 min-h-15 min-w-15" style={{ minHeight: 60, minWidth: 60 }}>
+    <ChartContainer config={chartConfig} className="mx-auto aspect-square size-full">
       <RadialBarChart
         data={chartData}
         startAngle={90}

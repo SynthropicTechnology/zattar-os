@@ -38,7 +38,7 @@ export async function TargetCard({ usuarioId }: TargetCardProps) {
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-4">
-          <div className="shrink-0">
+          <div className="size-15 shrink-0">
             <ProgressoChart percentual={progresso.percentual} />
           </div>
           <div className="min-w-0 flex-1">

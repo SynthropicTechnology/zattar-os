@@ -26,14 +26,13 @@ export function extrairDataFormatada(date?: Date): string {
 
 /**
  * Gera nome de arquivo para documento de timeline
- * Formato: doc_{idDocumento}_{YYYYMMDD}.pdf
- * 
+ * Formato: doc_{idDocumento}.pdf (estavel, sem data, para evitar duplicatas)
+ *
  * @param documentoId - ID do documento no PJE
- * @returns Nome do arquivo (ex: doc_222702194_20251121.pdf)
+ * @returns Nome do arquivo (ex: doc_222702194.pdf)
  */
 export function gerarNomeDocumentoTimeline(documentoId: string | number): string {
-  const dataFormatada = extrairDataFormatada();
-  return `doc_${documentoId}_${dataFormatada}.pdf`;
+  return `doc_${documentoId}.pdf`;
 }
 
 /**

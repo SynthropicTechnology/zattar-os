@@ -7,7 +7,7 @@
  */
 import { memo, useMemo } from "react";
 import { DyteParticipantTile } from "@dytesdk/react-ui-kit";
-import { useDyteSelector } from "@dytesdk/react-web-core";
+import { useDyteSelector, useDyteMeeting } from "@dytesdk/react-web-core";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -20,6 +20,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
   layout,
   className
 }: CustomVideoGridProps) {
+  const { meeting } = useDyteMeeting();
   const activeParticipants = useDyteSelector((m) => m.participants.active);
   const pinnedParticipants = useDyteSelector((m) => m.participants.pinned);
   
@@ -54,7 +55,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
         {/* Main Stage */}
         <div className="flex-1 rounded-lg overflow-hidden bg-gray-900/50 relative">
            {spotlightParticipant ? (
-             <DyteParticipantTile participant={spotlightParticipant} className="w-full h-full object-cover" />
+             <DyteParticipantTile participant={spotlightParticipant} meeting={meeting} className="w-full h-full object-cover" />
            ) : (
              <div className="flex items-center justify-center h-full text-gray-500">
                Aguardando participantes...
@@ -66,7 +67,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
         <div className="w-64 flex flex-col gap-2 overflow-y-auto">
           {sidebarParticipants.map(p => (
              <div key={p.id} className="aspect-video rounded-lg overflow-hidden bg-gray-800">
-                <DyteParticipantTile participant={p} />
+                <DyteParticipantTile participant={p} meeting={meeting} />
              </div>
           ))}
         </div>
@@ -92,7 +93,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
             transition={{ duration: 0.3, delay: index * 0.05 }}
             className="rounded-lg overflow-hidden bg-gray-900 shadow-lg relative aspect-video"
           >
-            <DyteParticipantTile participant={participant} className="w-full h-full" />
+            <DyteParticipantTile participant={participant} meeting={meeting} className="w-full h-full" />
             <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs text-white backdrop-blur-sm">
               {participant.name}
             </div>

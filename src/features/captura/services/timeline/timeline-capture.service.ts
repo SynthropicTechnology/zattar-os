@@ -17,6 +17,7 @@ import { getCredentialByTribunalAndGrau } from '../../credentials/credential.ser
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/features/captura/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../storage/upload-documento-timeline.service';
 import { salvarTimeline } from './timeline-persistence.service';
+import { carregarBackblazeExistente } from './timeline-merge.service';
 import type {
   TimelineResponse,
   TimelineItem,
@@ -210,21 +211,47 @@ export async function capturarTimeline(
       filtros: filtroDocumentos,
     });
 
-    // 6. Baixar documentos (se solicitado)
+    // 6. Merge incremental: carregar backblaze existente do banco
+    //    para não re-baixar documentos que já estão no Backblaze
+    const backblazeExistente = await carregarBackblazeExistente(processoId);
+
+    // 7. Baixar documentos (apenas novos)
     const documentosBaixados: DocumentoBaixado[] = [];
     let totalBaixadosSucesso = 0;
+    let totalReaproveitados = 0;
     let totalErros = 0;
     const timelineEnriquecida: TimelineItemEnriquecido[] = [...timeline];
 
-    if (baixarDocumentos && documentosFiltrados.length > 0) {
-      console.log('📥 [capturarTimeline] Iniciando download de documentos...');
+    // Primeiro: reaproveitar backblaze de documentos já existentes
+    for (let i = 0; i < timelineEnriquecida.length; i++) {
+      const item = timelineEnriquecida[i];
+      if (!item.documento) continue;
 
-      for (let i = 0; i < documentosFiltrados.length; i++) {
-        const itemTimeline = documentosFiltrados[i];
+      const backblazeAnterior = backblazeExistente.get(item.id);
+      if (backblazeAnterior) {
+        timelineEnriquecida[i] = { ...item, backblaze: backblazeAnterior };
+        totalReaproveitados++;
+      }
+    }
+
+    if (totalReaproveitados > 0) {
+      console.log(`[capturarTimeline] ${totalReaproveitados} documentos reaproveitados do Backblaze existente`);
+    }
+
+    // Segundo: baixar apenas documentos novos (filtrados que ainda não têm backblaze)
+    const documentosParaBaixar = baixarDocumentos
+      ? documentosFiltrados.filter((item) => !backblazeExistente.has(item.id))
+      : [];
+
+    if (documentosParaBaixar.length > 0) {
+      console.log(`[capturarTimeline] Iniciando download de ${documentosParaBaixar.length} documentos novos (${documentosFiltrados.length - documentosParaBaixar.length} ja existem)...`);
+
+      for (let i = 0; i < documentosParaBaixar.length; i++) {
+        const itemTimeline = documentosParaBaixar[i];
         const documentoId = String(itemTimeline.id);
 
         try {
-          console.log(`📄 [capturarTimeline] Baixando documento ${i + 1}/${documentosFiltrados.length}: ${documentoId}...`);
+          console.log(`[capturarTimeline] Baixando documento ${i + 1}/${documentosParaBaixar.length}: ${documentoId}...`);
 
           // Obter detalhes do documento
           const detalhes = await obterDocumento(page, processoId, documentoId, {
@@ -247,7 +274,7 @@ export async function capturarTimeline(
             documentoId,
           });
 
-          // Enriquecer item da timeline com informações do Backblaze B2
+          // Enriquecer item da timeline com informacoes do Backblaze B2
           const backblazeInfo: BackblazeB2Info = {
             url: backblazeResult.url,
             key: backblazeResult.key,
@@ -272,7 +299,7 @@ export async function capturarTimeline(
 
           totalBaixadosSucesso++;
 
-          console.log(`✅ [capturarTimeline] Documento ${documentoId} baixado e enviado para Backblaze B2`, {
+          console.log(`[capturarTimeline] Documento ${documentoId} baixado e enviado para Backblaze B2`, {
             titulo: detalhes.titulo,
             tamanho: pdf.length,
             url: backblazeResult.url,
@@ -280,7 +307,7 @@ export async function capturarTimeline(
         } catch (error) {
           const mensagemErro = error instanceof Error ? error.message : String(error);
 
-          console.error(`❌ [capturarTimeline] Erro ao baixar documento ${documentoId}:`, mensagemErro);
+          console.error(`[capturarTimeline] Erro ao baixar documento ${documentoId}:`, mensagemErro);
 
           documentosBaixados.push({
             detalhes: {
@@ -293,17 +320,20 @@ export async function capturarTimeline(
           totalErros++;
         }
 
-        // Delay entre downloads para não sobrecarregar
+        // Delay entre downloads para nao sobrecarregar
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
-      console.log('✅ [capturarTimeline] Downloads concluídos', {
-        sucesso: totalBaixadosSucesso,
+      console.log('[capturarTimeline] Downloads concluidos', {
+        novos: totalBaixadosSucesso,
+        reaproveitados: totalReaproveitados,
         erros: totalErros,
       });
+    } else if (baixarDocumentos) {
+      console.log(`[capturarTimeline] Todos os ${totalReaproveitados} documentos ja existem no Backblaze, nenhum download necessario`);
     }
 
-    // 7. Salvar timeline enriquecida no PostgreSQL
+    // 8. Salvar timeline enriquecida no PostgreSQL
     try {
       const persistenceResult = await salvarTimeline({
         processoId,
@@ -313,13 +343,13 @@ export async function capturarTimeline(
         advogadoId,
       });
 
-      console.log(`🏛️ [capturarTimeline] Timeline salva no PostgreSQL (JSONB)`, {
+      console.log(`[capturarTimeline] Timeline salva no PostgreSQL (JSONB)`, {
         totalItens: persistenceResult.totalItens,
       });
 
     } catch (error) {
-      console.error('❌ [capturarTimeline] Erro ao salvar no PostgreSQL:', error);
-      // Não falhar a captura por erro de persistência, apenas logar
+      console.error('[capturarTimeline] Erro ao salvar no PostgreSQL:', error);
+      // Nao falhar a captura por erro de persistencia, apenas logar
     }
 
     // 9. Retornar resultado
