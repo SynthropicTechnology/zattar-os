@@ -25,8 +25,8 @@ interface CustomParticipantListProps {
 }
 
 export const CustomParticipantList = memo(function CustomParticipantList({ isVisible, className }: CustomParticipantListProps) {
-  const activeParticipants = useDyteSelector((m) => m.participants.active);
-  const participants = useMemo(() => [...activeParticipants.toArray()], [activeParticipants]);
+  const joinedParticipants = useDyteSelector((m) => m.participants.joined);
+  const participants = useMemo(() => [...joinedParticipants.toArray()], [joinedParticipants]);
   const self = useDyteSelector((m) => m.self);
 
   // Add self to list if not already there (Dyte usually separates self)

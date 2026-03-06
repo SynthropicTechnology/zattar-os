@@ -23,8 +23,8 @@ interface CustomAudioGridProps {
 
 export function CustomAudioGrid({ className }: CustomAudioGridProps) {
   const { meeting } = useDyteMeeting();
-  const activeParticipants = useDyteSelector((m) => m.participants.active);
-  const participants = [...activeParticipants.toArray()];
+  const joinedParticipants = useDyteSelector((m) => m.participants.joined);
+  const participants = [...joinedParticipants.toArray()];
   // Include self
   const self = useDyteSelector((m) => m.self);
 

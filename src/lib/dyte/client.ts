@@ -17,7 +17,8 @@ async function getAuthHeader() {
 }
 
 /**
- * Creates or updates a preset with transcription enabled.
+ * Updates an existing preset to enable transcription.
+ * Preserves the original preset role and permissions.
  */
 export async function ensureTranscriptionPreset(presetName: string = 'group_call_with_transcription') {
   const config = await getDyteConfig();
@@ -39,31 +40,19 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
     headers,
   });
 
-  if (checkResponse.ok) {
-    // Update existing preset
-    const updateResponse = await fetch(`${DYTE_API_BASE}/presets/${presetName}`, {
-      method: 'PATCH',
-      headers,
-      body: JSON.stringify(transcriptionConfig),
-    });
+  if (!checkResponse.ok) {
+    console.warn(`Dyte preset '${presetName}' was not found; skipping transcription enablement for this preset.`);
+    return presetName;
+  }
 
-    if (!updateResponse.ok) {
-      console.warn('Failed to update Dyte preset, transcription might not work as expected.');
-    }
-  } else {
-    // Create new preset if it doesn't exist
-    const createResponse = await fetch(`${DYTE_API_BASE}/presets`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        name: presetName,
-        ...transcriptionConfig,
-      }),
-    });
+  const updateResponse = await fetch(`${DYTE_API_BASE}/presets/${presetName}`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(transcriptionConfig),
+  });
 
-    if (!createResponse.ok) {
-      console.warn('Failed to create Dyte preset, transcription might not work as expected.');
-    }
+  if (!updateResponse.ok) {
+    console.warn(`Failed to update Dyte preset '${presetName}', transcription might not work as expected.`);
   }
 
   return presetName;
@@ -110,15 +99,20 @@ export async function getAvailablePresetName(preferred: string[] = ['group_call_
  * Create a new meeting in Dyte.
  */
 export async function createMeeting(title: string) {
-  await getDyteConfig();
+  const config = await getDyteConfig();
   const body: Record<string, unknown> = {
     title,
     record_on_start: false,
     live_stream_on_start: false,
   };
 
-  // Transcription is configured via presets (ensureTranscriptionPreset),
-  // not via the meeting creation endpoint.
+  if (config.enable_transcription) {
+    body.ai_config = {
+      transcription: {
+        language: getDyteTranscriptionLanguage(config),
+      },
+    };
+  }
 
   const response = await fetch(`${DYTE_API_BASE}/meetings`, {
     method: 'POST',
@@ -142,21 +136,17 @@ export async function createMeeting(title: string) {
  * Add a participant to a meeting and get their auth token.
  */
 export async function addParticipant(meetingId: string, name: string, preset_name: string = 'group_call_participant') {
-  let finalPresetName = preset_name;
-
-  // Aplicar preset de transcrição para TODOS os participantes (host e participant)
-  const transcriptionEnabled = await isDyteTranscriptionEnabled();
-  if (transcriptionEnabled) {
-    finalPresetName = 'group_call_with_transcription';
-  }
-
   const participantData = {
     name,
-    preset_name: finalPresetName,
-    custom_participant_id: name.replace(/\s+/g, '_').toLowerCase() + '_' + Date.now(),
+    preset_name,
+    client_specific_id: `${name.replace(/\s+/g, '_').toLowerCase()}_${Date.now()}`,
   };
 
-  let response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
+  if (await isDyteTranscriptionEnabled()) {
+    await ensureTranscriptionPreset(preset_name);
+  }
+
+  const response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -165,38 +155,9 @@ export async function addParticipant(meetingId: string, name: string, preset_nam
     body: JSON.stringify(participantData),
   });
 
-  // Fallback: if preset fails, try with the original preset, then discover available presets
-  if (!response.ok && finalPresetName !== preset_name) {
-    console.warn(`Dyte preset '${finalPresetName}' failed (${response.status}), falling back to '${preset_name}'`);
-    participantData.preset_name = preset_name;
-    response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': await getAuthHeader(),
-      },
-      body: JSON.stringify(participantData),
-    });
-  }
-
-  // Last fallback: discover an available preset from the org
-  if (!response.ok) {
-    console.warn(`Dyte preset '${participantData.preset_name}' also failed (${response.status}), discovering available presets...`);
-    const discoveredPreset = await getAvailablePresetName();
-    participantData.preset_name = discoveredPreset;
-    response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': await getAuthHeader(),
-      },
-      body: JSON.stringify(participantData),
-    });
-  }
-
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to add participant to Dyte meeting: ${response.status} ${errorText}`);
+    throw new Error(`Failed to add participant to Dyte meeting with preset '${preset_name}': ${response.status} ${errorText}`);
   }
 
   const result = await response.json();

@@ -204,6 +204,8 @@ export function CallWindowContent({
     if (meeting && initialized && !roomJoinedRef.current) {
       roomJoinedRef.current = true;
       meeting.joinRoom().catch((err: unknown) => {
+        roomJoinedRef.current = false;
+        setInitialized(false);
         handleCallError(err);
         setError(err instanceof Error ? err.message : "Erro ao entrar na sala.");
       });

@@ -52,6 +52,7 @@ export function CallDialog({
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
   const joinedRef = useRef(false);
+  const roomJoinedRef = useRef(false);
 
   // Screenshare hook
   const {
@@ -156,6 +157,18 @@ export function CallDialog({
     }
   }, [open, initialized, initialAuthToken, startCall]);
 
+  useEffect(() => {
+    if (meeting && initialized && !roomJoinedRef.current) {
+      roomJoinedRef.current = true;
+      meeting.joinRoom().catch((err: unknown) => {
+        roomJoinedRef.current = false;
+        setInitialized(false);
+        handleCallError(err);
+        setError(err instanceof Error ? err.message : "Erro ao entrar na sala.");
+      });
+    }
+  }, [meeting, initialized]);
+
   const handleExit = useCallback(async () => {
     if (meeting) {
       meeting.leave();
@@ -170,6 +183,7 @@ export function CallDialog({
     }
 
     setInitialized(false);
+    roomJoinedRef.current = false;
     setError(null);
   }, [meeting, chamadaId, isInitiator, onCallEnd]);
 

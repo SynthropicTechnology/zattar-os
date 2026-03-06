@@ -51,7 +51,7 @@ describe('CustomMeetingUI', () => {
   const mockMeeting = {
     self: { name: 'Me', id: '1' },
     participants: {
-        active: { values: () => [] }
+        joined: { values: () => [] }
     }
   };
   const mockOnLeave = jest.fn();
@@ -63,17 +63,16 @@ describe('CustomMeetingUI', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Mock activeParticipants (Map-like object)
-    const mockActiveParticipants = {
+    const mockJoinedParticipants = {
       size: 0,
       has: jest.fn(() => false),
       toArray: jest.fn(() => []),
       values: jest.fn(() => [].values())
     };
-    // Mock useDyteSelector to return mockActiveParticipants for participants.active
+    // Mock useDyteSelector to return mockJoinedParticipants for participants.joined
     // and 'mock-self-id' for self.id
     (useDyteSelector as jest.Mock)
-      .mockReturnValueOnce(mockActiveParticipants) // First call: participants.active
+      .mockReturnValueOnce(mockJoinedParticipants) // First call: participants.joined
       .mockReturnValueOnce('mock-self-id'); // Second call: self.id
   });
 

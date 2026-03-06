@@ -22,11 +22,16 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
 }: CustomVideoGridProps) {
   const { meeting } = useDyteMeeting();
   const activeParticipants = useDyteSelector((m) => m.participants.active);
+  const joinedParticipants = useDyteSelector((m) => m.participants.joined);
   const pinnedParticipants = useDyteSelector((m) => m.participants.pinned);
   
   // Combine active and pinned, prioritizing pinned
   // Filter out self if needed, but Dyte usually handles self in active
-  const participants = useMemo(() => [...activeParticipants.toArray()], [activeParticipants]);
+  const participants = useMemo(() => {
+    const active = activeParticipants.toArray();
+    if (active.length > 0) return [...active];
+    return [...joinedParticipants.toArray()];
+  }, [activeParticipants, joinedParticipants]);
   
   // If screenshare is active, we might want to change layout behavior
   // But DyteGrid usually handles this if configured.

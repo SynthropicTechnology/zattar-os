@@ -27,11 +27,16 @@ export async function actionIniciarChamada(
     const salaResult = await service.buscarSala(salaId);
     if (salaResult.isErr()) return { success: false, message: 'Sala não encontrada', error: salaResult.error.message };
     
-    // Ensure transcription preset exists before creating meeting
-    try {
-      await ensureTranscriptionPreset('group_call_with_transcription');
-    } catch (error) {
-      console.warn('Failed to ensure transcription preset, continuing anyway:', error);
+    const { isDyteTranscriptionEnabled } = await import('@/lib/dyte/config');
+    if (await isDyteTranscriptionEnabled()) {
+      try {
+        await Promise.all([
+          ensureTranscriptionPreset('group_call_host'),
+          ensureTranscriptionPreset('group_call_participant'),
+        ]);
+      } catch (error) {
+        console.warn('Failed to update Dyte presets for transcription, continuing anyway:', error);
+      }
     }
     
     // 1. Criar meeting no Dyte with transcription enabled

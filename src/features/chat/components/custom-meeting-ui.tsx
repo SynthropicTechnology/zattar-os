@@ -69,13 +69,11 @@ export function CustomMeetingUI({
   const [showParticipants, setShowParticipants] = useState(false);
   const [showConsentDialog, setShowConsentDialog] = useState(false);
 
-  // Use Dyte selector to get participant count for responsive logic
-  // Check if participants.active already includes self, otherwise add 1
-  const activeParticipants = useDyteSelector((m) => m.participants.active);
+  const joinedParticipants = useDyteSelector((m) => m.participants.joined);
   const selfId = useDyteSelector((m) => m.self.id);
-  const participantCount = activeParticipants.has(selfId)
-    ? activeParticipants.size
-    : activeParticipants.size + 1;
+  const participantCount = joinedParticipants.has(selfId)
+    ? joinedParticipants.size
+    : joinedParticipants.size + 1;
   const { showSidebar: shouldShowSidebarDesktop } = useResponsiveLayout(participantCount);
   const { quality, score } = useNetworkQuality(meeting ?? undefined);
 
@@ -100,7 +98,7 @@ export function CustomMeetingUI({
     if (!meeting) return;
 
     // Filter out self from active participants to avoid double counting
-    const otherParticipants = Array.from(meeting.participants.active.values() as Iterable<DyteParticipant>)
+    const otherParticipants = Array.from(meeting.participants.joined.values() as Iterable<DyteParticipant>)
       .filter((p) => p.id !== meeting.self.id)
       .map((p) => p.name);
 
@@ -128,7 +126,7 @@ export function CustomMeetingUI({
               meeting
                 ? [
                   meeting.self.name,
-                  ...Array.from(meeting.participants.active.values() as Iterable<DyteParticipant>)
+                  ...Array.from(meeting.participants.joined.values() as Iterable<DyteParticipant>)
                     .filter((p) => p.id !== meeting.self.id)
                     .map((p) => p.name)
                 ].filter((n): n is string => !!n)

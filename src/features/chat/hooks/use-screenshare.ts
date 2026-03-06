@@ -65,14 +65,14 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
     };
 
     // Check existing participants
-    updateScreenShareState(meeting.participants.active.toArray());
+    updateScreenShareState(meeting.participants.joined.toArray());
 
     // For this specific codebase, it seems we were attaching listeners to each participant.
     // The previous error was: "Argument of type '...' is not assignable to parameter of type '...'"
     // This usually means the callback signature doesn't match what .on() expects.
     // Let's use 'any' for the callback payload to bypass the strict check while keeping logic sound.
 
-    const activeParticipants = meeting.participants.active.toArray();
+    const activeParticipants = meeting.participants.joined.toArray();
     const listeners = new Map<string, (data: unknown) => void>();
 
     const attachListener = (p: DyteParticipant) => {
@@ -124,7 +124,7 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
         onParticipantLeft
       );
 
-      meeting.participants.active.toArray().forEach((p: DyteParticipant) => {
+      meeting.participants.joined.toArray().forEach((p: DyteParticipant) => {
         const listener = listeners.get(p.id);
         if (listener) {
           p.removeListener("screenShareUpdate", listener);
