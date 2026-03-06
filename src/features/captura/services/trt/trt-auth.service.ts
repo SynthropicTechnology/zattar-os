@@ -186,9 +186,9 @@ async function processOTP(
   const currentOtp = otpResult.password;
   const nextOtp = otpResult.nextPassword;
 
-  log('success', `✅ OTP obtido: ${currentOtp}`);
+  log('success', `✅ OTP obtido e preenchido`);
   if (nextOtp) {
-    log('info', `📱 Próximo OTP disponível: ${nextOtp} (será usado se o atual falhar)`);
+    log('info', `📱 Próximo OTP disponível (será usado se o atual falhar)`);
   }
 
   await delay(1000);
@@ -238,7 +238,7 @@ async function processOTP(
       log('warn', '⚠️ OTP atual inválido, usando próximo código...');
       await otpField.clear();
       await otpField.fill(nextOtp);
-      log('success', `✅ Próximo OTP preenchido: ${nextOtp}`);
+      log('success', `✅ Próximo OTP preenchido`);
       await delay(500);
 
       // Tentar novamente com o próximo código
@@ -440,7 +440,7 @@ export async function obterTokens(page: Page): Promise<AuthTokens> {
   }
 
   log('success', '✅ Tokens capturados', {
-    accessToken: `${accessTokenCookie.value.substring(0, 30)}...`,
+    accessToken: 'presente',
     xsrfToken: xsrfTokenCookie ? 'presente' : 'ausente',
   });
 
@@ -530,7 +530,8 @@ export async function obterIdAdvogado(
           log('success', `✅ ID advogado do JWT: ${finalIdAdvogado}`);
         }
         if (payload.cpf) {
-          log('info', `👤 CPF do JWT: ${payload.cpf}`);
+          const maskedCpf = payload.cpf.length > 4 ? `***${payload.cpf.slice(-4)}` : '***';
+          log('info', `👤 CPF do JWT: ${maskedCpf}`);
         }
         if (payload.name) {
           log('info', `👤 Nome do JWT: ${payload.name}`);
@@ -607,34 +608,71 @@ export async function autenticarPJE(options: TRTAuthOptions): Promise<AuthResult
     headless,
     viewport: { width: 1920, height: 1080 },
   });
-  
+
   log('success', `✅ Firefox ${isRemote ? 'remoto' : 'local'} conectado`);
 
-  // Aplicar configurações anti-detecção
-  await aplicarConfiguracoesAntiDeteccao(page);
+  try {
+    // Aplicar configurações anti-detecção
+    await aplicarConfiguracoesAntiDeteccao(page);
 
-  // Realizar login
-  await realizarLogin(page, config.loginUrl, config.baseUrl, credential.cpf, credential.senha);
+    // Realizar login
+    await realizarLogin(page, config.loginUrl, config.baseUrl, credential.cpf, credential.senha);
 
-  // Obter ID do advogado e tokens do JWT
-  const advogadoInfo = await obterIdAdvogado(page);
-  const tokens = await obterTokens(page);
+    // Obter ID do advogado e tokens do JWT
+    const advogadoInfo = await obterIdAdvogado(page);
+    const tokens = await obterTokens(page);
 
-  // CPF vem da credencial (é o que usamos para logar)
-  advogadoInfo.cpf = credential.cpf;
+    // CPF vem da credencial (é o que usamos para logar)
+    advogadoInfo.cpf = credential.cpf;
 
-  log('success', '✅ Autenticação concluída com sucesso!', {
-    idAdvogado: advogadoInfo.idAdvogado,
-    cpf: advogadoInfo.cpf,
-    nome: advogadoInfo.nome,
-  });
+    log('success', '✅ Autenticação concluída com sucesso!', {
+      idAdvogado: advogadoInfo.idAdvogado,
+      cpf: advogadoInfo.cpf,
+      nome: advogadoInfo.nome,
+    });
 
-  return {
-    page,
-    browser,
-    browserContext,
-    advogadoInfo,
-    tokens,
-  };
+    return {
+      page,
+      browser,
+      browserContext,
+      advogadoInfo,
+      tokens,
+    };
+  } catch (error) {
+    log('error', '❌ Erro durante autenticação, fechando browser...', {
+      erro: error instanceof Error ? error.message : String(error),
+    });
+    try {
+      await browser.close();
+    } catch {
+      // Ignorar erro ao fechar browser — já estamos em estado de erro
+    }
+    throw error;
+  }
+}
+
+/**
+ * Wrapper com retry para autenticarPJE.
+ * Retenta o fluxo completo (incluindo browser) em caso de falha.
+ * Útil para erros transitórios de OTP, timeout SSO, etc.
+ */
+export async function autenticarComRetry(
+  options: TRTAuthOptions,
+  maxAttempts: number = 2,
+): Promise<AuthResult> {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      return await autenticarPJE(options);
+    } catch (error) {
+      if (attempt === maxAttempts - 1) throw error;
+      const delay = 5000 * (attempt + 1);
+      log('warn', `⚠️ Tentativa ${attempt + 1}/${maxAttempts} de autenticação falhou, retry em ${delay / 1000}s`, {
+        erro: error instanceof Error ? error.message : String(error),
+      });
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  // Unreachable
+  throw new Error('[autenticarComRetry] Falha após todas as tentativas');
 }
 

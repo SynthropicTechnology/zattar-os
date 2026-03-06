@@ -140,20 +140,39 @@ import type { Page } from 'playwright';
  *   }
  * );
  */
+/** Status HTTP que indicam erro transitório e merecem retry */
+const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+
+/** Cache de origin por Page para evitar evaluate repetido */
+const originCache = new WeakMap<Page, string>();
+
+export interface FetchPJEOptions {
+  /** Número máximo de retentativas (padrão: 3) */
+  maxRetries?: number;
+  /** Delay base em ms para backoff exponencial (padrão: 500) */
+  baseDelay?: number;
+}
+
 export async function fetchPJEAPI<T>(
   page: Page,
   endpoint: string,
-  params?: Record<string, string | number | boolean>
+  params?: Record<string, string | number | boolean>,
+  options?: FetchPJEOptions
 ): Promise<T> {
-  // Obtém a origem da URL atual do navegador (ex: "https://pje.trt3.jus.br")
-  // Isso garante que a URL base seja sempre correta, independente do TRT
-  const baseUrl = await page.evaluate(() => window.location.origin);
+  const maxRetries = options?.maxRetries ?? 3;
+  const baseDelay = options?.baseDelay ?? 500;
+
+  // Cache de origin — nunca muda durante a sessão
+  let baseUrl = originCache.get(page);
+  if (!baseUrl) {
+    baseUrl = await page.evaluate(() => window.location.origin);
+    originCache.set(page, baseUrl);
+  }
+
   let url = `${baseUrl}${endpoint}`;
 
   // Adiciona parâmetros de query string se fornecidos
   if (params) {
-    // Converte todos os valores para string antes de construir a query string
-    // Isso é necessário porque URLSearchParams espera strings
     const queryString = new URLSearchParams(
       Object.entries(params).reduce((acc, [key, value]) => {
         acc[key] = String(value);
@@ -163,41 +182,75 @@ export async function fetchPJEAPI<T>(
     url += `?${queryString}`;
   }
 
-  // Executa o fetch dentro do contexto do navegador para ter acesso aos cookies
-  const response = await page.evaluate(
-    async ({ url, xsrfToken }: { url: string; xsrfToken?: string }) => {
-      const headers: Record<string, string> = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      };
+  // Loop de retry com backoff exponencial
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      // Executa fetch no contexto do browser e retorna { status, data, errorText }
+      const result = await page.evaluate(
+        async ({ url, xsrfToken }: { url: string; xsrfToken?: string }) => {
+          const headers: Record<string, string> = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          };
 
-      // Adiciona XSRF token se disponível (atualmente não usado)
-      if (xsrfToken) {
-        headers['X-XSRF-Token'] = xsrfToken;
+          if (xsrfToken) {
+            headers['X-XSRF-Token'] = xsrfToken;
+          }
+
+          const response = await fetch(url, {
+            method: 'GET',
+            headers,
+            credentials: 'include',
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            return { ok: false as const, status: response.status, errorText };
+          }
+
+          const data = await response.json();
+          return { ok: true as const, status: response.status, data };
+        },
+        {
+          url,
+          xsrfToken: undefined,
+        }
+      );
+
+      // Tratar erro HTTP
+      if (!result.ok) {
+        const isRetryable = RETRYABLE_STATUS_CODES.has(result.status);
+        if (isRetryable && attempt < maxRetries) {
+          const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 100;
+          console.warn(
+            `[fetchPJEAPI] HTTP ${result.status} em ${endpoint}, tentativa ${attempt + 1}/${maxRetries}, retry em ${Math.round(delay)}ms`,
+          );
+          await new Promise((r) => setTimeout(r, delay));
+          continue;
+        }
+        throw new Error(`HTTP ${result.status}: ${result.errorText}`);
       }
 
-      // Faz a requisição GET com credentials: 'include' para enviar cookies automaticamente
-      const response = await fetch(url, {
-        method: 'GET',
-        headers,
-        credentials: 'include', // Envia cookies automaticamente
-      });
-
-      // Se a resposta não for ok, lança um erro com o status e texto da resposta
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      // Validar resposta não-vazia
+      if (result.data === null || result.data === undefined) {
+        throw new Error(`HTTP ${result.status}: Resposta vazia para ${endpoint}`);
       }
 
-      // Retorna o JSON parseado
-      return response.json();
-    },
-    {
-      url,
-      xsrfToken: undefined, // TODO: Extrair do cookie se necessário
+      return result.data as T;
+    } catch (error) {
+      // Erros de rede (page.evaluate falha) — retry se não for última tentativa
+      if (attempt < maxRetries) {
+        const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 100;
+        console.warn(
+          `[fetchPJEAPI] Erro de rede em ${endpoint}, tentativa ${attempt + 1}/${maxRetries}, retry em ${Math.round(delay)}ms`,
+        );
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      throw error;
     }
-  );
+  }
 
-  // Retorna a resposta tipada como T
-  return response as T;
+  // Unreachable, mas TypeScript precisa
+  throw new Error(`[fetchPJEAPI] Falha após ${maxRetries} retentativas para ${endpoint}`);
 }

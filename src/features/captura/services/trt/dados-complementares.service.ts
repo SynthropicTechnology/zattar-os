@@ -204,42 +204,50 @@ export async function buscarDadosComplementaresProcessos(
       erros: [],
     };
 
-    // Buscar timeline
+    // Buscar timeline e partes em paralelo (são chamadas independentes)
+    const promises: Promise<void>[] = [];
+
     if (buscarTimeline) {
-      try {
-        const timeline = await obterTimeline(page, String(processoId), {
+      promises.push(
+        obterTimeline(page, String(processoId), {
           somenteDocumentosAssinados: false,
           buscarMovimentos: true,
           buscarDocumentos: true,
-        });
-        dadosProcesso.timeline = timeline;
-        timelinesObtidas++;
-      } catch (e) {
-        const erro = e instanceof Error ? e.message : String(e);
-        dadosProcesso.erros.push({ tipo: 'timeline', erro });
-        errosDetalhados.push({ processoId, tipo: 'timeline', erro });
-        console.warn(`⚠️ [DadosComplementares] Erro ao buscar timeline do processo ${processoId}: ${erro}`);
-      }
-
-      // Delay entre requisições
-      await delay(delayEntreRequisicoes);
+        })
+          .then((timeline) => {
+            dadosProcesso.timeline = timeline;
+            timelinesObtidas++;
+          })
+          .catch((e) => {
+            const erro = e instanceof Error ? e.message : String(e);
+            dadosProcesso.erros.push({ tipo: 'timeline', erro });
+            errosDetalhados.push({ processoId, tipo: 'timeline', erro });
+            console.warn(`⚠️ [DadosComplementares] Erro ao buscar timeline do processo ${processoId}: ${erro}`);
+          }),
+      );
     }
 
-    // Buscar partes
     if (buscarPartes) {
-      try {
-        const resultado = await obterPartesProcesso(page, processoId);
-        dadosProcesso.partes = resultado.partes;
-        dadosProcesso.payloadBrutoPartes = resultado.payloadBruto;
-        partesObtidas++;
-      } catch (e) {
-        const erro = e instanceof Error ? e.message : String(e);
-        dadosProcesso.erros.push({ tipo: 'partes', erro });
-        errosDetalhados.push({ processoId, tipo: 'partes', erro });
-        console.warn(`⚠️ [DadosComplementares] Erro ao buscar partes do processo ${processoId}: ${erro}`);
-      }
+      promises.push(
+        obterPartesProcesso(page, processoId)
+          .then((resultado) => {
+            dadosProcesso.partes = resultado.partes;
+            dadosProcesso.payloadBrutoPartes = resultado.payloadBruto;
+            partesObtidas++;
+          })
+          .catch((e) => {
+            const erro = e instanceof Error ? e.message : String(e);
+            dadosProcesso.erros.push({ tipo: 'partes', erro });
+            errosDetalhados.push({ processoId, tipo: 'partes', erro });
+            console.warn(`⚠️ [DadosComplementares] Erro ao buscar partes do processo ${processoId}: ${erro}`);
+          }),
+      );
+    }
 
-      // Delay entre requisições
+    await Promise.all(promises);
+
+    // Um único delay após ambas as chamadas (ao invés de 2x delay)
+    if (buscarTimeline || buscarPartes) {
       await delay(delayEntreRequisicoes);
     }
 

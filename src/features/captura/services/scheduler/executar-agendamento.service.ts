@@ -24,7 +24,7 @@ interface SalvarPayloadsPartesParams {
     numeroProcesso?: string;
     payloadBruto: Record<string, unknown> | null;
   }>;
-  capturaLogId: number;
+  capturaLogId: number | null;
   advogadoId: number;
   credencialId: number;
   credencialIds: number[];
@@ -42,6 +42,11 @@ async function salvarPayloadsBrutosPartes(params: SalvarPayloadsPartesParams): P
   const { payloadsBrutosPartes, capturaLogId, advogadoId, credencialId, credencialIds, trt, grau, tipoCapturaPai } = params;
 
   if (!payloadsBrutosPartes || payloadsBrutosPartes.length === 0) {
+    return 0;
+  }
+
+  if (capturaLogId === null) {
+    console.warn(`[Scheduler] ${payloadsBrutosPartes.length} payloads de partes não salvos (logId não disponível)`);
     return 0;
   }
 
@@ -119,7 +124,7 @@ export async function executarAgendamento(
     throw new Error(`Credenciais não encontradas: ${credenciaisNaoEncontradas.join(', ')}`);
   }
 
-  // Criar registro de histórico
+  // Criar registro de histórico (com retry)
   let logId: number | null = null;
   try {
     logId = await iniciarCapturaLog({
@@ -129,8 +134,27 @@ export async function executarAgendamento(
       status: 'in_progress',
     });
   } catch (error) {
-    console.error('Erro ao criar registro de histórico:', error);
+    console.error('[Scheduler] Erro ao criar registro de histórico, tentando novamente:', error);
+    try {
+      logId = await iniciarCapturaLog({
+        tipo_captura: agendamento.tipo_captura,
+        advogado_id: agendamento.advogado_id,
+        credencial_ids: agendamento.credencial_ids,
+        status: 'in_progress',
+      });
+    } catch {
+      console.error('[Scheduler] CRÍTICO: Impossível criar registro de log. Raw logs serão pulados nesta execução.');
+    }
   }
+
+  // Helper: registrar raw log apenas se logId existe (evita registros com captura_log_id=-1)
+  const registrarRawLog = async (params: Omit<Parameters<typeof registrarCapturaRawLog>[0], 'captura_log_id'>) => {
+    if (logId === null) {
+      console.warn('[Scheduler] Raw log pulado (logId não disponível):', params.tipo_captura, params.status);
+      return;
+    }
+    await registrarCapturaRawLog({ ...params, captura_log_id: logId });
+  };
 
   // Executar captura baseado no tipo
   const executarCaptura = async () => {
@@ -156,8 +180,7 @@ export async function executarAgendamento(
           grau: credCompleta.grau,
           erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         });
-        await registrarCapturaRawLog({
-          captura_log_id: logId ?? -1,
+        await registrarRawLog({
           tipo_captura: agendamento.tipo_captura,
           advogado_id: agendamento.advogado_id,
           credencial_id: credCompleta.credentialId,
@@ -183,8 +206,7 @@ export async function executarAgendamento(
               credential: credCompleta.credenciais,
               config: tribunalConfig,
             });
-            await registrarCapturaRawLog({
-              captura_log_id: logId ?? -1,
+            await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -203,7 +225,7 @@ export async function executarAgendamento(
             if ((resultado as AcervoGeralResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as AcervoGeralResult).payloadsBrutosPartes!,
-                capturaLogId: logId ?? -1,
+                capturaLogId: logId,
                 advogadoId: agendamento.advogado_id,
                 credencialId: credCompleta.credentialId,
                 credencialIds: agendamento.credencial_ids,
@@ -218,8 +240,7 @@ export async function executarAgendamento(
               credential: credCompleta.credenciais,
               config: tribunalConfig,
             });
-            await registrarCapturaRawLog({
-              captura_log_id: logId ?? -1,
+            await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -238,7 +259,7 @@ export async function executarAgendamento(
             if ((resultado as ArquivadosResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as ArquivadosResult).payloadsBrutosPartes!,
-                capturaLogId: logId ?? -1,
+                capturaLogId: logId,
                 advogadoId: agendamento.advogado_id,
                 credencialId: credCompleta.credentialId,
                 credencialIds: agendamento.credencial_ids,
@@ -256,8 +277,7 @@ export async function executarAgendamento(
               dataInicio: paramsAudiencias?.dataInicio,
               dataFim: paramsAudiencias?.dataFim,
             });
-            await registrarCapturaRawLog({
-              captura_log_id: logId ?? -1,
+            await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -280,7 +300,7 @@ export async function executarAgendamento(
             if ((resultado as AudienciasResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as AudienciasResult).payloadsBrutosPartes!,
-                capturaLogId: logId ?? -1,
+                capturaLogId: logId,
                 advogadoId: agendamento.advogado_id,
                 credencialId: credCompleta.credentialId,
                 credencialIds: agendamento.credencial_ids,
@@ -310,8 +330,7 @@ export async function executarAgendamento(
 
                 resultadosPendentes.push({ filtroPrazo: filtro, resultado: captura });
 
-                await registrarCapturaRawLog({
-                  captura_log_id: logId ?? -1,
+                await registrarRawLog({
                   tipo_captura: agendamento.tipo_captura,
                   advogado_id: agendamento.advogado_id,
                   credencial_id: credCompleta.credentialId,
@@ -337,7 +356,7 @@ export async function executarAgendamento(
                 if ((captura as PendentesManifestacaoResult).payloadsBrutosPartes) {
                   await salvarPayloadsBrutosPartes({
                     payloadsBrutosPartes: (captura as PendentesManifestacaoResult).payloadsBrutosPartes!,
-                    capturaLogId: logId ?? -1,
+                    capturaLogId: logId,
                     advogadoId: agendamento.advogado_id,
                     credencialId: credCompleta.credentialId,
                     credencialIds: agendamento.credencial_ids,
@@ -352,8 +371,7 @@ export async function executarAgendamento(
                   erro: error instanceof Error ? error.message : 'Erro desconhecido',
                 });
 
-                await registrarCapturaRawLog({
-                  captura_log_id: logId ?? -1,
+                await registrarRawLog({
                   tipo_captura: agendamento.tipo_captura,
                   advogado_id: agendamento.advogado_id,
                   credencial_id: credCompleta.credentialId,
@@ -380,8 +398,7 @@ export async function executarAgendamento(
               config: tribunalConfig,
             });
 
-            await registrarCapturaRawLog({
-              captura_log_id: logId ?? -1,
+            await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -404,7 +421,7 @@ export async function executarAgendamento(
             if ((resultado as PericiasResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as PericiasResult).payloadsBrutosPartes!,
-                capturaLogId: logId ?? -1,
+                capturaLogId: logId,
                 advogadoId: agendamento.advogado_id,
                 credencialId: credCompleta.credentialId,
                 credencialIds: agendamento.credencial_ids,
@@ -422,8 +439,7 @@ export async function executarAgendamento(
               config: tribunalConfig,
             });
 
-            await registrarCapturaRawLog({
-              captura_log_id: logId ?? -1,
+            await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -450,7 +466,7 @@ export async function executarAgendamento(
             if ((resultado as CapturaCombinAdaResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as CapturaCombinAdaResult).payloadsBrutosPartes!,
-                capturaLogId: logId ?? -1,
+                capturaLogId: logId,
                 advogadoId: agendamento.advogado_id,
                 credencialId: credCompleta.credentialId,
                 credencialIds: agendamento.credencial_ids,
@@ -483,8 +499,7 @@ export async function executarAgendamento(
           erro: error instanceof Error ? error.message : 'Erro desconhecido',
         });
 
-        await registrarCapturaRawLog({
-          captura_log_id: logId ?? -1,
+        await registrarRawLog({
           tipo_captura: agendamento.tipo_captura,
           advogado_id: agendamento.advogado_id,
           credencial_id: credCompleta.credentialId,
@@ -544,7 +559,7 @@ export async function executarAgendamento(
         });
 
         if (errosColetados.length > 0) {
-          await finalizarCapturaLogErro(logId, errosColetados.join('; '));
+          await finalizarCapturaLogErro(logId, errosColetados);
         } else {
           const filtrosExecutados = Array.from(
             new Set(

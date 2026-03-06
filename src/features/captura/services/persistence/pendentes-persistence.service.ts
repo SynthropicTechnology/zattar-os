@@ -123,7 +123,35 @@ export async function salvarPendentes(
 
   const entidade: TipoEntidade = "expedientes";
 
-  // Processar cada processo individualmente
+  // Batch: buscar todos os registros existentes de uma vez (evita N+1 queries)
+  const idsPje = processos.map((p) => p.id);
+  const existentesMap = new Map<string, Record<string, unknown>>();
+
+  try {
+    const { data: existentes, error: erroBatch } = await supabase
+      .from("expedientes")
+      .select("*")
+      .in("id_pje", idsPje)
+      .eq("trt", trt)
+      .eq("grau", grau);
+
+    if (erroBatch) {
+      console.warn(
+        `⚠️ [Pendentes] Erro ao buscar existentes em batch: ${erroBatch.message}. Continuando sem cache.`,
+      );
+    } else if (existentes) {
+      for (const reg of existentes) {
+        const key = `${reg.id_pje}:${(reg.numero_processo as string).trim()}`;
+        existentesMap.set(key, reg as Record<string, unknown>);
+      }
+    }
+  } catch (e) {
+    console.warn(
+      `⚠️ [Pendentes] Exceção ao buscar existentes em batch. Continuando sem cache.`,
+    );
+  }
+
+  // Processar cada processo
   for (const processo of processos) {
     try {
       const numeroProcesso = processo.numeroProcesso.trim();
@@ -155,13 +183,13 @@ export async function salvarPendentes(
         sigla_orgao_julgador: processo.siglaOrgaoJulgador?.trim() ?? null,
       };
 
-      // Buscar registro existente
-      const registroExistente = await buscarPendenteExistente(
-        processo.id,
-        trt,
-        grau,
-        numeroProcesso
-      );
+      // Lookup no cache batch (ou fallback para query individual se cache vazio)
+      const cacheKey = `${processo.id}:${numeroProcesso}`;
+      const registroExistente = existentesMap.has(cacheKey)
+        ? existentesMap.get(cacheKey)!
+        : existentesMap.size === 0
+          ? await buscarPendenteExistente(processo.id, trt, grau, numeroProcesso)
+          : null;
 
       if (!registroExistente) {
         // Inserir

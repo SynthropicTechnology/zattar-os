@@ -5,6 +5,7 @@ import {
   criarCapturaLog,
   atualizarCapturaLog as updateCapturaLog,
 } from './persistence/captura-log-persistence.service';
+import { captureLogService } from './persistence/capture-log.service';
 
 // Re-export for convenience
 export { updateCapturaLog as atualizarCapturaLog };
@@ -27,29 +28,46 @@ export async function iniciarCapturaLog(
 }
 
 /**
- * Atualizar registro de captura com resultado de sucesso
+ * Atualizar registro de captura com resultado de sucesso.
+ * Inclui automaticamente os logs detalhados acumulados pelo captureLogService.
  */
 export async function finalizarCapturaLogSucesso(
   logId: number,
   resultado: Record<string, unknown>
 ): Promise<void> {
+  // Consumir logs in-memory e incluir no resultado persistido
+  const logsDetalhados = captureLogService.consumirLogs();
+  const estatisticas = captureLogService.getEstatisticas();
+
   await updateCapturaLog(logId, {
     status: 'completed',
-    resultado,
+    resultado: {
+      ...resultado,
+      _logs_detalhados: logsDetalhados.length > 0 ? logsDetalhados : undefined,
+      _logs_estatisticas: logsDetalhados.length > 0 ? estatisticas : undefined,
+    },
     concluido_em: new Date().toISOString(),
   });
 }
 
 /**
- * Atualizar registro de captura com erro
+ * Atualizar registro de captura com erro.
+ * Inclui logs detalhados acumulados e aceita erros como string ou array.
  */
 export async function finalizarCapturaLogErro(
   logId: number,
-  erro: string
+  erro: string | string[]
 ): Promise<void> {
+  // Consumir logs in-memory para não vazarem entre capturas
+  const logsDetalhados = captureLogService.consumirLogs();
+
   await updateCapturaLog(logId, {
     status: 'failed',
-    erro,
+    erro: Array.isArray(erro) ? erro.join('; ') : erro,
+    resultado: {
+      _erros: Array.isArray(erro) ? erro : undefined,
+      _logs_detalhados: logsDetalhados.length > 0 ? logsDetalhados : undefined,
+    },
     concluido_em: new Date().toISOString(),
   });
 }

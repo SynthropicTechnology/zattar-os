@@ -52,7 +52,7 @@
  * └─────────────────────────────────────────────────────────────────┘
  */
 
-import { autenticarPJE, type AuthResult } from "./trt-auth.service";
+import { autenticarComRetry, type AuthResult } from "./trt-auth.service";
 import type { CapturaCombinAdaParams } from "./trt-capture.service";
 import { obterTodasAudiencias } from "@/features/captura/pje-trt";
 import { obterTodosProcessosPendentesManifestacao } from "@/features/captura/pje-trt";
@@ -264,7 +264,7 @@ export async function capturaCombinada(
     // FASE 1: AUTENTICAÇÃO
     // ═══════════════════════════════════════════════════════════════
     console.log("🔐 [CapturaCombinada] Fase 1: Autenticando no PJE...");
-    authResult = await autenticarPJE({
+    authResult = await autenticarComRetry({
       credential: params.credential,
       config: params.config,
       headless: true,
@@ -595,7 +595,13 @@ export async function capturaCombinada(
 
         const processosMinimos: Processo[] = paraInserir.map((idPje) => {
           const numeroProcesso = (numeroProcessoPorId.get(idPje) || "").trim();
-          const numero = parseInt(numeroProcesso.split("-")[0] ?? "", 10) || 0;
+          const numeroParsed = parseInt(numeroProcesso.split("-")[0] ?? "", 10);
+          const numero = Number.isNaN(numeroParsed) ? 0 : numeroParsed;
+          if (Number.isNaN(numeroParsed)) {
+            console.warn(
+              `   ⚠️ [CapturaCombinada] Processo PJE ID ${idPje}: não foi possível extrair número de "${numeroProcesso}", usando 0`,
+            );
+          }
 
           return {
             id: idPje,
@@ -688,6 +694,12 @@ export async function capturaCombinada(
       if (dados.partes && dados.partes.length > 0) {
         try {
           const idAcervo = mapeamentoIds.get(processoId);
+          if (!idAcervo) {
+            console.warn(
+              `   ⚠️ Processo ${processoId} sem acervo_id no mapeamento, pulando persistência de partes`,
+            );
+            continue;
+          }
 
           // Buscar número do processo de qualquer uma das listas
           let numeroProcesso: string | undefined;
@@ -813,14 +825,43 @@ export async function capturaCombinada(
 
     // 5.7 Persistir perícias
     console.log("   🔬 Persistindo perícias...");
-    const todasPericias = resultado.capturas
+    const todasPericiasRaw = resultado.capturas
       .filter((c) => c.tipo === "pericias")
-      .flatMap((c) => (c.dados as { pericias: unknown[] })?.pericias || []);
+      .flatMap((c) => {
+        const dados = c.dados as Record<string, unknown> | undefined;
+        if (!dados || !Array.isArray(dados.pericias)) {
+          if (dados) {
+            console.warn(
+              "   ⚠️ [CapturaCombinada] Captura de perícias com estrutura inesperada:",
+              Object.keys(dados),
+            );
+          }
+          return [];
+        }
+        return dados.pericias;
+      });
+
+    // Filtrar apenas perícias com campos obrigatórios mínimos
+    const todasPericias = todasPericiasRaw.filter((p): p is Pericia => {
+      const obj = p as Record<string, unknown>;
+      return (
+        typeof obj === "object" &&
+        obj !== null &&
+        typeof obj.id === "number" &&
+        typeof obj.idProcesso === "number" &&
+        typeof obj.numeroProcesso === "string"
+      );
+    });
+    if (todasPericias.length !== todasPericiasRaw.length) {
+      console.warn(
+        `   ⚠️ [CapturaCombinada] ${todasPericiasRaw.length - todasPericias.length} perícia(s) descartadas por estrutura inválida`,
+      );
+    }
 
     if (todasPericias.length > 0) {
       try {
         const persistenciaPer = await salvarPericias({
-          pericias: todasPericias as Pericia[],
+          pericias: todasPericias,
           advogadoId: advogadoDb.id,
           trt: params.config.codigo,
           grau: params.config.grau,
