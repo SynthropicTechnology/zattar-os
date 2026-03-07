@@ -156,7 +156,11 @@ export function EventCalendar({
   };
 
   const handleEventSelect = (event: CalendarEvent) => {
-    onEventSelect?.(event);
+    if (onEventSelect) {
+      // Parent controls the dialog — delegate entirely
+      onEventSelect(event);
+      return;
+    }
     if (readOnly) return;
     setSelectedEvent(event);
     setIsEventDialogOpen(true);
@@ -231,7 +235,7 @@ export function EventCalendar({
 
     // Show toast notification when an event is deleted
     if (deletedEvent) {
-      toast(`Evento "${deletedEvent.title}" exclu\u00eddo`, {
+      toast(`Evento "${deletedEvent.title}" excluído`, {
         description: format(new Date(deletedEvent.start), "d 'de' MMM, yyyy", { locale: ptBR }),
         position: "bottom-left"
       });
@@ -313,7 +317,7 @@ export function EventCalendar({
               <Button variant="ghost" size="icon" onClick={handlePrevious} aria-label="Anterior">
                 <ChevronLeftIcon size={16} aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={handleNext} aria-label="Pr\u00f3ximo">
+              <Button variant="ghost" size="icon" onClick={handleNext} aria-label="Próximo">
                 <ChevronRightIcon size={16} aria-hidden="true" />
               </Button>
             </div>
@@ -328,7 +332,7 @@ export function EventCalendar({
                       {{ month: "M", week: "S", day: "D", agenda: "A" }[view]}
                     </span>
                     <span className="max-[479px]:sr-only">
-                      {{ month: "M\u00eas", week: "Semana", day: "Dia", agenda: "Agenda" }[view]}
+                      {{ month: "Mês", week: "Semana", day: "Dia", agenda: "Agenda" }[view]}
                     </span>
                   </span>
                   <ChevronDownIcon className="-me-1 opacity-60" size={16} aria-hidden="true" />
@@ -336,7 +340,7 @@ export function EventCalendar({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-32">
                 <DropdownMenuItem onClick={() => setView("month")}>
-                  M\u00eas <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                  Mês <DropdownMenuShortcut>M</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("week")}>
                   Semana <DropdownMenuShortcut>W</DropdownMenuShortcut>
@@ -394,21 +398,25 @@ export function EventCalendar({
               currentDate={currentDate}
               events={events}
               onEventSelect={handleEventSelect}
+              onEventCreate={handleEventCreate}
             />
           )}
         </div>
 
-        <EventDialog
-          event={selectedEvent}
-          isOpen={isEventDialogOpen}
-          readOnly={readOnly}
-          onClose={() => {
-            setIsEventDialogOpen(false);
-            setSelectedEvent(null);
-          }}
-          onSave={handleEventSave}
-          onDelete={handleEventDelete}
-        />
+        {/* Only render internal dialog when no parent controls it */}
+        {!onEventSelect && (
+          <EventDialog
+            event={selectedEvent}
+            isOpen={isEventDialogOpen}
+            readOnly={readOnly}
+            onClose={() => {
+              setIsEventDialogOpen(false);
+              setSelectedEvent(null);
+            }}
+            onSave={handleEventSave}
+            onDelete={handleEventDelete}
+          />
+        )}
       </CalendarDndProvider>
     </div>
   );

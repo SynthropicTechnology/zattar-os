@@ -402,9 +402,9 @@ export default function EventCalendarApp({
         <div className="ml-auto flex items-center gap-1">
           {/* Navigation: [<] Title [>] */}
           <Button
-            type="button"
-            className="flex items-center justify-center h-9 w-9 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
-            variant="ghost"
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 bg-card"
             onClick={handlePrevious}
             aria-label="Anterior">
             <ChevronLeftIcon size={16} aria-hidden="true" />
@@ -417,9 +417,9 @@ export default function EventCalendarApp({
             )}
           </span>
           <Button
-            type="button"
-            className="flex items-center justify-center h-9 w-9 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
-            variant="ghost"
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 bg-card"
             onClick={handleNext}
             aria-label="Próximo">
             <ChevronRightIcon size={16} aria-hidden="true" />

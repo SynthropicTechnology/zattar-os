@@ -145,7 +145,7 @@ export async function salvarPendentes(
         existentesMap.set(key, reg as Record<string, unknown>);
       }
     }
-  } catch (e) {
+  } catch {
     console.warn(
       `⚠️ [Pendentes] Exceção ao buscar existentes em batch. Continuando sem cache.`,
     );

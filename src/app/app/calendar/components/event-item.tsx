@@ -60,7 +60,7 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2",
+        "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full cursor-pointer overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through data-past-event:opacity-75 sm:px-2",
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className
@@ -152,7 +152,7 @@ export function EventItem({
         isDragging={isDragging}
         onClick={onClick}
         className={cn(
-          "mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs",
+          "mt-(--event-gap)ar(--event-height)] items-center text-[10px] sm:text-xs",
           className
         )}
         currentTime={currentTime}

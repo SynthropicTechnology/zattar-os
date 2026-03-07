@@ -1,4 +1,12 @@
-import { isSameDay } from "date-fns";
+import {
+  addHours,
+  areIntervalsOverlapping,
+  differenceInMinutes,
+  getHours,
+  getMinutes,
+  isSameDay,
+  startOfDay
+} from "date-fns";
 
 import type { CalendarEvent, EventColor } from "./components";
 
@@ -131,5 +139,122 @@ export function getAgendaEventsForDay(events: CalendarEvent[], day: Date): Calen
 export function addHoursToDate(date: Date, hours: number): Date {
   const result = new Date(date);
   result.setHours(result.getHours() + hours);
+  return result;
+}
+
+/**
+ * Positioned event with calculated layout coordinates
+ */
+export interface PositionedEvent {
+  event: CalendarEvent;
+  top: number;
+  height: number;
+  left: number;
+  width: number;
+  zIndex: number;
+}
+
+/**
+ * Calculate positioned events for a day using equal-width column distribution.
+ *
+ * Algorithm (similar to Google Calendar):
+ * 1. Sort events by start time, then by duration (longer first)
+ * 2. Place each event in the first available column (no overlap)
+ * 3. Group overlapping columns into clusters
+ * 4. Within each cluster, all events share width equally based on max columns used
+ */
+export function calculatePositionedEvents(
+  day: Date,
+  events: CalendarEvent[],
+  startHour: number,
+  cellHeight: number
+): PositionedEvent[] {
+  const dayStart = startOfDay(day);
+
+  // Filter to single-day, non-allday events on this day
+  const dayEvents = events.filter((event) => {
+    if (event.allDay || isMultiDayEvent(event)) return false;
+    const eventStart = new Date(event.start);
+    const eventEnd = new Date(event.end);
+    return (
+      isSameDay(day, eventStart) ||
+      isSameDay(day, eventEnd) ||
+      (eventStart < day && eventEnd > day)
+    );
+  });
+
+  // Sort by start time, then longer events first
+  const sorted = [...dayEvents].sort((a, b) => {
+    const aStart = new Date(a.start);
+    const bStart = new Date(b.start);
+    if (aStart < bStart) return -1;
+    if (aStart > bStart) return 1;
+    return differenceInMinutes(new Date(b.end), bStart) - differenceInMinutes(new Date(a.end), aStart);
+  });
+
+  // Column assignment: each column tracks its latest end time
+  const columns: { event: CalendarEvent; adjustedStart: Date; adjustedEnd: Date; columnIndex: number }[] = [];
+  const columnEnds: Date[] = [];
+
+  sorted.forEach((event) => {
+    const eventStart = new Date(event.start);
+    const eventEnd = new Date(event.end);
+    const adjustedStart = isSameDay(day, eventStart) ? eventStart : dayStart;
+    const adjustedEnd = isSameDay(day, eventEnd) ? eventEnd : addHours(dayStart, 24);
+
+    // Find first column where this event doesn't overlap
+    let placed = -1;
+    for (let col = 0; col < columnEnds.length; col++) {
+      if (!areIntervalsOverlapping(
+        { start: adjustedStart, end: adjustedEnd },
+        { start: dayStart, end: columnEnds[col]! }
+      )) {
+        placed = col;
+        break;
+      }
+    }
+
+    if (placed === -1) {
+      placed = columnEnds.length;
+      columnEnds.push(adjustedEnd);
+    } else {
+      columnEnds[placed] = adjustedEnd;
+    }
+
+    columns.push({ event, adjustedStart, adjustedEnd, columnIndex: placed });
+  });
+
+  // Build clusters: groups of events that overlap transitively
+  // Each cluster has a maxColumns count
+  const result: PositionedEvent[] = [];
+
+  // For each event, find how many columns its cluster uses
+  columns.forEach((item) => {
+    // Find all events that overlap with this one (directly or transitively)
+    const overlapping = columns.filter((other) =>
+      areIntervalsOverlapping(
+        { start: item.adjustedStart, end: item.adjustedEnd },
+        { start: other.adjustedStart, end: other.adjustedEnd }
+      )
+    );
+
+    // The max column index in the overlapping set determines total columns
+    const maxCol = Math.max(...overlapping.map((o) => o.columnIndex)) + 1;
+
+    const startH = getHours(item.adjustedStart) + getMinutes(item.adjustedStart) / 60;
+    const endH = getHours(item.adjustedEnd) + getMinutes(item.adjustedEnd) / 60;
+    const top = (startH - startHour) * cellHeight;
+    const height = (endH - startH) * cellHeight;
+
+    result.push({
+      event: item.event,
+      top,
+      height,
+      left: item.columnIndex / maxCol,
+      width: 1 / maxCol,
+      zIndex: 10 + item.columnIndex,
+    });
+  });
+
   return result;
 }

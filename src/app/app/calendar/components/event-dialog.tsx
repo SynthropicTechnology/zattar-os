@@ -32,6 +32,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface EventDialogProps {
   event: CalendarEvent | null;
@@ -154,7 +155,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
         endHours < StartHour ||
         endHours > EndHour
       ) {
-        setError(`O hor\u00e1rio selecionado deve estar entre ${StartHour}:00 e ${EndHour}:00`);
+        setError(`O horário selecionado deve estar entre ${StartHour}:00 e ${EndHour}:00`);
         return;
       }
 
@@ -167,12 +168,12 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
     // Validate that end date is not before start date
     if (isBefore(end, start)) {
-      setError("A data de t\u00e9rmino n\u00e3o pode ser anterior \u00e0 data de in\u00edcio");
+      setError("A data de término não pode ser anterior à data de início");
       return;
     }
 
     // Use generic title if empty
-    const eventTitle = title.trim() ? title : "(sem t\u00edtulo)";
+    const eventTitle = title.trim() ? title : "(sem título)";
 
     onSave({
       id: event?.id || "",
@@ -214,7 +215,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
     },
     {
       value: "amber",
-      label: "\u00c2mbar",
+      label: "Âmbar",
       bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
       borderClass: "border-amber-400 data-[state=checked]:border-amber-400"
     },
@@ -246,7 +247,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-106.25">
+      <DialogContent className="sm:max-w-106.25 max-h-[85svh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {readOnly ? "Detalhes do Evento" : event?.id ? "Editar Evento" : "Criar Evento"}
@@ -266,7 +267,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
         )}
         <div className="grid gap-4 py-4">
           <div className="*:not-first:mt-1.5">
-            <Label htmlFor="title">T\u00edtulo</Label>
+            <Label htmlFor="title">Título</Label>
             <Input
               id="title"
               value={title}
@@ -276,7 +277,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           </div>
 
           <div className="*:not-first:mt-1.5">
-            <Label htmlFor="description">Descri\u00e7\u00e3o</Label>
+            <Label htmlFor="description">Descrição</Label>
             <Textarea
               id="description"
               value={description}
@@ -288,7 +289,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
           <div className="flex gap-4">
             <div className="flex-1 *:not-first:mt-1.5">
-              <Label htmlFor="start-date">Data de In\u00edcio</Label>
+              <Label htmlFor="start-date">Data de Início</Label>
               <Popover
                 open={readOnly ? false : startDateOpen}
                 onOpenChange={(open) => {
@@ -338,7 +339,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
             {!allDay && (
               <div className="min-w-28 *:not-first:mt-1.5">
-                <Label htmlFor="start-time">Hora de In\u00edcio</Label>
+                <Label htmlFor="start-time">Hora de Início</Label>
                 <Select disabled={readOnly} value={startTime} onValueChange={setStartTime}>
                   <SelectTrigger id="start-time">
                     <SelectValue placeholder="Selecione" />
@@ -357,7 +358,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
           <div className="flex gap-4">
             <div className="flex-1 *:not-first:mt-1.5">
-              <Label htmlFor="end-date">Data de T\u00e9rmino</Label>
+              <Label htmlFor="end-date">Data de Término</Label>
               <Popover
                 open={readOnly ? false : endDateOpen}
                 onOpenChange={(open) => {
@@ -404,7 +405,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
             {!allDay && (
               <div className="min-w-28 *:not-first:mt-1.5">
-                <Label htmlFor="end-time">Hora de T\u00e9rmino</Label>
+                <Label htmlFor="end-time">Hora de Término</Label>
                 <Select disabled={readOnly} value={endTime} onValueChange={setEndTime}>
                   <SelectTrigger id="end-time">
                     <SelectValue placeholder="Selecione" />
@@ -443,9 +444,17 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
-          {!readOnly && (
-            <div className="*:not-first:mt-1.5">
-              <Label htmlFor="responsavel">Responsável</Label>
+          <div className="*:not-first:mt-1.5">
+            <Label htmlFor="responsavel">Responsável</Label>
+            {readOnly ? (
+              <p className="text-sm text-muted-foreground">
+                {responsavelId
+                  ? (usuarios.find((u) => u.id === responsavelId)?.nomeExibicao ||
+                    usuarios.find((u) => u.id === responsavelId)?.nomeCompleto ||
+                    "—")
+                  : "Nenhum"}
+              </p>
+            ) : (
               <Select
                 value={responsavelId ? String(responsavelId) : "none"}
                 onValueChange={(value) => setResponsavelId(value === "none" ? null : Number(value))}
@@ -463,8 +472,8 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-          )}
+            )}
+          </div>
 
           <fieldset className="space-y-4">
             <legend className="text-foreground text-sm leading-none font-medium">Cor</legend>
@@ -475,13 +484,19 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
               value={color}
               onValueChange={(value: EventColor) => setColor(value)}>
               {colorOptions.map((colorOption) => (
-                <RadioGroupItem
-                  key={colorOption.value}
-                  id={`color-${colorOption.value}`}
-                  value={colorOption.value}
-                  aria-label={colorOption.label}
-                  className={cn("size-6 shadow-none", colorOption.bgClass, colorOption.borderClass)}
-                />
+                <Tooltip key={colorOption.value}>
+                  <TooltipTrigger asChild>
+                    <RadioGroupItem
+                      id={`color-${colorOption.value}`}
+                      value={colorOption.value}
+                      aria-label={colorOption.label}
+                      className={cn("size-6 shadow-none", colorOption.bgClass, colorOption.borderClass)}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="text-xs">
+                    {colorOption.label}
+                  </TooltipContent>
+                </Tooltip>
               ))}
             </RadioGroup>
           </fieldset>

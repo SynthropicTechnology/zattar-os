@@ -104,7 +104,7 @@ export function CallWindowContent({
     document.title = `${tipo === "video" ? "Video" : "Audio"} - ${salaNome}`;
 
     return () => window.removeEventListener("message", handleMessage);
-  }, [tipo, salaNome, isInitiator]);
+  }, [chamadaId, tipo, salaNome, isInitiator]);
 
   const isVideo = tipo === "video";
 
@@ -199,7 +199,7 @@ export function CallWindowContent({
     } finally {
       setLoading(false);
     }
-  }, [chamadaId, authToken, initMeeting, initialized, loading, selectedDevices, isVideo]);
+  }, [chamadaId, authToken, initMeeting, initialized, loading, selectedDevices, isVideo, logDyteDebug]);
 
   // Apply selected devices after meeting initialization
   useEffect(() => {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
-import { startOfMonth, endOfMonth } from "date-fns";
+import { addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
 
 import EventCalendarApp from "./components/event-calendar-app";
 import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/features/calendar";
@@ -16,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
   const now = new Date();
-  const start = startOfMonth(now);
-  const end = endOfMonth(now);
+  const start = startOfMonth(subMonths(now, 1));
+  const end = endOfMonth(addMonths(now, 1));
 
   const result = await actionListarEventosCalendar({
     startAt: start.toISOString(),

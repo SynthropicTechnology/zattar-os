@@ -378,14 +378,11 @@ export async function actionAtualizarProcesso(
       };
     }
 
-    const client = await createClient();
-
-    // 4. Chamar servico do core
+    // 4. Chamar servico do core (sem passar client - repositório usa createDbClient com service_role que bypassa RLS)
     console.log('[actionAtualizarProcesso] Dados validados:', validation.data);
     const result = await atualizarProcesso(
       id,
-      validation.data as UpdateProcessoInput,
-      client
+      validation.data as UpdateProcessoInput
     );
 
     if (!result.success) {

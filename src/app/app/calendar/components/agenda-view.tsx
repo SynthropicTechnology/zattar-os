@@ -4,16 +4,19 @@ import { useMemo } from "react";
 import { addDays, format, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
-import { AgendaDaysToShow, CalendarEvent, EventItem, getAgendaEventsForDay } from "./";
-import { Calendar } from "lucide-react";
+import { AgendaDaysToShow, CalendarEvent, DefaultStartHour, EventItem, getAgendaEventsForDay } from "./";
+import { Calendar, PlusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface AgendaViewProps {
   currentDate: Date;
   events: CalendarEvent[];
   onEventSelect: (event: CalendarEvent) => void;
+  onEventCreate?: (startTime: Date) => void;
 }
 
-export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewProps) {
+export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }: AgendaViewProps) {
   const days = useMemo(() => {
     return Array.from({ length: AgendaDaysToShow }, (_, i) => addDays(new Date(currentDate), i));
   }, [currentDate]);
@@ -33,7 +36,7 @@ export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewPro
           <Calendar size={32} className="text-muted-foreground/50 mb-2" />
           <h3 className="text-lg font-medium">Nenhum evento encontrado</h3>
           <p className="text-muted-foreground">
-            N\u00e3o h\u00e1 eventos agendados para este per\u00edodo.
+            Não há eventos agendados para este período.
           </p>
         </div>
       ) : (
@@ -43,12 +46,33 @@ export function AgendaView({ currentDate, events, onEventSelect }: AgendaViewPro
           if (dayEvents.length === 0) return null;
 
           return (
-            <div key={day.toString()} className="border-border/70 relative my-12 border-t">
-              <span
-                className="bg-background absolute -top-3 left-0 flex h-6 items-center pe-4 text-[10px] uppercase data-today:font-medium sm:pe-4 sm:text-xs"
-                data-today={isToday(day) || undefined}>
-                {format(day, "d 'de' MMM, EEEE", { locale: ptBR })}
-              </span>
+            <div key={day.toString()} className="group border-border/70 relative my-8 first:mt-4 border-t">
+              <div className="bg-background absolute -top-3 left-0 flex h-6 items-center gap-1 pe-4 sm:pe-4">
+                <span
+                  className="text-[10px] uppercase data-today:font-medium sm:text-xs"
+                  data-today={isToday(day) || undefined}>
+                  {format(day, "d 'de' MMM, EEEE", { locale: ptBR })}
+                </span>
+                {onEventCreate && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100 hover:opacity-100 focus-visible:opacity-100"
+                        onClick={() => {
+                          const startTime = new Date(day);
+                          startTime.setHours(DefaultStartHour, 0, 0);
+                          onEventCreate(startTime);
+                        }}
+                        aria-label={`Criar evento em ${format(day, "d 'de' MMM", { locale: ptBR })}`}>
+                        <PlusIcon size={12} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs">Novo evento</TooltipContent>
+                  </Tooltip>
+                )}
+              </div>
               <div className="mt-6 space-y-2">
                 {dayEvents.map((event) => (
                   <EventItem
