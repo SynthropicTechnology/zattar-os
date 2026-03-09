@@ -60,14 +60,30 @@ export function ProximaAudienciaPopover({
   dataAudiencia,
   className,
 }: ProximaAudienciaPopoverProps) {
+  // Defer cálculos de data para o client para evitar hydration mismatch (server UTC vs client BRT)
+  const [clientData, setClientData] = React.useState<{
+    data: string;
+    hora: string;
+    diasRestantes: number;
+  } | null>(null);
+
+  React.useEffect(() => {
+    if (dataAudiencia) {
+      setClientData({
+        ...formatarDataAudiencia(dataAudiencia),
+        diasRestantes: calcularDiasRestantes(dataAudiencia),
+      });
+    }
+  }, [dataAudiencia]);
+
   if (!dataAudiencia) {
     return null;
   }
 
-  const { data, hora } = formatarDataAudiencia(dataAudiencia);
-  const diasRestantes = calcularDiasRestantes(dataAudiencia);
+  const diasRestantes = clientData?.diasRestantes ?? 0;
 
   const getUrgenciaColor = () => {
+    if (!clientData) return 'text-primary';
     if (diasRestantes < 0) return 'text-muted-foreground'; // Passada
     if (diasRestantes <= 3) return 'text-destructive'; // Urgente
     if (diasRestantes <= 7) return 'text-warning'; // Atenção
@@ -75,6 +91,7 @@ export function ProximaAudienciaPopover({
   };
 
   const getUrgenciaLabel = () => {
+    if (!clientData) return '';
     if (diasRestantes < 0) return `Há ${Math.abs(diasRestantes)} dia(s)`;
     if (diasRestantes === 0) return 'Hoje';
     if (diasRestantes === 1) return 'Amanhã';
@@ -113,13 +130,15 @@ export function ProximaAudienciaPopover({
             <Calendar className={cn('h-4 w-4', getUrgenciaColor())} />
             <h4 className="font-medium text-sm">Próxima Audiência</h4>
           </div>
-          <div className="space-y-1 text-sm">
-            <p className="text-muted-foreground capitalize">{data}</p>
-            <p className="font-medium">às {hora}</p>
-            <p className={cn('text-xs font-medium', getUrgenciaColor())}>
-              {getUrgenciaLabel()}
-            </p>
-          </div>
+          {clientData && (
+            <div className="space-y-1 text-sm">
+              <p className="text-muted-foreground capitalize">{clientData.data}</p>
+              <p className="font-medium">às {clientData.hora}</p>
+              <p className={cn('text-xs font-medium', getUrgenciaColor())}>
+                {getUrgenciaLabel()}
+              </p>
+            </div>
+          )}
         </div>
       </PopoverContent>
     </Popover>

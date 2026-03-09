@@ -9,6 +9,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { toDateString } from '@/lib/date-utils';
 import type { StatusLancamento, TipoLancamento } from '../types/lancamentos';
 
 export interface DashboardFinanceiroData {
@@ -64,7 +65,7 @@ type LancamentoProjetado = {
 };
 
 function isoDate(d: Date): string {
-  return d.toISOString().split('T')[0]!;
+  return toDateString(d);
 }
 
 function startOfMonth(d: Date): Date {

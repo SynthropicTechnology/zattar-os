@@ -49,6 +49,7 @@ import {
 import { CopyButton } from '@/features/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
+import { ProcessosBulkActions } from './processos-bulk-actions';
 import { actionListarUsuarios } from '@/features/usuarios';
 import { ConfigAtribuicaoDialog } from '@/features/config-atribuicao';
 import { Button } from '@/components/ui/button';
@@ -61,7 +62,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { ColumnDef, Row, Table as TanstackTable } from '@tanstack/react-table';
+import type { ColumnDef, Row, RowSelectionState, Table as TanstackTable } from '@tanstack/react-table';
 
 // =============================================================================
 // TIPOS
@@ -253,11 +254,8 @@ function ProcessoResponsavelCell({
   const nomeExibicao = responsavel?.nomeExibicao || '-';
 
   const handleSuccess = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
-    console.log('[ProcessoResponsavelCell] onSuccess chamado', { updatedProcesso });
-    // Atualizar processo local se fornecido
     if (updatedProcesso && updatedProcesso.id === localProcesso.id) {
       setLocalProcesso(updatedProcesso);
-      console.log('[ProcessoResponsavelCell] Processo local atualizado:', updatedProcesso);
     }
     onSuccess?.();
   }, [onSuccess, localProcesso.id]);
@@ -318,7 +316,7 @@ function criarColunas(
       accessorKey: 'dataAutuacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap">
+        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
           {formatarData(row.original.dataAutuacao)}
         </span>
       ),
@@ -521,7 +519,7 @@ function criarColunas(
       accessorKey: 'dataArquivamento',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Arquivamento" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap">
+        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
           {formatarData(row.original.dataArquivamento || null)}
         </span>
       ),
@@ -588,7 +586,7 @@ function criarColunas(
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Criado Em" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap">
+        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
           {formatarDataHora(row.original.createdAt || null)}
         </span>
       ),
@@ -605,7 +603,7 @@ function criarColunas(
       accessorKey: 'updatedAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado Em" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap">
+        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
           {formatarDataHora(row.original.updatedAt || null)}
         </span>
       ),
@@ -664,6 +662,9 @@ export function ProcessosTableWrapper({
   const [usersMap, setUsersMap] = React.useState(initialUsers);
   const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
   const [table, setTable] = React.useState<TanstackTable<ProcessoUnificado> | null>(null);
+
+  // Estado de seleção de linhas (bulk actions)
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   // Estado de visibilidade das colunas
   const [columnVisibility, setColumnVisibility] = React.useState<Record<string, boolean>>(INITIAL_COLUMN_VISIBILITY);
@@ -766,7 +767,6 @@ export function ProcessosTableWrapper({
     setProcessos((prev) =>
       prev.map((p) => (p.id === processoId ? { ...p, ...updates } : p))
     );
-    console.log('[ProcessosTableWrapper] Processo atualizado localmente:', { processoId, updates });
   }, []);
 
   // Função wrapper para refetch que também atualiza localmente se necessário
@@ -774,7 +774,6 @@ export function ProcessosTableWrapper({
   const refetchRef = React.useRef<() => Promise<void>>();
 
   const handleRefetchWithUpdate = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
-    console.log('[ProcessosTableWrapper] handleRefetchWithUpdate chamado', { updatedProcesso });
     if (updatedProcesso) {
       updateProcessoLocal(updatedProcesso.id, updatedProcesso);
     }
@@ -785,7 +784,6 @@ export function ProcessosTableWrapper({
 
   // Função para recarregar dados (movido para antes do useMemo de colunas)
   const refetch = React.useCallback(async () => {
-    console.log('[ProcessosTableWrapper] Refetch chamado');
     setIsLoading(true);
     setError(null);
 
@@ -805,11 +803,6 @@ export function ProcessosTableWrapper({
           pagination: PaginationInfo;
           referencedUsers: Record<number, { nome: string }>;
         };
-
-        console.log('[ProcessosTableWrapper] Dados atualizados:', {
-          totalProcessos: payload.data.length,
-          processos: payload.data.map(p => ({ id: p.id, responsavelId: p.responsavelId })),
-        });
 
         setProcessos(payload.data);
         setTotal(payload.pagination.total);
@@ -943,6 +936,14 @@ export function ProcessosTableWrapper({
             />
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <ProcessosBulkActions
+              selectedRows={processos.filter((p) => rowSelection[p.id.toString()])}
+              usuarios={usuarios}
+              onSuccess={() => {
+                setRowSelection({});
+                refetch();
+              }}
+            />
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -1017,6 +1018,11 @@ export function ProcessosTableWrapper({
             onColumnVisibilityChange={setColumnVisibility}
             onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
             emptyMessage="Nenhum processo encontrado."
+            rowSelection={{
+              state: rowSelection,
+              onRowSelectionChange: setRowSelection,
+              getRowId: (row) => row.id.toString(),
+            }}
             pagination={{
               pageIndex,
               pageSize,

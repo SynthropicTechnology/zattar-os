@@ -25,6 +25,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useContasBancarias } from '@/features/financeiro';
+import { todayDateString } from '@/lib/date-utils';
 import { pagarFolha } from '../../hooks';
 import { FORMA_PAGAMENTO_FOLHA_LABELS } from '../../domain';
 import type { FormaPagamentoFolha, PagarFolhaDTO } from '../../types';
@@ -58,7 +59,7 @@ export function PagarFolhaDialog({
     resolver: zodResolver(schema),
     defaultValues: {
       formaPagamento: 'transferencia_bancaria',
-      dataEfetivacao: new Date().toISOString().split('T')[0],
+      dataEfetivacao: todayDateString(),
     },
   });
 

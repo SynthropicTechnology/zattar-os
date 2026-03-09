@@ -3,6 +3,8 @@
  * Elimina duplicação entre Contas a Pagar e Contas a Receber
  */
 
+import { todayDateString, addDays } from '@/lib/date-utils';
+
 export interface VencimentoRange {
   dataVencimentoInicio?: string;
   dataVencimentoFim?: string;
@@ -18,26 +20,19 @@ export type VencimentoPreset = 'vencidas' | 'hoje' | '7dias' | '30dias' | '';
 export function parseVencimentoFilter(preset: VencimentoPreset): VencimentoRange {
   if (!preset) return {};
 
-  const hoje = new Date();
-  const hojeStr = hoje.toISOString().split('T')[0];
+  const hojeStr = todayDateString();
 
   switch (preset) {
     case 'vencidas': {
-      const ontem = new Date(hoje);
-      ontem.setDate(ontem.getDate() - 1);
-      return { dataVencimentoFim: ontem.toISOString().split('T')[0] };
+      return { dataVencimentoFim: addDays(hojeStr, -1) };
     }
     case 'hoje':
       return { dataVencimentoInicio: hojeStr, dataVencimentoFim: hojeStr };
     case '7dias': {
-      const em7dias = new Date(hoje);
-      em7dias.setDate(em7dias.getDate() + 7);
-      return { dataVencimentoInicio: hojeStr, dataVencimentoFim: em7dias.toISOString().split('T')[0] };
+      return { dataVencimentoInicio: hojeStr, dataVencimentoFim: addDays(hojeStr, 7) };
     }
     case '30dias': {
-      const em30dias = new Date(hoje);
-      em30dias.setDate(em30dias.getDate() + 30);
-      return { dataVencimentoInicio: hojeStr, dataVencimentoFim: em30dias.toISOString().split('T')[0] };
+      return { dataVencimentoInicio: hojeStr, dataVencimentoFim: addDays(hojeStr, 30) };
     }
     default:
       return {};

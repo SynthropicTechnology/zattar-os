@@ -5,6 +5,7 @@ import { verificarConsistencia } from '../services/obrigacoes-integracao';
 import { revalidatePath } from 'next/cache';
 import type { ParcelaComLancamento } from '@/features/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
+import { todayDateString } from '@/lib/date-utils';
 
 type ParcelaObrigacao = ParcelaComLancamento;
 
@@ -140,7 +141,7 @@ export async function actionVerificarConsistencia(acordoId: number) {
  */
 export async function actionObterResumoObrigacoes(): Promise<{ success: true; data: ObterResumoObrigacoesResult } | { success: false; error: string }> {
     try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = todayDateString();
 
         // Buscar parcelas pendentes e inconsistências em paralelo
         const [parcelasPendentes, inconsistencias, repassesPendentes] = await Promise.all([
@@ -244,7 +245,7 @@ export async function actionListarObrigacoes(
         const dados = await ObrigacoesService.listarParcelasComLancamentos(params);
 
         // Calcular resumo básico
-        const today = new Date().toISOString().split('T')[0];
+        const today = todayDateString();
         const vencidas = dados.filter(p => p.status === 'pendente' && p.dataVencimento < today);
         const pendentes = dados.filter(p => p.status === 'pendente');
 

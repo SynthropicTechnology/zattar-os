@@ -328,7 +328,7 @@ export const useResolveSuggestion = (
       if (!PathApi.equals(path, blockPath)) return;
 
       const entries = [
-        ...editor.api.nodes<TElement | TSuggestionText>({
+        ...editor.api.nodes({
           at: [],
           mode: 'all',
           match: (n) =>
@@ -350,7 +350,7 @@ export const useResolveSuggestion = (
       // overlapping suggestion
       entries.forEach(([node]) => {
         if (TextApi.isText(node)) {
-          const dataList = api.suggestion.dataList(node);
+          const dataList = api.suggestion.dataList(node as TSuggestionText);
 
           dataList.forEach((data) => {
             if (data.id === id) {

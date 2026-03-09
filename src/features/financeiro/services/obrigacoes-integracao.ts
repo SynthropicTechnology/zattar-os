@@ -8,6 +8,7 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { ObrigacoesRepository } from '../repository/obrigacoes';
 import type { ParcelaComLancamento } from '@/features/obrigacoes';
+import { todayDateString } from '@/lib/date-utils';
 
 type ParcelaObrigacao = ParcelaComLancamento;
 
@@ -253,7 +254,7 @@ export async function sincronizarParcelaParaFinanceiro(
             tipo: tipoLancamento,
             descricao,
             valor: valorTotal,
-            data_lancamento: new Date().toISOString().split('T')[0],
+            data_lancamento: todayDateString(),
             data_competencia: parcela.dataVencimento.split('T')[0],
             data_vencimento: parcela.dataVencimento.split('T')[0],
             data_efetivacao: parcela.dataEfetivacao ? parcela.dataEfetivacao.split('T')[0] : null,

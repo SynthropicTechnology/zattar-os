@@ -4,6 +4,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { toDateString } from '@/lib/date-utils';
 import type { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
 
 type LegacyResumoVencimentos = {
@@ -294,16 +295,16 @@ export const LancamentosRepository = {
     async buscarResumoVencimentos(tipo?: 'receita' | 'despesa'): Promise<RepositoryResult<LegacyResumoVencimentos>> {
         const supabase = createServiceClient();
         const hoje = new Date();
-        const hojeStr = hoje.toISOString().split('T')[0];
+        const hojeStr = toDateString(hoje);
 
         // Calculate date boundaries
         const em7Dias = new Date(hoje);
         em7Dias.setDate(em7Dias.getDate() + 7);
-        const em7DiasStr = em7Dias.toISOString().split('T')[0];
+        const em7DiasStr = toDateString(em7Dias);
 
         const em30Dias = new Date(hoje);
         em30Dias.setDate(em30Dias.getDate() + 30);
-        const em30DiasStr = em30Dias.toISOString().split('T')[0];
+        const em30DiasStr = toDateString(em30Dias);
 
         // Query pending lancamentos with due dates
         let query = supabase

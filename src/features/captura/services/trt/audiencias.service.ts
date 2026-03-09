@@ -44,6 +44,7 @@
  * └─────────────────────────────────────────────────────────────────┘
  */
 
+import { todayDateString, addDays } from "@/lib/date-utils";
 import { autenticarPJE, type AuthResult } from "./trt-auth.service";
 import type { CapturaAudienciasParams } from "./trt-capture.service";
 import { obterTodasAudiencias } from "@/features/captura/pje-trt";
@@ -107,17 +108,14 @@ export interface AudienciasResult {
  * Calcula data de hoje no formato YYYY-MM-DD
  */
 function getDataHoje(): string {
-  return new Date().toISOString().split("T")[0];
+  return todayDateString();
 }
 
 /**
  * Calcula data de hoje + 365 dias no formato YYYY-MM-DD
  */
 function getDataUmAnoDepois(): string {
-  const hoje = new Date();
-  const umAnoDepois = new Date(hoje);
-  umAnoDepois.setFullYear(hoje.getFullYear() + 1);
-  return umAnoDepois.toISOString().split("T")[0];
+  return addDays(todayDateString(), 365);
 }
 
 /**

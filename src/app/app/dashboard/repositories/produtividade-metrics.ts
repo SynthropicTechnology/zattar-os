@@ -8,6 +8,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { toDateString } from '@/lib/date-utils';
 import type { ProdutividadeResumo } from '../domain';
 
 /**
@@ -78,7 +79,7 @@ export async function buscarProdutividadeUsuario(
   for (let i = 6; i >= 0; i--) {
     const dia = new Date(hoje);
     dia.setDate(dia.getDate() - i);
-    const diaStr = dia.toISOString().split('T')[0];
+    const diaStr = toDateString(dia);
 
     const proximoDia = new Date(dia);
     proximoDia.setDate(proximoDia.getDate() + 1);

@@ -3,16 +3,17 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-import { 
-  actionListarSalarios, 
-  actionBuscarSalario, 
+import {
+  actionListarSalarios,
+  actionBuscarSalario,
   actionBuscarSalariosDoUsuario,
-  actionCriarSalario, 
-  actionAtualizarSalario, 
-  actionEncerrarVigenciaSalario, 
-  actionInativarSalario, 
-  actionExcluirSalario 
+  actionCriarSalario,
+  actionAtualizarSalario,
+  actionEncerrarVigenciaSalario,
+  actionInativarSalario,
+  actionExcluirSalario
 } from '../actions/salarios-actions';
+import { todayDateString } from '@/lib/date-utils';
 import {
   SalarioComDetalhes,
   UsuarioResumo,
@@ -301,7 +302,7 @@ export const useSalariosDoUsuario = (params: UseSalariosDoUsuarioParams): UseSal
       // We process them here to match legacy behavior.
       
       if (params.vigente) {
-        const dataRef = params.dataReferencia || new Date().toISOString().split('T')[0];
+        const dataRef = params.dataReferencia || todayDateString();
         const vigente = items.find(s => 
             s.ativo && 
             s.dataInicioVigencia <= dataRef && 

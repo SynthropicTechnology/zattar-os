@@ -8,6 +8,7 @@ import { jest, expect } from '@jest/globals';
 import type { PaginatedResponse } from '@/types';
 import type { Contrato, StatusContrato, TipoContrato, TipoCobranca, PapelContratual } from '@/features/contratos/domain';
 import type { Expediente, CodigoTribunal, GrauTribunal, OrigemExpediente } from '@/features/expedientes/domain';
+import { todayDateString, toDateString } from '@/lib/date-utils';
 
 // =============================================================================
 // MOCK FACTORIES - CONTRATOS
@@ -21,7 +22,7 @@ export const mockContrato = (overrides?: Partial<Contrato>): Contrato => ({
   clienteId: 1,
   papelClienteNoContrato: 'autora' as PapelContratual,
   status: 'em_contratacao' as StatusContrato,
-  cadastradoEm: new Date().toISOString().split('T')[0],
+  cadastradoEm: todayDateString(),
   responsavelId: null,
   createdBy: null,
   observacoes: null,
@@ -277,5 +278,5 @@ export const daysFromNow = (daysFromNow: number): string => {
  * @param date - Data a ser formatada (default: hoje)
  */
 export const formatDateOnly = (date: Date = new Date()): string => {
-  return date.toISOString().split('T')[0];
+  return toDateString(date);
 };

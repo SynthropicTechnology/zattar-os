@@ -1,7 +1,5 @@
 'use client';
 
-import type { TLinkElement } from 'platejs';
-
 import React from 'react';
 import {
   type UseVirtualFloatingOptions,
@@ -183,7 +181,7 @@ function LinkOpenButton() {
 
   const attributes = React.useMemo(
     () => {
-      const entry = editor.api.node<TLinkElement>({
+      const entry = editor.api.node({
         match: { type: editor.getType(KEYS.link) },
       });
       if (!entry) {

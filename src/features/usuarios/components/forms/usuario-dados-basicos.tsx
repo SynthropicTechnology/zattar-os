@@ -9,6 +9,7 @@ import {
   formatarTelefone,
   formatarNomeExibicao,
 } from '../../utils';
+import { formatDate } from '@/lib/formatters';
 import { User, Mail, Phone, FileText, Shield, MapPin, Calendar, UserCircle, Briefcase } from 'lucide-react';
 
 interface UsuarioDadosBasicosProps {
@@ -68,7 +69,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   Nascimento
                 </Typography.Muted>
                 <div className="text-base">
-                  {new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(new Date(usuario.dataNascimento))}
+                  {formatDate(usuario.dataNascimento)}
                 </div>
               </div>
             )}

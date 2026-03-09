@@ -54,7 +54,7 @@ export function CodeBlockElement(props: PlateElementProps<TCodeBlockElement>) {
               onClick={() => formatCodeBlock(editor, { element })}
               title="Formatar código"
             >
-              <BracesIcon className="!size-3.5 text-muted-foreground" />
+              <BracesIcon className="size-3.5! text-muted-foreground" />
             </Button>
           )}
 
@@ -107,7 +107,7 @@ function CodeBlockCombobox() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[200px] p-0"
+        className="w-50 p-0"
         onCloseAutoFocus={() => setSearchValue('')}
       >
         <Command shouldFilter={false}>
@@ -119,7 +119,7 @@ function CodeBlockCombobox() {
           />
           <CommandEmpty>Nenhuma linguagem encontrada.</CommandEmpty>
 
-          <CommandList className="h-[344px] overflow-y-auto">
+          <CommandList className="h-86 overflow-y-auto">
             <CommandGroup>
               {items.map((language) => (
                 <CommandItem
@@ -127,7 +127,7 @@ function CodeBlockCombobox() {
                   className="cursor-pointer"
                   value={language.value}
                   onSelect={(value) => {
-                    editor.tf.setNodes<TCodeBlockElement>(
+                    editor.tf.setNodes(
                       { lang: value },
                       { at: element }
                     );
@@ -178,9 +178,9 @@ function CopyButton({
     >
       <span className="sr-only">Copiar</span>
       {hasCopied ? (
-        <CheckIcon className="!size-3" />
+        <CheckIcon className="size-3!" />
       ) : (
-        <CopyIcon className="!size-3" />
+        <CopyIcon className="size-3!" />
       )}
     </Button>
   );

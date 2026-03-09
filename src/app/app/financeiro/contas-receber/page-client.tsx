@@ -11,6 +11,7 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
+import { todayDateString, addDays } from '@/lib/date-utils';
 import {
   DataPagination,
   DataShell,
@@ -379,29 +380,22 @@ export default function ContasReceberPage() {
 
   // Parâmetros de busca
   const params = React.useMemo(() => {
-    const hoje = new Date();
-    const hojeStr = hoje.toISOString().split('T')[0];
+    const hojeStr = todayDateString();
     let dataVencimentoInicio: string | undefined;
     let dataVencimentoFim: string | undefined;
 
     // Processar filtro de vencimento
     if (vencimento === 'vencidas') {
-      const ontem = new Date(hoje);
-      ontem.setDate(ontem.getDate() - 1);
-      dataVencimentoFim = ontem.toISOString().split('T')[0];
+      dataVencimentoFim = addDays(hojeStr, -1);
     } else if (vencimento === 'hoje') {
       dataVencimentoInicio = hojeStr;
       dataVencimentoFim = hojeStr;
     } else if (vencimento === '7dias') {
-      const em7dias = new Date(hoje);
-      em7dias.setDate(em7dias.getDate() + 7);
       dataVencimentoInicio = hojeStr;
-      dataVencimentoFim = em7dias.toISOString().split('T')[0];
+      dataVencimentoFim = addDays(hojeStr, 7);
     } else if (vencimento === '30dias') {
-      const em30dias = new Date(hoje);
-      em30dias.setDate(em30dias.getDate() + 30);
       dataVencimentoInicio = hojeStr;
-      dataVencimentoFim = em30dias.toISOString().split('T')[0];
+      dataVencimentoFim = addDays(hojeStr, 30);
     }
 
     return {

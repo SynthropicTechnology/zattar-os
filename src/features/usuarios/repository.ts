@@ -21,15 +21,47 @@ import {
 } from "./domain";
 
 // Conversores
+/**
+ * Normaliza uma string de data para o formato YYYY-MM-DD sem criar objetos Date.
+ * Evita problemas de timezone que ocorrem ao converter string→Date→string.
+ */
 function parseDate(dateString: string | null | undefined): string | null {
   if (!dateString) return null;
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return null;
-    return date.toISOString().split("T")[0];
-  } catch {
+  const trimmed = dateString.trim();
+
+  // Já está no formato ISO date-only (YYYY-MM-DD)
+  const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoMatch) {
+    const [, y, m, d] = isoMatch;
+    if (isValidDateParts(+y, +m, +d)) return `${y}-${m}-${d}`;
     return null;
   }
+
+  // Formato ISO com time component (YYYY-MM-DDTHH:mm:ss...) — extrai apenas a data UTC
+  const isoFullMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})T/);
+  if (isoFullMatch) {
+    const [, y, m, d] = isoFullMatch;
+    if (isValidDateParts(+y, +m, +d)) return `${y}-${m}-${d}`;
+    return null;
+  }
+
+  // Formato BR (DD/MM/YYYY)
+  const brMatch = trimmed.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (brMatch) {
+    const [, d, m, y] = brMatch;
+    if (isValidDateParts(+y, +m, +d)) return `${y}-${m}-${d}`;
+    return null;
+  }
+
+  return null;
+}
+
+/** Valida se dia/mês/ano formam uma data válida sem criar Date objects */
+function isValidDateParts(year: number, month: number, day: number): boolean {
+  if (month < 1 || month > 12 || day < 1 || year < 1) return false;
+  const daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) daysInMonth[2] = 29;
+  return day <= daysInMonth[month];
 }
 
 function converterParaUsuario(data: Record<string, unknown>): Usuario {

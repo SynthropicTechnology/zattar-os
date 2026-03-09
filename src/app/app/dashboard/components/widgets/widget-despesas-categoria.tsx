@@ -99,7 +99,7 @@ export function WidgetDespesasCategoria() {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
+                    formatter={(value) => typeof value === 'number' ? formatarValor(value) : String(value ?? '')}
                     contentStyle={{ fontSize: '12px' }}
                   />
                 </PieChart>

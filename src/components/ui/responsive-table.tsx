@@ -369,7 +369,7 @@ export function ResponsiveTable<TData>({
                                         );
                                     })}
                                     {rowActions && viewport.isMobile && (
-                                        <TableHead className="w-[50px]">
+                                        <TableHead className="w-12.5">
                                             <span className="sr-only">Ações</span>
                                         </TableHead>
                                     )}
@@ -413,7 +413,7 @@ export function ResponsiveTable<TData>({
                                             );
                                         })}
                                         {rowActions && viewport.isMobile && (
-                                            <TableCell className="w-[50px]">
+                                            <TableCell className="w-12.5">
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                                                         <Button variant="ghost" size="sm" className="h-11 w-11 p-0">

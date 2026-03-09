@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import { toDateString } from "@/lib/date-utils";
 import {
   actionGerarDRE,
   actionObterEvolucaoDRE,
@@ -328,8 +329,8 @@ export const gerarPeriodoAtual = (
       const dataInicio = new Date(ano, mes, 1);
       const dataFim = new Date(ano, mes + 1, 0);
       return {
-        dataInicio: dataInicio.toISOString().split("T")[0],
-        dataFim: dataFim.toISOString().split("T")[0],
+        dataInicio: toDateString(dataInicio),
+        dataFim: toDateString(dataFim),
       };
     }
     case "trimestral": {
@@ -338,8 +339,8 @@ export const gerarPeriodoAtual = (
       const dataInicio = new Date(ano, mesInicio, 1);
       const dataFim = new Date(ano, mesInicio + 3, 0);
       return {
-        dataInicio: dataInicio.toISOString().split("T")[0],
-        dataFim: dataFim.toISOString().split("T")[0],
+        dataInicio: toDateString(dataInicio),
+        dataFim: toDateString(dataFim),
       };
     }
     case "anual":
@@ -376,7 +377,7 @@ export const gerarPeriodoAnterior = (
   novoFim.setDate(novoFim.getDate() - 1);
 
   return {
-    dataInicio: novoInicio.toISOString().split("T")[0],
-    dataFim: novoFim.toISOString().split("T")[0],
+    dataInicio: toDateString(novoInicio),
+    dataFim: toDateString(novoFim),
   };
 };

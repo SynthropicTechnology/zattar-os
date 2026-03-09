@@ -12,6 +12,7 @@ import {
   DynamicFormData,
   ConditionalRule,
 } from '../../types';
+import { toDateString } from '@/lib/date-utils';
 import {
   Form,
   FormControl,
@@ -138,7 +139,7 @@ export default function DynamicFormRenderer({
             finalValue = Boolean(value);
           } else if (field.type === FormFieldType.DATE && value instanceof Date) {
             // Format date as YYYY-MM-DD for HTML date input
-            finalValue = value.toISOString().split('T')[0];
+            finalValue = toDateString(value);
           } else if (typeof value === 'object' && value !== null) {
             // For complex types, convert to JSON string
             finalValue = JSON.stringify(value);

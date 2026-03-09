@@ -1,4 +1,5 @@
 import type { ComboboxOption, FilterGroup } from '@/components/ui/table-toolbar';
+import { toDateString } from '@/lib/date-utils';
 import type { ListarTransacoesImportadasParams, StatusConciliacao } from '../../types/conciliacao';
 
 export const buildConciliacaoFilterOptions = (contas?: { id: number; nome: string }[]): ComboboxOption[] => {
@@ -67,7 +68,7 @@ export const parseConciliacaoFilters = (selectedIds: string[]): Partial<ListarTr
   }
 
   const hoje = new Date();
-  const toIso = (d: Date) => d.toISOString().split('T')[0];
+  const toIso = (d: Date) => toDateString(d);
   if (selectedIds.includes('periodo_7')) {
     const inicio = new Date(hoje);
     inicio.setDate(inicio.getDate() - 7);

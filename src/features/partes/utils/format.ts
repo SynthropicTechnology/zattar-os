@@ -181,9 +181,16 @@ export const formatarEnderecoCompleto = (endereco: {
 export const formatarData = (dataISO: string | null | undefined): string => {
   if (!dataISO) return '-';
   try {
+    // Para strings ISO date-only, formatar diretamente sem criar Date (evita timezone shift)
+    const isoMatch = dataISO.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+    if (isoMatch) {
+      const [, y, m, d] = isoMatch;
+      return `${d}/${m}/${y}`;
+    }
+
+    // Fallback para formatos não-ISO
     const data = new Date(dataISO);
     if (isNaN(data.getTime())) return '-';
-    // Usa UTC para evitar deslocamento de fuso horário em datas sem hora
     return new Intl.DateTimeFormat('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -218,12 +225,21 @@ export const formatarTipoPessoa = (tipoPessoa: 'pf' | 'pj'): string => {
 export function calcularIdade(dataNascimento: string | null): number | null {
   if (!dataNascimento) return null;
   try {
-    const nascimento = new Date(dataNascimento);
+    // Extrair componentes sem criar Date objects (evita timezone shift)
+    const match = dataNascimento.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!match) return null;
+
+    const anoNasc = +match[1];
+    const mesNasc = +match[2];
+    const diaNasc = +match[3];
+
     const hoje = new Date();
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mesAtual = hoje.getMonth();
-    const mesNascimento = nascimento.getMonth();
-    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+    const anoHoje = hoje.getFullYear();
+    const mesHoje = hoje.getMonth() + 1;
+    const diaHoje = hoje.getDate();
+
+    let idade = anoHoje - anoNasc;
+    if (mesHoje < mesNasc || (mesHoje === mesNasc && diaHoje < diaNasc)) {
       idade--;
     }
     return idade;

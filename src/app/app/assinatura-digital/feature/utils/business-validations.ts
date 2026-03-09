@@ -70,13 +70,31 @@ export function validateBirthDate(dateString: string): ValidationResult {
   const raw = (dateString ?? '').trim();
   if (!raw) return { valid: false, message: 'data obrigatória' };
 
-  const d = new Date(raw);
-  if (Number.isNaN(d.getTime())) return { valid: false, message: 'data inválida' };
+  // Extrair componentes da data sem criar Date objects (evita timezone shift)
+  const isoMatch = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!isoMatch) return { valid: false, message: 'data inválida' };
+
+  const [, yearStr, monthStr, dayStr] = isoMatch;
+  const year = +yearStr;
+  const month = +monthStr;
+  const day = +dayStr;
+
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return { valid: false, message: 'data inválida' };
+  }
 
   const now = new Date();
-  if (d > now) return { valid: false, message: 'não pode ser futura' };
+  const nowYear = now.getFullYear();
+  const nowMonth = now.getMonth() + 1;
+  const nowDay = now.getDate();
 
-  const age = now.getFullYear() - d.getFullYear() - (now < new Date(now.getFullYear(), d.getMonth(), d.getDate()) ? 1 : 0);
+  // Comparar como inteiros para evitar timezone issues
+  const dateNum = year * 10000 + month * 100 + day;
+  const nowNum = nowYear * 10000 + nowMonth * 100 + nowDay;
+  if (dateNum > nowNum) return { valid: false, message: 'não pode ser futura' };
+
+  let age = nowYear - year;
+  if (nowMonth < month || (nowMonth === month && nowDay < day)) age--;
 
   if (age < 0) return { valid: false, message: 'data inválida' };
   if (age > 120) return { valid: false, message: 'idade inválida' };

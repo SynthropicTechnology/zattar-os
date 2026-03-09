@@ -9,6 +9,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { toDateString } from '@/lib/date-utils';
 import type { AudienciasResumo, AudienciaProxima } from '../domain';
 
 /**
@@ -68,16 +69,16 @@ export async function buscarAudienciasResumo(
     });
   }
 
-  const hojeStr = hoje.toISOString().split('T')[0];
-  const amanhaStr = amanha.toISOString().split('T')[0];
+  const hojeStr = toDateString(hoje);
+  const amanhaStr = toDateString(amanha);
 
   const hojeCount = audiencias.filter((a) => {
-    const dataAud = new Date(a.data_inicio).toISOString().split('T')[0];
+    const dataAud = toDateString(new Date(a.data_inicio));
     return dataAud === hojeStr;
   }).length;
 
   const amanhaCount = audiencias.filter((a) => {
-    const dataAud = new Date(a.data_inicio).toISOString().split('T')[0];
+    const dataAud = toDateString(new Date(a.data_inicio));
     return dataAud === amanhaStr;
   }).length;
 

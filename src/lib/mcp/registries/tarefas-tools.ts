@@ -17,6 +17,7 @@
 import { z } from 'zod';
 import { registerMcpTool } from '../server';
 import { jsonResult, errorResult } from '../types';
+import { todayDateString, addDays } from '@/lib/date-utils';
 
 /**
  * ID do usuário do sistema para operações do agente de atendimento
@@ -324,18 +325,21 @@ export async function registerTarefasTools(): Promise<void> {
         // Excluindo almoço: 12h às 14h
         const horariosDisponiveis = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
 
-        const hoje = args.data_inicio ? new Date(args.data_inicio) : new Date();
+        const hojeStr = args.data_inicio ?? todayDateString();
         const slots: Array<{ data: string; horario: string; disponivel: boolean }> = [];
         const diasParaVerificar = args.dias ?? 7;
 
         for (let i = 0; i < diasParaVerificar; i++) {
-          const data = new Date(hoje);
-          data.setDate(data.getDate() + i);
+          const dataIso = addDays(hojeStr, i);
+          // Parse YYYY-MM-DD to check day of week (local)
+          const [y, m, d] = dataIso.split('-').map(Number);
+          const dataObj = new Date(y, m - 1, d);
 
           // Pular finais de semana
-          if (data.getDay() === 0 || data.getDay() === 6) continue;
+          if (dataObj.getDay() === 0 || dataObj.getDay() === 6) continue;
 
-          const dataStr = data.toLocaleDateString('pt-BR');
+          // Format as DD/MM/YYYY for pt-BR display
+          const dataStr = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
 
           for (const horario of horariosDisponiveis) {
             // Verificar se já existe reunião neste horário
@@ -353,10 +357,14 @@ export async function registerTarefasTools(): Promise<void> {
 
         const slotsDisponiveis = slots.filter((s) => s.disponivel);
 
+        // Format inicio as DD/MM/YYYY
+        const [iy, im, id] = hojeStr.split('-').map(Number);
+        const inicioStr = `${String(id).padStart(2, '0')}/${String(im).padStart(2, '0')}/${iy}`;
+
         return jsonResult({
           message: `${slotsDisponiveis.length} horário(s) disponível(is) encontrado(s)`,
           periodo: {
-            inicio: hoje.toLocaleDateString('pt-BR'),
+            inicio: inicioStr,
             dias: diasParaVerificar,
           },
           horarios_disponiveis: slotsDisponiveis.slice(0, 20), // Limitar a 20 slots

@@ -12,6 +12,7 @@ import {
     calcularProximaDataRecorrencia
 } from '../domain/lancamentos';
 import type { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
+import { todayDateString, toDateString } from '@/lib/date-utils';
 
 type EfetivarLancamentoInput = {
     dataEfetivacao?: string;
@@ -52,8 +53,8 @@ export const LancamentosService = {
         const dadosCompletos: Partial<Lancamento> = {
             ...dados,
             status: dados.status || 'pendente',
-            dataLancamento: dados.dataLancamento || new Date().toISOString().split('T')[0],
-            dataCompetencia: dados.dataCompetencia || dados.dataLancamento || new Date().toISOString().split('T')[0],
+            dataLancamento: dados.dataLancamento || todayDateString(),
+            dataCompetencia: dados.dataCompetencia || dados.dataLancamento || todayDateString(),
             recorrente: dados.recorrente || false,
             anexos: dados.anexos || []
         };
@@ -173,9 +174,9 @@ export const LancamentosService = {
         return LancamentosRepository.criar({
             ...lancamentoBase,
             status: 'pendente',
-            dataLancamento: new Date().toISOString().split('T')[0],
-            dataVencimento: novaDataVencimento.toISOString().split('T')[0],
-            dataCompetencia: novaDataVencimento.toISOString().split('T')[0],
+            dataLancamento: todayDateString(),
+            dataVencimento: toDateString(novaDataVencimento),
+            dataCompetencia: toDateString(novaDataVencimento),
             dataEfetivacao: null,
             lancamentoOrigemId: lancamentoOrigemId,
             anexos: []

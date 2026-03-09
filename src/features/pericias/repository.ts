@@ -5,6 +5,7 @@
 import "server-only";
 
 import { createDbClient } from "@/lib/supabase";
+import { addDays } from "@/lib/date-utils";
 import { Result, ok, err, appError, PaginatedResponse } from "@/types";
 import type {
   Pericia,
@@ -110,9 +111,7 @@ function converterParaPericia(data: PericiaRowWithJoins): Pericia {
 }
 
 function calcularProximoDia(dataStr: string): string {
-  const date = new Date(dataStr);
-  date.setDate(date.getDate() + 1);
-  return date.toISOString().split("T")[0];
+  return addDays(dataStr, 1);
 }
 
 export async function findAllPericias(

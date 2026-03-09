@@ -23,12 +23,12 @@
  *
  * ## Características
  *
- * - Usa automaticamente as cores semânticas do Design System
- * - Polo ATIVO (Reclamante/Autor) = azul (info)
- * - Polo PASSIVO (Reclamado/Réu) = vermelho (destructive)
+ * - Exibe um indicador circular colorido (avatar-icon) ao lado do nome
+ * - Polo ATIVO (Reclamante/Autor) = azul (sky-600)
+ * - Polo PASSIVO (Reclamado/Réu) = vermelho (red-600)
+ * - Layout limpo: círculo pequeno + texto em cor normal
  * - Suporta trunc do texto para nomes longos
  * - Tooltip automático com o nome completo quando truncado
- * - Segue o padrão solid (fundo forte) definido no Design System
  *
  * ## Exemplos de Uso
  *
@@ -51,18 +51,6 @@
  *
  * ## Regras de Implementação
  *
- * ❌ **NÃO FAÇA**:
- * ```tsx
- * // Cores hardcoded
- * <AppBadge className="bg-blue-100 text-blue-700">{nome}</AppBadge>
- *
- * // Badge genérico sem polo
- * <Badge>{nome}</Badge>
- *
- * // Span ou div com estilos manuais
- * <span className="bg-red-100 px-2 py-1">{nome}</span>
- * ```
- *
  * ✅ **FAÇA**:
  * ```tsx
  * // Use ParteBadge com polo especificado
@@ -83,7 +71,6 @@
  */
 
 import * as React from 'react';
-import { SemanticBadge } from './semantic-badge';
 import {
   Tooltip,
   TooltipContent,
@@ -133,11 +120,24 @@ export interface ParteBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 // =============================================================================
+// HELPERS
+// =============================================================================
+
+const POLO_ATIVO_VALUES: ReadonlySet<string> = new Set(['ATIVO', 'AUTOR', 'RECLAMANTE', 'REQUERENTE']);
+
+function isPoloAtivo(polo: string): boolean {
+  return POLO_ATIVO_VALUES.has(polo);
+}
+
+// =============================================================================
 // COMPONENT
 // =============================================================================
 
 /**
  * ParteBadge - Componente padronizado para nomes de partes processuais
+ *
+ * Exibe um indicador circular colorido (avatar-icon) seguido do nome da parte.
+ * Azul = polo ativo (autor/reclamante), Vermelho = polo passivo (réu/reclamado).
  *
  * @ai-context Use SEMPRE este componente para renderizar partes processuais.
  * Não use AppBadge, Badge ou elementos HTML com cores hardcoded.
@@ -152,21 +152,37 @@ export function ParteBadge({
 }: ParteBadgeProps) {
   const content = children?.toString() || '';
   const shouldShowTooltip = truncate && content && content !== '-';
+  const ativo = isPoloAtivo(polo);
 
   const badgeContent = (
-    <SemanticBadge
-      category="polo"
-      value={polo}
+    <span
       className={cn(
-        'text-xs px-1.5 py-0',
-        truncate && 'inline-block overflow-hidden text-ellipsis whitespace-nowrap',
+        'inline-flex items-center gap-1.5',
+        truncate && 'max-w-full',
         className
       )}
       style={truncate ? { maxWidth } : undefined}
       {...props}
     >
-      {children}
-    </SemanticBadge>
+      <span
+        className={cn(
+          'shrink-0 rounded-full size-3.5',
+          ativo
+            ? 'bg-sky-600 dark:bg-sky-500'
+            : 'bg-red-600 dark:bg-red-500'
+        )}
+        aria-label={ativo ? 'Polo ativo' : 'Polo passivo'}
+        role="img"
+      />
+      <span
+        className={cn(
+          'text-foreground',
+          truncate && 'overflow-hidden text-ellipsis whitespace-nowrap'
+        )}
+      >
+        {children}
+      </span>
+    </span>
   );
 
   if (shouldShowTooltip) {

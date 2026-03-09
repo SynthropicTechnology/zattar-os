@@ -37,16 +37,9 @@ export function ProcessosAlterarResponsavelDialog({
   // Criar função bound com o ID do processo
   const boundAction = React.useCallback(
     (prevState: ActionResult | null, formData: FormData) => {
-      // Debug: log do valor antes de enviar
-      const responsavelIdValue = formData.get('responsavelId');
-      console.log('[ProcessosAlterarResponsavelDialog] Enviando responsavelId:', {
-        responsavelId,
-        formDataValue: responsavelIdValue,
-        processoId: processo?.id,
-      });
       return actionAtualizarProcesso(processo?.id || 0, prevState, formData);
     },
-    [processo?.id, responsavelId]
+    [processo?.id]
   );
 
   const [formState, formAction, isPending] = useActionState(
@@ -68,18 +61,9 @@ export function ProcessosAlterarResponsavelDialog({
     if (!formState) return;
 
     if (formState.success) {
-      console.log('[ProcessosAlterarResponsavelDialog] Sucesso! Chamando onSuccess e fechando diálogo');
       const updatedProcesso = formState.data as ProcessoUnificado | undefined;
       onSuccess(updatedProcesso);
       onOpenChange(false);
-    } else if (!formState.success) {
-      // Log de erro para debug - formState tem success: false, então tem error e message
-      console.error('[ProcessosAlterarResponsavelDialog] Erro:', {
-        error: formState.error,
-        message: formState.message,
-        errors: formState.errors,
-        formState,
-      });
     }
   }, [formState, onSuccess, onOpenChange]);
 

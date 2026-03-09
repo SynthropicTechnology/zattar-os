@@ -142,9 +142,19 @@ export const parseCEP = (cep: string): string => {
  */
 export const formatData = (data: string | Date): string => {
   if (!data) return '';
+
+  // Para strings ISO date-only, formatar direto sem criar Date (evita timezone shift)
+  if (typeof data === 'string') {
+    const isoMatch = data.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+    if (isoMatch) {
+      const [, y, m, d] = isoMatch;
+      return `${d}/${m}/${y}`;
+    }
+  }
+
+  // Fallback para Date objects ou formatos não-ISO
   const date = typeof data === 'string' ? new Date(data) : data;
   if (isNaN(date.getTime())) return '';
-  // Usa UTC para evitar deslocamento de fuso horário em datas sem hora
   return new Intl.DateTimeFormat('pt-BR', {
     day: '2-digit',
     month: '2-digit',

@@ -976,6 +976,11 @@ export async function saveProcesso(
     }
 
     const resultado = converterParaProcesso(data as Record<string, unknown>);
+
+    // Refresh da materialized view para refletir a inserção
+    try { await db.rpc("refresh_acervo_unificado", { use_concurrent: true }); }
+    catch (e) { console.warn("[createProcesso] Falha no refresh da view materializada:", e); }
+
     await invalidateAcervoCache();
     return ok(resultado);
   } catch (error) {
@@ -1101,6 +1106,11 @@ export async function updateProcesso(
     }
 
     const resultado = converterParaProcesso(data as Record<string, unknown>);
+
+    // Refresh da materialized view para refletir a atualização
+    try { await db.rpc("refresh_acervo_unificado", { use_concurrent: true }); }
+    catch (e) { console.warn("[updateProcesso] Falha no refresh da view materializada:", e); }
+
     await deleteCached(`${CACHE_PREFIXES.acervo}:unificado:${id}`);
     await invalidateAcervoCache();
     return ok(resultado);

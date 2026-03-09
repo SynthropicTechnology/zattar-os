@@ -23,6 +23,7 @@ import {
   ultimoDiaDoMes
 } from './utils';
 import { MESES_LABELS } from './domain';
+import { todayDateString } from '@/lib/date-utils';
 
 // Re-export Salary functions from repository as they contain the business logic
 export {
@@ -281,7 +282,7 @@ export const aprovarFolhaPagamento = async (
   const mesNome = MESES_LABELS[folha.mesReferencia] || String(folha.mesReferencia);
   const dataVencimento = folha.dataPagamento || ultimoDiaDoMes(folha.mesReferencia, folha.anoReferencia);
   const dataCompetencia = `${folha.anoReferencia}-${String(folha.mesReferencia).padStart(2, '0')}-01`;
-  const hoje = new Date().toISOString().split('T')[0];
+  const hoje = todayDateString();
 
   const erros: Array<{ itemId: number; usuario: string; erro: string }> = [];
 

@@ -81,6 +81,16 @@ export function formatDate(
   }
 
   try {
+    // Para strings ISO date-only (YYYY-MM-DD), formatar direto sem Date (evita timezone shift)
+    if (typeof dateISO === 'string' && !includeTime) {
+      const isoMatch = dateISO.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+      if (isoMatch) {
+        const [, y, m, d] = isoMatch;
+        return `${d}/${m}/${y}`;
+      }
+    }
+
+    // Fallback para Date objects, formatos não-ISO, ou quando includeTime é true
     const date = typeof dateISO === 'string' ? new Date(dateISO) : dateISO;
 
     if (isNaN(date.getTime())) {
@@ -91,7 +101,6 @@ export function formatDate(
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
-      // Usa UTC para datas sem hora para evitar deslocamento de fuso horário
       timeZone: includeTime ? undefined : 'UTC',
     };
 

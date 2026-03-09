@@ -4,6 +4,7 @@
  */
 
 import { createServiceClient } from "@/lib/supabase/service-client";
+import { toDateString } from "@/lib/date-utils";
 import { Result, ok, err, appError, PaginatedResponse } from "@/types";
 import type {
   ComunicacaoCNJ,
@@ -429,7 +430,7 @@ export async function findExpedienteCorrespondente(
       .eq("numero_processo", params.numeroProcesso)
       .eq("trt", params.trt)
       .eq("grau", params.grau)
-      .gte("data_criacao_expediente", dataLimite.toISOString().split("T")[0])
+      .gte("data_criacao_expediente", toDateString(dataLimite))
       .lte("data_criacao_expediente", params.dataDisponibilizacao)
       .is("baixado_em", null) // Não baixado
       .order("data_criacao_expediente", { ascending: false })

@@ -1,6 +1,7 @@
 
 import { StatusFolhaPagamento, Salario } from './domain';
 import { MESES_LABELS } from './domain';
+import { todayDateString, toDateString } from '@/lib/date-utils';
 
 /**
  * Formata o período como string (ex: "Janeiro/2025")
@@ -49,7 +50,7 @@ export const validarPeriodoFolha = (mes: number, ano: number): { valido: boolean
  */
 export const ultimoDiaDoMes = (mes: number, ano: number): string => {
   const data = new Date(ano, mes, 0); // Dia 0 do próximo mês = último dia do mês atual
-  return data.toISOString().split('T')[0];
+  return toDateString(data);
 };
 
 /**
@@ -57,7 +58,7 @@ export const ultimoDiaDoMes = (mes: number, ano: number): string => {
  */
 export const primeiroDiaDoMes = (mes: number, ano: number): string => {
   const data = new Date(ano, mes - 1, 1);
-  return data.toISOString().split('T')[0];
+  return toDateString(data);
 };
 
 /**
@@ -122,7 +123,7 @@ export const calcularDuracaoVigencia = (
 export const calcularSalarioVigente = (
   salarios: Salario[],
   usuarioId: number,
-  dataReferencia: string = new Date().toISOString().split('T')[0]
+  dataReferencia: string = todayDateString()
 ): Salario | null => {
   const vigentes = salarios
     .filter((salario) => salario.usuarioId === usuarioId && salario.ativo)

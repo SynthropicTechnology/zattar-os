@@ -5,6 +5,8 @@
  * Consolida funcionalidades de geração de relatórios
  */
 
+import { todayDateString } from '@/lib/date-utils';
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -294,7 +296,7 @@ export async function actionExportarPlanoContasCSV() {
             success: true,
             data: {
                 content: csvContent,
-                filename: `plano_contas_${new Date().toISOString().split('T')[0]}.csv`,
+                filename: `plano_contas_${todayDateString()}.csv`,
                 contentType: 'text/csv',
             },
         };
@@ -359,7 +361,7 @@ export async function actionExportarConciliacaoCSV(contaBancariaId: number, data
  */
 export async function actionExportarInadimplenciaCSV(dataReferencia?: string) {
     try {
-        const dataRef = dataReferencia || new Date().toISOString().split('T')[0];
+        const dataRef = dataReferencia || todayDateString();
 
         const linhas: string[] = [];
         const sep = ',';

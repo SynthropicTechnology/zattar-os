@@ -454,7 +454,7 @@ function CategoriaPieChart({ categorias }: { categorias: CategoriaDRE[] }) {
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
+              formatter={(value) => typeof value === 'number' ? formatarValor(value) : String(value ?? '')}
               labelFormatter={(name) => name}
             />
           </PieChart>
@@ -555,11 +555,11 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
               width={70}
             />
             <Tooltip
-              formatter={(value: number | undefined, name: string | undefined) => [
-                value !== undefined ? formatarValor(value) : '',
+              formatter={(value, name) => [
+                typeof value === 'number' ? formatarValor(value) : String(value ?? ''),
                 name === 'receitaLiquida' ? 'Receita Líquida' :
                   name === 'lucroOperacional' ? 'Lucro Operacional' :
-                    name === 'lucroLiquido' ? 'Lucro Líquido' : (name || '')
+                    name === 'lucroLiquido' ? 'Lucro Líquido' : String(name || '')
               ]}
             />
             <Legend

@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { toDateString } from '@/lib/date-utils';
 
 export type StatusConciliacaoFilter = 'pendente' | 'conciliado' | 'divergente' | 'ignorado' | 'todos';
 export type PeriodoFilter = '7' | '30' | '90' | 'todos';
@@ -46,7 +47,7 @@ export function ConciliacaoListFilters({
         value={statusFiltro}
         onValueChange={(value) => onStatusChange(value as StatusConciliacaoFilter)}
       >
-        <SelectTrigger className="h-10 w-[140px]">
+        <SelectTrigger className="h-10 w-35">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
@@ -63,7 +64,7 @@ export function ConciliacaoListFilters({
         value={periodoFiltro}
         onValueChange={(value) => onPeriodoChange(value as PeriodoFilter)}
       >
-        <SelectTrigger className="h-10 w-[150px]">
+        <SelectTrigger className="h-10 w-37.5">
           <SelectValue placeholder="Período" />
         </SelectTrigger>
         <SelectContent>
@@ -83,7 +84,7 @@ export function ConciliacaoListFilters({
             else onContaChange(Number(value));
           }}
         >
-          <SelectTrigger className="h-10 w-[180px]">
+          <SelectTrigger className="h-10 w-45">
             <SelectValue placeholder="Conta" />
           </SelectTrigger>
           <SelectContent>
@@ -110,7 +111,7 @@ export function calcularPeriodo(periodo: PeriodoFilter): { dataInicio?: string; 
   const inicio = new Date(hoje);
   inicio.setDate(inicio.getDate() - Number(periodo));
 
-  const toIso = (d: Date) => d.toISOString().split('T')[0];
+  const toIso = (d: Date) => toDateString(d);
 
   return {
     dataInicio: toIso(inicio),

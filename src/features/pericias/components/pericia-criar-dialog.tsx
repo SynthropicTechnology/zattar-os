@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import { toDateString } from '@/lib/date-utils';
 import {
   CodigoTribunal,
   SituacaoPericiaCodigo,
@@ -84,7 +85,7 @@ export function PericiaCriarDialog({
       fd.append('trt', trt);
       fd.append('grau', grau);
       if (prazoEntrega) {
-        fd.append('prazoEntrega', prazoEntrega.toISOString().split('T')[0]);
+        fd.append('prazoEntrega', toDateString(prazoEntrega));
       }
       fd.append('situacaoCodigo', situacaoCodigo);
       if (especialidadeId && especialidadeId !== '_none') {

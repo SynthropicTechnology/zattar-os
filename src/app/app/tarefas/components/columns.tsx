@@ -21,7 +21,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Selecionar todos"
-        className="translate-y-[2px]"
+        className="translate-y-0.5"
       />
     ),
     cell: ({ row }) => (
@@ -29,7 +29,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Selecionar linha"
-        className="translate-y-[2px]"
+        className="translate-y-0.5"
       />
     ),
     enableSorting: false,
@@ -94,14 +94,14 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
           {url ? (
             <a
               href={url}
-              className="flex max-w-[500px] items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline"
+              className="flex max-w-125 items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline"
               title="Abrir no módulo de origem"
             >
               <span className="truncate">{row.getValue("title")}</span>
               <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
             </a>
           ) : (
-            <span className="max-w-[500px] truncate font-medium">{row.getValue("title")}</span>
+            <span className="max-w-125 truncate font-medium">{row.getValue("title")}</span>
           )}
           {row.original.prazoVencido && (
             <Badge variant="destructive" className="shrink-0 text-[10px]">
@@ -126,7 +126,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center gap-2">
+        <div className="flex w-25 items-center gap-2">
           {status.icon && <status.icon className="text-muted-foreground size-4" />}
           <span>{status.label}</span>
         </div>

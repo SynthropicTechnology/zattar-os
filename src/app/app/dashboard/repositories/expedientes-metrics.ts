@@ -9,6 +9,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { toDateString } from '@/lib/date-utils';
 import type { ExpedientesResumo, ExpedienteUrgente } from '../domain';
 
 /**
@@ -72,8 +73,8 @@ export async function buscarExpedientesResumo(
 
   const total = todosExpedientes.length;
 
-  const hojeStr = hoje.toISOString().split('T')[0];
-  const amanhaStr = amanha.toISOString().split('T')[0];
+  const hojeStr = toDateString(hoje);
+  const amanhaStr = toDateString(amanha);
 
   let vencidos = 0;
   let venceHoje = 0;
@@ -85,7 +86,7 @@ export async function buscarExpedientesResumo(
 
     const prazoDate = new Date(exp.prazo);
     prazoDate.setHours(0, 0, 0, 0);
-    const prazoStr = prazoDate.toISOString().split('T')[0];
+    const prazoStr = toDateString(prazoDate);
 
     if (prazoDate < hoje) {
       vencidos++;

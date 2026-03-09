@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useObrigacoes } from "@/features/financeiro/hooks";
 import { formatDate, formatCurrency } from "@/lib/formatters";
+import { todayDateString, addDays } from "@/lib/date-utils";
 import type { ParcelaComLancamento } from "@/features/obrigacoes";
 
 type ParcelaObrigacao = ParcelaComLancamento;
@@ -48,18 +49,13 @@ function getTipoBadge(): string {
 
 export function ObrigacoesRecentesCard() {
   // Buscar obrigações próximas do vencimento (últimos 7 dias vencidas + próximos 30 dias)
-  const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0);
-  const dataInicio = new Date(hoje);
-  dataInicio.setDate(dataInicio.getDate() - 7); // 7 dias atrás (vencidas recentes)
-  const dataFim = new Date(hoje);
-  dataFim.setDate(dataFim.getDate() + 30); // Próximos 30 dias
+  const hojeStr = todayDateString();
 
   const { obrigacoes, isLoading, error } = useObrigacoes({
     limite: 10,
     pagina: 1,
-    dataVencimentoInicio: dataInicio.toISOString().split('T')[0],
-    dataVencimentoFim: dataFim.toISOString().split('T')[0],
+    dataVencimentoInicio: addDays(hojeStr, -7),
+    dataVencimentoFim: addDays(hojeStr, 30),
   });
 
   // Ordenar por data de vencimento (mais próximas primeiro)

@@ -4,7 +4,7 @@ import type { SlateElementProps } from 'platejs/static';
 
 import { type Heading, BaseTocPlugin, isHeading } from '@platejs/toc';
 import { cva } from 'class-variance-authority';
-import { type SlateEditor, type TElement, NodeApi } from 'platejs';
+import { type SlateEditor, NodeApi } from 'platejs';
 import { SlateElement } from 'platejs/static';
 
 import { Button } from '@/components/ui/button';
@@ -72,7 +72,7 @@ const getHeadingList = (editor?: SlateEditor) => {
 
   const headingList: Heading[] = [];
 
-  const values = editor.api.nodes<TElement>({
+  const values = editor.api.nodes({
     at: [],
     match: (n) => isHeading(n),
   });

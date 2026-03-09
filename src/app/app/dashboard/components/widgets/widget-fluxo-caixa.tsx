@@ -69,7 +69,7 @@ export function WidgetFluxoCaixa() {
                   width={70}
                 />
                 <Tooltip
-                  formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
+                  formatter={(value) => typeof value === 'number' ? formatarValor(value) : String(value ?? '')}
                   contentStyle={{ fontSize: '12px' }}
                   cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
                 />

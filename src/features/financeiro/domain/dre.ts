@@ -3,6 +3,8 @@
  * Entidades e regras de negocio puras (sem dependencia de infraestrutura)
  */
 
+import { toDateString } from '@/lib/date-utils';
+
 // ============================================================================
 // Enums e tipos literais (From Types)
 // ============================================================================
@@ -385,8 +387,8 @@ export function calcularPeriodoAnterior(dataInicio: string, dataFim: string): { 
     novoFim.setDate(novoFim.getDate() - 1);
 
     return {
-        dataInicio: novoInicio.toISOString().split('T')[0],
-        dataFim: novoFim.toISOString().split('T')[0]
+        dataInicio: toDateString(novoInicio),
+        dataFim: toDateString(novoFim)
     };
 }
 

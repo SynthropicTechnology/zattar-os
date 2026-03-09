@@ -1,4 +1,5 @@
 import { createDbClient } from "@/lib/supabase";
+import { toDateString } from "@/lib/date-utils";
 import { ok, err, appError, type Result } from "@/types/result";
 import type {
   DashboardSummary,
@@ -232,7 +233,7 @@ export async function getProjetosPorPeriodo(
     );
 
     const results: ProjetosPorPeriodo[] = allResults.map(([criados, concluidos], idx) => ({
-      data: months[idx].monthStart.toISOString().split("T")[0],
+      data: toDateString(months[idx].monthStart),
       criados: criados.count ?? 0,
       concluidos: concluidos.count ?? 0,
     }));

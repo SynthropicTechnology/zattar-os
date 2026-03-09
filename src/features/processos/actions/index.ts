@@ -12,6 +12,7 @@
  */
 
 import { revalidatePath } from "next/cache";
+import { todayDateString } from "@/lib/date-utils";
 import { authenticateRequest } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -360,16 +361,11 @@ export async function actionAtualizarProcesso(
 
     // 2. Converter FormData para objeto
     const rawData = formDataToUpdateProcessoInput(formData);
-    
-    // Debug: log do rawData para investigar problema de atribuição
-    console.log('[actionAtualizarProcesso] rawData:', rawData);
-    console.log('[actionAtualizarProcesso] FormData responsavelId:', formData.get('responsavelId'));
 
     // 3. Validar com Zod
     const validation = updateProcessoSchema.safeParse(rawData);
 
     if (!validation.success) {
-      console.error('[actionAtualizarProcesso] Erro de validação:', validation.error);
       return {
         success: false,
         error: "Erro de validacao",
@@ -378,23 +374,19 @@ export async function actionAtualizarProcesso(
       };
     }
 
-    // 4. Chamar servico do core (sem passar client - repositório usa createDbClient com service_role que bypassa RLS)
-    console.log('[actionAtualizarProcesso] Dados validados:', validation.data);
+    // 4. Chamar servico do core
     const result = await atualizarProcesso(
       id,
       validation.data as UpdateProcessoInput
     );
 
     if (!result.success) {
-      console.error('[actionAtualizarProcesso] Erro no service:', result.error);
       return {
         success: false,
         error: result.error.message,
         message: result.error.message,
       };
     }
-    
-    console.log('[actionAtualizarProcesso] Sucesso:', result.data);
 
     // 5. Revalidar cache
     revalidatePath("/app/processos");
@@ -574,6 +566,81 @@ export async function actionBuscarTimeline(
       error:
         error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao carregar timeline. Tente novamente.",
+    };
+  }
+}
+
+// =============================================================================
+// ATRIBUIÇÃO DE RESPONSÁVEL EM LOTE
+// =============================================================================
+
+/**
+ * Action para atribuir responsável a múltiplos processos de uma vez
+ */
+export async function actionAtribuirResponsavelEmLote(
+  processoIds: number[],
+  responsavelId: number | null
+): Promise<ActionResult<{ atualizados: number; falhas: number }>> {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
+    if (!processoIds.length) {
+      return {
+        success: false,
+        error: "Nenhum processo selecionado",
+        message: "Selecione pelo menos um processo",
+      };
+    }
+
+    let atualizados = 0;
+    let falhas = 0;
+
+    const results = await Promise.allSettled(
+      processoIds.map((id) =>
+        atualizarProcesso(id, { responsavelId } as UpdateProcessoInput)
+      )
+    );
+
+    for (const result of results) {
+      if (result.status === "fulfilled" && result.value.success) {
+        atualizados++;
+      } else {
+        falhas++;
+      }
+    }
+
+    revalidatePath("/app/processos");
+
+    if (atualizados === 0) {
+      return {
+        success: false,
+        error: "Falha ao atribuir responsável",
+        message: "Nenhum processo foi atualizado",
+      };
+    }
+
+    return {
+      success: true,
+      data: { atualizados, falhas },
+      message:
+        falhas > 0
+          ? `${atualizados} processo(s) atualizado(s), ${falhas} falha(s)`
+          : `${atualizados} processo(s) atualizado(s) com sucesso`,
+    };
+  } catch (error) {
+    console.error("Erro ao atribuir responsável em lote:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atribuir responsável. Tente novamente.",
     };
   }
 }
@@ -940,7 +1007,7 @@ export async function actionCriarProcessoManual(
     const advogadoId = 1; // Placeholder - idealmente seria o usuário logado ou configurável
     const numero = extrairNumeroSequencialCNJ(dadosValidados.numeroProcesso);
     const codigoStatusProcesso = "ATIVO";
-    const dataAutuacao = dadosValidados.dataAutuacao || new Date().toISOString().split("T")[0];
+    const dataAutuacao = dadosValidados.dataAutuacao || todayDateString();
 
     // 4. Montar input completo para o serviço
     const processoInput: CreateProcessoInput = {

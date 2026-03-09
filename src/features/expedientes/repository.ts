@@ -3,6 +3,7 @@
  */
 
 import { createDbClient } from "@/lib/supabase";
+import { addDays } from "@/lib/date-utils";
 import { Result, ok, err, appError, PaginatedResponse } from "@/types";
 import {
   Expediente,
@@ -218,9 +219,7 @@ export async function findAllExpedientes(
     if (params.dataPrazoLegalInicio || params.dataPrazoLegalFim) {
       // Helper: calcular próximo dia para filtro < (já que campo é timestamptz)
       const calcularProximoDia = (dataStr: string): string => {
-        const date = new Date(dataStr);
-        date.setDate(date.getDate() + 1);
-        return date.toISOString().split("T")[0];
+        return addDays(dataStr, 1);
       };
 
       if (params.incluirSemPrazo) {

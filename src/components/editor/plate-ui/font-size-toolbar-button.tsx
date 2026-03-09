@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 
-import type { TElement } from 'platejs';
-
 import { toUnitLess } from '@platejs/basic-styles';
 import { FontSizePlugin } from '@platejs/basic-styles/react';
 import { Minus, Plus } from 'lucide-react';
@@ -56,7 +54,7 @@ export function FontSizeToolbarButton() {
       return toUnitLess(fontSize as string);
     }
 
-    const [block] = editor.api.block<TElement>() || [];
+    const [block] = editor.api.block() || [];
 
     if (!block?.type) return DEFAULT_FONT_SIZE;
 

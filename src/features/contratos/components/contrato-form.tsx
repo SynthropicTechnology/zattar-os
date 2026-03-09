@@ -23,6 +23,7 @@ import {
 import type { ComboboxOption } from '@/components/ui/combobox';
 import { ServerCombobox } from '@/components/ui/server-combobox';
 import { cn } from '@/lib/utils';
+import { todayDateString, toDateString } from '@/lib/date-utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '../actions';
@@ -62,7 +63,7 @@ const INITIAL_FORM_STATE = {
   papelClienteNoContrato: '' as PapelContratual | '',
   partesContrariasIds: [] as string[],
   status: 'em_contratacao' as StatusContrato,
-  cadastradoEm: new Date().toISOString().split('T')[0],
+  cadastradoEm: todayDateString(),
   responsavelId: '' as string,
   observacoes: '' as string,
 };
@@ -151,13 +152,13 @@ export function ContratoForm({
 
       // Converter data para formato YYYY-MM-DD
       const formatarDataParaInput = (dataStr: string | null | undefined): string => {
-        if (!dataStr) return new Date().toISOString().split('T')[0];
+        if (!dataStr) return todayDateString();
         // Se já está no formato YYYY-MM-DD, retornar diretamente
         if (/^\d{4}-\d{2}-\d{2}$/.test(dataStr)) return dataStr;
         // Se é uma data ISO completa, extrair apenas a parte da data
         const parsed = new Date(dataStr);
-        if (isNaN(parsed.getTime())) return new Date().toISOString().split('T')[0];
-        return parsed.toISOString().split('T')[0];
+        if (isNaN(parsed.getTime())) return todayDateString();
+        return toDateString(parsed);
       };
 
       // Criar opções iniciais para partes contrárias com nomes

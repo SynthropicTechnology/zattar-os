@@ -52,6 +52,7 @@
  * └─────────────────────────────────────────────────────────────────┘
  */
 
+import { todayDateString, addDays } from "@/lib/date-utils";
 import { autenticarComRetry, type AuthResult } from "./trt-auth.service";
 import type { CapturaCombinAdaParams } from "./trt-capture.service";
 import { obterTodasAudiencias } from "@/features/captura/pje-trt";
@@ -174,26 +175,21 @@ export interface CapturaCombinAdaResult {
  * Calcula data de hoje no formato YYYY-MM-DD
  */
 function getDataHoje(): string {
-  return new Date().toISOString().split("T")[0];
+  return todayDateString();
 }
 
 /**
  * Calcula data de ontem no formato YYYY-MM-DD
  */
 function getDataOntem(): string {
-  const ontem = new Date();
-  ontem.setDate(ontem.getDate() - 1);
-  return ontem.toISOString().split("T")[0];
+  return addDays(todayDateString(), -1);
 }
 
 /**
  * Calcula data de hoje + 365 dias no formato YYYY-MM-DD
  */
 function getDataUmAnoDepois(): string {
-  const hoje = new Date();
-  const umAnoDepois = new Date(hoje);
-  umAnoDepois.setFullYear(hoje.getFullYear() + 1);
-  return umAnoDepois.toISOString().split("T")[0];
+  return addDays(todayDateString(), 365);
 }
 
 /**

@@ -1,5 +1,6 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { todayDateString, toDateString } from '@/lib/date-utils';
 import {
   Salario,
   SalarioComDetalhes,
@@ -252,7 +253,7 @@ export const listarSalarios = async (params: ListarSalariosParams): Promise<List
   }
 
   if (vigente) {
-    const hoje = new Date().toISOString().split('T')[0];
+    const hoje = todayDateString();
     query = query
       .lte('data_inicio_vigencia', hoje)
       .or(`data_fim_vigencia.is.null,data_fim_vigencia.gte.${hoje}`);
@@ -356,7 +357,7 @@ export const buscarSalarioVigente = async (
   usuarioId: number,
   dataReferencia?: string
 ): Promise<SalarioComDetalhes | null> => {
-  const dataRef = dataReferencia || new Date().toISOString().split('T')[0];
+  const dataRef = dataReferencia || todayDateString();
   const supabase = createServiceClient();
 
   const { data: salarios, error } = await supabase
@@ -398,7 +399,7 @@ export const buscarSalarioVigente = async (
 
 export const buscarSalariosVigentesNoMes = async (mes: number, ano: number): Promise<SalarioComDetalhes[]> => {
   const primeiroDia = `${ano}-${String(mes).padStart(2, '0')}-01`;
-  const ultimoDia = new Date(ano, mes, 0).toISOString().split('T')[0];
+  const ultimoDia = toDateString(new Date(ano, mes, 0));
 
   const supabase = createServiceClient();
 
@@ -635,7 +636,7 @@ export const calcularTotaisSalariosAtivos = async (): Promise<{
   totalFuncionarios: number;
   totalBrutoMensal: number;
 }> => {
-  const hoje = new Date().toISOString().split('T')[0];
+  const hoje = todayDateString();
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -661,7 +662,7 @@ export const calcularTotaisSalariosAtivos = async (): Promise<{
 };
 
 export const listarUsuariosSemSalarioVigente = async (): Promise<UsuarioResumo[]> => {
-  const hoje = new Date().toISOString().split('T')[0];
+  const hoje = todayDateString();
   const supabase = createServiceClient();
 
   const { data: usuarios, error: erroUsuarios } = await supabase

@@ -2,7 +2,7 @@
  * Sinesys - Formatadores de Dados Brasileiros
  *
  * ⚠️ Legado/Compat:
- * - O “single source of truth” de formatação é o Design System em `@/lib/design-system`.
+ * - O "single source of truth" de formatação é o Design System em `@/lib/design-system`.
  * - Mantemos este módulo como compatibilidade (assinaturas/semântica antigas),
  *   para não quebrar telas que esperam `''` ao invés de `'-'` em campos vazios.
  *
@@ -63,24 +63,36 @@ export const formatCNPJ = (cnpj: string | null | undefined): string => {
 export const formatDate = (
   date: Date | string | null | undefined
 ): string => {
-  // Mantém comportamento antigo ('' ao invés de '-') e consistência via timezone UTC
-  // para evitar “voltar um dia” em datas sem timezone.
-  if (!date) return "";
+  if (!date) return '';
   try {
-    const dateObj = typeof date === "string" ? new Date(date) : date;
-    // Adiciona verificação de data válida
-    if (isNaN(dateObj.getTime())) {
-        return "";
+    // Para strings no formato ISO date-only (YYYY-MM-DD), formatar diretamente
+    // sem criar Date objects - evita problemas de timezone.
+    if (typeof date === 'string') {
+      const isoMatch = date.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+      if (isoMatch) {
+        const [, y, m, d] = isoMatch;
+        const month = +m;
+        const day = +d;
+        if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+          return `${d}/${m}/${y}`;
+        }
+      }
     }
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "UTC", // Garante consistência independente do fuso do servidor/cliente
+
+    // Fallback para Date objects ou formatos nao-ISO
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(dateObj.getTime())) {
+      return '';
+    }
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      timeZone: 'UTC',
     }).format(dateObj);
   } catch (error) {
-    console.error("Erro ao formatar data:", error);
-    return "";
+    console.error('Erro ao formatar data:', error);
+    return '';
   }
 };
 

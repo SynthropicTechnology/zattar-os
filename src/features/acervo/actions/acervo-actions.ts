@@ -6,6 +6,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { todayDateString } from "@/lib/date-utils";
 import { authenticateRequest as getCurrentUser } from "@/lib/auth";
 import { checkPermission } from "@/lib/auth/authorization";
 import {
@@ -415,7 +416,7 @@ export async function actionExportarAcervoCSV(
       success: true,
       data: {
         csv,
-        filename: `acervo_${new Date().toISOString().split("T")[0]}.csv`,
+        filename: `acervo_${todayDateString()}.csv`,
       },
     };
   } catch (error) {

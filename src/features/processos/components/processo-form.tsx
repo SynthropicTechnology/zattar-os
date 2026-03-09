@@ -15,6 +15,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { cn } from '@/lib/utils';
+import { todayDateString } from '@/lib/date-utils';
 import { Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -40,7 +41,7 @@ const INITIAL_FORM_STATE = {
   classeJudicial: '',
   nomeParteAutora: '',
   nomeParteRe: '',
-  dataAutuacao: new Date().toISOString().split('T')[0],
+  dataAutuacao: todayDateString(),
 
   // Opcionais/Defaults
   segredoJustica: false,

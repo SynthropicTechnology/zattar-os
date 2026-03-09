@@ -63,10 +63,17 @@ export function formatarNomeExibicao(nome: string | null | undefined): string {
 export function formatarData(data: string | null | undefined): string {
   if (!data) return '-';
   try {
+    // Para strings ISO date-only, formatar direto sem Date (evita timezone shift)
+    const isoMatch = data.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+    if (isoMatch) {
+      const [, y, m, d] = isoMatch;
+      return `${d}/${m}/${y}`;
+    }
+
+    // Fallback para formatos não-ISO
     const date = new Date(data);
     if (isNaN(date.getTime())) return '-';
-    // Ajuste para fuso horário se necessário, ou usar UTC
-    return new Intl.DateTimeFormat('pt-BR').format(date);
+    return new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(date);
   } catch {
     return '-';
   }
