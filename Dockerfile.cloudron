@@ -1,41 +1,23 @@
 # ============================================================================
 # Dockerfile.cloudron - Deploy no Cloudron
 # ============================================================================
-# Multi-stage build otimizado para a plataforma Cloudron.
-# NOTA: Sem BuildKit (--mount=type=cache) pois o build service nao suporta.
+# NOTA: Sem BuildKit pois o build service nao suporta.
 #
-# Cloudron fornece automaticamente:
-#   - Redis (addon)         -> CLOUDRON_REDIS_URL, CLOUDRON_REDIS_PASSWORD
-#   - Email/SMTP (addon)    -> CLOUDRON_MAIL_SMTP_*, CLOUDRON_MAIL_FROM
-#   - Storage persistente   -> /app/data (sobrevive a updates)
-#   - SSL/TLS automatico    -> gerenciado pelo Cloudron
-#   - Backups automaticos   -> incluindo /app/data
-#
-# IMPORTANTE sobre o Cloudron:
-#   - /app/code é READ-ONLY em runtime (nao pode criar arquivos/symlinks)
-#   - /app/data é o unico diretório writable (persistente)
-#   - /tmp e /run sao writable mas efemeros
-#   - O Cloudron gerencia restart do container (nao precisa de supervisor)
-#
-# Uso:
-#   cloudron build -f Dockerfile.cloudron \
-#     --build-arg NEXT_PUBLIC_SUPABASE_URL=https://... \
-#     --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=...
+# Cloudron runtime:
+#   - /app/code READ-ONLY | /app/data writable (persistente) | /tmp writable
+#   - Cloudron gerencia restart (sem supervisor)
+#   - Node.js 18 no cloudron/base é insuficiente (Supabase requer 20+)
 # ============================================================================
 
 # ============================================================================
-# STAGE 1: Dependencies
+# STAGE 1: Dependencies (Alpine para build rapido)
 # ============================================================================
 FROM node:22-alpine AS deps
 WORKDIR /app
-
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ENV NEXT_TELEMETRY_DISABLED=1
-
 RUN apk add --no-cache libc6-compat
-
 COPY package.json package-lock.json* ./
-
 RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
 
 # ============================================================================
@@ -43,53 +25,47 @@ RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
 # ============================================================================
 FROM node:22-alpine AS builder
 WORKDIR /app
-
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
-
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_BUILD_LINT_DISABLED=1
 ENV SKIP_TYPE_CHECK=true
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-
 COPY --from=deps /app/node_modules ./node_modules
-
 RUN mkdir -p .next/cache
-
 COPY . .
-
-# Copiar PDF.js worker (postinstall nao roda com --ignore-scripts)
 RUN mkdir -p public/pdfjs && \
     cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdfjs/pdf.worker.min.mjs
-
-# Build da aplicacao
 RUN npm run build:ci
 
 # ============================================================================
 # STAGE 3: Cloudron Runner
 # ============================================================================
-# cloudron/base:4.2.0 inclui: Ubuntu, Node.js 18.18, supervisor, nginx, cron
-# O filesystem é read-only exceto /app/data, /tmp, /run
-# Node.js 18.18+ é compatível com Next.js 16 standalone output
-# ============================================================================
 FROM cloudron/base:4.2.0
 
-RUN mkdir -p /app/code /app/data
+# Atualizar Node.js 18 -> 22
+# cloudron/base tem node 18 em /usr/local/node-18.18.0/bin/ que aparece primeiro no PATH.
+# Estrategia: instalar via n e depois sobrescrever o binario antigo no path prioritario.
+RUN npm install -g n && n 22 \
+    && cp /usr/local/bin/node /usr/local/node-18.18.0/bin/node \
+    && cp /usr/local/bin/npm /usr/local/node-18.18.0/bin/npm \
+    && cp /usr/local/bin/npx /usr/local/node-18.18.0/bin/npx \
+    && node --version
 
+RUN mkdir -p /app/code /app/data
 WORKDIR /app/code
 
-# Copiar standalone build do Next.js (apenas o necessario para producao)
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copiar script de inicializacao
+# Symlink cache para diretorio writable (/app/data é persistente no Cloudron)
+# /app/code é READ-ONLY em runtime, mas symlinks criados no build funcionam
+RUN ln -sf /app/data/cache/next .next/cache
+
 COPY cloudron/start.sh /app/code/start.sh
 RUN chmod +x /app/code/start.sh
-
-# Garantir permissoes corretas para o usuario cloudron
-RUN chown -R cloudron:cloudron /app/code
 
 CMD [ "/app/code/start.sh" ]

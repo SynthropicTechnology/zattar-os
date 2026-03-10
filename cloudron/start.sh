@@ -43,7 +43,9 @@ fi
 export NODE_ENV="${NODE_ENV:-production}"
 export NEXT_TELEMETRY_DISABLED=1
 export PORT="${PORT:-3000}"
-export HOSTNAME="${HOSTNAME:-0.0.0.0}"
+# HOSTNAME é definido automaticamente pelo Docker com o hostname do container.
+# Next.js standalone usa HOSTNAME para bind. Forçar 0.0.0.0 para escutar em IPv4+IPv6.
+export HOSTNAME="0.0.0.0"
 
 # --------------------------------------------------------------------------
 # STORAGE PERSISTENTE (/app/data)
@@ -51,7 +53,7 @@ export HOSTNAME="${HOSTNAME:-0.0.0.0}"
 # /app/data é o unico diretório writable (persiste entre updates e backups)
 # /app/code, /var/log, etc. são READ-ONLY no Cloudron
 # --------------------------------------------------------------------------
-mkdir -p /app/data/cache /app/data/uploads /app/data/logs
+mkdir -p /app/data/cache/next /app/data/uploads /app/data/logs
 
 # --------------------------------------------------------------------------
 # INFORMAÇÕES DO AMBIENTE
