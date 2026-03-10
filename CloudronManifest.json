@@ -1,0 +1,30 @@
+{
+  "id": "io.zattar.os",
+  "title": "Zattar OS",
+  "author": "Zattar Advogados <contato@zataradvogados.com>",
+  "description": "Sistema de gestao juridica completo com IA, automacao de processos, captura PJE, calendario, financeiro, documentos e muito mais.",
+  "tagline": "Gestao juridica inteligente",
+  "version": "1.0.0",
+  "healthCheckPath": "/api/health",
+  "httpPort": 3000,
+  "addons": {
+    "localstorage": {},
+    "redis": {},
+    "sendmail": {
+      "supportsDisplayName": true
+    }
+  },
+  "manifestVersion": 2,
+  "website": "https://zataradvogados.com",
+  "contactEmail": "contato@zataradvogados.com",
+  "icon": "file://icon.png",
+  "tags": [
+    "legal",
+    "management",
+    "nextjs",
+    "ai"
+  ],
+  "mediaLinks": [],
+  "memoryLimit": 2048,
+  "optionalSso": true
+}
