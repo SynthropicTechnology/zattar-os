@@ -15,7 +15,7 @@ export const createCommentChunks = (editor: PlateEditor) => {
       selectionFallback: true,
       sort: true,
     })
-    .map(([block]) => block);
+    .map(([block]: any) => block);
 
   const isSelectingSome = editor.getOption(
     BlockSelectionPlugin,

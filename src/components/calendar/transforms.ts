@@ -187,7 +187,7 @@ export const setBlockType = (
 
     const entries = editor.api.blocks({ mode: 'lowest' });
 
-    entries.forEach((entry) => {
+    entries.forEach((entry: any) => {
       setEntry(entry);
     });
   });
