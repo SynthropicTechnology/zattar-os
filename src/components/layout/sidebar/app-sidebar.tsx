@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  Bell,
   Bot,
   Briefcase,
   Calendar,
@@ -107,13 +108,14 @@ const navServicos = [
     icon: ScrollText,
   },
   {
-    title: "Pesquisa Jurídica",
-    url: "/app/pesquisa-juridica",
+    title: "Diário Oficial",
+    url: "/app/comunica-cnj",
+    icon: Bell,
+  },
+  {
+    title: "Jurisprudência",
+    url: "/app/pangea",
     icon: Search,
-    items: [
-      { title: "Diário Oficial", url: "/app/comunica-cnj" },
-      { title: "Pangea", url: "/app/pangea" },
-    ],
   },
   {
     title: "Chat",
@@ -169,21 +171,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         if (item.url === "/app/project-management") {
           return canSeeProjetos
         }
+        // Ocultar Jurisprudência sem permissão de Pangea
+        if (item.url === "/app/pangea") {
+          return canSeePangea
+        }
         return true
       })
-      .map((item) => {
-        // Filtrar sub-itens do Pangea se não tiver permissão
-        if (item.items) {
-          const filteredItems = item.items.filter((subItem) => {
-            if (subItem.url === "/app/pangea") {
-              return canSeePangea
-            }
-            return true
-          })
-          return { ...item, items: filteredItems }
-        }
-        return item
-      })
+      .map((item) => item)
   }, [canSeePangea, canSeeProjetos])
 
   const todosItens = React.useMemo(() => {

@@ -119,11 +119,11 @@ describe('AppSidebar - Property-Based Tests', () => {
 
                     // Validate presence/absence based on permission (case-insensitive)
                     if (canSeePangea) {
-                        // When permission granted, Pangea should be visible
-                        expect(linkText).toMatch(/Pangea/i);
+                        // When permission granted, Jurisprudência should be visible
+                        expect(linkText).toMatch(/Jurisprudência/i);
                     } else {
-                        // When permission denied, Pangea must NOT be visible
-                        expect(linkText).not.toMatch(/Pangea/i);
+                        // When permission denied, Jurisprudência must NOT be visible
+                        expect(linkText).not.toMatch(/Jurisprudência/i);
                     }
 
                     // Verify sidebar structure is intact

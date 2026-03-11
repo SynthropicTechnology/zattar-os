@@ -50,7 +50,7 @@ const navPrincipal = [
     icon: FolderOpen,
   },
   {
-    title: "ComunicaCNJ",
+    title: "Diário Oficial",
     url: "/app/comunica-cnj",
     icon: Bell,
   },
@@ -81,6 +81,11 @@ const navPrincipal = [
 
 // Nav Serviços - Ferramentas e utilitários
 const navServicos = [
+  {
+    title: "Jurisprudência",
+    url: "/app/pangea",
+    icon: SearchIcon,
+  },
   {
     title: "Notas",
     url: "/app/notas",
