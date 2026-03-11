@@ -1,19 +1,17 @@
 /**
  * Header do Processo
  *
- * Exibe metadados completos do processo seguindo a mesma organização
- * da coluna "Processo" na tabela de processos.
- * Suporta exibição de múltiplas instâncias (unificado).
+ * Layout flat (sem Card) integrado ao design system.
+ * Tipografia alinhada ao padrão DataTableToolbar (text-2xl font-heading).
+ * Metadados compactados em layout horizontal.
  */
 
 'use client';
 
 import React from 'react';
-import { Lock, Layers, RefreshCw } from 'lucide-react';
+import { Lock, Layers, RefreshCw, ArrowLeft } from 'lucide-react';
 import type { ProcessoUnificado, Processo } from '@/features/processos/domain';
 import type { GrauProcesso } from '@/features/partes';
-import { Card } from '@/components/ui/card';
-import { AppBadge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -41,38 +39,26 @@ interface InstanciaInfo {
   grau: GrauProcesso;
   trt: string;
   totalItensOriginal: number;
-  totalMovimentosProprios?: number; // Apenas movimentos próprios (sem mala direta)
+  totalMovimentosProprios?: number;
 }
 
 interface ProcessoHeaderProps {
   processo: ProcessoUnificado;
-  /** Instâncias do processo (quando usando timeline unificada) */
   instancias?: InstanciaInfo[];
-  /** Quantidade de duplicatas removidas na timeline */
   duplicatasRemovidas?: number;
-  /** Função para atualizar timeline */
   onAtualizarTimeline?: () => void;
-  /** Se está capturando timeline */
   isCapturing?: boolean;
+  onVoltar?: () => void;
 }
 
-/**
- * Retorna o órgão julgador do processo de forma segura
- */
 function getOrgaoJulgador(processo: ProcessoUnificado): string {
   return processo.descricaoOrgaoJulgador || '-';
 }
 
-/**
- * Formata grau para exibição
- */
 function formatarGrau(grau: string): string {
   return GRAU_LABELS[grau as keyof typeof GRAU_LABELS] || grau;
 }
 
-/**
- * Formata grau com ordinal para exibição nas instâncias
- */
 function formatarGrauComOrdinal(grau: GrauProcesso): string {
   switch (grau) {
     case 'tribunal_superior':
@@ -86,9 +72,6 @@ function formatarGrauComOrdinal(grau: GrauProcesso): string {
   }
 }
 
-/**
- * Retorna as iniciais do nome para o Avatar
- */
 function getInitials(name: string): string {
   if (!name) return 'U';
   const parts = name.trim().split(/\s+/);
@@ -104,9 +87,6 @@ interface Usuario {
   avatarUrl?: string | null;
 }
 
-/**
- * Célula de Responsável (similar à tabela)
- */
 function ProcessoResponsavelCell({
   processo,
   usuarios = [],
@@ -119,7 +99,6 @@ function ProcessoResponsavelCell({
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [localProcesso, setLocalProcesso] = React.useState(processo);
 
-  // Atualizar processo local quando o processo prop mudar
   React.useEffect(() => {
     setLocalProcesso(processo);
   }, [processo]);
@@ -142,18 +121,18 @@ function ProcessoResponsavelCell({
           e.stopPropagation();
           setIsDialogOpen(true);
         }}
-        className="flex items-center gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        className="flex items-center gap-2 text-sm min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
         title={responsavel ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (
           <>
-            <Avatar className="h-7 w-7 shrink-0">
+            <Avatar className="h-6 w-6 shrink-0">
               <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
-              <AvatarFallback className="text-xs font-medium">
+              <AvatarFallback className="text-[10px] font-medium">
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate">{responsavel.nomeExibicao}</span>
+            <span className="truncate text-sm">{responsavel.nomeExibicao}</span>
           </>
         ) : (
           <span className="text-muted-foreground text-sm">Não atribuído</span>
@@ -171,10 +150,9 @@ function ProcessoResponsavelCell({
   );
 }
 
-export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAtualizarTimeline, isCapturing }: ProcessoHeaderProps) {
+export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAtualizarTimeline, isCapturing, onVoltar }: ProcessoHeaderProps) {
   const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
 
-  // Buscar usuários para mostrar nome do responsável
   React.useEffect(() => {
     const fetchUsuarios = async () => {
       try {
@@ -194,7 +172,6 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
     fetchUsuarios();
   }, []);
 
-  // FONTE DA VERDADE: Usar trtOrigem (1º grau) ao invés de trt (grau atual)
   const trt = processo.trtOrigem || processo.trt;
   const classeJudicial = processo.classeJudicial || '';
   const numeroProcesso = processo.numeroProcesso;
@@ -203,57 +180,26 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
   const dataProximaAudiencia = processo.dataProximaAudiencia;
   const isUnificado = isProcessoUnificado(processo);
 
-  // FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos
   const parteAutora = processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-';
   const parteRe = processo.nomeParteReOrigem || processo.nomeParteRe || '-';
 
   return (
-    <Card className="p-6 relative">
-      {/* Botão de atualizar timeline (canto superior direito) */}
-      {onAtualizarTimeline && (
-        <div className="absolute top-4 right-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={onAtualizarTimeline}
-                  disabled={isCapturing}
-                  className="h-8 w-8"
-                >
-                  <RefreshCw className={`h-4 w-4 ${isCapturing ? 'animate-spin' : ''}`} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Atualizar timeline do processo</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      )}
+    <div className="space-y-3">
+      {/* Linha 1: Voltar + Número do Processo + Ações */}
+      <div className="flex items-center gap-3">
+        {onVoltar && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={onVoltar}
+            title="Voltar para Processos"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        )}
 
-      {/* Primeiro Grupo: Badges, Classe+Número, Órgão (com espaçamento compacto) */}
-      <div className="space-y-1.5">
-        {/* Linha 1: Badge Tribunal + Badges Graus */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <SemanticBadge category="tribunal" value={trt} className="w-fit text-xs">
-            {trt}
-          </SemanticBadge>
-          {isUnificado && processo.grausAtivos ? (
-            <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
-          ) : (
-            processo.grauAtual && (
-              <SemanticBadge category="grau" value={processo.grauAtual} className="w-fit text-xs">
-                {formatarGrau(processo.grauAtual)}
-              </SemanticBadge>
-            )
-          )}
-        </div>
-
-        {/* Linha 2: Classe Judicial (texto) + Número Processo + CopyButton + Ícone Segredo Justiça */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight whitespace-nowrap">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <h1 className="text-2xl font-bold tracking-tight font-heading truncate">
             {classeJudicial && `${classeJudicial} `}
             {numeroProcesso}
           </h1>
@@ -262,79 +208,107 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Lock className="h-5 w-5 text-destructive" />
+                  <Lock className="h-4 w-4 text-destructive shrink-0" />
                 </TooltipTrigger>
                 <TooltipContent>Segredo de Justiça</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
-        </div>
-
-        {/* Linha 3: Órgão Julgador + Popover Próxima Audiência */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-sm text-muted-foreground max-w-full truncate">{orgaoJulgador}</span>
           <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
         </div>
-      </div>
 
-      {/* Segundo Grupo: Partes + Responsável (com espaçamento maior antes) */}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Partes */}
-        <div className="flex flex-col gap-1.5">
-          <AppBadge
-            variant="secondary"
-            className="block whitespace-normal wrap-break-word text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none text-sm"
-          >
-            {parteAutora}
-          </AppBadge>
-          <AppBadge
-            variant="secondary"
-            className="block whitespace-normal wrap-break-word text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none text-sm"
-          >
-            {parteRe}
-          </AppBadge>
-        </div>
-
-        {/* Responsável */}
-        <div className="flex items-center">
-          <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => { }} />
+        {/* Ações */}
+        <div className="flex items-center gap-1 shrink-0">
+          {onAtualizarTimeline && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon-sm"
+                    variant="ghost"
+                    onClick={onAtualizarTimeline}
+                    disabled={isCapturing}
+                  >
+                    <RefreshCw className={`h-4 w-4 ${isCapturing ? 'animate-spin' : ''}`} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Atualizar timeline do processo</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </div>
 
-      {/* Instâncias do Processo (modo unificado) */}
+      {/* Linha 2: Badges + Órgão + Responsável — tudo compacto numa linha */}
+      <div className="flex items-center gap-2 flex-wrap text-sm">
+        {/* Tribunal */}
+        <SemanticBadge category="tribunal" value={trt} className="text-xs">
+          {trt}
+        </SemanticBadge>
+
+        {/* Graus */}
+        {isUnificado && processo.grausAtivos ? (
+          <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
+        ) : (
+          processo.grauAtual && (
+            <SemanticBadge category="grau" value={processo.grauAtual} className="text-xs">
+              {formatarGrau(processo.grauAtual)}
+            </SemanticBadge>
+          )
+        )}
+
+        <Separator orientation="vertical" className="h-4" />
+
+        {/* Órgão Julgador */}
+        <span className="text-muted-foreground truncate max-w-xs">{orgaoJulgador}</span>
+
+        <Separator orientation="vertical" className="h-4" />
+
+        {/* Responsável inline */}
+        <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => { }} />
+      </div>
+
+      {/* Linha 3: Partes — layout clean com indicadores de polo */}
+      <div className="flex items-start gap-4 text-sm">
+        <div className="flex items-start gap-1.5 min-w-0 flex-1">
+          <SemanticBadge category="polo" value="ativo" className="text-xs shrink-0 mt-0.5">
+            Autor
+          </SemanticBadge>
+          <span className="text-foreground wrap-break-word">{parteAutora}</span>
+        </div>
+        <div className="flex items-start gap-1.5 min-w-0 flex-1">
+          <SemanticBadge category="polo" value="passivo" className="text-xs shrink-0 mt-0.5">
+            Réu
+          </SemanticBadge>
+          <span className="text-foreground wrap-break-word">{parteRe}</span>
+        </div>
+      </div>
+
+      {/* Instâncias (modo unificado) — compacto */}
       {instancias && instancias.length > 1 && (
-        <>
-          <Separator className="my-4" />
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Layers className="h-4 w-4 text-muted-foreground" />
-              <h3 className="text-sm font-medium text-muted-foreground">
-                Instâncias do Processo ({instancias.length})
-              </h3>
-              {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
-                <AppBadge variant="outline" className="text-xs">
-                  {duplicatasRemovidas} eventos duplicados removidos
-                </AppBadge>
-              )}
+        <div className="flex items-center gap-2 flex-wrap text-sm">
+          <Layers className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+          <span className="text-muted-foreground text-xs font-medium">
+            {instancias.length} instâncias
+          </span>
+          {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
+            <span className="text-muted-foreground text-xs">
+              ({duplicatasRemovidas} duplicatas removidas)
+            </span>
+          )}
+          <Separator orientation="vertical" className="h-4" />
+          {instancias.map((inst) => (
+            <div key={inst.id} className="flex items-center gap-1.5">
+              <SemanticBadge category="grau" value={inst.grau} className="text-xs">
+                {formatarGrauComOrdinal(inst.grau)}
+              </SemanticBadge>
+              <span className="text-xs text-muted-foreground">
+                {inst.totalMovimentosProprios ?? inst.totalItensOriginal} mov.
+              </span>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {instancias.map((inst) => (
-                <div
-                  key={inst.id}
-                  className="flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2"
-                >
-                  <SemanticBadge category="grau" value={inst.grau}>
-                    {formatarGrauComOrdinal(inst.grau)}
-                  </SemanticBadge>
-                  <span className="text-xs font-medium">
-                    {inst.totalMovimentosProprios ?? inst.totalItensOriginal} movimentos
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
+          ))}
+        </div>
       )}
-    </Card>
+    </div>
   );
 }

@@ -140,6 +140,9 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
     actionLoading,
     senderName,
     senderInitials,
+    replyMode,
+    startReply,
+    cancelReply,
     handleReply,
     actions,
   } = useMailDisplay(mail);
@@ -158,15 +161,21 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Auto-scroll to reply editor when entering reply mode
+  useEffect(() => {
+    if (replyMode) {
+      const timer = setTimeout(() => {
+        replyAreaRef.current?.scrollIntoView({ behavior: "smooth" });
+        editorRef.current?.focus();
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [replyMode, editorRef]);
+
   const handleMobileAction = async (action: (() => Promise<void>) | undefined) => {
     if (!action) return;
     await action();
     setOpen(false);
-  };
-
-  const scrollToReply = () => {
-    editorRef.current?.focus();
-    replyAreaRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -263,7 +272,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 size="icon"
                 disabled={!mail}
                 aria-label="Responder"
-                onClick={scrollToReply}>
+                onClick={() => startReply("reply")}>
                 <Reply className="h-4 w-4" />
               </Button>
               <Button
@@ -271,7 +280,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 size="icon"
                 disabled={!mail}
                 aria-label="Responder a todos"
-                onClick={scrollToReply}>
+                onClick={() => startReply("reply-all")}>
                 <ReplyAll className="h-4 w-4" />
               </Button>
               <Button
@@ -332,39 +341,68 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
               <Separator className="mt-auto" />
 
-              <div ref={replyAreaRef} className="p-4">
-                <form onSubmit={(e) => handleReply(e)}>
-                  <div className="grid gap-3">
-                    <MailEditor
-                      editorRef={editorRef}
-                      placeholder={`Responder ${senderName}...`}
-                    />
-                    <div className="flex items-center gap-2 justify-end">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        disabled={isSending}
-                        onClick={(e) => handleReply(e, true)}>
-                        Responder a todos
-                      </Button>
-                      <Button
-                        type="submit"
-                        size="sm"
-                        disabled={isSending}>
-                        {isSending ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Enviando...
-                          </>
-                        ) : (
-                          "Enviar"
-                        )}
-                      </Button>
+              {replyMode ? (
+                <div ref={replyAreaRef} className="p-4">
+                  <form onSubmit={handleReply}>
+                    <div className="grid gap-3">
+                      <div className="text-sm text-muted-foreground">
+                        {replyMode === "reply-all"
+                          ? "Responder a todos"
+                          : "Responder para"}{" "}
+                        <span className="font-medium text-foreground">
+                          {senderName}
+                        </span>
+                      </div>
+                      <MailEditor
+                        variant="inline"
+                        editorRef={editorRef}
+                        placeholder="Escreva sua resposta..."
+                      />
+                      <div className="flex items-center gap-2 justify-end">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={cancelReply}
+                          disabled={isSending}>
+                          Cancelar
+                        </Button>
+                        <Button type="submit" size="sm" disabled={isSending}>
+                          {isSending ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Enviando...
+                            </>
+                          ) : (
+                            "Enviar"
+                          )}
+                        </Button>
+                      </div>
                     </div>
+                  </form>
+                </div>
+              ) : (
+                <div className="p-4">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={!mail}
+                      onClick={() => startReply("reply")}>
+                      <Reply className="mr-2 h-4 w-4" />
+                      Responder
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={!mail}
+                      onClick={() => startReply("reply-all")}>
+                      <ReplyAll className="mr-2 h-4 w-4" />
+                      Responder a todos
+                    </Button>
                   </div>
-                </form>
-              </div>
+                </div>
+              )}
             </div>
           )}
         </div>

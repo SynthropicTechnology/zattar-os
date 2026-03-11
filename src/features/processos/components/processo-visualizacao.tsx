@@ -1,15 +1,15 @@
 /**
  * Componente de Visualização de Processo (Client Component)
  *
- * Layout master-detail: timeline na esquerda, viewer de documento na direita.
- * Mobile: Tabs (Timeline | Documento).
+ * Layout integrado: header flat + tabs de detalhes + split-panel timeline/documento.
+ * Sem Cards desnecessários — usa separadores e espaçamento do design system.
  */
 
 'use client';
 
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { useCopilotReadable } from '@copilotkit/react-core';
 import {
   useProcessoTimeline,
@@ -24,7 +24,6 @@ import { TimelineError } from './timeline-error';
 import { TimelineEmpty } from './timeline-empty';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Card } from '@/components/ui/card';
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -73,6 +72,10 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     setSelectedItem(item);
   }, []);
 
+  const handleVoltar = useCallback(() => {
+    router.push('/processos');
+  }, [router]);
+
   // CopilotKit context
   const copilotContext = useMemo(
     () => ({
@@ -110,23 +113,10 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     value: copilotContext,
   });
 
-  const backButton = (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => router.push('/processos')}
-      className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-      title="Voltar para Processos"
-    >
-      <ArrowLeft className="h-5 w-5" />
-    </Button>
-  );
-
   // Loading inicial
   if (isLoading) {
     return (
-      <div className="w-full py-8 space-y-6">
-        <div className="flex items-center">{backButton}</div>
+      <div className="w-full space-y-6">
         <TimelineLoading message="Carregando dados do processo..." />
       </div>
     );
@@ -135,8 +125,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Erro ao carregar
   if (error && !processo) {
     return (
-      <div className="w-full py-8 space-y-6">
-        <div className="flex items-center">{backButton}</div>
+      <div className="w-full space-y-6">
         <TimelineError error={error} onRetry={refetch} />
       </div>
     );
@@ -145,8 +134,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Processo não encontrado
   if (!processo) {
     return (
-      <div className="w-full py-8 space-y-6">
-        <div className="flex items-center">{backButton}</div>
+      <div className="w-full space-y-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Processo não encontrado</AlertTitle>
@@ -155,6 +143,9 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             para acessá-lo.
           </AlertDescription>
         </Alert>
+        <Button variant="outline" onClick={handleVoltar}>
+          Voltar para Processos
+        </Button>
       </div>
     );
   }
@@ -163,11 +154,8 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     !isCapturing && timeline && timeline.timeline.length > 0;
 
   return (
-    <div className="w-full py-8 space-y-4">
-      {/* Seta de voltar */}
-      <div className="flex items-center">{backButton}</div>
-
-      {/* Dados do processo */}
+    <div className="w-full space-y-4">
+      {/* Cabeçalho do Processo (flat, sem Card) */}
       <ProcessoHeader
         processo={processo}
         instancias={
@@ -183,9 +171,10 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
         }
         onAtualizarTimeline={forceRecapture}
         isCapturing={isCapturing}
+        onVoltar={handleVoltar}
       />
 
-      {/* Audiências, Expedientes e Perícias */}
+      {/* Tabs: Expedientes, Audiências, Perícias (integrado ao header, sem Card) */}
       <ProcessoDetailsTabs
         processoId={processo.id}
         numeroProcesso={processo.numeroProcesso}
@@ -212,7 +201,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
       {hasTimeline && (
         <>
           {/* Desktop: ResizablePanelGroup */}
-          <Card className="hidden md:flex h-[calc(100vh-420px)] min-h-125 overflow-hidden">
+          <div className="hidden md:flex h-[calc(100vh-420px)] min-h-125 overflow-hidden rounded-lg border">
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel defaultSize={30} minSize={20} maxSize={45}>
                 <TimelineSidebar
@@ -226,7 +215,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                 <DocumentViewerPanel item={selectedItem} onRecapture={forceRecapture} isCapturing={isCapturing} />
               </ResizablePanel>
             </ResizablePanelGroup>
-          </Card>
+          </div>
 
           {/* Mobile: Tabs */}
           <div className="md:hidden">
@@ -240,18 +229,18 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="timeline">
-                <Card className="h-[60vh] overflow-hidden">
+                <div className="h-[60vh] overflow-hidden rounded-lg border">
                   <TimelineSidebar
                     items={timeline.timeline as TimelineItemWithGrau[]}
                     selectedItemId={selectedItem?.id ?? null}
                     onSelectItem={handleSelectItem}
                   />
-                </Card>
+                </div>
               </TabsContent>
               <TabsContent value="documento">
-                <Card className="h-[60vh] overflow-hidden">
+                <div className="h-[60vh] overflow-hidden rounded-lg border">
                   <DocumentViewerPanel item={selectedItem} onRecapture={forceRecapture} isCapturing={isCapturing} />
-                </Card>
+                </div>
               </TabsContent>
             </Tabs>
           </div>

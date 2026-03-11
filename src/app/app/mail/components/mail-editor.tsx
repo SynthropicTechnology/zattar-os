@@ -167,6 +167,8 @@ interface MailEditorProps {
   className?: string;
   editorRef?: React.RefObject<MailEditorRef | null>;
   autoFocus?: boolean;
+  /** 'default' shows fixed toolbar; 'inline' uses only floating toolbar */
+  variant?: 'default' | 'inline';
 }
 
 const defaultValue: Descendant[] = [
@@ -176,9 +178,11 @@ const defaultValue: Descendant[] = [
 function MailEditorContent({
   editorRef,
   placeholder,
+  variant = 'default',
 }: {
   editorRef?: React.RefObject<MailEditorRef | null>;
   placeholder?: string;
+  variant?: 'default' | 'inline';
 }) {
   const editor = useEditorRef();
 
@@ -253,7 +257,10 @@ function MailEditorContent({
   return (
     <Editor
       variant="none"
-      className="min-h-30 max-h-75 overflow-y-auto px-3 py-2 text-sm"
+      className={cn(
+        "overflow-y-auto px-3 py-2 text-sm",
+        variant === 'default' ? "min-h-30 max-h-75" : "min-h-40"
+      )}
       placeholder={placeholder}
     />
   );
@@ -264,6 +271,7 @@ export function MailEditor({
   className,
   editorRef,
   autoFocus: _autoFocus = false,
+  variant = 'default',
 }: MailEditorProps) {
   const editor = usePlateEditor({
     plugins: MailEditorKit,
@@ -291,6 +299,7 @@ export function MailEditor({
           <MailEditorContent
             editorRef={editorRef}
             placeholder={placeholder}
+            variant={variant}
           />
         </EditorContainer>
       </div>

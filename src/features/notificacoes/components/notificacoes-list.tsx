@@ -2,15 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import {
   DataPagination,
   DataShell,
@@ -19,8 +12,9 @@ import {
   DataTableToolbar,
   type DataTableDensity,
 } from "@/components/shared/data-shell";
-import type { Table as TanstackTable } from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
+import { FilterPopover } from "@/features/partes/components/shared";
+import type { FilterOption } from "@/features/partes/components/shared";
+import type { Table as TanstackTable, ColumnDef } from "@tanstack/react-table";
 import { CheckCheckIcon, ClockIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -35,8 +29,15 @@ import type {
   ListarNotificacoesParams,
 } from "../domain";
 import { TIPO_NOTIFICACAO_LABELS } from "../domain";
-// Mapeamento de variantes para tipos de notificação
-const TIPO_NOTIFICACAO_VARIANTS: Record<TipoNotificacaoUsuario, "info" | "warning" | "success" | "destructive" | "secondary"> = {
+
+// ============================================================================
+// Constantes
+// ============================================================================
+
+const TIPO_NOTIFICACAO_VARIANTS: Record<
+  TipoNotificacaoUsuario,
+  "info" | "warning" | "success" | "destructive" | "secondary"
+> = {
   processo_atribuido: "info",
   processo_movimentacao: "info",
   audiencia_atribuida: "success",
@@ -46,6 +47,15 @@ const TIPO_NOTIFICACAO_VARIANTS: Record<TipoNotificacaoUsuario, "info" | "warnin
   prazo_vencendo: "warning",
   prazo_vencido: "destructive",
 };
+
+const TIPO_OPTIONS: readonly FilterOption[] = Object.entries(
+  TIPO_NOTIFICACAO_LABELS
+).map(([value, label]) => ({ value, label }));
+
+const STATUS_OPTIONS: readonly FilterOption[] = [
+  { value: "nao_lida", label: "Não lidas" },
+  { value: "lida", label: "Lidas" },
+];
 
 // ============================================================================
 // Helpers
@@ -58,17 +68,13 @@ const formatarData = (dataString: string): string => {
   });
 };
 
-const getEntityLink = (
-  entidadeTipo: string,
-  entidadeId: number
-): string => {
+const getEntityLink = (entidadeTipo: string, entidadeId: number): string => {
   switch (entidadeTipo) {
     case "processo":
       return `/processos/${entidadeId}`;
     case "audiencia":
       return `/audiencias/${entidadeId}`;
     case "expediente":
-      // Expedientes não possuem página individual - ir para lista
       return `/expedientes/lista`;
     case "pericia":
       return `/pericias/${entidadeId}`;
@@ -88,9 +94,7 @@ function criarColunas(
     {
       accessorKey: "tipo",
       header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Tipo" />
-        </div>
+        <DataTableColumnHeader column={column} title="Tipo" />
       ),
       enableSorting: true,
       size: 180,
@@ -106,19 +110,20 @@ function criarColunas(
     {
       accessorKey: "titulo",
       header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Título" />
-        </div>
+        <DataTableColumnHeader column={column} title="Título" />
       ),
       enableSorting: true,
       size: 300,
       cell: ({ row }) => {
         const notificacao = row.original;
-        const link = getEntityLink(notificacao.entidade_tipo, notificacao.entidade_id);
+        const link = getEntityLink(
+          notificacao.entidade_tipo,
+          notificacao.entidade_id
+        );
         return (
           <Link
             href={link}
-            className="font-medium hover:underline"
+            className="text-sm font-medium hover:underline"
             onClick={() => {
               if (!notificacao.lida) {
                 onMarcarComoLida(notificacao.id);
@@ -133,63 +138,50 @@ function criarColunas(
     {
       accessorKey: "descricao",
       header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Descrição" />
-        </div>
+        <DataTableColumnHeader column={column} title="Descrição" />
       ),
       enableSorting: false,
       size: 400,
-      cell: ({ row }) => {
-        return (
-          <div className="text-sm text-muted-foreground line-clamp-2">
-            {row.original.descricao}
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground line-clamp-2">
+          {row.original.descricao}
+        </span>
+      ),
     },
     {
       accessorKey: "created_at",
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex justify-center">
           <DataTableColumnHeader column={column} title="Data" />
         </div>
       ),
       enableSorting: true,
       size: 150,
-      cell: ({ row }) => {
-        return (
-          <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
-            <ClockIcon className="h-3 w-3" />
-            {formatarData(row.original.created_at)}
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
+          <ClockIcon className="size-3" />
+          {formatarData(row.original.created_at)}
+        </div>
+      ),
     },
     {
       accessorKey: "lida",
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex justify-center">
           <DataTableColumnHeader column={column} title="Status" />
         </div>
       ),
       enableSorting: true,
       size: 100,
-      cell: ({ row }) => {
-        const lida = row.original.lida;
-        return (
-          <div className="flex items-center justify-center">
-            {lida ? (
-              <Badge variant="outline" className="text-xs">
-                Lida
-              </Badge>
-            ) : (
-              <Badge variant="default" className="bg-destructive text-xs">
-                Não lida
-              </Badge>
-            )}
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          {row.original.lida ? (
+            <Badge variant="outline">Lida</Badge>
+          ) : (
+            <Badge variant="destructive">Não lida</Badge>
+          )}
+        </div>
+      ),
     },
   ];
 }
@@ -199,10 +191,10 @@ function criarColunas(
 // ============================================================================
 
 export function NotificacoesList() {
-  const [table, setTable] = React.useState<TanstackTable<Notificacao> | undefined>(
-    undefined
-  );
-  const [density] = React.useState<DataTableDensity>("standard");
+  const [table, setTable] = React.useState<
+    TanstackTable<Notificacao> | undefined
+  >(undefined);
+  const [density, setDensity] = React.useState<DataTableDensity>("standard");
 
   // Estado de filtros
   const [pagina, setPagina] = React.useState(1);
@@ -210,9 +202,9 @@ export function NotificacoesList() {
   const [tipoFiltro, setTipoFiltro] = React.useState<
     TipoNotificacaoUsuario | "all"
   >("all");
-  const [lidaFiltro, setLidaFiltro] = React.useState<"all" | "lida" | "nao_lida">(
-    "all"
-  );
+  const [lidaFiltro, setLidaFiltro] = React.useState<
+    "all" | "lida" | "nao_lida"
+  >("all");
 
   // Estado de dados
   const [notificacoes, setNotificacoes] = React.useState<Notificacao[]>([]);
@@ -235,8 +227,8 @@ export function NotificacoesList() {
           lidaFiltro === "lida"
             ? true
             : lidaFiltro === "nao_lida"
-            ? false
-            : undefined,
+              ? false
+              : undefined,
       };
 
       const result = await actionListarNotificacoes(params);
@@ -265,17 +257,22 @@ export function NotificacoesList() {
   }, [pagina, limite, tipoFiltro, lidaFiltro]);
 
   // Marcar como lida
-  const marcarComoLida = React.useCallback(async (id: number) => {
-    const result = await actionMarcarNotificacaoComoLida({ id });
-    if (result.success) {
-      // Atualizar estado local
-      setNotificacoes((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, lida: true, lida_em: new Date().toISOString() } : n))
-      );
-      // Recarregar para atualizar contadores
-      buscarNotificacoes();
-    }
-  }, [buscarNotificacoes]);
+  const marcarComoLida = React.useCallback(
+    async (id: number) => {
+      const result = await actionMarcarNotificacaoComoLida({ id });
+      if (result.success) {
+        setNotificacoes((prev) =>
+          prev.map((n) =>
+            n.id === id
+              ? { ...n, lida: true, lida_em: new Date().toISOString() }
+              : n
+          )
+        );
+        buscarNotificacoes();
+      }
+    },
+    [buscarNotificacoes]
+  );
 
   // Marcar todas como lidas
   const marcarTodasComoLidas = React.useCallback(async () => {
@@ -311,102 +308,75 @@ export function NotificacoesList() {
     setPagina(1);
   };
 
-  const handleLimparFiltros = () => {
-    setTipoFiltro("all");
-    setLidaFiltro("all");
-    setPagina(1);
-  };
-
   return (
-    <div className="space-y-4">
-      <DataShell
-        header={
-          <DataTableToolbar
-            table={table}
-            filtersSlot={
-              <>
-                <Select value={tipoFiltro} onValueChange={handleTipoChange}>
-                  <SelectTrigger className="w-full sm:w-50">
-                    <SelectValue placeholder="Tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os tipos</SelectItem>
-                    {Object.entries(TIPO_NOTIFICACAO_LABELS).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Select value={lidaFiltro} onValueChange={handleLidaChange}>
-                  <SelectTrigger className="w-full sm:w-45">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="nao_lida">Não lidas</SelectItem>
-                    <SelectItem value="lida">Lidas</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {(tipoFiltro !== "all" || lidaFiltro !== "all") && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleLimparFiltros}
-                  >
-                    Limpar filtros
-                  </Button>
-                )}
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={marcarTodasComoLidas}
-                  disabled={isLoading || notificacoes.length === 0}
-                >
-                  <CheckCheckIcon className="h-4 w-4 mr-2" />
-                  Marcar todas como lidas
-                </Button>
-              </>
-            }
-          />
-        }
-        footer={
-          totalPaginas > 0 ? (
-            <DataPagination
-              pageIndex={pagina - 1}
-              pageSize={limite}
-              total={total}
-              totalPages={totalPaginas}
-              onPageChange={handlePageChange}
-              onPageSizeChange={() => {}}
-              isLoading={isLoading}
-            />
-          ) : null
-        }
-      >
-        <DataTable
-          columns={colunas}
-          data={notificacoes}
-          isLoading={isLoading}
-          error={error}
-          pagination={{
-            pageIndex: pagina - 1,
-            pageSize: limite,
-            total,
-            totalPages: totalPaginas,
-            onPageChange: handlePageChange,
-            onPageSizeChange: () => {},
-          }}
-          hidePagination={true}
-          onTableReady={setTable}
+    <DataShell
+      header={
+        <DataTableToolbar
+          table={table}
+          title="Notificações"
           density={density}
-          emptyMessage="Nenhuma notificação encontrada."
+          onDensityChange={setDensity}
+          searchPlaceholder="Buscar notificações..."
+          filtersSlot={
+            <>
+              <FilterPopover
+                label="Tipo"
+                options={TIPO_OPTIONS}
+                value={tipoFiltro}
+                onValueChange={handleTipoChange}
+              />
+              <FilterPopover
+                label="Status"
+                options={STATUS_OPTIONS}
+                value={lidaFiltro}
+                onValueChange={handleLidaChange}
+              />
+            </>
+          }
+          actionSlot={
+            <Button
+              variant="outline"
+              onClick={marcarTodasComoLidas}
+              disabled={isLoading || notificacoes.length === 0}
+            >
+              <CheckCheckIcon className="size-4" />
+              Marcar todas como lidas
+            </Button>
+          }
         />
-      </DataShell>
-    </div>
+      }
+      footer={
+        totalPaginas > 0 ? (
+          <DataPagination
+            pageIndex={pagina - 1}
+            pageSize={limite}
+            total={total}
+            totalPages={totalPaginas}
+            onPageChange={handlePageChange}
+            onPageSizeChange={() => {}}
+            isLoading={isLoading}
+          />
+        ) : null
+      }
+    >
+      <DataTable
+        columns={colunas}
+        data={notificacoes}
+        isLoading={isLoading}
+        error={error}
+        pagination={{
+          pageIndex: pagina - 1,
+          pageSize: limite,
+          total,
+          totalPages: totalPaginas,
+          onPageChange: handlePageChange,
+          onPageSizeChange: () => {},
+        }}
+        hidePagination={true}
+        onTableReady={setTable}
+        density={density}
+        emptyMessage="Nenhuma notificação encontrada."
+      />
+    </DataShell>
   );
 }
-

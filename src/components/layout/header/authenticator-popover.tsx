@@ -131,8 +131,8 @@ export function AuthenticatorPopover() {
   return (
     <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <Button size="icon" variant="ghost" className="relative">
-          <ShieldCheckIcon className="h-5 w-5" />
+        <Button size="icon" variant="ghost">
+          <ShieldCheckIcon className="size-5" />
         </Button>
       </PopoverTrigger>
 

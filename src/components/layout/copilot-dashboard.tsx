@@ -30,14 +30,14 @@ function DashboardHeader() {
     >
       <div className="flex items-center gap-3">
         <SidebarTrigger className="-ml-1 hover:bg-muted transition-colors" />
-        <Separator orientation="vertical" className="h-5 bg-border/50" />
+        <Separator orientation="vertical" className="h-4 bg-border" />
         <Search />
       </div>
       <div className="flex items-center gap-2">
         <AuthenticatorPopover />
         <Notifications />
-        <AiSphere onClick={() => setOpen(!open)} />
-        <Separator orientation="vertical" className="h-5 bg-border/50" />
+        <AiSphere onClick={() => setOpen(!open)} size={30} />
+        <Separator orientation="vertical" className="h-4 bg-border" />
         <HeaderUserMenu />
       </div>
     </header>
