@@ -63,6 +63,20 @@ echo "=> Node.js: $(node --version)"
 echo "=> Memory limit: ${CLOUDRON_MEMORY_LIMIT:-unknown}MB"
 
 # --------------------------------------------------------------------------
+# MEMÓRIA - Calcular max-old-space-size baseado no limite do container
+# --------------------------------------------------------------------------
+# O Node.js usa ~256MB de heap por padrão, independente da memória do container.
+# Reservar 256MB para overhead (stack, buffers, etc.) e dar o resto ao V8 heap.
+# --------------------------------------------------------------------------
+MEMORY_LIMIT="${CLOUDRON_MEMORY_LIMIT:-2048}"
+NODE_HEAP_SIZE=$(( MEMORY_LIMIT - 256 ))
+if [ "$NODE_HEAP_SIZE" -lt 256 ]; then
+    NODE_HEAP_SIZE=256
+fi
+export NODE_OPTIONS="--max-old-space-size=${NODE_HEAP_SIZE}"
+echo "=> Node heap: ${NODE_HEAP_SIZE}MB (container: ${MEMORY_LIMIT}MB)"
+
+# --------------------------------------------------------------------------
 # INICIAR NODE.JS DIRETAMENTE
 # --------------------------------------------------------------------------
 # Sem supervisor — o Cloudron ja gerencia restart do container automaticamente.
