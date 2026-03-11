@@ -34,10 +34,10 @@ import { UFS_BRASIL } from '@/features/advogados/domain';
 
 type Props = {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChangeAction: (open: boolean) => void;
   advogado: Advogado | null;
   mode: 'create' | 'edit';
-  onSave: (data: CriarAdvogadoParams | AtualizarAdvogadoParams) => Promise<void>;
+  onSaveAction: (data: CriarAdvogadoParams | AtualizarAdvogadoParams) => Promise<void>;
 };
 
 interface FormData {
@@ -46,7 +46,13 @@ interface FormData {
   oabs: OabEntry[];
 }
 
-export function AdvogadoDialog({ open, onOpenChange, advogado, mode, onSave }: Props) {
+export function AdvogadoDialog({
+  open,
+  onOpenChangeAction,
+  advogado,
+  mode,
+  onSaveAction,
+}: Props) {
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     nome_completo: '',
@@ -89,7 +95,7 @@ export function AdvogadoDialog({ open, onOpenChange, advogado, mode, onSave }: P
         return;
       }
 
-      await onSave({
+      await onSaveAction({
         nome_completo: formData.nome_completo,
         cpf: formData.cpf,
         oabs: oabsValidas,
@@ -141,7 +147,7 @@ export function AdvogadoDialog({ open, onOpenChange, advogado, mode, onSave }: P
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="sm:max-w-137.5">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
@@ -247,7 +253,7 @@ export function AdvogadoDialog({ open, onOpenChange, advogado, mode, onSave }: P
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => onOpenChangeAction(false)}
               disabled={isSaving}
             >
               Cancelar

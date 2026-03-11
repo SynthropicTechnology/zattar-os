@@ -87,14 +87,14 @@ const navPrincipal = [
 // Nav Serviços - Ferramentas e utilitários
 const navServicos = [
   {
-    title: "Planner",
-    url: "/app/planner",
+    title: "Agenda",
+    url: "/app/calendar",
     icon: CalendarCheck,
-    items: [
-      { title: "Agenda", url: "/app/calendar" },
-      { title: "Tarefas", url: "/app/tarefas" },
-      { title: "Notas", url: "/app/notas" },
-    ],
+  },
+  {
+    title: "Notas",
+    url: "/app/notas",
+    icon: FileEdit,
   },
   {
     title: "Documentos",

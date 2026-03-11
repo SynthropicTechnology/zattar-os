@@ -218,10 +218,10 @@ export default function AdvogadosPage() {
       {/* Dialog de criar/editar advogado (multi-OAB) */}
       <AdvogadoDialog
         open={advogadoDialog.open}
-        onOpenChange={(open) => setAdvogadoDialog({ ...advogadoDialog, open })}
+        onOpenChangeAction={(open) => setAdvogadoDialog({ ...advogadoDialog, open })}
         advogado={advogadoDialog.advogado}
         mode={advogadoDialog.mode}
-        onSave={handleSaveAdvogado}
+        onSaveAction={handleSaveAdvogado}
       />
 
       {/* Dialog de credenciais do advogado (com cadastro em massa) */}

@@ -82,6 +82,11 @@ const navPrincipal = [
 // Nav Serviços - Ferramentas e utilitários
 const navServicos = [
   {
+    title: "Notas",
+    url: "/app/notas",
+    icon: FileEdit,
+  },
+  {
     title: "Assinatura Digital",
     url: "/app/assinatura-digital/assinatura",
     icon: PenTool,

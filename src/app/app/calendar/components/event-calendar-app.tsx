@@ -16,6 +16,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import {
+  CheckSquare,
   Calendar,
   CalendarCheck,
   CalendarDays,
@@ -67,6 +68,13 @@ const CALENDAR_VIEW_OPTIONS = [
   { value: "day" as CalendarView, label: "Dia", icon: Calendar, shortcut: "D" },
   { value: "agenda" as CalendarView, label: "Agenda", icon: List, shortcut: "A" }
 ];
+
+const TAREFAS_VIEW_OPTION = {
+  value: "tasks",
+  label: "Tarefas",
+  icon: CheckSquare,
+  shortcut: "T",
+} as const;
 
 const GRAU_LABELS: Record<string, string> = {
   primeiro_grau: "1º Grau",
@@ -469,6 +477,7 @@ function CalendarViewPopover({
   value: CalendarView;
   onValueChange: (value: CalendarView) => void;
 }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const currentOption = CALENDAR_VIEW_OPTIONS.find((opt) => opt.value === value);
 
@@ -518,6 +527,23 @@ function CalendarViewPopover({
               </button>
             );
           })}
+
+          <button
+            type="button"
+            onClick={() => {
+              router.push('/app/tarefas');
+              setOpen(false);
+            }}
+            className={cn(
+              "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors",
+              "hover:bg-accent hover:text-accent-foreground",
+              "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2"
+            )}
+          >
+            <TAREFAS_VIEW_OPTION.icon className="h-4 w-4" />
+            <span className="flex-1 text-left">{TAREFAS_VIEW_OPTION.label}</span>
+            <kbd className="text-muted-foreground text-xs">{TAREFAS_VIEW_OPTION.shortcut}</kbd>
+          </button>
         </div>
       </PopoverContent>
     </Popover>

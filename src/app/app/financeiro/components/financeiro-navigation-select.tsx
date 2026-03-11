@@ -41,8 +41,7 @@ export function FinanceiroNavigationSelect() {
   const currentValue = React.useMemo(() => getCurrentValue(pathname), [pathname]);
 
   return (
-    <div className="w-full max-w-sm space-y-1.5">
-      <p className="text-sm font-medium text-foreground">Navegação</p>
+    <div className="w-full max-w-sm">
       <Select value={currentValue} onValueChange={(value) => router.push(value)}>
         <SelectTrigger aria-label="Navegação do módulo financeiro" className="bg-card">
           <SelectValue placeholder="Ir para..." />
