@@ -1,6 +1,6 @@
 import type { Usuario } from "@/features/usuarios";
 
-export type UsuarioOption = Pick<Usuario, "id" | "nomeExibicao" | "nomeCompleto"> & {
+export type UsuarioOption = Pick<Usuario, "id" | "nomeExibicao" | "nomeCompleto" | "avatarUrl"> & {
   nome_exibicao?: string;
   nome?: string;
 };

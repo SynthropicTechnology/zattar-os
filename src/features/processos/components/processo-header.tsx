@@ -147,7 +147,7 @@ function ProcessoResponsavelCell({
         {responsavel ? (
           <>
             <Avatar className="h-7 w-7 shrink-0">
-              <AvatarImage src={undefined} alt={responsavel.nomeExibicao} />
+              <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
               <AvatarFallback className="text-xs font-medium">
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>

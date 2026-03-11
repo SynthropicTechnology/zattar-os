@@ -377,7 +377,7 @@ export async function buscarTimeline(
  */
 export async function buscarUsuariosRelacionados(
   processos: (Processo | ProcessoUnificado)[]
-): Promise<Record<number, { nome: string }>> {
+): Promise<Record<number, { nome: string; avatarUrl?: string | null }>> {
   const ids = new Set<number>();
 
   processos.forEach((p) => {
@@ -392,10 +392,10 @@ export async function buscarUsuariosRelacionados(
 
   try {
     const usuarios = await usuarioRepository.findByIds(Array.from(ids));
-    const map: Record<number, { nome: string }> = {};
+    const map: Record<number, { nome: string; avatarUrl?: string | null }> = {};
 
     usuarios.forEach((u) => {
-      map[u.id] = { nome: u.nomeExibicao || u.nomeCompleto };
+      map[u.id] = { nome: u.nomeExibicao || u.nomeCompleto, avatarUrl: u.avatarUrl ?? null };
     });
 
     return map;

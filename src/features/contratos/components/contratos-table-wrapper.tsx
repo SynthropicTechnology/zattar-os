@@ -22,12 +22,20 @@ import {
   DataPagination,
 } from '@/components/shared/data-shell';
 import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
-import type { Table as TanstackTable, SortingState } from '@tanstack/react-table';
+import type { Table as TanstackTable, SortingState, RowSelectionState } from '@tanstack/react-table';
 
 import { getContratosColumns } from './columns';
+import type { ContratosTableMeta } from './columns';
 import { ContratoForm } from './contrato-form';
 import { SegmentosFilter } from './segmentos-filter';
 import { ContratoDeleteDialog } from './contrato-delete-dialog';
+import {
+  ContratosBulkActionsBar,
+  AlterarStatusMassaDialog,
+  AtribuirResponsavelMassaDialog,
+  AlterarSegmentoMassaDialog,
+  ExcluirMassaDialog,
+} from './contratos-bulk-actions';
 import { GerarPecaDialog } from '@/features/pecas-juridicas/components';
 import type {
   Contrato,
@@ -129,12 +137,21 @@ export function ContratosTableWrapper({
 
   const [segmentos, _setSegmentos] = React.useState(segmentosOptions);
 
+  // ---------- Estado de Seleção (Ações em Massa) ----------
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+
   // ---------- Estado de Dialogs/Sheets ----------
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [gerarPecaOpen, setGerarPecaOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [contratoSelecionado, setContratoSelecionado] = React.useState<Contrato | null>(null);
+
+  // Dialogs de ações em massa
+  const [bulkStatusOpen, setBulkStatusOpen] = React.useState(false);
+  const [bulkResponsavelOpen, setBulkResponsavelOpen] = React.useState(false);
+  const [bulkSegmentoOpen, setBulkSegmentoOpen] = React.useState(false);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = React.useState(false);
 
   // Debounce da busca (500ms)
   const buscaDebounced = useDebounce(busca, 500);
@@ -337,6 +354,23 @@ export function ContratosTableWrapper({
     setCreateOpen(false);
   }, [refetch]);
 
+  // ---------- Seleção em Massa ----------
+  const selectedIds = React.useMemo(() => {
+    return Object.keys(rowSelection)
+      .filter((key) => rowSelection[key])
+      .map(Number)
+      .filter((id) => Number.isFinite(id) && id > 0);
+  }, [rowSelection]);
+
+  const selectedCount = selectedIds.length;
+
+  const handleBulkSuccess = React.useCallback(() => {
+    setRowSelection({});
+    refetch();
+  }, [refetch]);
+
+  const getRowId = React.useCallback((row: Contrato) => String(row.id), []);
+
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
     () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca, handleDelete),
@@ -437,6 +471,18 @@ export function ContratosTableWrapper({
           ) : null
         }
       >
+        {selectedCount > 0 && (
+          <div className="px-3 py-2">
+            <ContratosBulkActionsBar
+              selectedCount={selectedCount}
+              onClearSelection={() => setRowSelection({})}
+              onAlterarStatus={() => setBulkStatusOpen(true)}
+              onAtribuirResponsavel={() => setBulkResponsavelOpen(true)}
+              onAlterarSegmento={() => setBulkSegmentoOpen(true)}
+              onExcluir={() => setBulkDeleteOpen(true)}
+            />
+          </div>
+        )}
         <DataTable
           data={contratos}
           columns={columns}
@@ -454,11 +500,22 @@ export function ContratosTableWrapper({
             // Ao mudar ordenação, voltar para a primeira página (server-side sorting)
             setPageIndex(0);
           }}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId,
+          }}
           isLoading={isLoading}
           error={error}
           density={density}
           onTableReady={(t) => setTable(t as TanstackTable<Contrato>)}
           emptyMessage="Nenhum contrato encontrado."
+          options={{
+            meta: {
+              usuarios: usuariosOptionsState,
+              onSuccessAction: refetch,
+            } satisfies ContratosTableMeta,
+          }}
         />
       </DataShell>
 
@@ -519,6 +576,34 @@ export function ContratosTableWrapper({
           }}
         />
       )}
+
+      {/* Dialogs de ações em massa */}
+      <AlterarStatusMassaDialog
+        open={bulkStatusOpen}
+        onOpenChange={setBulkStatusOpen}
+        selectedIds={selectedIds}
+        onSuccess={handleBulkSuccess}
+      />
+      <AtribuirResponsavelMassaDialog
+        open={bulkResponsavelOpen}
+        onOpenChange={setBulkResponsavelOpen}
+        selectedIds={selectedIds}
+        usuarios={usuariosOptionsState}
+        onSuccess={handleBulkSuccess}
+      />
+      <AlterarSegmentoMassaDialog
+        open={bulkSegmentoOpen}
+        onOpenChange={setBulkSegmentoOpen}
+        selectedIds={selectedIds}
+        segmentos={segmentosOptions}
+        onSuccess={handleBulkSuccess}
+      />
+      <ExcluirMassaDialog
+        open={bulkDeleteOpen}
+        onOpenChange={setBulkDeleteOpen}
+        selectedIds={selectedIds}
+        onSuccess={handleBulkSuccess}
+      />
     </>
   );
 }

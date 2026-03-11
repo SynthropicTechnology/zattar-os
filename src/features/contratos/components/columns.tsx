@@ -19,7 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Eye, Pencil, FileText, Trash2 } from 'lucide-react';
 import type { Contrato } from '../domain';
 import type { ClienteInfo } from '../types';
@@ -29,6 +29,16 @@ import {
   STATUS_CONTRATO_LABELS,
 } from '../domain';
 import { formatarData } from '../utils';
+import { ContratoAlterarResponsavelDialog } from './contrato-alterar-responsavel-dialog';
+
+// =============================================================================
+// TIPOS PARA TABLE META
+// =============================================================================
+
+export interface ContratosTableMeta {
+  usuarios?: ClienteInfo[];
+  onSuccessAction?: () => void;
+}
 
 // =============================================================================
 // HELPERS
@@ -41,6 +51,64 @@ function getInitials(name: string): string {
     return parts[0].substring(0, 2).toUpperCase();
   }
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+// =============================================================================
+// RESPONSÁVEL CELL (Edição Inline)
+// =============================================================================
+
+function ResponsavelCell({
+  contrato,
+  usuariosMap,
+  usuarios,
+  onSuccessAction,
+}: {
+  contrato: Contrato;
+  usuariosMap: Map<number, ClienteInfo>;
+  usuarios: ClienteInfo[];
+  onSuccessAction?: () => void;
+}) {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+  const usuarioResp = contrato.responsavelId
+    ? usuariosMap.get(contrato.responsavelId) ?? null
+    : null;
+  const nome = usuarioResp?.nome ?? null;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsDialogOpen(true)}
+        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
+        title={nome ? `Clique para alterar responsável: ${nome}` : 'Clique para atribuir responsável'}
+      >
+        {nome ? (
+          <>
+            <Avatar className="h-6 w-6 shrink-0">
+              <AvatarImage src={usuarioResp?.avatarUrl || undefined} alt={nome} />
+              <AvatarFallback className="text-[10px] font-medium">
+                {getInitials(nome)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate">{nome}</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">Sem responsável</span>
+        )}
+      </button>
+
+      <ContratoAlterarResponsavelDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        contrato={contrato}
+        usuarios={usuarios}
+        onSuccess={() => {
+          onSuccessAction?.();
+        }}
+      />
+    </>
+  );
 }
 
 // =============================================================================
@@ -232,25 +300,19 @@ export function getContratosColumns(
       },
       size: 180,
       enableSorting: true,
-      cell: ({ row }) => {
+      cell: ({ row, table }) => {
         const contrato = row.original;
-        const nome = contrato.responsavelId
-          ? usuariosMap.get(contrato.responsavelId)?.nome
-          : null;
-
-        if (!nome) {
-          return <span className="text-sm text-muted-foreground">-</span>;
-        }
+        const meta = table.options.meta as ContratosTableMeta | undefined;
+        const usuarios = meta?.usuarios ?? [];
+        const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6 shrink-0">
-              <AvatarFallback className="text-[10px] font-medium">
-                {getInitials(nome)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-sm truncate">{nome}</span>
-          </div>
+          <ResponsavelCell
+            contrato={contrato}
+            usuariosMap={usuariosMap}
+            usuarios={usuarios}
+            onSuccessAction={onSuccessAction}
+          />
         );
       },
     },

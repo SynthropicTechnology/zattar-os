@@ -257,6 +257,9 @@ export function AudienciaDetailSheet({
   const dataInicio = parseISO(audiencia.dataInicio);
   const dataFim = parseISO(audiencia.dataFim);
   const responsavelNome = getResponsavelNome(audiencia.responsavelId);
+  const responsavelAvatar = audiencia.responsavelId
+    ? usuarios.find((u) => u.id === audiencia.responsavelId)?.avatarUrl ?? null
+    : null;
 
   // Verifica se a audiência tem ata disponível
   const hasAta = audiencia.ataAudienciaId || audiencia.urlAtaAudiencia;
@@ -368,7 +371,7 @@ export function AudienciaDetailSheet({
             {audiencia.responsavelId && responsavelNome ? (
               <div className="flex items-center gap-3">
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src={undefined} alt={responsavelNome} />
+                  <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
                   <AvatarFallback className="text-xs font-medium">
                     {getInitials(responsavelNome)}
                   </AvatarFallback>

@@ -46,9 +46,10 @@ async function fetchSegmentosAtivos() {
 async function fetchUsuariosAtivos() {
   try {
     const result = await usuariosService.listarUsuarios({ limite: 1000, ativo: true });
-    return result.usuarios.map((u: { id: number; nomeExibicao?: string; nomeCompleto: string }) => ({
+    return result.usuarios.map((u: { id: number; nomeExibicao?: string; nomeCompleto: string; avatarUrl?: string | null }) => ({
       id: u.id,
       nome: u.nomeExibicao || u.nomeCompleto,
+      avatarUrl: u.avatarUrl ?? null,
     }));
   } catch {
     return [];

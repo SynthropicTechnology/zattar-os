@@ -614,6 +614,225 @@ export async function actionExcluirContrato(id: number): Promise<ActionResult> {
   }
 }
 
+// =============================================================================
+// SERVER ACTIONS - OPERAÇÕES EM MASSA (BULK)
+// =============================================================================
+
+/**
+ * Valida uma lista de IDs para operações em massa.
+ * Retorna apenas IDs válidos (positivos, finitos, sem duplicatas).
+ */
+function validarIdsMassa(ids: unknown): number[] {
+  if (!Array.isArray(ids)) return [];
+  return Array.from(
+    new Set(ids.filter((id): id is number => Number.isFinite(id) && id > 0)),
+  );
+}
+
+/**
+ * Altera o status (estágio) de múltiplos contratos de uma vez.
+ */
+export async function actionAlterarStatusContratosEmMassa(
+  ids: number[],
+  novoStatus: string,
+): Promise<ActionResult<{ atualizados: number }>> {
+  try {
+    const idsValidos = validarIdsMassa(ids);
+    if (idsValidos.length === 0) {
+      return { success: false, error: "Nenhum contrato selecionado", message: "Selecione ao menos um contrato" };
+    }
+
+    const statusValidos = ["em_contratacao", "contratado", "distribuido", "desistencia"];
+    if (!statusValidos.includes(novoStatus)) {
+      return { success: false, error: "Status inválido", message: "Status informado não é válido" };
+    }
+
+    const db = createDbClient();
+    const { error, count } = await db
+      .from("contratos")
+      .update({ status: novoStatus, updated_at: new Date().toISOString() })
+      .in("id", idsValidos);
+
+    if (error) {
+      return { success: false, error: error.message, message: "Erro ao alterar status dos contratos" };
+    }
+
+    revalidatePath("/app/contratos");
+    return {
+      success: true,
+      data: { atualizados: count ?? idsValidos.length },
+      message: `Status alterado para ${STATUS_CONTRATO_LABELS[novoStatus as StatusContrato] ?? novoStatus} em ${count ?? idsValidos.length} contrato(s)`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao alterar status em massa",
+    };
+  }
+}
+
+/**
+ * Atribui um responsável a múltiplos contratos de uma vez.
+ * Passa `responsavelId = null` para remover responsável.
+ */
+export async function actionAtribuirResponsavelContratosEmMassa(
+  ids: number[],
+  responsavelId: number | null,
+): Promise<ActionResult<{ atualizados: number }>> {
+  try {
+    const idsValidos = validarIdsMassa(ids);
+    if (idsValidos.length === 0) {
+      return { success: false, error: "Nenhum contrato selecionado", message: "Selecione ao menos um contrato" };
+    }
+
+    if (responsavelId !== null && (!Number.isFinite(responsavelId) || responsavelId <= 0)) {
+      return { success: false, error: "ID do responsável inválido", message: "ID do responsável é inválido" };
+    }
+
+    const db = createDbClient();
+    const { error, count } = await db
+      .from("contratos")
+      .update({ responsavel_id: responsavelId, updated_at: new Date().toISOString() })
+      .in("id", idsValidos);
+
+    if (error) {
+      return { success: false, error: error.message, message: "Erro ao atribuir responsável" };
+    }
+
+    revalidatePath("/app/contratos");
+    return {
+      success: true,
+      data: { atualizados: count ?? idsValidos.length },
+      message: `Responsável ${responsavelId ? "atribuído" : "removido"} em ${count ?? idsValidos.length} contrato(s)`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atribuir responsável em massa",
+    };
+  }
+}
+
+/**
+ * Altera o segmento de múltiplos contratos de uma vez.
+ * Passa `segmentoId = null` para remover segmento.
+ */
+export async function actionAlterarSegmentoContratosEmMassa(
+  ids: number[],
+  segmentoId: number | null,
+): Promise<ActionResult<{ atualizados: number }>> {
+  try {
+    const idsValidos = validarIdsMassa(ids);
+    if (idsValidos.length === 0) {
+      return { success: false, error: "Nenhum contrato selecionado", message: "Selecione ao menos um contrato" };
+    }
+
+    if (segmentoId !== null && (!Number.isFinite(segmentoId) || segmentoId <= 0)) {
+      return { success: false, error: "ID do segmento inválido", message: "ID do segmento é inválido" };
+    }
+
+    const db = createDbClient();
+    const { error, count } = await db
+      .from("contratos")
+      .update({ segmento_id: segmentoId, updated_at: new Date().toISOString() })
+      .in("id", idsValidos);
+
+    if (error) {
+      return { success: false, error: error.message, message: "Erro ao alterar segmento" };
+    }
+
+    revalidatePath("/app/contratos");
+    return {
+      success: true,
+      data: { atualizados: count ?? idsValidos.length },
+      message: `Segmento ${segmentoId ? "alterado" : "removido"} em ${count ?? idsValidos.length} contrato(s)`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao alterar segmento em massa",
+    };
+  }
+}
+
+/**
+ * Exclui múltiplos contratos de uma vez (hard delete).
+ */
+export async function actionExcluirContratosEmMassa(
+  ids: number[],
+): Promise<ActionResult<{ excluidos: number }>> {
+  try {
+    const idsValidos = validarIdsMassa(ids);
+    if (idsValidos.length === 0) {
+      return { success: false, error: "Nenhum contrato selecionado", message: "Selecione ao menos um contrato" };
+    }
+
+    const db = createDbClient();
+    const { error, count } = await db
+      .from("contratos")
+      .delete()
+      .in("id", idsValidos);
+
+    if (error) {
+      return { success: false, error: error.message, message: "Erro ao excluir contratos" };
+    }
+
+    revalidatePath("/app/contratos");
+    revalidatePath("/app/financeiro");
+    return {
+      success: true,
+      data: { excluidos: count ?? idsValidos.length },
+      message: `${count ?? idsValidos.length} contrato(s) excluído(s) com sucesso`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao excluir contratos em massa",
+    };
+  }
+}
+
+/**
+ * Atualiza o responsável de um único contrato (para edição inline na tabela).
+ */
+export async function actionAlterarResponsavelContrato(
+  contratoId: number,
+  responsavelId: number | null,
+): Promise<ActionResult> {
+  try {
+    if (!contratoId || contratoId <= 0) {
+      return { success: false, error: "ID inválido", message: "ID do contrato é obrigatório" };
+    }
+
+    const db = createDbClient();
+    const { error } = await db
+      .from("contratos")
+      .update({ responsavel_id: responsavelId, updated_at: new Date().toISOString() })
+      .eq("id", contratoId);
+
+    if (error) {
+      return { success: false, error: error.message, message: "Erro ao alterar responsável" };
+    }
+
+    revalidatePath("/app/contratos");
+    return {
+      success: true,
+      data: null,
+      message: "Responsável alterado com sucesso",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao alterar responsável",
+    };
+  }
+}
+
 /**
  * Action para listar contratos (refresh manual)
  *

@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 interface Usuario {
     id: number;
     nomeExibicao: string;
+    avatarUrl?: string | null;
 }
 
 interface ClienteResponsavelCellProps {
@@ -104,7 +105,7 @@ export function ClienteResponsavelCell({
                     {responsavel ? (
                         <>
                             <Avatar className="h-6 w-6 shrink-0">
-                                <AvatarImage src={undefined} alt={responsavel.nomeExibicao} />
+                                <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
                                 <AvatarFallback className="text-[10px] font-medium">
                                     {getInitials(responsavel.nomeExibicao)}
                                 </AvatarFallback>
@@ -144,6 +145,7 @@ export function ClienteResponsavelCell({
                                     className="gap-2"
                                 >
                                     <Avatar className="h-6 w-6">
+                                        <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />
                                         <AvatarFallback className="text-[10px]">
                                             {getInitials(usuario.nomeExibicao)}
                                         </AvatarFallback>

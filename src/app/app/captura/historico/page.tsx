@@ -9,7 +9,7 @@ function HistoricoLoading() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-[500px] w-full" />
+      <Skeleton className="h-125 w-full" />
     </div>
   );
 }

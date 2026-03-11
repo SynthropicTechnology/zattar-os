@@ -22,6 +22,11 @@ export {
   actionContarContratosComEstatisticas,
   actionResolverNomesEntidadesContrato,
   actionExcluirContrato,
+  actionAlterarStatusContratosEmMassa,
+  actionAtribuirResponsavelContratosEmMassa,
+  actionAlterarSegmentoContratosEmMassa,
+  actionExcluirContratosEmMassa,
+  actionAlterarResponsavelContrato,
 } from "./contratos-actions";
 
 // Segmentos Actions

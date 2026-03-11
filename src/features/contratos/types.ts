@@ -123,6 +123,7 @@ export interface PaginationInfo {
 export interface ClienteInfo {
   id: number;
   nome: string;
+  avatarUrl?: string | null;
 }
 
 /**

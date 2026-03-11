@@ -138,6 +138,7 @@ interface Usuario {
   id: number;
   nomeExibicao?: string;
   nomeCompleto?: string;
+  avatarUrl?: string | null;
 }
 
 // =============================================================================
@@ -471,7 +472,7 @@ export function ResponsavelCell({
         {responsavel || audiencia.responsavelId ? (
           <>
             <Avatar className="h-7 w-7 shrink-0">
-              <AvatarImage src={undefined} alt={nomeExibicao} />
+              <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeExibicao} />
               <AvatarFallback className="text-xs font-medium">
                 {getInitials(nomeExibicao)}
               </AvatarFallback>

@@ -79,13 +79,14 @@ interface PaginationInfo {
 interface Usuario {
   id: number;
   nomeExibicao: string;
+  avatarUrl?: string | null;
 }
 
 
 interface ProcessosTableWrapperProps {
   initialData: ProcessoUnificado[];
   initialPagination: PaginationInfo | null;
-  initialUsers: Record<number, { nome: string }>;
+  initialUsers: Record<number, { nome: string; avatarUrl?: string | null }>;
   initialTribunais: Array<{ codigo: string; nome: string }>;
 }
 
@@ -275,7 +276,7 @@ function ProcessoResponsavelCell({
         {responsavel ? (
           <>
             <Avatar className="h-6 w-6 shrink-0">
-              <AvatarImage src={undefined} alt={responsavel.nomeExibicao} />
+              <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
               <AvatarFallback className="text-[10px] font-medium">
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
@@ -720,9 +721,10 @@ export function ProcessosTableWrapper({
       try {
         const result = await actionListarUsuarios({ ativo: true, limite: 100 });
         if (result.success && result.data?.usuarios) {
-          const usuariosList = (result.data.usuarios as Array<{ id: number; nomeExibicao?: string; nome_exibicao?: string; nome?: string }>).map((u) => ({
+          const usuariosList = (result.data.usuarios as Array<{ id: number; nomeExibicao?: string; nome_exibicao?: string; nome?: string; avatarUrl?: string | null }>).map((u) => ({
             id: u.id,
             nomeExibicao: u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`,
+            avatarUrl: u.avatarUrl ?? null,
           }));
           setUsuarios(usuariosList);
         }
