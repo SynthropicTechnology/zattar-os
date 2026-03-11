@@ -5,7 +5,7 @@
  * Utiliza AWS SDK v3 para compatibilidade com a API S3 do Backblaze.
  */
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 /**
@@ -176,6 +176,69 @@ export async function deleteFromBackblaze(key: string): Promise<void> {
  * @param expiresIn - Tempo em segundos até a URL expirar (padrão: 3600 = 1 hora)
  * @returns URL assinada que permite acesso temporário ao arquivo
  */
+/**
+ * Objeto retornado pela listagem de arquivos por prefixo
+ */
+export interface BackblazeListItem {
+    /** Chave (path) do arquivo no bucket */
+    key: string;
+    /** Tamanho em bytes */
+    size: number;
+    /** Data da última modificação */
+    lastModified?: Date;
+}
+
+/**
+ * Lista arquivos no Backblaze B2 por prefixo (diretório virtual)
+ *
+ * Usa ListObjectsV2Command (S3-compatible) para listar todos os objetos
+ * cujo Key começa com o prefixo fornecido. Paginação automática.
+ *
+ * @param prefix - Prefixo do caminho (ex: "processos/0010702-80.2025.5.03.0111/timeline/")
+ * @param maxKeys - Máximo de resultados por página (padrão: 1000)
+ * @returns Array de objetos encontrados
+ */
+export async function listObjectsByPrefix(
+    prefix: string,
+    maxKeys: number = 1000
+): Promise<BackblazeListItem[]> {
+    const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
+    if (!bucket) {
+        throw new Error('BACKBLAZE_BUCKET_NAME (ou B2_BUCKET) não configurado nas variáveis de ambiente');
+    }
+
+    const client = getS3Client();
+    const items: BackblazeListItem[] = [];
+    let continuationToken: string | undefined;
+
+    do {
+        const command = new ListObjectsV2Command({
+            Bucket: bucket,
+            Prefix: prefix,
+            MaxKeys: maxKeys,
+            ContinuationToken: continuationToken,
+        });
+
+        const response = await client.send(command);
+
+        if (response.Contents) {
+            for (const obj of response.Contents) {
+                if (obj.Key) {
+                    items.push({
+                        key: obj.Key,
+                        size: obj.Size ?? 0,
+                        lastModified: obj.LastModified,
+                    });
+                }
+            }
+        }
+
+        continuationToken = response.IsTruncated ? response.NextContinuationToken : undefined;
+    } while (continuationToken);
+
+    return items;
+}
+
 export async function generatePresignedUrl(
     key: string,
     expiresIn: number = 3600

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { fetchContratoCompleto } from '@/features/contratos/queries';
 import { LancamentosRepository } from '@/features/financeiro/repository/lancamentos';
+import { fetchEntrevistaByContratoId } from '@/features/entrevistas-trabalhistas/queries';
 import { ContratoDetalhesClient } from './contrato-detalhes-client';
 
 interface PageProps {
@@ -34,16 +35,16 @@ export default async function ContratoDetalhesPage({ params }: PageProps) {
 
   const { contrato, cliente, responsavel, segmento, stats } = result.data;
 
-  // Fetch lançamentos financeiros
-  let lancamentos: Awaited<ReturnType<typeof LancamentosRepository.listar>> = [];
-  try {
-    lancamentos = await LancamentosRepository.listar({
-      contratoId: contratoId,
-      limite: 50,
-    });
-  } catch (error) {
-    console.error('Erro ao buscar lançamentos:', error);
-  }
+  // Fetch lançamentos financeiros e entrevista em paralelo
+  const [lancamentos, entrevistaResult] = await Promise.all([
+    LancamentosRepository.listar({ contratoId, limite: 50 }).catch((error) => {
+      console.error('Erro ao buscar lançamentos:', error);
+      return [] as Awaited<ReturnType<typeof LancamentosRepository.listar>>;
+    }),
+    fetchEntrevistaByContratoId(contratoId),
+  ]);
+
+  const entrevistaData = entrevistaResult.success ? entrevistaResult.data : null;
 
   return (
     <ContratoDetalhesClient
@@ -53,6 +54,8 @@ export default async function ContratoDetalhesPage({ params }: PageProps) {
       segmento={segmento}
       stats={stats}
       lancamentos={lancamentos}
+      entrevista={entrevistaData?.entrevista ?? null}
+      entrevistaAnexos={entrevistaData?.anexos ?? []}
     />
   );
 }

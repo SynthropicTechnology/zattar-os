@@ -14,6 +14,9 @@
  */
 
 import * as React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Settings, List, Kanban } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   DataShell,
@@ -22,6 +25,15 @@ import {
   DataPagination,
 } from '@/components/shared/data-shell';
 import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
+import { ViewModePopover, type ViewModeOption } from '@/components/shared/view-mode-popover';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Table as TanstackTable, SortingState, RowSelectionState } from '@tanstack/react-table';
 
 import { getContratosColumns } from './columns';
@@ -73,6 +85,11 @@ const STATUS_CONTRATO_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_C
   ([value, label]) => ({ value, label })
 );
 
+const CONTRATOS_VIEW_OPTIONS: ViewModeOption[] = [
+  { value: 'lista', label: 'Lista', icon: List },
+  { value: 'quadro', label: 'Kanban', icon: Kanban },
+];
+
 // =============================================================================
 // TIPOS
 // =============================================================================
@@ -98,6 +115,15 @@ export function ContratosTableWrapper({
   usuariosOptions = [],
   segmentosOptions = [],
 }: ContratosTableWrapperProps) {
+  // ---------- Navegação (view mode) ----------
+  const router = useRouter();
+
+  const handleViewChange = React.useCallback((value: string) => {
+    if (value === 'quadro') {
+      router.push('/app/contratos/kanban');
+    }
+  }, [router]);
+
   // ---------- Estado dos Dados ----------
   const [contratos, setContratos] = React.useState<Contrato[]>(initialData);
   const [table, setTable] = React.useState<TanstackTable<Contrato> | null>(null);
@@ -451,6 +477,43 @@ export function ContratosTableWrapper({
                     }}
                   />
                 </>
+              }
+              actionSlot={
+                <DropdownMenu>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-9 w-9 bg-card"
+                          aria-label="Configurações de contratos"
+                        >
+                          <Settings className="h-4 w-4" aria-hidden="true" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>Configurações</TooltipContent>
+                  </Tooltip>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link href="/app/contratos/tipos">Tipos de Contrato</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/app/contratos/tipos-cobranca">Tipos de Cobrança</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/app/contratos/pipelines">Pipelines</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              }
+              viewModeSlot={
+                <ViewModePopover
+                  value="lista"
+                  onValueChange={handleViewChange}
+                  options={CONTRATOS_VIEW_OPTIONS}
+                />
               }
             />
           ) : (

@@ -223,7 +223,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
               </ResizablePanel>
               <ResizableHandle withHandle />
               <ResizablePanel defaultSize={70} minSize={40}>
-                <DocumentViewerPanel item={selectedItem} />
+                <DocumentViewerPanel item={selectedItem} onRecapture={forceRecapture} isCapturing={isCapturing} />
               </ResizablePanel>
             </ResizablePanelGroup>
           </Card>
@@ -250,7 +250,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
               </TabsContent>
               <TabsContent value="documento">
                 <Card className="h-[60vh] overflow-hidden">
-                  <DocumentViewerPanel item={selectedItem} />
+                  <DocumentViewerPanel item={selectedItem} onRecapture={forceRecapture} isCapturing={isCapturing} />
                 </Card>
               </TabsContent>
             </Tabs>

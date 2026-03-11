@@ -321,6 +321,10 @@ export function sincronizarTimelineEmBackground(
       numeroProcesso: processo.numeroProcesso,
       advogadoId: processo.advogadoId,
       baixarDocumentos: true,
+      filtroDocumentos: {
+        apenasAssinados: false,
+        apenasNaoSigilosos: false,
+      },
     };
 
     fetch(`${baseUrl}/api/captura/trt/timeline`, {

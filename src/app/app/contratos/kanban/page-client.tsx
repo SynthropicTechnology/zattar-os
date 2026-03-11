@@ -15,7 +15,9 @@
  */
 
 import * as React from 'react';
-import { RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { RefreshCw, Settings, List, Kanban as KanbanIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -27,6 +29,15 @@ import {
 } from '@/components/ui/kanban';
 import { DataShell } from '@/components/shared/data-shell/data-shell';
 import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
+import { ViewModePopover, type ViewModeOption } from '@/components/shared/view-mode-popover';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Select,
   SelectContent,
@@ -46,6 +57,15 @@ import {
   type KanbanColumns,
 } from '@/features/contratos/hooks';
 import type { ContratoPipelineEstagio } from '@/features/contratos/pipelines/types';
+
+// =============================================================================
+// VIEW MODE OPTIONS
+// =============================================================================
+
+const CONTRATOS_VIEW_OPTIONS: ViewModeOption[] = [
+  { value: 'lista', label: 'Lista', icon: List },
+  { value: 'quadro', label: 'Kanban', icon: KanbanIcon },
+];
 
 // =============================================================================
 // HELPERS
@@ -384,6 +404,14 @@ function KanbanBoardContent({
 // =============================================================================
 
 export function KanbanContratosClient() {
+  const router = useRouter();
+
+  const handleViewChange = React.useCallback((value: string) => {
+    if (value === 'lista') {
+      router.push('/app/contratos');
+    }
+  }, [router]);
+
   const [selectedSegmentoId, setSelectedSegmentoId] = React.useState<
     number | null
   >(null);
@@ -467,26 +495,63 @@ export function KanbanContratosClient() {
             </Select>
           }
           actionSlot={
-            <button
-              type="button"
-              onClick={() => void handleRefresh()}
-              disabled={isLoading || isRefreshing}
-              aria-label="Atualizar kanban"
-              className={cn(
-                'inline-flex items-center justify-center rounded-md border border-input bg-card',
-                'h-9 w-9 text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                'transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-                'disabled:pointer-events-none disabled:opacity-50'
-              )}
-            >
-              <RefreshCw
+            <>
+              <DropdownMenu>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-9 w-9 bg-card"
+                        aria-label="Configurações de contratos"
+                      >
+                        <Settings className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>Configurações</TooltipContent>
+                </Tooltip>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link href="/app/contratos/tipos">Tipos de Contrato</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/app/contratos/tipos-cobranca">Tipos de Cobrança</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/app/contratos/pipelines">Pipelines</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <button
+                type="button"
+                onClick={() => void handleRefresh()}
+                disabled={isLoading || isRefreshing}
+                aria-label="Atualizar kanban"
                 className={cn(
-                  'h-4 w-4',
-                  (isLoading || isRefreshing) && 'animate-spin'
+                  'inline-flex items-center justify-center rounded-md border border-input bg-card',
+                  'h-9 w-9 text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                  'transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+                  'disabled:pointer-events-none disabled:opacity-50'
                 )}
-                aria-hidden="true"
-              />
-            </button>
+              >
+                <RefreshCw
+                  className={cn(
+                    'h-4 w-4',
+                    (isLoading || isRefreshing) && 'animate-spin'
+                  )}
+                  aria-hidden="true"
+                />
+              </button>
+            </>
+          }
+          viewModeSlot={
+            <ViewModePopover
+              value="quadro"
+              onValueChange={handleViewChange}
+              options={CONTRATOS_VIEW_OPTIONS}
+            />
           }
         />
       }

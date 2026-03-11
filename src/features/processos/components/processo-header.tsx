@@ -101,6 +101,7 @@ function getInitials(name: string): string {
 interface Usuario {
   id: number;
   nomeExibicao: string;
+  avatarUrl?: string | null;
 }
 
 /**
@@ -179,9 +180,10 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
       try {
         const result = await actionListarUsuarios({ ativo: true, limite: 100 });
         if (result.success && result.data?.usuarios) {
-          const usuariosList = (result.data.usuarios as Array<{ id: number; nomeExibicao?: string; nome_exibicao?: string; nome?: string }>).map((u) => ({
+          const usuariosList = (result.data.usuarios as Array<{ id: number; nomeExibicao?: string; nome_exibicao?: string; nome?: string; avatarUrl?: string | null }>).map((u) => ({
             id: u.id,
             nomeExibicao: u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`,
+            avatarUrl: u.avatarUrl ?? null,
           }));
           setUsuarios(usuariosList);
         }

@@ -18,6 +18,7 @@ import { obterTimeline, obterDocumento, baixarDocumento } from '@/features/captu
 import { uploadDocumentoTimeline } from '../storage/upload-documento-timeline.service';
 import { salvarTimeline } from './timeline-persistence.service';
 import { carregarBackblazeExistente } from './timeline-merge.service';
+import { relinkBackblazeDocumentos } from './timeline-relink.service';
 import type {
   TimelineResponse,
   TimelineItem,
@@ -213,7 +214,34 @@ export async function capturarTimeline(
 
     // 6. Merge incremental: carregar backblaze existente do banco
     //    para não re-baixar documentos que já estão no Backblaze
+    //    Usa indexação dupla (por ID e por idUnicoDocumento) para resiliência
     const backblazeExistente = await carregarBackblazeExistente(processoId);
+
+    // 6b. Fallback: se o merge do banco não encontrou backblaze,
+    //     tentar relink direto do Backblaze B2 (lista arquivos e reconstrói links)
+    if (backblazeExistente.porId.size === 0) {
+      try {
+        console.log('[capturarTimeline] Nenhum backblaze no banco — tentando relink do Backblaze B2...');
+        const relinkResult = await relinkBackblazeDocumentos(processoId, numeroProcesso);
+
+        if (relinkResult.totalRelinkados > 0) {
+          console.log(`[capturarTimeline] Relink restaurou ${relinkResult.totalRelinkados} documentos do Backblaze B2`);
+          // Recarregar backblaze do banco após relink ter atualizado
+          const backblazeRecarregado = await carregarBackblazeExistente(processoId);
+          // Substituir o mapa vazio pelo recarregado
+          for (const [id, info] of backblazeRecarregado.porId) {
+            backblazeExistente.porId.set(id, info);
+          }
+          for (const [id, info] of backblazeRecarregado.porIdUnico) {
+            backblazeExistente.porIdUnico.set(id, info);
+          }
+        } else {
+          console.log('[capturarTimeline] Relink não encontrou arquivos no Backblaze B2');
+        }
+      } catch (relinkError) {
+        console.warn('[capturarTimeline] Erro no relink (continuando sem):', relinkError);
+      }
+    }
 
     // 7. Baixar documentos (apenas novos)
     const documentosBaixados: DocumentoBaixado[] = [];
@@ -223,11 +251,15 @@ export async function capturarTimeline(
     const timelineEnriquecida: TimelineItemEnriquecido[] = [...timeline];
 
     // Primeiro: reaproveitar backblaze de documentos já existentes
+    // Tenta match por item.id primeiro, depois fallback por idUnicoDocumento
     for (let i = 0; i < timelineEnriquecida.length; i++) {
       const item = timelineEnriquecida[i];
       if (!item.documento) continue;
 
-      const backblazeAnterior = backblazeExistente.get(item.id);
+      const backblazeAnterior =
+        backblazeExistente.porId.get(item.id) ||
+        (item.idUnicoDocumento ? backblazeExistente.porIdUnico.get(item.idUnicoDocumento) : undefined);
+
       if (backblazeAnterior) {
         timelineEnriquecida[i] = { ...item, backblaze: backblazeAnterior };
         totalReaproveitados++;
@@ -238,9 +270,15 @@ export async function capturarTimeline(
       console.log(`[capturarTimeline] ${totalReaproveitados} documentos reaproveitados do Backblaze existente`);
     }
 
-    // Segundo: baixar apenas documentos novos (filtrados que ainda não têm backblaze)
+    // Segundo: baixar apenas documentos novos (filtrados que ainda não têm backblaze na timeline enriquecida)
     const documentosParaBaixar = baixarDocumentos
-      ? documentosFiltrados.filter((item) => !backblazeExistente.has(item.id))
+      ? documentosFiltrados.filter((item) => {
+          // Verificar se já tem backblaze via merge (por ID ou idUnicoDocumento)
+          const jaTemBackblaze =
+            backblazeExistente.porId.has(item.id) ||
+            (item.idUnicoDocumento ? backblazeExistente.porIdUnico.has(item.idUnicoDocumento) : false);
+          return !jaTemBackblaze;
+        })
       : [];
 
     if (documentosParaBaixar.length > 0) {
@@ -333,7 +371,17 @@ export async function capturarTimeline(
       console.log(`[capturarTimeline] Todos os ${totalReaproveitados} documentos ja existem no Backblaze, nenhum download necessario`);
     }
 
-    // 8. Salvar timeline enriquecida no PostgreSQL
+    // 8. Verificar integridade antes de salvar — proteger contra perda de backblaze
+    const totalComBackblazeNovo = timelineEnriquecida.filter(
+      item => item.documento && item.backblaze
+    ).length;
+    const totalComBackblazeAntigo = backblazeExistente.porId.size;
+
+    if (totalComBackblazeAntigo > 0 && totalComBackblazeNovo < totalComBackblazeAntigo) {
+      console.warn(`[capturarTimeline] ⚠️ ATENÇÃO: Nova timeline tem MENOS backblaze (${totalComBackblazeNovo}) que a anterior (${totalComBackblazeAntigo}). Verificar se houve perda de dados.`);
+    }
+
+    // 9. Salvar timeline enriquecida no PostgreSQL
     try {
       const persistenceResult = await salvarTimeline({
         processoId,
@@ -345,6 +393,7 @@ export async function capturarTimeline(
 
       console.log(`[capturarTimeline] Timeline salva no PostgreSQL (JSONB)`, {
         totalItens: persistenceResult.totalItens,
+        totalComBackblaze: totalComBackblazeNovo,
       });
 
     } catch (error) {
@@ -352,7 +401,7 @@ export async function capturarTimeline(
       // Nao falhar a captura por erro de persistencia, apenas logar
     }
 
-    // 9. Retornar resultado
+    // 10. Retornar resultado
     const resultado: CapturaTimelineResult = {
       timeline,
       totalItens,

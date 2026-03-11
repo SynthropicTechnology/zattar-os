@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import type { Audiencia } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
@@ -58,6 +58,7 @@ interface Usuario {
   id: number;
   nomeExibicao?: string;
   nomeCompleto?: string;
+  avatarUrl?: string | null;
 }
 
 function getUsuarioNome(u: Usuario): string {
@@ -188,6 +189,7 @@ function AudienciaCard({
               {responsavel ? (
                 <>
                   <Avatar className="h-7 w-7 shrink-0">
+                    <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeResponsavel || undefined} />
                     <AvatarFallback className="text-xs font-medium">
                       {getInitials(nomeResponsavel)}
                     </AvatarFallback>
@@ -223,7 +225,7 @@ function AudienciaCard({
         </TabsContent>
 
         <TabsContent value="historico" className="mt-0">
-          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[400px]" />
+          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-100" />
         </TabsContent>
       </Tabs>
     </div>

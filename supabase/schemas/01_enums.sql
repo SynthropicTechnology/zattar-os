@@ -412,3 +412,23 @@ create type public.status_orcamento as enum (
   'encerrado'
 );
 comment on type public.status_orcamento is 'Status do orçamento: rascunho (em elaboração), aprovado (validado), em_execucao (período corrente), encerrado (período finalizado)';
+
+-- ----------------------------------------------------------------------------
+-- Enums de Entrevista Trabalhista
+-- ----------------------------------------------------------------------------
+
+-- Tipo de litígio trabalhista (bifurcação ontológica)
+create type public.tipo_litigio_trabalhista as enum (
+  'trabalhista_classico',
+  'gig_economy',
+  'pejotizacao'
+);
+comment on type public.tipo_litigio_trabalhista is 'Tipo de litígio trabalhista: trabalhista_classico (empresa física/tradicional), gig_economy (plataforma/aplicativo), pejotizacao (MEI para tomadora única)';
+
+-- Status da entrevista trabalhista
+create type public.status_entrevista as enum (
+  'rascunho',
+  'em_andamento',
+  'concluida'
+);
+comment on type public.status_entrevista is 'Status da entrevista trabalhista: rascunho (iniciada mas vazia), em_andamento (módulos sendo preenchidos), concluida (finalizada)';

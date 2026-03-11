@@ -103,16 +103,16 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
           </span>
 
           {/* Partes com badges de polo */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-0.5">
             <ParteBadge
               polo="ATIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
             >
               {processo.nome_parte_autora || '-'}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
             >
               {processo.nome_parte_re || '-'}
             </ParteBadge>

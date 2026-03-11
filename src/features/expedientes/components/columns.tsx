@@ -362,18 +362,18 @@ export function ResponsavelCell({ expediente, usuarios = [], onSuccessAction }: 
       <button
         type="button"
         onClick={() => setIsDialogOpen(true)}
-        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (
           <>
-            <Avatar className="h-7 w-7 shrink-0">
+            <Avatar className="h-6 w-6 shrink-0">
               <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
-              <AvatarFallback className="text-xs font-medium">
+              <AvatarFallback className="text-[10px] font-medium">
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate max-w-30">{responsavel.nomeExibicao}</span>
+            <span className="truncate">{responsavel.nomeExibicao}</span>
           </>
         ) : (
           <span className="text-muted-foreground">Sem responsável</span>
@@ -604,16 +604,16 @@ export const columns: ColumnDef<Expediente>[] = [
           </span>
 
           {/* Partes com badges de polo */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-0.5">
             <ParteBadge
               polo="ATIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
             >
               {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
             >
               {e.nomeParteReOrigem || e.nomeParteRe || '-'}
             </ParteBadge>

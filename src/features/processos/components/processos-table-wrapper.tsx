@@ -201,16 +201,16 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
         <span className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</span>
         <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-0.5">
         <ParteBadge
           polo="ATIVO"
-          className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
+          className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
         >
           {processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-'}
         </ParteBadge>
         <ParteBadge
           polo="PASSIVO"
-          className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
+          className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
         >
           {processo.nomeParteReOrigem || processo.nomeParteRe || '-'}
         </ParteBadge>
@@ -270,7 +270,7 @@ function ProcessoResponsavelCell({
           e.stopPropagation();
           setIsDialogOpen(true);
         }}
-        className="flex items-center justify-start gap-2 text-xs w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (

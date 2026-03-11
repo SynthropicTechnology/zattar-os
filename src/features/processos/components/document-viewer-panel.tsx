@@ -10,6 +10,7 @@ import {
   Lock,
   Loader2,
   MousePointerClick,
+  RefreshCw,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
@@ -30,6 +31,10 @@ type TimelineItemWithGrau = TimelineItemEnriquecido & {
 
 interface DocumentViewerPanelProps {
   item: TimelineItemWithGrau | null;
+  /** Callback para forçar recaptura da timeline */
+  onRecapture?: () => void;
+  /** Se uma recaptura está em andamento */
+  isCapturing?: boolean;
 }
 
 function formatarGrauComOrdinal(grau: GrauProcesso): string {
@@ -45,7 +50,7 @@ function formatarGrauComOrdinal(grau: GrauProcesso): string {
   }
 }
 
-export function DocumentViewerPanel({ item }: DocumentViewerPanelProps) {
+export function DocumentViewerPanel({ item, onRecapture, isCapturing }: DocumentViewerPanelProps) {
   const [presignedUrl, setPresignedUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -149,7 +154,7 @@ export function DocumentViewerPanel({ item }: DocumentViewerPanelProps) {
   // Documento sem Backblaze (não capturado)
   if (!item.backblaze) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center gap-3 p-8">
+      <div className="flex flex-col items-center justify-center h-full text-center gap-4 p-8">
         <div className="rounded-full bg-muted p-4">
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
@@ -158,7 +163,26 @@ export function DocumentViewerPanel({ item }: DocumentViewerPanelProps) {
           <p className="text-sm text-muted-foreground">
             Documento não foi capturado ou enviado para armazenamento
           </p>
+          <p className="text-xs text-muted-foreground/70">
+            Atualize a timeline para tentar capturar este documento novamente.
+          </p>
         </div>
+        {onRecapture && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onRecapture}
+            disabled={isCapturing}
+            className="gap-2"
+          >
+            {isCapturing ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <RefreshCw className="h-3.5 w-3.5" />
+            )}
+            {isCapturing ? 'Capturando...' : 'Atualizar Timeline'}
+          </Button>
+        )}
       </div>
     );
   }

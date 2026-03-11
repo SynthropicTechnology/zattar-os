@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { LayoutDashboard, Wallet, FileText, History } from 'lucide-react';
+import { LayoutDashboard, Wallet, FileText, History, ClipboardList } from 'lucide-react';
 import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import type {
   Contrato,
@@ -11,6 +11,8 @@ import type {
   ContratoCompletoStats,
 } from '@/features/contratos';
 import type { Lancamento } from '@/features/financeiro/domain/lancamentos';
+import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/features/entrevistas-trabalhistas';
+import { EntrevistaTab } from '@/features/entrevistas-trabalhistas/components/entrevista-tab';
 import {
   ContratoDetalhesHeader,
   ContratoResumoCard,
@@ -29,13 +31,14 @@ import {
 // Tipos e Constantes
 // =============================================================================
 
-type ContratoTab = 'resumo' | 'financeiro' | 'documentos' | 'historico';
+type ContratoTab = 'resumo' | 'financeiro' | 'documentos' | 'historico' | 'entrevista';
 
 const TABS: { value: ContratoTab; label: string; icon: React.ReactNode }[] = [
   { value: 'resumo', label: 'Resumo', icon: <LayoutDashboard className="h-4 w-4" /> },
   { value: 'financeiro', label: 'Financeiro', icon: <Wallet className="h-4 w-4" /> },
   { value: 'documentos', label: 'Documentos', icon: <FileText className="h-4 w-4" /> },
   { value: 'historico', label: 'Histórico', icon: <History className="h-4 w-4" /> },
+  { value: 'entrevista', label: 'Entrevista', icon: <ClipboardList className="h-4 w-4" /> },
 ];
 
 // =============================================================================
@@ -49,6 +52,8 @@ interface ContratoDetalhesClientProps {
   segmento: SegmentoDetalhado | null;
   stats: ContratoCompletoStats;
   lancamentos: Lancamento[];
+  entrevista?: EntrevistaTrabalhista | null;
+  entrevistaAnexos?: EntrevistaAnexo[];
 }
 
 export function ContratoDetalhesClient({
@@ -58,6 +63,8 @@ export function ContratoDetalhesClient({
   segmento,
   stats,
   lancamentos,
+  entrevista = null,
+  entrevistaAnexos = [],
 }: ContratoDetalhesClientProps) {
   const [activeTab, setActiveTab] = React.useState<ContratoTab>('resumo');
   const [selectedParte, setSelectedParte] = React.useState<ParteDisplay | null>(null);
@@ -105,6 +112,14 @@ export function ContratoDetalhesClient({
         return <ContratoDocumentosCard contratoId={contrato.id} />;
       case 'historico':
         return <ContratoTimeline historico={contrato.statusHistorico} />;
+      case 'entrevista':
+        return (
+          <EntrevistaTab
+            contratoId={contrato.id}
+            entrevista={entrevista}
+            anexos={entrevistaAnexos}
+          />
+        );
       default:
         return null;
     }
