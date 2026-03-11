@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -22,6 +21,7 @@ import type {
   RecusaConsequencia,
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloControleAlgoritmicoProps {
   data: RespostasControleAlgoritmico;
@@ -72,31 +72,35 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
         />
       </div>
 
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="renda-mensal-media">Renda mensal média na plataforma</Label>
+          <Input
+            id="renda-mensal-media"
+            placeholder="Ex: R$ 3.800,00"
+            value={data.renda_mensal_media ?? ''}
+            onChange={(e) => onChange({ ...data, renda_mensal_media: e.target.value })}
+          />
+        </div>
+        <div className="space-y-2 sm:max-w-xs">
+          <Label htmlFor="data-inicio-plataforma">Data de início na plataforma</Label>
+          <Input
+            id="data-inicio-plataforma"
+            type="date"
+            value={data.data_inicio_plataforma ?? ''}
+            onChange={(e) => onChange({ ...data, data_inicio_plataforma: e.target.value })}
+          />
+        </div>
+      </div>
+
       {/* B.1.3: Definição de preço */}
       <div className="space-y-3">
         <Label>A plataforma define o preço do serviço (você não pode negociar com o cliente)?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="preco-sim"
-              checked={data.plataforma_define_preco === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, plataforma_define_preco: checked === true })
-              }
-            />
-            <Label htmlFor="preco-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="preco-nao"
-              checked={data.plataforma_define_preco === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, plataforma_define_preco: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="preco-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="define-preco"
+          value={data.plataforma_define_preco}
+          onValueChange={(value) => onChange({ ...data, plataforma_define_preco: value })}
+        />
         {data.plataforma_define_preco === true && (
           <OperadorAlert tipo="info">
             A definição unilateral de preço pelo app é forte indício de subordinação algorítmica (art. 3° CLT). O trabalhador autônomo real negocia seus próprios preços.
@@ -127,56 +131,22 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       {/* B.1.5: Sistema de avaliação */}
       <div className="space-y-3">
         <Label>Existe um sistema de nota/avaliação que afeta seu trabalho?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="avaliacao-sim"
-              checked={data.sistema_avaliacao === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, sistema_avaliacao: checked === true })
-              }
-            />
-            <Label htmlFor="avaliacao-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="avaliacao-nao"
-              checked={data.sistema_avaliacao === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, sistema_avaliacao: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="avaliacao-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="sistema-avaliacao"
+          value={data.sistema_avaliacao}
+          onValueChange={(value) => onChange({ ...data, sistema_avaliacao: value })}
+        />
       </div>
 
       {/* B.1.6: Punição por nota baixa (condicional) */}
       {data.sistema_avaliacao === true && (
         <div className="space-y-3">
           <Label>Já foi punido por nota baixa?</Label>
-          <div className="flex gap-4">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="punido-sim"
-                checked={data.punido_nota_baixa === true}
-                onCheckedChange={(checked) =>
-                  onChange({ ...data, punido_nota_baixa: checked === true })
-                }
-              />
-              <Label htmlFor="punido-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="punido-nao"
-                checked={data.punido_nota_baixa === false}
-                onCheckedChange={(checked) =>
-                  onChange({ ...data, punido_nota_baixa: checked === true ? false : undefined })
-                }
-              />
-              <Label htmlFor="punido-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-            </div>
-          </div>
+          <SimNaoRadio
+            id="punicao-nota"
+            value={data.punido_nota_baixa}
+            onValueChange={(value) => onChange({ ...data, punido_nota_baixa: value })}
+          />
 
           {mostrarPunicao && (
             <div className="space-y-2">
@@ -195,55 +165,21 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       {/* B.1.7: GPS */}
       <div className="space-y-3">
         <Label>A plataforma monitora sua localização por GPS em tempo real?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="gps-sim"
-              checked={data.monitoramento_gps === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, monitoramento_gps: checked === true })
-              }
-            />
-            <Label htmlFor="gps-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="gps-nao"
-              checked={data.monitoramento_gps === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, monitoramento_gps: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="gps-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="monitoramento-gps"
+          value={data.monitoramento_gps}
+          onValueChange={(value) => onChange({ ...data, monitoramento_gps: value })}
+        />
       </div>
 
       {/* B.1.8: Meta de aceitação */}
       <div className="space-y-3">
         <Label>Existe meta ou taxa mínima de aceitação de corridas/serviços?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="meta-sim"
-              checked={data.meta_aceitacao_minima === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, meta_aceitacao_minima: checked === true })
-              }
-            />
-            <Label htmlFor="meta-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="meta-nao"
-              checked={data.meta_aceitacao_minima === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, meta_aceitacao_minima: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="meta-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="meta-aceitacao"
+          value={data.meta_aceitacao_minima}
+          onValueChange={(value) => onChange({ ...data, meta_aceitacao_minima: value })}
+        />
       </div>
 
       {/* B.1.9: Narrativa */}

@@ -61,6 +61,32 @@ function getBrowserWsEndpoint(): string | undefined {
 }
 
 /**
+ * Define se o runtime atual é de produção.
+ */
+function isProductionRuntime(): boolean {
+  return process.env.NODE_ENV === 'production';
+}
+
+/**
+ * Em desenvolvimento o padrão é usar browser local para evitar depender
+ * do serviço remoto de produção. Para forçar remoto em dev, defina
+ * BROWSER_USE_REMOTE_IN_DEV=true.
+ */
+function shouldUseRemoteBrowser(): boolean {
+  const wsEndpoint = getBrowserWsEndpoint();
+
+  if (!wsEndpoint) {
+    return false;
+  }
+
+  if (isProductionRuntime()) {
+    return true;
+  }
+
+  return process.env.BROWSER_USE_REMOTE_IN_DEV === 'true';
+}
+
+/**
  * Obtém o token de autenticação do browser service (opcional)
  */
 function getBrowserServiceToken(): string | undefined {
@@ -171,8 +197,9 @@ export async function getBrowserConnection(
   options: BrowserConnectionOptions = {}
 ): Promise<BrowserConnectionResult> {
   const wsEndpoint = getBrowserWsEndpoint();
+  const useRemote = shouldUseRemoteBrowser();
 
-  if (wsEndpoint) {
+  if (wsEndpoint && useRemote) {
     try {
       return await connectToRemoteBrowser(wsEndpoint, options);
     } catch (error) {
@@ -182,6 +209,12 @@ export async function getBrowserConnection(
       // Fallback para local se remoto falhar
       return await launchLocalBrowser(options);
     }
+  }
+
+  if (wsEndpoint && !useRemote) {
+    console.log(
+      '[Browser] Ambiente de desenvolvimento detectado: ignorando BROWSER_WS_ENDPOINT e usando browser local'
+    );
   }
 
   // Sem endpoint remoto configurado → usar local

@@ -6,6 +6,7 @@ import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/compon
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button, buttonVariants } from '@/components/ui/button';
+import Link from 'next/link';
 import { FilterPopover } from '@/features/partes';
 import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
@@ -15,8 +16,19 @@ import { deletarCapturaLog } from '@/features/captura/services/api-client';
 import type { ColumnDef, RowSelectionState, Table as TanstackTable } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/types';
 import type { CodigoTRT } from '@/features/captura';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, Settings, Trash2 } from 'lucide-react';
 import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -629,39 +641,70 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                 : undefined
             }
             actionSlot={
-              selectedCount > 0 ? (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 gap-2 bg-card text-destructive hover:text-destructive"
-                      disabled={isDeletingBulk}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      {isDeletingBulk ? 'Excluindo...' : `Excluir (${selectedCount})`}
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Confirmar exclusão em massa</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Tem certeza que deseja deletar {selectedCount}{' '}
-                        {selectedCount === 1 ? 'captura' : 'capturas'}? Esta ação não pode ser desfeita.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleBulkDelete}
-                        className={buttonVariants({ variant: 'destructive' })}
+              <div className="flex items-center gap-2">
+                {selectedCount > 0 && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 gap-2 bg-card text-destructive hover:text-destructive"
+                        disabled={isDeletingBulk}
                       >
-                        Deletar {selectedCount} {selectedCount === 1 ? 'captura' : 'capturas'}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              ) : undefined
+                        <Trash2 className="h-4 w-4" />
+                        {isDeletingBulk ? 'Excluindo...' : `Excluir (${selectedCount})`}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirmar exclusão em massa</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Tem certeza que deseja deletar {selectedCount}{' '}
+                          {selectedCount === 1 ? 'captura' : 'capturas'}? Esta ação não pode ser desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleBulkDelete}
+                          className={buttonVariants({ variant: 'destructive' })}
+                        >
+                          Deletar {selectedCount} {selectedCount === 1 ? 'captura' : 'capturas'}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+
+                <DropdownMenu>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-9 w-9 bg-card"
+                          aria-label="Configurações de captura"
+                        >
+                          <Settings className="h-4 w-4" aria-hidden="true" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>Configurações</TooltipContent>
+                  </Tooltip>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link href="/app/captura/agendamentos">Agendamentos</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/app/captura/advogados">Advogados</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/app/captura/credenciais">Credenciais</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             }
             filtersSlot={
               <>

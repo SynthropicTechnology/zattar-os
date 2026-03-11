@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
@@ -21,6 +20,7 @@ import type {
   DiasSemana,
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloCondicoesTrabalhoGigProps {
   data: RespostasCondicoesTrabalhoGig;
@@ -88,81 +88,30 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       {/* B.3.3: Acesso a banheiro/descanso */}
       <div className="space-y-3">
         <Label>Tinha acesso a banheiro e local de descanso durante o trabalho?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="banheiro-sim"
-              checked={data.acesso_banheiro_descanso === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, acesso_banheiro_descanso: checked === true })
-              }
-            />
-            <Label htmlFor="banheiro-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="banheiro-nao"
-              checked={data.acesso_banheiro_descanso === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, acesso_banheiro_descanso: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="banheiro-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="acesso-banheiro"
+          value={data.acesso_banheiro_descanso}
+          onValueChange={(value) => onChange({ ...data, acesso_banheiro_descanso: value })}
+        />
       </div>
 
       {/* B.3.4: Acidente de trabalho */}
       <div className="space-y-3">
         <Label>Já sofreu acidente durante o trabalho na plataforma?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="acidente-sim"
-              checked={data.sofreu_acidente === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, sofreu_acidente: checked === true })
-              }
-            />
-            <Label htmlFor="acidente-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="acidente-nao"
-              checked={data.sofreu_acidente === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, sofreu_acidente: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="acidente-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="acidente"
+          value={data.sofreu_acidente}
+          onValueChange={(value) => onChange({ ...data, sofreu_acidente: value })}
+        />
 
         {mostrarAssistencia && (
           <div className="space-y-3">
             <Label>A plataforma prestou alguma assistência após o acidente?</Label>
-            <div className="flex gap-4">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="assist-sim"
-                  checked={data.plataforma_assistiu_acidente === true}
-                  onCheckedChange={(checked) =>
-                    onChange({ ...data, plataforma_assistiu_acidente: checked === true })
-                  }
-                />
-                <Label htmlFor="assist-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="assist-nao"
-                  checked={data.plataforma_assistiu_acidente === false}
-                  onCheckedChange={(checked) =>
-                    onChange({ ...data, plataforma_assistiu_acidente: checked === true ? false : undefined })
-                  }
-                />
-                <Label htmlFor="assist-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-              </div>
-            </div>
+            <SimNaoRadio
+              id="assistencia-acidente"
+              value={data.plataforma_assistiu_acidente}
+              onValueChange={(value) => onChange({ ...data, plataforma_assistiu_acidente: value })}
+            />
           </div>
         )}
       </div>
@@ -170,55 +119,21 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       {/* B.3.5: EPI */}
       <div className="space-y-3">
         <Label>A plataforma fornecia equipamento de segurança (capacete, colete, etc.)?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="epi-sim"
-              checked={data.plataforma_fornece_epi === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, plataforma_fornece_epi: checked === true })
-              }
-            />
-            <Label htmlFor="epi-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="epi-nao"
-              checked={data.plataforma_fornece_epi === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, plataforma_fornece_epi: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="epi-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="fornece-epi"
+          value={data.plataforma_fornece_epi}
+          onValueChange={(value) => onChange({ ...data, plataforma_fornece_epi: value })}
+        />
       </div>
 
       {/* B.3.6: Seguro */}
       <div className="space-y-3">
         <Label>Existia algum seguro oferecido pela plataforma?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="seguro-sim"
-              checked={data.possui_seguro === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, possui_seguro: checked === true })
-              }
-            />
-            <Label htmlFor="seguro-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="seguro-nao"
-              checked={data.possui_seguro === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, possui_seguro: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="seguro-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="seguro"
+          value={data.possui_seguro}
+          onValueChange={(value) => onChange({ ...data, possui_seguro: value })}
+        />
       </div>
 
       {/* B.3.7: Narrativa */}

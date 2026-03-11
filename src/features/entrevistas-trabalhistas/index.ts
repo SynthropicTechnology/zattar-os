@@ -26,6 +26,7 @@ export type {
   RespostasSubordinacaoReal,
   RespostasExclusividadePessoalidade,
   RespostasFraudeVerbas,
+  RespostasConsolidacaoFinal,
   // Inputs
   CreateEntrevistaInput,
   SalvarModuloInput,
@@ -39,6 +40,7 @@ export {
   respostasClassicoSchema,
   respostasGigSchema,
   respostasPejotizacaoSchema,
+  respostasConsolidacaoFinalSchema,
   tipoLitigioSchema,
   statusEntrevistaSchema,
   TIPO_LITIGIO_LABELS,
@@ -99,7 +101,9 @@ export {
   finalizarEntrevistaAction,
   reabrirEntrevistaAction,
 } from './actions/entrevista-actions';
-export { uploadAnexoAction, deleteAnexoAction } from './actions/anexo-actions';
+export { uploadAnexoAction, uploadArquivoAnexoAction, deleteAnexoAction } from './actions/anexo-actions';
+export { consolidarEntrevistaIAAction } from './actions/consolidacao-ia-actions';
+export { enviarParaIntegracaoPeticaoAction } from './actions/integracao-peticao-actions';
 
 // Hooks (Client Components)
 export { useEntrevista } from './hooks/use-entrevista';

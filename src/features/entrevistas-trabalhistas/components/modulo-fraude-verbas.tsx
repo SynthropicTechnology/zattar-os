@@ -21,6 +21,7 @@ import type {
   RegimeFerias,
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloFraudeVerbasProps {
   data: RespostasFraudeVerbas;
@@ -31,9 +32,19 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
   const beneficios = data.beneficios_recebidos ?? [];
 
   const toggleBeneficio = (value: BeneficioRecebido, checked: boolean) => {
-    const updated = checked
+    let updated = checked
       ? [...beneficios, value]
       : beneficios.filter((v) => v !== value);
+
+    // "nenhum" is mutually exclusive with concrete benefits.
+    if (checked && value === 'nenhum') {
+      updated = ['nenhum'];
+    }
+
+    if (checked && value !== 'nenhum') {
+      updated = updated.filter((v) => v !== 'nenhum');
+    }
+
     onChange({ ...data, beneficios_recebidos: updated });
   };
 
@@ -49,28 +60,11 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       {/* C.4.1: Valor mensal fixo */}
       <div className="space-y-3">
         <Label>Recebia um valor mensal fixo (como um salário)?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="fixo-sim"
-              checked={data.valor_mensal_fixo === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, valor_mensal_fixo: checked === true })
-              }
-            />
-            <Label htmlFor="fixo-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="fixo-nao"
-              checked={data.valor_mensal_fixo === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, valor_mensal_fixo: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="fixo-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="fixo"
+          value={data.valor_mensal_fixo}
+          onValueChange={(value) => onChange({ ...data, valor_mensal_fixo: value })}
+        />
 
         {data.valor_mensal_fixo === true && (
           <div className="space-y-2">
@@ -110,28 +104,11 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       {/* C.4.3: 13° disfarçado */}
       <div className="space-y-3">
         <Label>Havia algum &quot;bônus de fim de ano&quot; que funcionava como 13° salário?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="13-sim"
-              checked={data.decimo_terceiro_disfarado === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, decimo_terceiro_disfarado: checked === true })
-              }
-            />
-            <Label htmlFor="13-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="13-nao"
-              checked={data.decimo_terceiro_disfarado === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, decimo_terceiro_disfarado: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="13-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="decimo-terceiro"
+          value={data.decimo_terceiro_disfarado}
+          onValueChange={(value) => onChange({ ...data, decimo_terceiro_disfarado: value })}
+        />
       </div>
 
       {/* C.4.4: Férias */}
@@ -157,55 +134,21 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       {/* C.4.5: Verbas rescisórias */}
       <div className="space-y-3">
         <Label>Ao sair da empresa, recebeu alguma verba rescisória?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="rescisao-sim"
-              checked={data.recebeu_verbas_rescisao === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, recebeu_verbas_rescisao: checked === true })
-              }
-            />
-            <Label htmlFor="rescisao-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="rescisao-nao"
-              checked={data.recebeu_verbas_rescisao === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, recebeu_verbas_rescisao: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="rescisao-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="rescisao"
+          value={data.recebeu_verbas_rescisao}
+          onValueChange={(value) => onChange({ ...data, recebeu_verbas_rescisao: value })}
+        />
       </div>
 
       {/* C.4.6: Controle como CLT */}
       <div className="space-y-3">
         <Label>O pagamento era feito na PJ, mas o controle do trabalho era como CLT?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="controle-sim"
-              checked={data.controle_como_clt === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, controle_como_clt: checked === true })
-              }
-            />
-            <Label htmlFor="controle-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="controle-nao"
-              checked={data.controle_como_clt === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, controle_como_clt: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="controle-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="controle-clt"
+          value={data.controle_como_clt}
+          onValueChange={(value) => onChange({ ...data, controle_como_clt: value })}
+        />
       </div>
 
       <OperadorAlert tipo="info">

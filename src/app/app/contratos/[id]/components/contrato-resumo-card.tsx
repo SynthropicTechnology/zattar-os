@@ -52,7 +52,7 @@ function formatEndereco(endereco: ClienteDetalhado['endereco']): string | null {
 }
 
 export function ContratoResumoCard({
-  contrato,
+  contrato: _contrato,
   cliente,
   stats,
 }: ContratoResumoCardProps) {

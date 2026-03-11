@@ -8,7 +8,10 @@ import {
   finalizarEntrevistaAction,
   reabrirEntrevistaAction,
 } from '../actions/entrevista-actions';
-import { uploadAnexoAction, deleteAnexoAction } from '../actions/anexo-actions';
+import { uploadAnexoAction, deleteAnexoAction, uploadArquivoAnexoAction } from '../actions/anexo-actions';
+import { consolidarEntrevistaIAAction } from '../actions/consolidacao-ia-actions';
+import type { RespostasEntrevista } from '../domain';
+import { enviarParaIntegracaoPeticaoAction } from '../actions/integracao-peticao-actions';
 
 interface UseEntrevistaResult {
   isLoading: boolean;
@@ -49,6 +52,22 @@ interface UseEntrevistaResult {
     anexoId: number,
     contratoId: number,
   ) => Promise<boolean>;
+  uploadArquivoAnexo: (
+    entrevistaId: number,
+    contratoId: number,
+    modulo: string,
+    file: File,
+    tipoAnexo: string,
+    descricao?: string,
+    noReferencia?: string,
+  ) => Promise<boolean>;
+  consolidarComIA: (
+    entrevistaId: number,
+    respostas: RespostasEntrevista,
+  ) => Promise<{ relatoConsolidado: string; inconsistencias: string[] } | null>;
+  enviarIntegracaoPeticao: (
+    entrevistaId: number,
+  ) => Promise<{ message: string; workflowRunId?: string } | null>;
 }
 
 export function useEntrevista(): UseEntrevistaResult {
@@ -235,6 +254,98 @@ export function useEntrevista(): UseEntrevistaResult {
     [],
   );
 
+  const uploadArquivoAnexoFn = useCallback(
+    async (
+      entrevistaId: number,
+      contratoId: number,
+      modulo: string,
+      file: File,
+      tipoAnexo: string,
+      descricao?: string,
+      noReferencia?: string,
+    ) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const formData = new FormData();
+        formData.append('entrevistaId', String(entrevistaId));
+        formData.append('contratoId', String(contratoId));
+        formData.append('modulo', modulo);
+        formData.append('file', file);
+        formData.append('tipoAnexo', tipoAnexo);
+        if (descricao) formData.append('descricao', descricao);
+        if (noReferencia) formData.append('noReferencia', noReferencia);
+
+        const result = await uploadArquivoAnexoAction(formData);
+        if (!result.success) {
+          setError(result.error);
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Erro ao enviar arquivo';
+        setError(msg);
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
+
+  const consolidarComIAFn = useCallback(
+    async (entrevistaId: number, respostas: RespostasEntrevista) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await consolidarEntrevistaIAAction(entrevistaId, respostas);
+        if (!result.success) {
+          setError(result.error ?? 'Erro ao consolidar com IA');
+          return null;
+        }
+
+        return {
+          relatoConsolidado: result.relatoConsolidado ?? '',
+          inconsistencias: result.inconsistencias ?? [],
+        };
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Erro ao consolidar com IA';
+        setError(msg);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
+
+  const enviarIntegracaoPeticaoFn = useCallback(
+    async (entrevistaId: number) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await enviarParaIntegracaoPeticaoAction(entrevistaId);
+        if (!result.success) {
+          setError(result.message);
+          return null;
+        }
+
+        return {
+          message: result.message,
+          workflowRunId: result.workflowRunId,
+        };
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Erro ao enviar para integracao';
+        setError(msg);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
+
   return {
     isLoading,
     error,
@@ -244,5 +355,8 @@ export function useEntrevista(): UseEntrevistaResult {
     reabrir,
     uploadAnexo: uploadAnexoFn,
     deleteAnexo: deleteAnexoFn,
+    uploadArquivoAnexo: uploadArquivoAnexoFn,
+    consolidarComIA: consolidarComIAFn,
+    enviarIntegracaoPeticao: enviarIntegracaoPeticaoFn,
   };
 }

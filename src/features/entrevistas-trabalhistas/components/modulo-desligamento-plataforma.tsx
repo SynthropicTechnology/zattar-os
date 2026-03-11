@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -22,6 +21,7 @@ import type {
   TempoPlataforma,
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloDesligamentoPlataformaProps {
   data: RespostasDesligamentoPlataforma;
@@ -63,60 +63,36 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
         </Select>
       </div>
 
+      <div className="space-y-2 sm:max-w-xs">
+        <Label htmlFor="data-fim-plataforma">Data de encerramento na plataforma</Label>
+        <Input
+          id="data-fim-plataforma"
+          type="date"
+          value={data.data_fim_plataforma ?? ''}
+          onChange={(e) => onChange({ ...data, data_fim_plataforma: e.target.value })}
+        />
+      </div>
+
       {foiBloqueado && (
         <>
           {/* B.4.2: Aviso prévio */}
           <div className="space-y-3">
             <Label>Recebeu aviso prévio antes do bloqueio/desativação?</Label>
-            <div className="flex gap-4">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="aviso-sim"
-                  checked={data.aviso_previo === true}
-                  onCheckedChange={(checked) =>
-                    onChange({ ...data, aviso_previo: checked === true })
-                  }
-                />
-                <Label htmlFor="aviso-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="aviso-nao"
-                  checked={data.aviso_previo === false}
-                  onCheckedChange={(checked) =>
-                    onChange({ ...data, aviso_previo: checked === true ? false : undefined })
-                  }
-                />
-                <Label htmlFor="aviso-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-              </div>
-            </div>
+            <SimNaoRadio
+              id="aviso-previo"
+              value={data.aviso_previo}
+              onValueChange={(value) => onChange({ ...data, aviso_previo: value })}
+            />
           </div>
 
           {/* B.4.3: Direito de defesa */}
           <div className="space-y-3">
             <Label>Teve direito a defesa ou contestação antes do desligamento?</Label>
-            <div className="flex gap-4">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="defesa-sim"
-                  checked={data.direito_defesa === true}
-                  onCheckedChange={(checked) =>
-                    onChange({ ...data, direito_defesa: checked === true })
-                  }
-                />
-                <Label htmlFor="defesa-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="defesa-nao"
-                  checked={data.direito_defesa === false}
-                  onCheckedChange={(checked) =>
-                    onChange({ ...data, direito_defesa: checked === true ? false : undefined })
-                  }
-                />
-                <Label htmlFor="defesa-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-              </div>
-            </div>
+            <SimNaoRadio
+              id="direito-defesa"
+              value={data.direito_defesa}
+              onValueChange={(value) => onChange({ ...data, direito_defesa: value })}
+            />
           </div>
 
           {/* B.4.4: Motivo informado */}
@@ -140,28 +116,11 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       {/* B.4.5: Saldo retido */}
       <div className="space-y-3">
         <Label>Havia saldo/ganhos retidos pela plataforma no momento do desligamento?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="saldo-sim"
-              checked={data.saldo_retido === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, saldo_retido: checked === true })
-              }
-            />
-            <Label htmlFor="saldo-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="saldo-nao"
-              checked={data.saldo_retido === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, saldo_retido: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="saldo-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="saldo-retido"
+          value={data.saldo_retido}
+          onValueChange={(value) => onChange({ ...data, saldo_retido: value })}
+        />
 
         {mostrarValorRetido && (
           <div className="space-y-2">

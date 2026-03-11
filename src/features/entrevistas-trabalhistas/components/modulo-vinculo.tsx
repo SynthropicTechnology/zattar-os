@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { CTPS_OPTIONS } from '../domain';
@@ -50,6 +51,38 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      {/* A.1.2: Dados essenciais para cálculo */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="funcao-cargo">Função/Cargo exercido</Label>
+          <Input
+            id="funcao-cargo"
+            placeholder="Ex: Auxiliar administrativo"
+            value={data.funcao_cargo ?? ''}
+            onChange={(e) => onChange({ ...data, funcao_cargo: e.target.value })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="remuneracao-mensal">Remuneração mensal</Label>
+          <Input
+            id="remuneracao-mensal"
+            placeholder="Ex: R$ 2.500,00"
+            value={data.remuneracao_mensal ?? ''}
+            onChange={(e) => onChange({ ...data, remuneracao_mensal: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2 sm:max-w-xs">
+        <Label htmlFor="data-admissao">Data de admissão</Label>
+        <Input
+          id="data-admissao"
+          type="date"
+          value={data.data_admissao ?? ''}
+          onChange={(e) => onChange({ ...data, data_admissao: e.target.value })}
+        />
       </div>
 
       {/* Campo condicional: Subordinação */}

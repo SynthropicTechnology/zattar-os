@@ -74,12 +74,6 @@ const navPrincipal = [
     title: "Captura",
     url: "/app/captura",
     icon: Database,
-    items: [
-      { title: "Histórico", url: "/app/captura/historico" },
-      { title: "Agendamentos", url: "/app/captura/agendamentos" },
-      { title: "Credenciais", url: "/app/captura/credenciais" },
-      { title: "Tribunais", url: "/app/captura/tribunais" },
-    ],
   },
 ]
 

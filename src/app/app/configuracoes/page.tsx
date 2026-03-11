@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { actionObterMetricasDB } from "@/features/admin";
@@ -59,15 +58,13 @@ export default async function ConfiguracoesPage() {
     : [];
 
   return (
-    <Suspense>
-      <ConfiguracoesTabsContent
-        metricas={metricasResult.data}
-        integracao2FAuth={integracao2FAuth}
-        integracaoChatwoot={integracaoChatwoot}
-        integracaoDyte={integracaoDyte}
-        integracaoEditorIA={integracaoEditorIA}
-        systemPrompts={systemPrompts}
-      />
-    </Suspense>
+    <ConfiguracoesTabsContent
+      metricas={metricasResult.data}
+      integracao2FAuth={integracao2FAuth}
+      integracaoChatwoot={integracaoChatwoot}
+      integracaoDyte={integracaoDyte}
+      integracaoEditorIA={integracaoEditorIA}
+      systemPrompts={systemPrompts}
+    />
   );
 }

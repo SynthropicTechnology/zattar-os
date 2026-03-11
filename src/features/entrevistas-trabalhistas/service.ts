@@ -19,6 +19,7 @@ import {
   respostasSubordinacaoRealSchema,
   respostasExclusividadePessoalidadeSchema,
   respostasFraudeVerbasSchema,
+  respostasConsolidacaoFinalSchema,
 } from './domain';
 import {
   findByContratoId,
@@ -35,6 +36,10 @@ import {
   entrevistaValidationError,
   entrevistaStatusInvalidoError,
 } from './errors';
+
+function hasText(value: string | undefined | null): boolean {
+  return Boolean(value && value.trim().length > 0);
+}
 
 // =============================================================================
 // INICIAR ENTREVISTA
@@ -85,6 +90,7 @@ const SCHEMA_POR_MODULO: Record<string, ZodTypeAny> = {
   subordinacao_real: respostasSubordinacaoRealSchema,
   exclusividade_pessoalidade: respostasExclusividadePessoalidadeSchema,
   fraude_verbas: respostasFraudeVerbasSchema,
+  consolidacao_final: respostasConsolidacaoFinalSchema,
 };
 
 export async function salvarModulo(
@@ -172,8 +178,20 @@ export async function finalizarEntrevista(
       if (!respostas.vinculo?.ctps_assinada) {
         return err(entrevistaValidationError('Módulo Vínculo: campo CTPS é obrigatório'));
       }
+      if (!hasText(respostas.vinculo?.remuneracao_mensal)) {
+        return err(entrevistaValidationError('Módulo Vínculo: remuneração mensal é obrigatória'));
+      }
+      if (!hasText(respostas.vinculo?.data_admissao)) {
+        return err(entrevistaValidationError('Módulo Vínculo: data de admissão é obrigatória'));
+      }
+      if (!hasText(respostas.vinculo?.funcao_cargo)) {
+        return err(entrevistaValidationError('Módulo Vínculo: função/cargo é obrigatório'));
+      }
       if (!respostas.ruptura?.motivo) {
         return err(entrevistaValidationError('Módulo Ruptura: motivo do término é obrigatório'));
+      }
+      if (!hasText(respostas.ruptura?.data_demissao)) {
+        return err(entrevistaValidationError('Módulo Ruptura: data do desligamento é obrigatória'));
       }
       break;
 
@@ -181,8 +199,20 @@ export async function finalizarEntrevista(
       if (!respostas.controle_algoritmico?.tipo_plataforma) {
         return err(entrevistaValidationError('Módulo Controle Algorítmico: tipo de plataforma é obrigatório'));
       }
+      if (!hasText(respostas.controle_algoritmico?.renda_mensal_media)) {
+        return err(entrevistaValidationError('Módulo Controle Algorítmico: renda mensal média é obrigatória'));
+      }
+      if (!hasText(respostas.controle_algoritmico?.data_inicio_plataforma)) {
+        return err(entrevistaValidationError('Módulo Controle Algorítmico: data de início é obrigatória'));
+      }
+      if (!respostas.condicoes_trabalho_gig?.horas_dia) {
+        return err(entrevistaValidationError('Módulo Condições de Trabalho: horas por dia é obrigatório'));
+      }
       if (!respostas.desligamento_plataforma?.forma_desligamento) {
         return err(entrevistaValidationError('Módulo Desligamento: forma de desligamento é obrigatória'));
+      }
+      if (!hasText(respostas.desligamento_plataforma?.data_fim_plataforma)) {
+        return err(entrevistaValidationError('Módulo Desligamento: data de encerramento é obrigatória'));
       }
       break;
 
@@ -190,10 +220,20 @@ export async function finalizarEntrevista(
       if (!respostas.contrato_pj?.origem_pj) {
         return err(entrevistaValidationError('Módulo Contrato PJ: origem do PJ é obrigatória'));
       }
+      if (!hasText(respostas.contrato_pj?.data_inicio_pj)) {
+        return err(entrevistaValidationError('Módulo Contrato PJ: data de início é obrigatória'));
+      }
+      if (!hasText(respostas.contrato_pj?.remuneracao_liquida_mensal)) {
+        return err(entrevistaValidationError('Módulo Contrato PJ: remuneração líquida mensal é obrigatória'));
+      }
       if (!respostas.fraude_verbas?.regime_ferias) {
         return err(entrevistaValidationError('Módulo Fraude nas Verbas: regime de férias é obrigatório'));
       }
       break;
+  }
+
+  if (!hasText(respostas.consolidacao_final?.relato_completo_texto)) {
+    return err(entrevistaValidationError('Módulo Consolidação Final: relato completo em texto é obrigatório'));
   }
 
   // Atualizar testemunhas

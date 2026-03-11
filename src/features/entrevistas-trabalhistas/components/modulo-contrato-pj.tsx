@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -23,6 +22,7 @@ import type {
   ValorPagamento,
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloContratoPJProps {
   data: RespostasContratoPJ;
@@ -86,58 +86,56 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
         </Select>
       </div>
 
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2 sm:max-w-xs">
+          <Label htmlFor="data-inicio-pj">Data de início da relação PJ</Label>
+          <Input
+            id="data-inicio-pj"
+            type="date"
+            value={data.data_inicio_pj ?? ''}
+            onChange={(e) => onChange({ ...data, data_inicio_pj: e.target.value })}
+          />
+        </div>
+        <div className="space-y-2 sm:max-w-xs">
+          <Label htmlFor="data-fim-pj">Data de fim da relação PJ</Label>
+          <Input
+            id="data-fim-pj"
+            type="date"
+            value={data.data_fim_pj ?? ''}
+            onChange={(e) => onChange({ ...data, data_fim_pj: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="remuneracao-liquida">Remuneração líquida mensal</Label>
+        <Input
+          id="remuneracao-liquida"
+          placeholder="Ex: R$ 6.500,00"
+          value={data.remuneracao_liquida_mensal ?? ''}
+          onChange={(e) => onChange({ ...data, remuneracao_liquida_mensal: e.target.value })}
+          className="max-w-56"
+        />
+      </div>
+
       {/* C.1.3: Contrato formal */}
       <div className="space-y-3">
         <Label>Existia contrato formal de prestação de serviços assinado?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="contrato-sim"
-              checked={data.contrato_formal === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, contrato_formal: checked === true })
-              }
-            />
-            <Label htmlFor="contrato-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="contrato-nao"
-              checked={data.contrato_formal === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, contrato_formal: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="contrato-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="contrato"
+          value={data.contrato_formal}
+          onValueChange={(value) => onChange({ ...data, contrato_formal: value })}
+        />
       </div>
 
       {/* C.1.4: Empresa paga custos CNPJ */}
       <div className="space-y-3">
         <Label>A empresa pagava os custos do CNPJ (contador, impostos, DAS)?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="custos-sim"
-              checked={data.empresa_paga_custos_cnpj === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, empresa_paga_custos_cnpj: checked === true })
-              }
-            />
-            <Label htmlFor="custos-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="custos-nao"
-              checked={data.empresa_paga_custos_cnpj === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, empresa_paga_custos_cnpj: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="custos-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="custos-cnpj"
+          value={data.empresa_paga_custos_cnpj}
+          onValueChange={(value) => onChange({ ...data, empresa_paga_custos_cnpj: value })}
+        />
         {data.empresa_paga_custos_cnpj === true && (
           <OperadorAlert tipo="info">
             O fato de a empresa arcar com os custos do CNPJ reforça que a PJ era mera formalidade para mascarar o vínculo empregatício.
@@ -148,28 +146,11 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       {/* C.1.5: Emissão de NF */}
       <div className="space-y-3">
         <Label>Emitia nota fiscal mensal para a empresa?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="nf-sim"
-              checked={data.emissao_nf_mensal === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, emissao_nf_mensal: checked === true })
-              }
-            />
-            <Label htmlFor="nf-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="nf-nao"
-              checked={data.emissao_nf_mensal === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, emissao_nf_mensal: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="nf-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="nota-fiscal"
+          value={data.emissao_nf_mensal}
+          onValueChange={(value) => onChange({ ...data, emissao_nf_mensal: value })}
+        />
       </div>
 
       {/* C.1.6: Tipo de pagamento */}

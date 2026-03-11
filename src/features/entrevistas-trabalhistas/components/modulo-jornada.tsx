@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { CONTROLE_PONTO_OPTIONS } from '../domain';
 import type { RespostasJornada, ControlePonto } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloJornadaProps {
   data: RespostasJornada;
@@ -22,9 +23,19 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
 
   const toggleControlePonto = (value: ControlePonto, checked: boolean) => {
     const current = controlePonto;
-    const updated = checked
+    let updated = checked
       ? [...current, value]
       : current.filter((v) => v !== value);
+
+    // "nenhum" is mutually exclusive with any concrete control mode.
+    if (checked && value === 'nenhum') {
+      updated = ['nenhum'];
+    }
+
+    if (checked && value !== 'nenhum') {
+      updated = updated.filter((v) => v !== 'nenhum');
+    }
+
     onChange({ ...data, controle_ponto: updated });
   };
 
@@ -58,6 +69,29 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
         </div>
       </div>
 
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="horario-entrada">Horário habitual de entrada</Label>
+          <Input
+            id="horario-entrada"
+            type="time"
+            value={data.horario_entrada ?? ''}
+            onChange={(e) => onChange({ ...data, horario_entrada: e.target.value })}
+            className="max-w-44"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="horario-saida">Horário habitual de saída</Label>
+          <Input
+            id="horario-saida"
+            type="time"
+            value={data.horario_saida ?? ''}
+            onChange={(e) => onChange({ ...data, horario_saida: e.target.value })}
+            className="max-w-44"
+          />
+        </div>
+      </div>
+
       {/* Tooltip inversão de ônus */}
       {mostrarAlertaOnus && (
         <OperadorAlert tipo="aviso">
@@ -68,32 +102,13 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       {/* A.2.2: Intervalo */}
       <div className="space-y-3">
         <Label>Conseguia tirar 1 hora inteira de almoço/descanso?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="intervalo-sim"
-              checked={data.intervalo_concedido === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, intervalo_concedido: checked === true })
-              }
-            />
-            <Label htmlFor="intervalo-sim" className="cursor-pointer text-sm font-normal">
-              Sim, tirava 1h completa
-            </Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="intervalo-nao"
-              checked={data.intervalo_concedido === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, intervalo_concedido: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="intervalo-nao" className="cursor-pointer text-sm font-normal">
-              Não, era reduzido
-            </Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="intervalo"
+          value={data.intervalo_concedido}
+          onValueChange={(value) => onChange({ ...data, intervalo_concedido: value })}
+          labelSim="Sim, tirava 1h completa"
+          labelNao="Não, era reduzido"
+        />
       </div>
 
       {/* Campo condicional: minutos reais */}

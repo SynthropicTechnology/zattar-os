@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronLeft, ChevronRight, Save, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, CheckCircle2, Sparkles, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import type {
@@ -25,7 +25,9 @@ import { ModuloContratoPJ } from './modulo-contrato-pj';
 import { ModuloSubordinacaoReal } from './modulo-subordinacao-real';
 import { ModuloExclusividadePessoalidade } from './modulo-exclusividade-pessoalidade';
 import { ModuloFraudeVerbas } from './modulo-fraude-verbas';
+import { ModuloConsolidacaoFinal } from './modulo-consolidacao-final';
 import { TestemunhasToggle } from './testemunhas-toggle';
+import { AnexoUploadZone } from './anexo-upload-zone';
 
 interface EntrevistaWizardProps {
   entrevista: EntrevistaTrabalhista;
@@ -34,7 +36,7 @@ interface EntrevistaWizardProps {
 }
 
 export function EntrevistaWizard({ entrevista, contratoId, onFinish }: EntrevistaWizardProps) {
-  const { salvarModulo, finalizar, isLoading, error } = useEntrevista();
+  const { salvarModulo, finalizar, consolidarComIA, enviarIntegracaoPeticao, isLoading, error } = useEntrevista();
 
   // Determinar módulos da trilha ativa
   const modulos = getModulosPorTrilha(entrevista.tipoLitigio);
@@ -47,6 +49,8 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
 
   const [currentStep, setCurrentStep] = React.useState(getInitialStep);
   const [testemunhas, setTestemunhas] = React.useState(entrevista.testemunhasMapeadas);
+  const [bloqueioFinalizacao, setBloqueioFinalizacao] = React.useState<string | null>(null);
+  const [integracaoMensagem, setIntegracaoMensagem] = React.useState<string | null>(null);
 
   // Estado unificado das respostas (carregado do que já foi salvo)
   const [respostas, setRespostas] = React.useState<RespostasEntrevista>(
@@ -104,6 +108,20 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
   };
 
   const handleFinalize = async () => {
+    const consolidacao = respostas.consolidacao_final;
+    const inconsistencias = consolidacao?.inconsistencias_ia ?? [];
+    const justificativas = consolidacao?.justificativas_inconsistencias ?? {};
+    const faltandoJustificativa = inconsistencias.some(
+      (item) => !(justificativas[item] && justificativas[item].trim().length > 0),
+    );
+
+    if (faltandoJustificativa) {
+      setBloqueioFinalizacao('Existem inconsistencias apontadas pela IA sem justificativa. Preencha as justificativas para concluir.');
+      return;
+    }
+
+    setBloqueioFinalizacao(null);
+
     // Salvar último módulo antes de finalizar
     await salvarModulo(
       entrevista.id,
@@ -117,6 +135,29 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
     if (result) {
       onFinish();
     }
+  };
+
+  const handleConsolidarIA = async () => {
+    const result = await consolidarComIA(entrevista.id, respostas);
+    if (!result) return;
+
+    updateModuloData('consolidacao_final', {
+      ...(respostas.consolidacao_final ?? {}),
+      relato_consolidado_ia: result.relatoConsolidado,
+      inconsistencias_ia: result.inconsistencias,
+      justificativas_inconsistencias: respostas.consolidacao_final?.justificativas_inconsistencias ?? {},
+    });
+  };
+
+  const handleEnviarIntegracao = async () => {
+    const result = await enviarIntegracaoPeticao(entrevista.id);
+    if (!result) return;
+
+    setIntegracaoMensagem(
+      result.workflowRunId
+        ? `${result.message} (run: ${result.workflowRunId})`
+        : result.message,
+    );
   };
 
   const renderModulo = () => {
@@ -148,6 +189,8 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
         return <ModuloExclusividadePessoalidade data={respostas.exclusividade_pessoalidade ?? {}} onChange={(d) => updateModuloData('exclusividade_pessoalidade', d)} />;
       case 'fraude_verbas':
         return <ModuloFraudeVerbas data={respostas.fraude_verbas ?? {}} onChange={(d) => updateModuloData('fraude_verbas', d)} />;
+      case 'consolidacao_final':
+        return <ModuloConsolidacaoFinal data={respostas.consolidacao_final ?? {}} onChange={(d) => updateModuloData('consolidacao_final', d)} />;
       default:
         return null;
     }
@@ -207,6 +250,13 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
       <Card>
         <CardContent className="p-6">
           {renderModulo()}
+          <div className="mt-6">
+            <AnexoUploadZone
+              entrevistaId={entrevista.id}
+              contratoId={contratoId}
+              modulo={currentModulo}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -218,6 +268,27 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
       {/* Erro */}
       {error && (
         <p className="text-sm text-destructive">{error}</p>
+      )}
+
+      {bloqueioFinalizacao && (
+        <p className="text-sm text-destructive">{bloqueioFinalizacao}</p>
+      )}
+
+      {currentModulo === 'consolidacao_final' && (
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button variant="secondary" onClick={handleConsolidarIA} disabled={isLoading}>
+            <Sparkles className="mr-2 h-4 w-4" />
+            Consolidar com IA
+          </Button>
+          <Button variant="outline" onClick={handleEnviarIntegracao} disabled={isLoading}>
+            <Send className="mr-2 h-4 w-4" />
+            Enviar para Integracao
+          </Button>
+        </div>
+      )}
+
+      {integracaoMensagem && (
+        <p className="text-sm text-muted-foreground">{integracaoMensagem}</p>
       )}
 
       {/* Navegação */}

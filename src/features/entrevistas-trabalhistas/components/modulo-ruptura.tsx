@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MOTIVO_RUPTURA_OPTIONS, VERBAS_RECEBIDAS_OPTIONS } from '../domain';
 import type { RespostasRuptura, MotivoRuptura, VerbaRecebida } from '../domain';
@@ -23,9 +24,19 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
   const verbas = data.verbas_recebidas ?? [];
 
   const toggleVerba = (value: VerbaRecebida, checked: boolean) => {
-    const updated = checked
+    let updated = checked
       ? [...verbas, value]
       : verbas.filter((v) => v !== value);
+
+    // "tudo" and "nada" cannot be selected together.
+    if (checked && value === 'tudo') {
+      updated = updated.filter((v) => v !== 'nada');
+    }
+
+    if (checked && value === 'nada') {
+      updated = updated.filter((v) => v !== 'tudo');
+    }
+
     onChange({ ...data, verbas_recebidas: updated });
   };
 
@@ -56,6 +67,16 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="space-y-2 sm:max-w-xs">
+        <Label htmlFor="data-demissao">Data do desligamento</Label>
+        <Input
+          id="data-demissao"
+          type="date"
+          value={data.data_demissao ?? ''}
+          onChange={(e) => onChange({ ...data, data_demissao: e.target.value })}
+        />
       </div>
 
       {/* A.4.2: Verbas rescisórias */}

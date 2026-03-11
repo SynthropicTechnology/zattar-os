@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import {
   PROIBICAO_OUTROS_OPTIONS,
@@ -20,6 +19,7 @@ import type {
   DuracaoRelacao,
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloExclusividadePessoalidadeProps {
   data: RespostasExclusividadePessoalidade;
@@ -41,55 +41,25 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       {/* C.3.1: Exclusividade */}
       <div className="space-y-3">
         <Label>Atendia exclusivamente esta empresa (não tinha outros clientes PJ)?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="exclus-sim"
-              checked={data.atende_exclusivamente === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, atende_exclusivamente: checked === true })
-              }
-            />
-            <Label htmlFor="exclus-sim" className="cursor-pointer text-sm font-normal">Sim, apenas esta empresa</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="exclus-nao"
-              checked={data.atende_exclusivamente === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, atende_exclusivamente: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="exclus-nao" className="cursor-pointer text-sm font-normal">Não, tinha outros clientes</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="atende-exclusivamente"
+          value={data.atende_exclusivamente}
+          onValueChange={(value) => onChange({ ...data, atende_exclusivamente: value })}
+          labelSim="Sim, apenas esta empresa"
+          labelNao="Não, tinha outros clientes"
+        />
       </div>
 
       {/* C.3.2: Pessoalidade */}
       <div className="space-y-3">
         <Label>Poderia enviar outra pessoa no seu lugar para fazer o trabalho?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="substituto-sim"
-              checked={data.pode_enviar_substituto === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, pode_enviar_substituto: checked === true })
-              }
-            />
-            <Label htmlFor="substituto-sim" className="cursor-pointer text-sm font-normal">Sim, poderia mandar qualquer um</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="substituto-nao"
-              checked={data.pode_enviar_substituto === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, pode_enviar_substituto: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="substituto-nao" className="cursor-pointer text-sm font-normal">Não, tinha que ser eu pessoalmente</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="pode-enviar-substituto"
+          value={data.pode_enviar_substituto}
+          onValueChange={(value) => onChange({ ...data, pode_enviar_substituto: value })}
+          labelSim="Sim, poderia mandar qualquer um"
+          labelNao="Não, tinha que ser eu pessoalmente"
+        />
       </div>
 
       {forteIndicioVinculo && (
@@ -121,28 +91,11 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       {/* C.3.4: Liberdade de recusar tarefas */}
       <div className="space-y-3">
         <Label>Tinha liberdade para recusar tarefas ou projetos da empresa?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="recusar-sim"
-              checked={data.liberdade_recusar_tarefas === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, liberdade_recusar_tarefas: checked === true })
-              }
-            />
-            <Label htmlFor="recusar-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="recusar-nao"
-              checked={data.liberdade_recusar_tarefas === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, liberdade_recusar_tarefas: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="recusar-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="liberdade-recusar"
+          value={data.liberdade_recusar_tarefas}
+          onValueChange={(value) => onChange({ ...data, liberdade_recusar_tarefas: value })}
+        />
       </div>
 
       {/* C.3.5: Duração da relação */}

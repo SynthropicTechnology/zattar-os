@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
@@ -21,6 +20,7 @@ import type {
   QtdPlataformas,
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { SimNaoRadio } from './sim-nao-radio';
 
 interface ModuloDependenciaEconomicaProps {
   data: RespostasDependenciaEconomica;
@@ -82,28 +82,11 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       {/* B.2.3: Investimento específico */}
       <div className="space-y-3">
         <Label>Fez algum investimento específico para trabalhar na plataforma? (moto, bag, celular, carro)</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="invest-sim"
-              checked={data.investimento_especifico === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, investimento_especifico: checked === true })
-              }
-            />
-            <Label htmlFor="invest-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="invest-nao"
-              checked={data.investimento_especifico === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, investimento_especifico: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="invest-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="investimento"
+          value={data.investimento_especifico}
+          onValueChange={(value) => onChange({ ...data, investimento_especifico: value })}
+        />
 
         {mostrarInvestimento && (
           <div className="space-y-2">
@@ -122,55 +105,21 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       {/* B.2.4: Única fonte de renda */}
       <div className="space-y-3">
         <Label>A plataforma era sua única fonte de renda?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="unica-sim"
-              checked={data.unica_fonte_renda === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, unica_fonte_renda: checked === true })
-              }
-            />
-            <Label htmlFor="unica-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="unica-nao"
-              checked={data.unica_fonte_renda === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, unica_fonte_renda: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="unica-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="unica-fonte-renda"
+          value={data.unica_fonte_renda}
+          onValueChange={(value) => onChange({ ...data, unica_fonte_renda: value })}
+        />
       </div>
 
       {/* B.2.5: Exclusividade */}
       <div className="space-y-3">
         <Label>Havia cláusula de exclusividade (formal ou informal) com a plataforma?</Label>
-        <div className="flex gap-4">
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="excl-sim"
-              checked={data.clausula_exclusividade === true}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, clausula_exclusividade: checked === true })
-              }
-            />
-            <Label htmlFor="excl-sim" className="cursor-pointer text-sm font-normal">Sim</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="excl-nao"
-              checked={data.clausula_exclusividade === false}
-              onCheckedChange={(checked) =>
-                onChange({ ...data, clausula_exclusividade: checked === true ? false : undefined })
-              }
-            />
-            <Label htmlFor="excl-nao" className="cursor-pointer text-sm font-normal">Não</Label>
-          </div>
-        </div>
+        <SimNaoRadio
+          id="clausula-exclusividade"
+          value={data.clausula_exclusividade}
+          onValueChange={(value) => onChange({ ...data, clausula_exclusividade: value })}
+        />
       </div>
 
       <OperadorAlert tipo="info">

@@ -59,7 +59,16 @@ export type ModuloEntrevista =
   | 'contrato_pj'
   | 'subordinacao_real'
   | 'exclusividade_pessoalidade'
-  | 'fraude_verbas';
+  | 'fraude_verbas'
+  | 'consolidacao_final';
+
+export interface RespostasConsolidacaoFinal {
+  relato_completo_texto?: string;
+  observacoes_finais?: string;
+  relato_consolidado_ia?: string;
+  inconsistencias_ia?: string[];
+  justificativas_inconsistencias?: Record<string, string>;
+}
 
 // =============================================================================
 // TIPOS: Respostas por Módulo (Trilha A — Clássico)
@@ -82,11 +91,16 @@ export type VerbaRecebida = 'tudo' | 'parcial_acordo' | 'nada' | 'fgts_nao_depos
 
 export interface RespostasVinculo {
   ctps_assinada?: CtpsAssinada;
+  funcao_cargo?: string;
+  remuneracao_mensal?: string;
+  data_admissao?: string;
   narrativa_subordinacao?: string;
 }
 
 export interface RespostasJornada {
   controle_ponto?: ControlePonto[];
+  horario_entrada?: string;
+  horario_saida?: string;
   intervalo_concedido?: boolean;
   minutos_intervalo_real?: number;
   horas_extras_pagas?: boolean;
@@ -105,6 +119,7 @@ export interface RespostasSaudeAmbiente {
 
 export interface RespostasRuptura {
   motivo?: MotivoRuptura;
+  data_demissao?: string;
   verbas_recebidas?: VerbaRecebida[];
 }
 
@@ -113,6 +128,7 @@ export interface RespostasClassico {
   jornada?: RespostasJornada;
   saude_ambiente?: RespostasSaudeAmbiente;
   ruptura?: RespostasRuptura;
+  consolidacao_final?: RespostasConsolidacaoFinal;
 }
 
 // =============================================================================
@@ -139,6 +155,8 @@ export type TempoPlataforma = 'menos_6m' | '6m_1a' | '1a_2a' | 'mais_2a';
 export interface RespostasControleAlgoritmico {
   tipo_plataforma?: TipoPlataforma;
   nome_plataforma?: string;
+  renda_mensal_media?: string;
+  data_inicio_plataforma?: string;
   plataforma_define_preco?: boolean;
   pode_recusar_corrida?: RecusaConsequencia;
   sistema_avaliacao?: boolean;
@@ -174,6 +192,7 @@ export interface RespostasCondicoesTrabalhoGig {
 /** B.4 — Desligamento: como foi a "demissão" pela plataforma */
 export interface RespostasDesligamentoPlataforma {
   forma_desligamento?: FormaDesligamento;
+  data_fim_plataforma?: string;
   aviso_previo?: boolean;
   direito_defesa?: boolean;
   motivo_informado?: string;
@@ -187,6 +206,7 @@ export interface RespostasGig {
   dependencia_economica?: RespostasDependenciaEconomica;
   condicoes_trabalho_gig?: RespostasCondicoesTrabalhoGig;
   desligamento_plataforma?: RespostasDesligamentoPlataforma;
+  consolidacao_final?: RespostasConsolidacaoFinal;
 }
 
 // =============================================================================
@@ -213,6 +233,9 @@ export type BeneficioRecebido = 'vt' | 'va' | 'vr' | 'plano_saude' | 'plano_odon
 export interface RespostasContratoPJ {
   origem_pj?: OrigemPJ;
   tipo_pj?: TipoPJ;
+  data_inicio_pj?: string;
+  data_fim_pj?: string;
+  remuneracao_liquida_mensal?: string;
   contrato_formal?: boolean;
   empresa_paga_custos_cnpj?: boolean;
   emissao_nf_mensal?: boolean;
@@ -256,6 +279,7 @@ export interface RespostasPejotizacao {
   subordinacao_real?: RespostasSubordinacaoReal;
   exclusividade_pessoalidade?: RespostasExclusividadePessoalidade;
   fraude_verbas?: RespostasFraudeVerbas;
+  consolidacao_final?: RespostasConsolidacaoFinal;
 }
 
 // =============================================================================
@@ -340,6 +364,7 @@ export const moduloEntrevistaSchema = z.enum([
   'subordinacao_real',
   'exclusividade_pessoalidade',
   'fraude_verbas',
+  'consolidacao_final',
 ]);
 
 // =============================================================================
@@ -348,11 +373,16 @@ export const moduloEntrevistaSchema = z.enum([
 
 export const respostasVinculoSchema = z.object({
   ctps_assinada: z.enum(['sim_ok', 'sim_atrasada', 'nao_informal', 'obrigado_mei']).optional(),
+  funcao_cargo: z.string().max(200).optional(),
+  remuneracao_mensal: z.string().max(200).optional(),
+  data_admissao: z.string().optional(),
   narrativa_subordinacao: z.string().max(5000).optional(),
 });
 
 export const respostasJornadaSchema = z.object({
   controle_ponto: z.array(z.enum(['eletronico', 'manual', 'nenhum', 'britanico'])).optional(),
+  horario_entrada: z.string().max(10).optional(),
+  horario_saida: z.string().max(10).optional(),
   intervalo_concedido: z.boolean().optional(),
   minutos_intervalo_real: z.number().int().min(0).max(480).optional(),
   horas_extras_pagas: z.boolean().optional(),
@@ -377,6 +407,7 @@ export const respostasRupturaSchema = z.object({
     'empresa_faliu',
     'rescisao_indireta',
   ]).optional(),
+  data_demissao: z.string().optional(),
   verbas_recebidas: z.array(z.enum(['tudo', 'parcial_acordo', 'nada', 'fgts_nao_depositado'])).optional(),
 });
 
@@ -394,6 +425,8 @@ export const respostasClassicoSchema = z.object({
 export const respostasControleAlgoritmicoSchema = z.object({
   tipo_plataforma: z.enum(['transporte', 'entrega', 'servicos_gerais', 'outro']).optional(),
   nome_plataforma: z.string().max(200).optional(),
+  renda_mensal_media: z.string().max(200).optional(),
+  data_inicio_plataforma: z.string().optional(),
   plataforma_define_preco: z.boolean().optional(),
   pode_recusar_corrida: z.enum(['sem_punicao', 'perde_pontuacao', 'pode_ser_bloqueado']).optional(),
   sistema_avaliacao: z.boolean().optional(),
@@ -426,6 +459,7 @@ export const respostasCondicoesTrabalhoGigSchema = z.object({
 
 export const respostasDesligamentoPlataformaSchema = z.object({
   forma_desligamento: z.enum(['bloqueio_definitivo', 'bloqueio_temporario', 'conta_desativada', 'saiu_voluntariamente']).optional(),
+  data_fim_plataforma: z.string().optional(),
   aviso_previo: z.boolean().optional(),
   direito_defesa: z.boolean().optional(),
   motivo_informado: z.string().max(2000).optional(),
@@ -448,6 +482,9 @@ export const respostasGigSchema = z.object({
 export const respostasContratoPJSchema = z.object({
   origem_pj: z.enum(['empresa_obrigou', 'empresa_sugeriu', 'decisao_propria', 'contador_sugeriu']).optional(),
   tipo_pj: z.enum(['mei', 'simples_nacional', 'lucro_presumido', 'outro']).optional(),
+  data_inicio_pj: z.string().optional(),
+  data_fim_pj: z.string().optional(),
+  remuneracao_liquida_mensal: z.string().max(200).optional(),
   contrato_formal: z.boolean().optional(),
   empresa_paga_custos_cnpj: z.boolean().optional(),
   emissao_nf_mensal: z.boolean().optional(),
@@ -488,6 +525,14 @@ export const respostasPejotizacaoSchema = z.object({
   subordinacao_real: respostasSubordinacaoRealSchema.optional(),
   exclusividade_pessoalidade: respostasExclusividadePessoalidadeSchema.optional(),
   fraude_verbas: respostasFraudeVerbasSchema.optional(),
+});
+
+export const respostasConsolidacaoFinalSchema = z.object({
+  relato_completo_texto: z.string().max(20000).optional(),
+  observacoes_finais: z.string().max(10000).optional(),
+  relato_consolidado_ia: z.string().max(50000).optional(),
+  inconsistencias_ia: z.array(z.string().max(2000)).optional(),
+  justificativas_inconsistencias: z.record(z.string().max(5000)).optional(),
 });
 
 // =============================================================================
@@ -580,6 +625,7 @@ export const MODULO_LABELS: Record<ModuloEntrevista, string> = {
   subordinacao_real: 'Subordinação Real',
   exclusividade_pessoalidade: 'Exclusividade e Pessoalidade',
   fraude_verbas: 'Fraude nas Verbas',
+  consolidacao_final: 'Consolidação Final',
 };
 
 // =============================================================================
@@ -591,6 +637,7 @@ export const MODULOS_CLASSICO: ModuloEntrevista[] = [
   'jornada',
   'saude_ambiente',
   'ruptura',
+  'consolidacao_final',
 ];
 
 export const MODULOS_GIG: ModuloEntrevista[] = [
@@ -598,6 +645,7 @@ export const MODULOS_GIG: ModuloEntrevista[] = [
   'dependencia_economica',
   'condicoes_trabalho_gig',
   'desligamento_plataforma',
+  'consolidacao_final',
 ];
 
 export const MODULOS_PEJOTIZACAO: ModuloEntrevista[] = [
@@ -605,6 +653,7 @@ export const MODULOS_PEJOTIZACAO: ModuloEntrevista[] = [
   'subordinacao_real',
   'exclusividade_pessoalidade',
   'fraude_verbas',
+  'consolidacao_final',
 ];
 
 export function getModulosPorTrilha(tipoLitigio: TipoLitigio): ModuloEntrevista[] {
