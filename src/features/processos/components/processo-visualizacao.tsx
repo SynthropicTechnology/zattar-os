@@ -239,7 +239,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                   items={timelineItems}
                   selectedItemId={selectedItem?.id ?? null}
                   onSelectItem={handleSelectItem}
-                  onOpenSearch={() => setIsSearchOpen(true)}
+
                   processo={processoContext}
                 />
               </ResizablePanel>
@@ -270,7 +270,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                     items={timelineItems}
                     selectedItemId={selectedItem?.id ?? null}
                     onSelectItem={handleSelectItem}
-                    onOpenSearch={() => setIsSearchOpen(true)}
+  
                     processo={processoContext}
                   />
                 </div>

@@ -67,7 +67,7 @@ export function TimelineSearchModal({
     toggleFilter,
     results,
     selectedIndex,
-    setSelectedIndex,
+    setSelectedIndex: _setSelectedIndex,
     handleKeyDown,
   } = useTimelineSearch({ items });
 

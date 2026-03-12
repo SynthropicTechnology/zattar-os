@@ -62,7 +62,7 @@ export function KpiStrip({ data, isLoading }: KpiStripProps) {
 
   // Calcular variações a partir da evolução mensal
   const evolucao = data.evolucaoMensal || [];
-  const mesAtualIdx = evolucao.length - 1;
+  const _mesAtualIdx = evolucao.length - 1;
   const mesAnteriorIdx = evolucao.length - 2;
 
   const receitaAnterior = mesAnteriorIdx >= 0 ? evolucao[mesAnteriorIdx].receitas : 0;

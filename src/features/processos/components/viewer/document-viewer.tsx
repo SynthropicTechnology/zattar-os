@@ -120,17 +120,19 @@ export function DocumentViewer({ item, onOpenDetails }: DocumentViewerProps) {
 
   return (
     <div className="flex flex-col h-full bg-muted/30 relative">
-      {/* Barra superior com info e ações */}
-      <ViewerToolbar
-        title={title}
-        date={date}
-        isDocumento={isDocumento}
-        hasBackblaze={hasBackblaze}
-        isLoading={isLoading}
-        onOpenExternal={handleOpenExternal}
-        onDownload={handleDownload}
-        onOpenDetails={onOpenDetails}
-      />
+      {/* Barra superior — só aparece quando há item selecionado (conforme protótipo 1.html) */}
+      {item && (
+        <ViewerToolbar
+          title={title}
+          date={date}
+          isDocumento={isDocumento}
+          hasBackblaze={hasBackblaze}
+          isLoading={isLoading}
+          onOpenExternal={handleOpenExternal}
+          onDownload={handleDownload}
+          onOpenDetails={onOpenDetails}
+        />
+      )}
 
       {/* Área de conteúdo */}
       <div className="flex-1 relative overflow-hidden">

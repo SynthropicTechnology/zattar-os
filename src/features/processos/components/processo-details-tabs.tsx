@@ -17,7 +17,7 @@ import {
   FileDown,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -74,17 +74,10 @@ function formatarDataRelativa(data: string | null | undefined): string | null {
 function StatusAudienciaBadge({ status }: { status: StatusAudiencia }) {
   const label = STATUS_AUDIENCIA_LABELS[status] || status;
 
-  const variant =
-    status === StatusAudiencia.Marcada
-      ? 'info' as const
-      : status === StatusAudiencia.Finalizada
-        ? 'success' as const
-        : 'neutral' as const;
-
   return (
-    <Badge variant={variant} tone="soft" className="text-xs">
+    <SemanticBadge category="audiencia_status" value={status} className="text-xs">
       {label}
-    </Badge>
+    </SemanticBadge>
   );
 }
 
@@ -98,10 +91,10 @@ function PrazoBadge({ data, baixadoEm }: { data: string | null | undefined; baix
     return (
       <div className="flex items-center gap-1.5">
         <span className="text-xs whitespace-nowrap">{formatarData(data)}</span>
-        <Badge variant="success" tone="soft" className="text-xs">
+        <SemanticBadge category="status" value="respondido" variantOverride="success" toneOverride="soft" className="text-xs">
           <CheckCircle2 className="h-3 w-3 mr-0.5" />
           Respondido
-        </Badge>
+        </SemanticBadge>
       </div>
     );
   }
@@ -110,10 +103,10 @@ function PrazoBadge({ data, baixadoEm }: { data: string | null | undefined; baix
     return (
       <div className="flex items-center gap-1.5">
         <span className="text-xs whitespace-nowrap text-destructive font-medium">{formatarData(data)}</span>
-        <Badge variant="destructive" tone="soft" className="text-xs">
+        <SemanticBadge category="status" value="vencido" variantOverride="destructive" toneOverride="soft" className="text-xs">
           <AlertTriangle className="h-3 w-3 mr-0.5" />
           Vencido
-        </Badge>
+        </SemanticBadge>
       </div>
     );
   }
@@ -122,17 +115,17 @@ function PrazoBadge({ data, baixadoEm }: { data: string | null | undefined; baix
   return (
     <div className="flex items-center gap-1.5">
       <span className="text-xs whitespace-nowrap">{formatarData(data)}</span>
-      <Badge variant="warning" tone="soft" className="text-xs">
+      <SemanticBadge category="status" value="no-prazo" variantOverride="warning" toneOverride="soft" className="text-xs">
         <Clock className="h-3 w-3 mr-0.5" />
         {relativa || 'No prazo'}
-      </Badge>
+      </SemanticBadge>
     </div>
   );
 }
 
 function SituacaoPericiaBadge({ codigo }: { codigo: SituacaoPericiaCodigo }) {
   const label = SITUACAO_PERICIA_LABELS[codigo] || codigo;
-  return <Badge variant="outline" className="text-xs">{label}</Badge>;
+  return <SemanticBadge category="status" value={codigo} variantOverride="outline" className="text-xs">{label}</SemanticBadge>;
 }
 
 // ─── Tabelas ────────────────────────────────────────────────────────────────
@@ -263,9 +256,9 @@ function ExpedientesTable({ expedientes }: { expedientes: Expediente[] }) {
           >
             {/* Linha 1: Origem + Data + Prazo */}
             <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="secondary" tone="soft" className="text-xs">
+              <SemanticBadge category="status" value={origemLabel} variantOverride="secondary" toneOverride="soft" className="text-xs">
                 {origemLabel}
-              </Badge>
+              </SemanticBadge>
               <span className="text-xs text-muted-foreground">
                 Criado em {formatarData(exp.dataCriacaoExpediente)}
               </span>
@@ -368,9 +361,9 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
               </td>
               <td className="py-2.5">
                 {per.laudoJuntado ? (
-                  <Badge variant="success" tone="soft" className="text-xs">
+                  <SemanticBadge category="status" value="juntado" variantOverride="success" toneOverride="soft" className="text-xs">
                     Juntado
-                  </Badge>
+                  </SemanticBadge>
                 ) : (
                   <span className="text-muted-foreground text-xs">Pendente</span>
                 )}
@@ -435,27 +428,27 @@ export function ProcessoDetailsTabs({
             <FileText className="h-3.5 w-3.5" />
             Expedientes
             {!isLoading && totalExpedientes > 0 && (
-              <Badge variant="secondary" tone="soft" className="ml-1 text-[10px] px-1.5 py-0">
+              <SemanticBadge category="status" value={totalExpedientes} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
                 {totalExpedientes}
-              </Badge>
+              </SemanticBadge>
             )}
           </TabsTrigger>
           <TabsTrigger value="audiencias" className="gap-1.5 text-sm">
             <Calendar className="h-3.5 w-3.5" />
             Audiências
             {!isLoading && totalAudiencias > 0 && (
-              <Badge variant="secondary" tone="soft" className="ml-1 text-[10px] px-1.5 py-0">
+              <SemanticBadge category="status" value={totalAudiencias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
                 {totalAudiencias}
-              </Badge>
+              </SemanticBadge>
             )}
           </TabsTrigger>
           <TabsTrigger value="pericias" className="gap-1.5 text-sm">
             <Microscope className="h-3.5 w-3.5" />
             Perícias
             {!isLoading && totalPericias > 0 && (
-              <Badge variant="secondary" tone="soft" className="ml-1 text-[10px] px-1.5 py-0">
+              <SemanticBadge category="status" value={totalPericias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
                 {totalPericias}
-              </Badge>
+              </SemanticBadge>
             )}
           </TabsTrigger>
         </TabsList>

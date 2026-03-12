@@ -141,7 +141,7 @@ const Notifications = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button size="icon" variant="ghost" className="relative">
-          <BellIcon className="size-5" />
+          <BellIcon className="size-4" />
           {unreadCount > 0 && (
             <span className="bg-destructive absolute inset-e-0 top-0 block size-2 shrink-0 rounded-full" />
           )}

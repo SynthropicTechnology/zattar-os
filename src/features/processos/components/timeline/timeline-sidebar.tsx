@@ -4,17 +4,15 @@
  * TimelineSidebar
  *
  * Contêiner principal da sidebar da timeline de processos.
- * Orquestra o card de contexto, cabeçalho de busca/estatísticas
- * e a lista virtualizada de itens da timeline.
+ * Exibe o card de contexto do processo e a lista cronológica de itens.
  *
- * Os itens são ordenados por data decrescente (mais recente primeiro)
- * e filtrados em tempo real pelo texto de busca.
+ * Os itens são ordenados por data decrescente (mais recente primeiro).
+ * A busca é feita via modal CMD+K (componente TimelineSearchModal).
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { TimelineContextCard } from './timeline-context-card';
-import { TimelineSidebarHeader } from './timeline-sidebar-header';
 import { TimelineSidebarItem } from './timeline-sidebar-item';
 import type { TimelineItemUnificado } from './types';
 
@@ -25,8 +23,6 @@ interface TimelineSidebarProps {
   selectedItemId: number | null;
   /** Callback chamado quando o usuário seleciona um item */
   onSelectItem: (item: TimelineItemUnificado) => void;
-  /** Callback para abrir o modal de busca avançada (CMD+K) */
-  onOpenSearch: () => void;
   /** Informações contextuais do processo para exibição no topo */
   processo?: {
     numeroProcesso: string;
@@ -45,7 +41,6 @@ interface TimelineSidebarProps {
  *   items={timelineItems}
  *   selectedItemId={selectedId}
  *   onSelectItem={(item) => setSelectedId(item.id)}
- *   onOpenSearch={() => setSearchModalOpen(true)}
  *   processo={{
  *     numeroProcesso: "1002345-67.2023.8.26.0100",
  *     partes: "João da Silva vs. Empresa X",
@@ -57,35 +52,15 @@ export function TimelineSidebar({
   items,
   selectedItemId,
   onSelectItem,
-  onOpenSearch,
   processo,
   className,
 }: TimelineSidebarProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  // Contagens para o header
-  const totalDocumentos = useMemo(
-    () => items.filter((i) => i.documento).length,
-    [items]
-  );
-  const totalMovimentos = useMemo(
-    () => items.filter((i) => !i.documento).length,
-    [items]
-  );
-
-  // Ordenar por data decrescente e filtrar por texto de busca
-  const itensFiltrados = useMemo(() => {
-    const ordenados = [...items].sort(
+  // Ordenar por data decrescente (mais recente primeiro)
+  const itensOrdenados = useMemo(() => {
+    return [...items].sort(
       (a, b) => new Date(b.data).getTime() - new Date(a.data).getTime()
     );
-
-    if (!searchTerm.trim()) return ordenados;
-
-    const termo = searchTerm.toLowerCase();
-    return ordenados.filter((item) =>
-      item.titulo.toLowerCase().includes(termo)
-    );
-  }, [items, searchTerm]);
+  }, [items]);
 
   return (
     <div className={cn('flex flex-col h-full bg-card', className)}>
@@ -98,34 +73,22 @@ export function TimelineSidebar({
         />
       )}
 
-      {/* Cabeçalho com busca e estatísticas */}
-      <TimelineSidebarHeader
-        totalItems={items.length}
-        totalDocumentos={totalDocumentos}
-        totalMovimentos={totalMovimentos}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onOpenSearch={onOpenSearch}
-      />
-
-      {/* Lista de itens com scroll */}
+      {/* Lista de itens com scroll — sem header de busca, CMD+K é o mecanismo de busca */}
       <div className="flex-1 overflow-y-auto py-2 min-h-0">
-        {itensFiltrados.length === 0 ? (
+        {itensOrdenados.length === 0 ? (
           <div className="px-4 py-6 text-center">
             <p className="text-xs text-muted-foreground italic">
-              {searchTerm.trim()
-                ? 'Nenhum item encontrado para esta busca.'
-                : 'Nenhum item na timeline.'}
+              Nenhum item na timeline.
             </p>
           </div>
         ) : (
           <>
-            {itensFiltrados.map((item, index) => (
+            {itensOrdenados.map((item, index) => (
               <TimelineSidebarItem
                 key={item.id}
                 item={item}
                 isSelected={item.id === selectedItemId}
-                isLast={index === itensFiltrados.length - 1}
+                isLast={index === itensOrdenados.length - 1}
                 onSelect={onSelectItem}
               />
             ))}

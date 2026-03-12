@@ -4,7 +4,7 @@ import { Target, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { cn } from '@/lib/utils';
 import type { AnaliseOrcamentariaUI } from '@/features/financeiro/actions/orcamentos';
 
@@ -100,9 +100,9 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Execução Geral</span>
             <div className="flex items-center gap-2">
-              <Badge variant={isOverBudget ? 'destructive' : 'secondary'} className="text-xs">
+              <SemanticBadge category="status" value={Math.round(resumo.percentualExecutado)} variantOverride={isOverBudget ? 'destructive' : 'secondary'} className="text-xs">
                 {Math.round(resumo.percentualExecutado)}%
-              </Badge>
+              </SemanticBadge>
             </div>
           </div>
           <Progress value={percentualExec} className="h-2.5" />
@@ -114,18 +114,18 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
         {/* Status badges */}
         <div className="flex gap-2 flex-wrap">
-          <Badge variant="outline" className="text-xs gap-1">
+          <SemanticBadge category="status" value="acima" variantOverride="outline" className="text-xs gap-1">
             <TrendingUp className="h-3 w-3 text-red-500" />
             {resumo.itensAcimaMeta} acima
-          </Badge>
-          <Badge variant="outline" className="text-xs gap-1">
+          </SemanticBadge>
+          <SemanticBadge category="status" value="alvo" variantOverride="outline" className="text-xs gap-1">
             <Minus className="h-3 w-3 text-green-500" />
             {resumo.itensDentroMeta} no alvo
-          </Badge>
-          <Badge variant="outline" className="text-xs gap-1">
+          </SemanticBadge>
+          <SemanticBadge category="status" value="abaixo" variantOverride="outline" className="text-xs gap-1">
             <TrendingDown className="h-3 w-3 text-blue-500" />
             {resumo.itensAbaixoMeta} abaixo
-          </Badge>
+          </SemanticBadge>
         </div>
 
         {/* Top itens com maior desvio */}

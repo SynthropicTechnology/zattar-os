@@ -2,7 +2,7 @@
 
 import { Bell, AlertTriangle, AlertCircle, Info, CheckCircle2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { cn } from '@/lib/utils';
 
 // ============================================================================
@@ -90,9 +90,9 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
             Alertas
           </div>
           {alertas.length > 0 && (
-            <Badge variant="secondary" className="text-xs tabular-nums">
+            <SemanticBadge category="status" value={alertas.length} variantOverride="secondary" className="text-xs tabular-nums">
               {alertas.length}
-            </Badge>
+            </SemanticBadge>
           )}
         </CardTitle>
       </CardHeader>
