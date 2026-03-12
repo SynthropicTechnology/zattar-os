@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Annotation Mode - Minimalista Profissional</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0a66c2",
+                        "background-light": "#FAFAFA",
+                        "background-dark": "#101922",
+                        "surface": "#FFFFFF",
+                        "text-main": "#09090B",
+                        "muted": "#71717A",
+                        "border-color": "#E4E4E7",
+                        "accent-info": "#0284C7",
+                        "accent-success": "#16A34A",
+                        "note-bg": "#FEF9C3",
+                        "note-border": "#FEF08A",
+                        "highlight": "#FEF08A"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "4px", "sm": "4px", "lg": "8px", "xl": "12px", "full": "9999px" },
+                    boxShadow: {
+                        'toolbar': '0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)',
+                        'sm': '0 1px 2px rgba(0,0,0,0.05)'
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .mix-blend-multiply {
+            mix-blend-mode: multiply;
+        }
+
+        .hairline-border {
+            border-color: #E4E4E7;
+            border-width: 1px;
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: -8px;
+            width: 1px;
+            background-color: #E4E4E7;
+            z-index: 0;
+        }
+
+        .timeline-item:last-child .timeline-line::before {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light text-text-main h-screen flex flex-col overflow-hidden font-display">
+    <!-- Top Navigation / Context Header -->
+    <header
+        class="flex-none h-16 bg-surface flex items-center justify-between px-6 border-b hairline-border relative z-20">
+        <div class="flex items-center gap-4">
+            <div class="w-6 h-6 text-primary flex items-center justify-center">
+                <span class="material-symbols-outlined">gavel</span>
+            </div>
+            <h1 class="text-lg font-semibold tracking-tight text-text-main">Minimalista Profissional</h1>
+        </div>
+        <div class="flex items-center gap-6">
+            <span
+                class="text-sm font-medium text-text-main bg-background-light px-2 py-1 rounded border hairline-border font-mono">Processo
+                12345-67.2023</span>
+            <span class="text-sm font-medium text-text-main">Silva vs. Rocha</span>
+            <span class="text-sm font-medium text-muted">3ª Câmara</span>
+        </div>
+    </header>
+    <!-- Main Workspace -->
+    <div class="flex flex-1 overflow-hidden relative">
+        <!-- Timeline Sidebar (Left) -->
+        <aside class="w-[300px] flex-none bg-surface border-r hairline-border flex flex-col z-10">
+            <div class="p-4 border-b hairline-border bg-background-light/50">
+                <h2 class="text-xs font-semibold text-muted uppercase tracking-wider">Histórico Processual</h2>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-2">
+                <!-- Timeline Items -->
+                <div
+                    class="timeline-item relative pl-8 py-2 group cursor-pointer hover:bg-background-light rounded transition-colors">
+                    <div
+                        class="timeline-line absolute left-0 top-3 w-6 h-6 flex items-center justify-center bg-surface border hairline-border rounded-full z-10 text-muted group-hover:text-primary">
+                        <span class="material-symbols-outlined text-[14px]">description</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono text-muted">12/05/2023</span>
+                            <span
+                                class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100">Petição</span>
+                        </div>
+                        <p class="text-sm font-medium text-text-main leading-tight">Petição Inicial</p>
+                    </div>
+                </div>
+                <div
+                    class="timeline-item relative pl-8 py-2 group cursor-pointer hover:bg-background-light rounded transition-colors">
+                    <div
+                        class="timeline-line absolute left-0 top-3 w-6 h-6 flex items-center justify-center bg-surface border hairline-border rounded-full z-10 text-muted group-hover:text-primary">
+                        <span class="material-symbols-outlined text-[14px]">person</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono text-muted">15/05/2023</span>
+                            <span
+                                class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-sky-50 text-accent-info border border-sky-100">Aviso</span>
+                        </div>
+                        <p class="text-sm font-medium text-text-main leading-tight">Citação do Réu</p>
+                    </div>
+                </div>
+                <div class="timeline-item relative pl-8 py-2 bg-background-light rounded border hairline-border">
+                    <div
+                        class="timeline-line absolute left-0 top-3 w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full z-10 shadow-sm">
+                        <span class="material-symbols-outlined text-[14px]">description</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono text-muted">28/05/2023</span>
+                            <span
+                                class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-100">Defesa</span>
+                        </div>
+                        <p class="text-sm font-semibold text-primary leading-tight">Contestação</p>
+                    </div>
+                </div>
+                <div
+                    class="timeline-item relative pl-8 py-2 group cursor-pointer hover:bg-background-light rounded transition-colors">
+                    <div
+                        class="timeline-line absolute left-0 top-3 w-6 h-6 flex items-center justify-center bg-surface border hairline-border rounded-full z-10 text-muted group-hover:text-primary">
+                        <span class="material-symbols-outlined text-[14px]">gavel</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono text-muted">10/06/2023</span>
+                            <span
+                                class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-green-50 text-accent-success border border-green-100">Decisão</span>
+                        </div>
+                        <p class="text-sm font-medium text-text-main leading-tight">Sentença Interlocutória</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- Document Viewer (Center) -->
+        <main
+            class="flex-1 bg-[#F4F4F5] relative overflow-hidden flex flex-col items-center justify-start pt-8 pb-16 px-8 overflow-y-auto cursor-text">
+            <!-- Floating Annotation Toolbar -->
+            <div
+                class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-surface rounded-full shadow-toolbar border hairline-border flex items-center p-1.5 gap-1 z-50">
+                <button
+                    class="w-8 h-8 flex items-center justify-center rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                    title="Highlight">
+                    <span class="material-symbols-outlined text-[18px]">format_ink_highlighter</span>
+                </button>
+                <div class="w-[1px] h-5 bg-border-color mx-1"></div>
+                <button
+                    class="w-8 h-8 flex items-center justify-center rounded text-muted hover:bg-background-light hover:text-text-main transition-colors"
+                    title="Underline">
+                    <span class="material-symbols-outlined text-[18px]">format_underlined</span>
+                </button>
+                <div class="w-[1px] h-5 bg-border-color mx-1"></div>
+                <button
+                    class="w-8 h-8 flex items-center justify-center rounded text-muted hover:bg-background-light hover:text-text-main transition-colors"
+                    title="Add Note">
+                    <span class="material-symbols-outlined text-[18px]">add_comment</span>
+                </button>
+                <div class="w-[1px] h-5 bg-border-color mx-1"></div>
+                <button
+                    class="w-8 h-8 flex items-center justify-center rounded text-muted hover:bg-background-light hover:text-text-main transition-colors"
+                    title="Eraser">
+                    <span class="material-symbols-outlined text-[18px]">ink_eraser</span>
+                </button>
+            </div>
+            <!-- Mini Context Menu (Simulated Selection) -->
+            <div
+                class="absolute top-[280px] left-[450px] bg-surface border hairline-border rounded shadow-md flex items-center p-1 z-40 transform -translate-x-1/2 -translate-y-full mb-2">
+                <button
+                    class="px-2 py-1 text-xs font-medium text-text-main hover:bg-background-light rounded flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px] text-yellow-500">format_ink_highlighter</span>
+                    Destacar
+                </button>
+                <div class="w-[1px] h-4 bg-border-color mx-1"></div>
+                <button
+                    class="px-2 py-1 text-xs font-medium text-text-main hover:bg-background-light rounded flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px] text-primary">add_comment</span>
+                    Anotar
+                </button>
+            </div>
+            <!-- PDF Page Container -->
+            <div
+                class="w-full max-w-[800px] bg-surface shadow-sm border hairline-border min-h-[1056px] p-12 relative flex-none">
+                <div class="mb-10 text-center">
+                    <h3 class="text-xl font-bold uppercase mb-2">Contestação</h3>
+                    <p class="text-sm text-muted">Autos nº 12345-67.2023</p>
+                </div>
+                <div class="space-y-6 text-[15px] leading-[1.6] text-text-main font-serif relative">
+                    <p>Excelentíssimo Senhor Doutor Juiz de Direito da 3ª Vara Cível da Comarca...</p>
+                    <p>
+                        A parte ré, devidamente qualificada nos autos do processo em epígrafe, vem, tempestivamente,
+                        apresentar sua <span class="bg-highlight mix-blend-multiply px-1 rounded-sm relative"
+                            id="highlight-1">contestação aos fatos alegados</span> pelo autor na petição inicial, nos
+                        seguintes termos.
+                    </p>
+                    <p>
+                        Preliminarmente, cumpre destacar a <span class="border-b-2 border-red-500">inépcia da petição
+                            inicial</span>, visto que os documentos juntados não comprovam o nexo de causalidade entre a
+                        conduta da ré e o suposto dano suportado.
+                    </p>
+                    <p>
+                        No mérito, a ré argumenta que a <span
+                            class="bg-highlight mix-blend-multiply px-1 rounded-sm relative"
+                            id="highlight-2">responsabilidade civil exige a comprovação cabal de culpa</span>, o que não
+                        ocorreu no presente caso. O autor baseia suas alegações em presunções, sem trazer aos autos
+                        qualquer prova documental ou testemunhal robusta.
+                    </p>
+                    <p>
+                        Diante do exposto, requer seja acolhida a preliminar arguida, extinguindo-se o processo sem
+                        resolução de mérito. Caso superada, requer no mérito a total improcedência dos pedidos
+                        formulados pelo autor, com a consequente condenação ao pagamento de custas e honorários
+                        advocatícios.
+                    </p>
+                </div>
+            </div>
+            <!-- Pagination Fixed Bottom -->
+            <div
+                class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-surface border hairline-border rounded-full h-9 flex items-center px-2 shadow-sm z-30">
+                <button
+                    class="w-6 h-6 flex items-center justify-center text-muted hover:text-text-main rounded hover:bg-background-light transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                </button>
+                <span class="text-xs font-mono px-3 text-text-main">3 / 45</span>
+                <button
+                    class="w-6 h-6 flex items-center justify-center text-muted hover:text-text-main rounded hover:bg-background-light transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                </button>
+            </div>
+        </main>
+        <!-- Connecting SVG Lines Layer -->
+        <!-- These lines would normally be calculated by JS based on highlight and note card positions. 
+             Hardcoded here for visual representation of the Annotation Mode -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-20"
+            style="left: 300px; width: calc(100% - 300px);">
+            <!-- Line connecting first highlight to first note -->
+            <path d="M 650 285 C 750 285, 750 180, 850 180" fill="none" stroke="#FEF08A" stroke-width="1.5"></path>
+            <!-- Line connecting second highlight to second note -->
+            <path d="M 650 420 C 750 420, 750 310, 850 310" fill="none" stroke="#FEF08A" stroke-width="1.5"></path>
+        </svg>
+        <!-- Marginalia Sidebar (Right) -->
+        <aside
+            class="w-[250px] flex-none bg-background-light border-l hairline-border p-4 relative z-30 overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xs font-semibold text-muted uppercase tracking-wider">Anotações</h3>
+                <span class="text-[10px] bg-surface border hairline-border px-1.5 py-0.5 rounded text-muted">2</span>
+            </div>
+            <div class="space-y-4 relative pt-[120px]">
+                <!-- Note Card 1 -->
+                <div class="bg-note-bg border border-note-border rounded p-3 shadow-sm relative group">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] font-mono text-muted flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                            pág. 3
+                        </span>
+                        <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            <button class="text-muted hover:text-primary"><span
+                                    class="material-symbols-outlined text-[14px]">edit</span></button>
+                            <button class="text-muted hover:text-red-500"><span
+                                    class="material-symbols-outlined text-[14px]">delete</span></button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-text-main leading-relaxed font-medium">Verificar se a contestação foi de fato
+                        tempestiva. O prazo do aviso anterior parece curto.</p>
+                </div>
+                <!-- Note Card 2 -->
+                <div class="bg-note-bg border border-note-border rounded p-3 shadow-sm relative group mt-[40px]">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] font-mono text-muted flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                            pág. 3
+                        </span>
+                        <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            <button class="text-muted hover:text-primary"><span
+                                    class="material-symbols-outlined text-[14px]">edit</span></button>
+                            <button class="text-muted hover:text-red-500"><span
+                                    class="material-symbols-outlined text-[14px]">delete</span></button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-text-main leading-relaxed font-medium">Importante: Buscar jurisprudência
+                        sobre exigência de prova cabal neste tribunal específico.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+
+</html>

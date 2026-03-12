@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Event Inspector</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0a66c2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+</head>
+
+<body class="font-display bg-background-light text-slate-900 antialiased h-screen w-full overflow-hidden flex">
+    <div class="flex-1 p-6 flex flex-col gap-4 opacity-50 pointer-events-none">
+        <div class="h-16 w-full bg-white rounded-lg border border-slate-200 shadow-sm flex items-center px-6">
+            <div class="h-4 w-48 bg-slate-200 rounded"></div>
+        </div>
+        <div
+            class="flex-1 w-full bg-white rounded-lg border border-slate-200 shadow-sm flex items-center justify-center">
+            <div class="h-6 w-64 bg-slate-100 rounded"></div>
+        </div>
+    </div>
+    <div class="fixed inset-0 bg-slate-900/20 backdrop-blur-[2px] z-40 transition-opacity"></div>
+    <div
+        class="fixed right-0 top-0 bottom-0 w-[400px] bg-white shadow-2xl z-50 border-l border-slate-200 flex flex-col transform transition-transform">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200 shrink-0">
+            <h2 class="text-[18px] font-semibold tracking-[-0.02em] text-slate-900">Detalhes do Evento</h2>
+            <button
+                class="text-slate-400 hover:text-slate-900 transition-colors flex items-center justify-center rounded-lg p-1 hover:bg-slate-100">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            <div class="px-6 py-6 border-b border-slate-200">
+                <div class="flex flex-col gap-4">
+                    <div class="flex justify-between items-start gap-4">
+                        <span class="text-[13px] text-slate-500 font-medium">Protocolo</span>
+                        <span
+                            class="text-[13px] text-slate-900 font-mono bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">0012345-67.2023.8.26.0000</span>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                        <span class="text-[13px] text-slate-500 font-medium">Data de Envio</span>
+                        <span class="text-[13px] text-slate-900 text-right">14 Out 2023, 14:32</span>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                        <span class="text-[13px] text-slate-500 font-medium">Tipo de Documento</span>
+                        <span class="text-[13px] text-slate-900 text-right font-medium">Petição Inicial</span>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                        <span class="text-[13px] text-slate-500 font-medium">Tamanho do Arquivo</span>
+                        <span class="text-[13px] text-slate-900 text-right">4.2 MB</span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/50">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100/50 text-green-600 shrink-0 border border-green-200/50">
+                        <span class="material-symbols-outlined text-[18px]"
+                            style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    </div>
+                    <p class="text-[13px] text-slate-900 font-medium leading-tight">Assinado digitalmente por<br /><span
+                            class="text-slate-600 font-normal">Dr. Carlos Eduardo</span></p>
+                </div>
+            </div>
+            <div class="px-6 py-6">
+                <h3 class="text-[14px] font-semibold text-slate-900 mb-4 tracking-tight">Arquivos Anexos</h3>
+                <div class="flex flex-col gap-2">
+                    <div
+                        class="group flex items-center justify-between h-[40px] px-3 rounded-lg border border-slate-200 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-pointer bg-white">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <span
+                                class="material-symbols-outlined text-[18px] text-slate-400 group-hover:text-primary transition-colors">description</span>
+                            <span class="text-[13px] text-slate-900 truncate font-medium">Procuracao_Assinada.pdf</span>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0 pl-3">
+                            <span class="text-[12px] text-slate-500 group-hover:hidden block">1.2 MB</span>
+                            <button class="hidden group-hover:flex items-center justify-center text-primary w-5 h-5">
+                                <span class="material-symbols-outlined text-[18px]">download</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="group flex items-center justify-between h-[40px] px-3 rounded-lg border border-slate-200 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-pointer bg-white">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <span
+                                class="material-symbols-outlined text-[18px] text-slate-400 group-hover:text-primary transition-colors">image</span>
+                            <span
+                                class="text-[13px] text-slate-900 truncate font-medium">Comprovante_Residencia.jpg</span>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0 pl-3">
+                            <span class="text-[12px] text-slate-500 group-hover:hidden block">845 KB</span>
+                            <button class="hidden group-hover:flex items-center justify-center text-primary w-5 h-5">
+                                <span class="material-symbols-outlined text-[18px]">download</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-6 border-t border-slate-200 bg-slate-50 mt-auto">
+            <button
+                class="w-full h-9 bg-primary hover:bg-primary/90 text-white text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">file_download</span>
+                Baixar Pacote Completo
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>

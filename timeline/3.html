@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Timeline Filter Modal - Minimalista Profissional</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0a66c2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["Geist Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "sm": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'Geist Mono', monospace;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen antialiased flex items-start justify-center pt-[20vh] relative">
+    <!-- Backdrop Overlay -->
+    <div aria-hidden="true" class="fixed inset-0 bg-slate-900/20 backdrop-blur-[2px] z-40"></div>
+    <!-- Modal Container -->
+    <div aria-labelledby="modal-title" aria-modal="true"
+        class="relative z-50 w-full max-w-[480px] bg-white dark:bg-slate-900 rounded shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-2px_rgba(0,0,0,0.05)] border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden"
+        role="dialog">
+        <!-- Search Header -->
+        <div
+            class="flex items-center px-4 border-b border-slate-200 dark:border-slate-800 h-16 bg-white dark:bg-slate-900">
+            <span aria-hidden="true"
+                class="material-symbols-outlined text-slate-400 dark:text-slate-500 mr-3 text-xl">search</span>
+            <input autofocus=""
+                class="flex-1 bg-transparent border-none focus:ring-0 text-[18px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-0 outline-none font-display"
+                placeholder="Buscar na linha do tempo..." type="text" value="Agravo" />
+            <div
+                class="hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 font-mono tracking-tight">
+                ESC
+            </div>
+        </div>
+        <!-- Quick Filters -->
+        <div
+            class="flex gap-2 px-4 py-3 border-b border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-hide bg-slate-50/50 dark:bg-slate-900/50">
+            <button
+                class="flex h-7 shrink-0 items-center justify-center rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 hover:border-slate-300 dark:hover:border-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <span class="text-slate-700 dark:text-slate-300 text-[13px] font-medium">Apenas Decisões</span>
+            </button>
+            <button
+                class="flex h-7 shrink-0 items-center justify-center rounded border border-transparent bg-primary px-3 shadow-sm hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-slate-900">
+                <span class="text-white text-[13px] font-medium">Com Anexos</span>
+            </button>
+            <button
+                class="flex h-7 shrink-0 items-center justify-center rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 hover:border-slate-300 dark:hover:border-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <span class="text-slate-700 dark:text-slate-300 text-[13px] font-medium">Favoritos</span>
+            </button>
+        </div>
+        <!-- Results List -->
+        <div class="max-h-[320px] overflow-y-auto p-2 space-y-1 bg-white dark:bg-slate-900">
+            <!-- Result Item 1 (Selected/Hover state) -->
+            <button
+                class="w-full flex items-center justify-between p-2 rounded bg-slate-100 dark:bg-slate-800/50 text-left group cursor-pointer focus:outline-none focus:bg-slate-100 dark:focus:bg-slate-800/50">
+                <div class="flex items-start gap-3 min-w-0">
+                    <div
+                        class="flex items-center justify-center w-8 h-8 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0 shadow-sm mt-0.5 group-hover:border-slate-300 dark:group-hover:border-slate-600 transition-colors">
+                        <span
+                            class="material-symbols-outlined text-[18px] text-slate-500 dark:text-slate-400">description</span>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span
+                            class="text-[14px] font-medium text-slate-900 dark:text-slate-100 truncate leading-snug">Juntada
+                            de Petição de <span class="font-semibold text-primary">Agravo</span> de Instrumento</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span
+                                class="inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400">Petição
+                                Inicial</span>
+                            <span
+                                class="text-slate-400 dark:text-slate-500 text-[11px] font-mono flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px]">attachment</span>
+                                2 anexos
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shrink-0 pl-3">
+                    <span class="text-[12px] text-slate-500 dark:text-slate-400 font-mono">12/04/2023</span>
+                </div>
+            </button>
+            <!-- Result Item 2 -->
+            <button
+                class="w-full flex items-center justify-between p-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800/30 text-left group cursor-pointer focus:outline-none focus:bg-slate-50 dark:focus:bg-slate-800/30">
+                <div class="flex items-start gap-3 min-w-0">
+                    <div
+                        class="flex items-center justify-center w-8 h-8 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0 shadow-sm mt-0.5 group-hover:border-slate-300 dark:group-hover:border-slate-600 transition-colors">
+                        <span
+                            class="material-symbols-outlined text-[18px] text-slate-500 dark:text-slate-400">gavel</span>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span
+                            class="text-[14px] font-medium text-slate-900 dark:text-slate-100 truncate leading-snug">Decisão
+                            Interlocutória - Recebimento de <span
+                                class="font-semibold text-primary">Agravo</span></span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span
+                                class="inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">Decisão</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shrink-0 pl-3">
+                    <span class="text-[12px] text-slate-500 dark:text-slate-400 font-mono">15/04/2023</span>
+                </div>
+            </button>
+            <!-- Result Item 3 -->
+            <button
+                class="w-full flex items-center justify-between p-2 rounded hover:bg-slate-50 dark:hover:bg-slate-800/30 text-left group cursor-pointer focus:outline-none focus:bg-slate-50 dark:focus:bg-slate-800/30">
+                <div class="flex items-start gap-3 min-w-0">
+                    <div
+                        class="flex items-center justify-center w-8 h-8 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0 shadow-sm mt-0.5 group-hover:border-slate-300 dark:group-hover:border-slate-600 transition-colors">
+                        <span
+                            class="material-symbols-outlined text-[18px] text-slate-500 dark:text-slate-400">history_edu</span>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span
+                            class="text-[14px] font-medium text-slate-900 dark:text-slate-100 truncate leading-snug">Manifestação
+                            sobre o <span class="font-semibold text-primary">Agravo</span> interposto</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span
+                                class="inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Manifestação</span>
+                            <span
+                                class="text-slate-400 dark:text-slate-500 text-[11px] font-mono flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px]">attachment</span>
+                                1 anexo
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shrink-0 pl-3">
+                    <span class="text-[12px] text-slate-500 dark:text-slate-400 font-mono">20/04/2023</span>
+                </div>
+            </button>
+        </div>
+        <!-- Footer / Meta -->
+        <div
+            class="px-4 py-2 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-between items-center text-[12px] text-slate-500 dark:text-slate-400">
+            <span class="flex items-center gap-1">
+                <span class="font-semibold text-slate-700 dark:text-slate-300">3</span> resultados encontrados
+            </span>
+            <div class="flex items-center gap-3">
+                <span class="flex items-center gap-1"><span
+                        class="material-symbols-outlined text-[14px]">keyboard_arrow_up</span><span
+                        class="material-symbols-outlined text-[14px] -ml-1">keyboard_arrow_down</span> Navegar</span>
+                <span class="flex items-center gap-1"><span
+                        class="material-symbols-outlined text-[14px]">keyboard_return</span> Selecionar</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

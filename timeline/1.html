@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Case Workspace - Minimalista Profissional</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0a66c2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body
+    class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-screen w-full flex flex-col overflow-hidden">
+    <!-- Global Header (64px) -->
+    <header
+        class="h-16 shrink-0 flex items-center justify-between px-6 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 z-20">
+        <div class="flex items-center gap-3">
+            <div class="size-6 bg-primary text-white rounded flex items-center justify-center">
+                <span class="material-symbols-outlined text-[16px]">gavel</span>
+            </div>
+            <h1 class="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">Minimalista Profissional
+            </h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+                <span class="material-symbols-outlined">search</span>
+            </button>
+            <button class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div class="w-px h-6 bg-slate-200 dark:bg-slate-800"></div>
+            <button
+                class="flex h-8 items-center justify-center rounded px-4 bg-primary text-white text-sm font-medium transition-colors hover:bg-primary/90">
+                <span>Novo Arquivo</span>
+            </button>
+        </div>
+    </header>
+    <!-- Main Workspace Area -->
+    <main class="flex flex-1 overflow-hidden relative">
+        <!-- Timeline Sidebar (300px) -->
+        <aside
+            class="w-[300px] shrink-0 flex flex-col bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 z-10">
+            <!-- Sticky Context Card (80px) -->
+            <div
+                class="h-[80px] shrink-0 p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col justify-center bg-white dark:bg-slate-950 sticky top-0">
+                <p class="font-mono text-xs text-slate-500 dark:text-slate-400 mb-1 tracking-wider">Nº
+                    1002345-67.2023.8.26.0100</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">João da Silva vs. Empresa X
+                </p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">3ª Vara Cível - Foro Central</p>
+            </div>
+            <!-- Scrollable Timeline List -->
+            <div class="flex-1 overflow-y-auto py-2">
+                <!-- Timeline Item 1 (Active) -->
+                <div
+                    class="group relative flex cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50 bg-primary/5 dark:bg-primary/10">
+                    <!-- Active Indicator Line -->
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-primary"></div>
+                    <div class="grid grid-cols-[48px_1fr] w-full px-2 py-3">
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="w-[1px] h-2 bg-transparent"></div>
+                            <div
+                                class="flex items-center justify-center size-6 rounded-full bg-white dark:bg-slate-800 border border-primary text-primary">
+                                <span class="material-symbols-outlined text-[14px]">description</span>
+                            </div>
+                            <div class="w-[1px] grow bg-slate-200 dark:bg-slate-800 mt-1"></div>
+                        </div>
+                        <div class="flex flex-col justify-center pb-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span
+                                    class="px-1.5 py-0.5 rounded-sm bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-semibold uppercase tracking-wider border border-slate-200 dark:border-slate-700">Petição</span>
+                                <span class="text-xs text-slate-500 font-mono">12/08/23</span>
+                            </div>
+                            <p class="text-sm font-medium text-primary leading-tight">Petição Inicial</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item 2 -->
+                <div class="group relative flex cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                    <div class="grid grid-cols-[48px_1fr] w-full px-2 py-3">
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="w-[1px] h-2 bg-slate-200 dark:bg-slate-800"></div>
+                            <div
+                                class="flex items-center justify-center size-6 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sky-600 dark:text-sky-400">
+                                <span class="material-symbols-outlined text-[14px]">mail</span>
+                            </div>
+                            <div class="w-[1px] grow bg-slate-200 dark:bg-slate-800 mt-1"></div>
+                        </div>
+                        <div class="flex flex-col justify-center pb-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span
+                                    class="px-1.5 py-0.5 rounded-sm bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 text-[10px] font-semibold uppercase tracking-wider border border-sky-100 dark:border-sky-800/50">Citação</span>
+                                <span class="text-xs text-slate-500 font-mono">15/08/23</span>
+                            </div>
+                            <p
+                                class="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100 leading-tight">
+                                Aviso de Recebimento</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item 3 -->
+                <div class="group relative flex cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                    <div class="grid grid-cols-[48px_1fr] w-full px-2 py-3">
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="w-[1px] h-2 bg-slate-200 dark:bg-slate-800"></div>
+                            <div
+                                class="flex items-center justify-center size-6 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500">
+                                <span class="material-symbols-outlined text-[14px]">description</span>
+                            </div>
+                            <div class="w-[1px] grow bg-slate-200 dark:bg-slate-800 mt-1"></div>
+                        </div>
+                        <div class="flex flex-col justify-center pb-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span
+                                    class="px-1.5 py-0.5 rounded-sm bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-semibold uppercase tracking-wider border border-slate-200 dark:border-slate-700">Petição</span>
+                                <span class="text-xs text-slate-500 font-mono">30/08/23</span>
+                            </div>
+                            <p
+                                class="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100 leading-tight">
+                                Contestação</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item 4 -->
+                <div class="group relative flex cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                    <div class="grid grid-cols-[48px_1fr] w-full px-2 py-3">
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="w-[1px] h-2 bg-slate-200 dark:bg-slate-800"></div>
+                            <div
+                                class="flex items-center justify-center size-6 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-green-600 dark:text-green-500">
+                                <span class="material-symbols-outlined text-[14px]">gavel</span>
+                            </div>
+                            <div class="w-[1px] grow bg-slate-200 dark:bg-slate-800 mt-1"></div>
+                        </div>
+                        <div class="flex flex-col justify-center pb-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span
+                                    class="px-1.5 py-0.5 rounded-sm bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-semibold uppercase tracking-wider border border-green-100 dark:border-green-800/50">Decisão</span>
+                                <span class="text-xs text-slate-500 font-mono">10/10/23</span>
+                            </div>
+                            <p
+                                class="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-100 leading-tight">
+                                Sentença de Mérito</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Timeline Item 5 (End) -->
+                <div class="group relative flex cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900/50 opacity-60">
+                    <div class="grid grid-cols-[48px_1fr] w-full px-2 py-3">
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="w-[1px] h-2 bg-slate-200 dark:bg-slate-800"></div>
+                            <div
+                                class="flex items-center justify-center size-3 rounded-full bg-slate-200 dark:bg-slate-700">
+                            </div>
+                            <div class="w-[1px] grow bg-transparent mt-1"></div>
+                        </div>
+                        <div class="flex flex-col justify-center pb-1">
+                            <p class="text-xs font-medium text-slate-500 italic">Trânsito em julgado aguardando prazo
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- PDF Viewer Pane -->
+        <section
+            class="flex-1 bg-slate-100 dark:bg-slate-900 relative overflow-y-auto pt-8 pb-32 px-4 flex justify-center custom-scrollbar">
+            <!-- Document Container -->
+            <article
+                class="bg-white dark:bg-slate-950 w-full max-w-4xl min-h-[1122px] rounded shadow-sm border border-slate-200 dark:border-slate-800 p-12 md:p-20 relative">
+                <!-- Dummy PDF Content -->
+                <div
+                    class="max-w-2xl mx-auto flex flex-col gap-6 text-slate-800 dark:text-slate-300 font-display leading-relaxed">
+                    <header class="text-center mb-10">
+                        <h2 class="text-xl font-bold uppercase tracking-wide mb-2 text-slate-900 dark:text-white">
+                            Excelentíssimo Senhor Doutor Juiz de Direito</h2>
+                        <p class="text-sm uppercase tracking-wider text-slate-600 dark:text-slate-400">Da 3ª Vara Cível
+                            do Foro Central da Comarca de São Paulo/SP</p>
+                    </header>
+                    <p class="text-justify indent-8">
+                        <strong>JOÃO DA SILVA</strong>, brasileiro, casado, engenheiro, portador da Cédula de Identidade
+                        RG nº 11.222.333-4, inscrito no CPF/MF sob o nº 123.456.789-00, residente e domiciliado na Rua
+                        das Flores, 123, apto. 45, Bairro Jardins, São Paulo/SP, CEP 01234-567, por seu advogado que
+                        esta subscreve (procuração anexa), vem, respeitosamente, à presença de Vossa Excelência, propor
+                        a presente
+                    </p>
+                    <h3 class="text-center font-bold text-lg my-4 uppercase text-slate-900 dark:text-white">Ação de
+                        Indenização por Danos Morais e Materiais</h3>
+                    <p class="text-justify indent-8">
+                        em face de <strong>EMPRESA X LTDA.</strong>, pessoa jurídica de direito privado, inscrita no
+                        CNPJ sob o nº 98.765.432/0001-10, com sede na Avenida Paulista, 1000, conjunto 101, São
+                        Paulo/SP, CEP 01310-100, pelos motivos de fato e de direito a seguir aduzidos.
+                    </p>
+                    <h4
+                        class="font-bold mt-6 mb-2 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-1">
+                        I - DOS FATOS</h4>
+                    <p class="text-justify indent-8">
+                        No dia 15 de maio de 2023, o Autor firmou contrato de prestação de serviços com a empresa Ré,
+                        cujo objeto era a reforma integral de sua residência, com prazo estipulado de 60 (sessenta) dias
+                        para conclusão, conforme faz prova o contrato anexo (Doc. 01).
+                    </p>
+                    <p
+                        class="text-justify indent-8 bg-[#fef08a]/40 dark:bg-[#fef08a]/10 border-l-2 border-yellow-400 px-2 -ml-[10px]">
+                        Ocorre que, passados mais de 120 (cento e vinte) dias da assinatura do termo, a empresa Ré
+                        abandonou a obra pela metade, deixando o imóvel inabitável e causando imensos transtornos à
+                        família do Autor, que precisou alugar outro imóvel em caráter de urgência.
+                    </p>
+                    <p class="text-justify indent-8 mt-4">
+                        Inúmeras foram as tentativas de resolução amigável, todas infrutíferas, restando ao Autor buscar
+                        a tutela jurisdicional do Estado para ver seus direitos resguardados.
+                    </p>
+                    <!-- Decorative Stamp/Signature Area -->
+                    <div class="mt-32 flex flex-col items-center justify-center gap-2">
+                        <div class="w-64 border-b border-slate-400 dark:border-slate-600"></div>
+                        <p class="text-sm font-medium">Advogado Subscritor</p>
+                        <p class="text-xs text-slate-500 font-mono">OAB/SP 123.456</p>
+                    </div>
+                </div>
+                <!-- Page Number Indicator on Document -->
+                <div class="absolute bottom-8 right-12 text-sm text-slate-400 font-mono">
+                    Pág. 1 de 45
+                </div>
+            </article>
+            <!-- Floating Pagination Pill -->
+            <div
+                class="fixed bottom-8 left-[calc(50%+150px)] transform -translate-x-1/2 flex items-center h-10 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-full px-2 z-30">
+                <button
+                    class="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors cursor-not-allowed opacity-50">
+                    <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                </button>
+                <div
+                    class="px-4 text-sm font-mono font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    <input
+                        class="w-8 text-center bg-transparent border-none p-0 text-sm font-mono focus:ring-0 text-slate-900 dark:text-white"
+                        type="text" value="1" />
+                    <span class="text-slate-400">/</span>
+                    <span class="text-slate-400">45</span>
+                </div>
+                <button
+                    class="p-1.5 text-slate-600 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                </button>
+                <div class="w-px h-4 bg-slate-200 dark:bg-slate-800 mx-2"></div>
+                <button class="p-1.5 text-slate-600 hover:text-primary rounded-full transition-colors"
+                    title="Aumentar zoom">
+                    <span class="material-symbols-outlined text-[18px]">zoom_in</span>
+                </button>
+                <button class="p-1.5 text-slate-600 hover:text-primary rounded-full transition-colors"
+                    title="Diminuir zoom">
+                    <span class="material-symbols-outlined text-[18px]">zoom_out</span>
+                </button>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
