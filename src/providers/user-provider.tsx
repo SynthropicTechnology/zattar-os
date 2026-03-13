@@ -91,6 +91,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // Manter ref sincronizado com state
   userRef.current = user;
 
+  const clearAuthState = useCallback(() => {
+    setUser(null);
+    setPermissoes([]);
+    setSessionToken(null);
+  }, []);
+
+  const isCurrentRoutePublic = useCallback(() => {
+    if (typeof window === 'undefined') return false;
+    return PUBLIC_ROUTES.some((route) => window.location.pathname.startsWith(route));
+  }, []);
+
   /**
    * Logout: limpa sessão, cookies e redireciona para login
    */
@@ -119,13 +130,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } catch {
       // Continuar com redirect mesmo com erro
     } finally {
-      setUser(null);
-      setPermissoes([]);
-      setSessionToken(null);
+      clearAuthState();
+      hasFetchedRef.current = false;
       logoutInProgressRef.current = false;
       router.push('/app/login');
+      router.refresh();
     }
-  }, [supabase, router]);
+  }, [clearAuthState, router, supabase]);
+
+  const invalidateSession = useCallback(async () => {
+    clearAuthState();
+    setIsLoading(false);
+
+    if (!isCurrentRoutePublic()) {
+      await logout();
+    }
+  }, [clearAuthState, isCurrentRoutePublic, logout]);
 
   /**
    * Busca dados do usuário + permissões da API consolidada
@@ -143,10 +163,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (signal?.aborted) return;
 
       if (userResult.error || !userResult.data.user) {
-        setUser(null);
-        setPermissoes([]);
-        setSessionToken(null);
-        setIsLoading(false);
+        hasFetchedRef.current = false;
+        await invalidateSession();
         return;
       }
 
@@ -161,21 +179,20 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (signal?.aborted) return;
 
       if (response.status === 401) {
-        setUser(null);
-        setPermissoes([]);
-        setSessionToken(null);
-        setIsLoading(false);
-
-        const currentPath = window.location.pathname;
-        const isPublicRoute = PUBLIC_ROUTES.some((r) => currentPath.startsWith(r));
-        if (!isPublicRoute) {
-          await logout();
-        }
+        hasFetchedRef.current = false;
+        await invalidateSession();
         return;
       }
 
       if (!response.ok) {
         console.error('Erro ao buscar dados do usuário:', response.status);
+        if (response.status === 403 || response.status === 404) {
+          hasFetchedRef.current = false;
+          await invalidateSession();
+          return;
+        }
+
+        hasFetchedRef.current = false;
         setIsLoading(false);
         return;
       }
@@ -196,16 +213,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
           isSuperAdmin: data.data.isSuperAdmin,
         });
         setPermissoes(data.data.permissoes);
+      } else {
+        hasFetchedRef.current = false;
       }
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
       console.error('Erro ao carregar dados do usuário:', error);
+      hasFetchedRef.current = false;
     } finally {
       if (!signal?.aborted) {
         setIsLoading(false);
       }
     }
-  }, [supabase, logout]);
+  }, [invalidateSession, supabase]);
 
   // Fetch inicial + listener de auth state
   useEffect(() => {
@@ -221,45 +241,48 @@ export function UserProvider({ children }: { children: ReactNode }) {
       await fetchUserData(controller.signal);
     };
 
-    init();
-
-    // Verificar sessão periodicamente (5 minutos)
-    intervalId = setInterval(async () => {
+    const validateSession = async () => {
       if (!mounted || logoutInProgressRef.current) return;
 
-      const { error } = await supabase.auth.getUser();
-      if (error) {
-        const currentPath = window.location.pathname;
-        const isPublicRoute = PUBLIC_ROUTES.some((r) => currentPath.startsWith(r));
-        if (!isPublicRoute) {
-          console.log('Sessão expirada detectada, fazendo logout automático');
-          await logout();
-        }
+      const [{ data: userData, error: userError }, { data: sessionData }] = await Promise.all([
+        supabase.auth.getUser(),
+        supabase.auth.getSession(),
+      ]);
+
+      if (!mounted) return;
+
+      if (userError || !userData.user || !sessionData.session) {
+        console.log('Sessão inválida detectada, fazendo logout automático');
+        hasFetchedRef.current = false;
+        await invalidateSession();
       }
-    }, 300000);
+    };
+
+    init();
+
+    // Revalidar quando a aba volta a receber foco e também periodicamente.
+    window.addEventListener('focus', validateSession);
+    document.addEventListener('visibilitychange', validateSession);
+    intervalId = setInterval(validateSession, 60000);
 
     // Escutar mudanças de autenticação
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted || logoutInProgressRef.current) return;
 
       if (session?.user) {
         setSessionToken(session.access_token);
-        // Se é um novo login (não tínhamos user antes), buscar dados
-        if (!userRef.current) {
+        if (!userRef.current || userRef.current.authUserId !== session.user.id) {
           hasFetchedRef.current = false;
           await fetchUserData(controller.signal);
         }
       } else {
-        setUser(null);
-        setPermissoes([]);
-        setSessionToken(null);
+        hasFetchedRef.current = false;
+        clearAuthState();
 
-        const currentPath = window.location.pathname;
-        const isPublicRoute = PUBLIC_ROUTES.some((r) => currentPath.startsWith(r));
-        if (!isPublicRoute) {
-          await logout();
+        if (event === 'SIGNED_OUT' || event === 'USER_DELETED' || event === 'INITIAL_SESSION') {
+          await invalidateSession();
         }
       }
     });
@@ -268,6 +291,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
       mounted = false;
       controller.abort();
       if (intervalId) clearInterval(intervalId);
+      window.removeEventListener('focus', validateSession);
+      document.removeEventListener('visibilitychange', validateSession);
       subscription.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
