@@ -63,17 +63,18 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
     return (
       <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
-        <div className="flex items-center gap-2 mb-2">
-          <Button asChild variant="ghost" size="icon">
-            <Link href="/assistentes">
-              <ChevronLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <span className="text-sm font-medium text-muted-foreground">{assistente.nome}</span>
-        </div>
-
-        <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0">
-          <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} metadata={difyApp.metadata ?? null} />
+        <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0 flex flex-col">
+          <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
+            <Button asChild variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+              <Link href="/assistentes">
+                <ChevronLeft className="h-4 w-4" />
+              </Link>
+            </Button>
+            <h2 className="text-sm font-medium">{assistente.nome}</h2>
+          </div>
+          <div className="flex-1 min-h-0">
+            <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} metadata={difyApp.metadata ?? null} />
+          </div>
         </div>
       </div>
     );
@@ -82,20 +83,21 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   // Renderização iframe (comportamento original)
   return (
     <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
-      <div className="flex items-center gap-2 mb-2">
-        <Button asChild variant="ghost" size="icon">
-          <Link href="/assistentes">
-            <ChevronLeft className="h-4 w-4" />
-          </Link>
-        </Button>
-        <span className="text-sm font-medium text-muted-foreground">{assistente.nome}</span>
-      </div>
-
-      <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0">
-        <div
-          className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
-          dangerouslySetInnerHTML={{ __html: assistente.iframe_code || '' }}
-        />
+      <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0 flex flex-col">
+        <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
+          <Button asChild variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+            <Link href="/assistentes">
+              <ChevronLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+          <h2 className="text-sm font-medium">{assistente.nome}</h2>
+        </div>
+        <div className="flex-1 min-h-0">
+          <div
+            className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+            dangerouslySetInnerHTML={{ __html: assistente.iframe_code || '' }}
+          />
+        </div>
       </div>
     </div>
   );

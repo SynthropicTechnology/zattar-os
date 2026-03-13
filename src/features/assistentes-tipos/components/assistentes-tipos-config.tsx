@@ -184,14 +184,14 @@ export function AssistentesTiposConfig({
             Nova Configuração
           </CardTitle>
           <CardDescription>
-            Configure qual assistente Dify será usado para gerar automaticamente peças de um
+            Configure qual assistente será usado para gerar automaticamente peças de um
             tipo de expediente
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Assistente Dify</label>
+              <label className="text-sm font-medium">Assistente</label>
               <Select value={assistenteId} onValueChange={setAssistenteId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o assistente" />

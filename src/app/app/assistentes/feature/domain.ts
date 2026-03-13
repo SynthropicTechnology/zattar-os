@@ -11,7 +11,7 @@ export type TipoAssistente = (typeof TIPO_ASSISTENTE)[keyof typeof TIPO_ASSISTEN
 
 export const TIPO_ASSISTENTE_LABELS: Record<TipoAssistente, string> = {
   iframe: "Iframe",
-  dify: "Dify AI",
+  dify: "IA",
 };
 
 export const STATUS_LABELS = {

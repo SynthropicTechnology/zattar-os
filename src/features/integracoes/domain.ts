@@ -145,7 +145,7 @@ export type AtualizarIntegracaoParams = z.infer<typeof atualizarIntegracaoSchema
 export const LABELS_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
   twofauth: "2FAuth",
   zapier: "Zapier",
-  dify: "Dify",
+  dify: "Assistentes IA",
   webhook: "Webhook",
   api: "API",
   chatwoot: "Chatwoot",

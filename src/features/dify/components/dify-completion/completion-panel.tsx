@@ -11,10 +11,12 @@ import {
   RotateCcw,
   Copy,
   Check,
+  FileText,
 } from 'lucide-react';
 import { useDifyCompletion } from '../../hooks/use-dify-completion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { SaveAsDocumentDialog } from '../save-as-document-dialog';
 
 interface CompletionPanelProps {
   appId?: string;
@@ -31,6 +33,7 @@ export function CompletionPanel({
 }: CompletionPanelProps) {
   const [inputValue, setInputValue] = useState('');
   const [copied, setCopied] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 
   const {
     answer,
@@ -62,17 +65,6 @@ export function CompletionPanel({
 
   return (
     <div className={cn('flex flex-col h-full', className)}>
-      {/* Header */}
-      <div className="flex items-center justify-between border-b px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-muted-foreground" />
-          <h3 className="text-sm font-medium">Completion</h3>
-        </div>
-        <Button variant="ghost" size="icon" onClick={handleReset} title="Limpar">
-          <RotateCcw className="h-4 w-4" />
-        </Button>
-      </div>
-
       {/* Input */}
       <form onSubmit={handleSubmit} className="border-b p-4 space-y-3">
         <Textarea
@@ -94,6 +86,12 @@ export function CompletionPanel({
               Gerar
             </Button>
           )}
+          {answer && (
+            <Button type="button" variant="ghost" onClick={handleReset} title="Limpar">
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Limpar
+            </Button>
+          )}
         </div>
       </form>
 
@@ -109,13 +107,23 @@ export function CompletionPanel({
         <div className="flex-1 flex flex-col min-h-0">
           <div className="flex items-center justify-between px-4 py-2 border-b">
             <span className="text-xs font-medium text-muted-foreground">Resultado</span>
-            <Button variant="ghost" size="icon" onClick={handleCopy} title="Copiar">
-              {copied ? (
-                <Check className="h-3.5 w-3.5 text-green-500" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" />
-              )}
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSaveDialogOpen(true)}
+                title="Salvar como Documento"
+              >
+                <FileText className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={handleCopy} title="Copiar">
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-green-500" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </Button>
+            </div>
           </div>
           <ScrollArea className="flex-1 px-4">
             <div className="py-4 prose prose-sm dark:prose-invert max-w-none">
@@ -148,6 +156,11 @@ export function CompletionPanel({
           </div>
         </div>
       )}
+      <SaveAsDocumentDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        content={answer || ''}
+      />
     </div>
   );
 }

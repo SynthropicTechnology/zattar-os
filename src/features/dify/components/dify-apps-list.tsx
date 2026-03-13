@@ -197,7 +197,7 @@ export function DifyAppsList() {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between gap-4">
-                <h1 className="text-2xl font-semibold tracking-tight">Aplicativos Dify</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">Aplicativos IA</h1>
                 <div className="flex items-center gap-2">
                     <Button
                         variant="outline"
@@ -304,8 +304,8 @@ export function DifyAppsList() {
             <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
                 <DialogContent className="sm:max-w-125">
                     <DialogHeader>
-                        <DialogTitle>{editingApp ? 'Editar App' : 'Novo App Dify'}</DialogTitle>
-                        <DialogDescription>Conecte um novo aplicativo do Dify fornecendo a chave de API.</DialogDescription>
+                        <DialogTitle>{editingApp ? 'Editar App' : 'Novo App IA'}</DialogTitle>
+                        <DialogDescription>Conecte um novo aplicativo de IA fornecendo a chave de API.</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         <div className="space-y-2">

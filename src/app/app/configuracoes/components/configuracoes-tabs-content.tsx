@@ -146,16 +146,16 @@ export function ConfiguracoesTabsContent({
               {/* Card Editor de Texto IA */}
               <EditorIAIntegrationCard integracao={integracaoEditorIA} />
 
-              {/* Card Dify */}
+              {/* Card Assistentes IA */}
               <Card>
                 <CardHeader className="pb-3">
                   <Bot className="h-10 w-10 mb-2 text-primary" />
-                  <CardTitle>Dify AI</CardTitle>
-                  <CardDescription>Conecte seus agentes e workflows do Dify.</CardDescription>
+                  <CardTitle>Assistentes IA</CardTitle>
+                  <CardDescription>Conecte seus agentes e workflows de IA.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Gerencie múltiplos aplicativos Dify, incluindo chatbots e workflows de automação.
+                    Gerencie múltiplos aplicativos de IA, incluindo chatbots e workflows de automação.
                   </p>
                 </CardContent>
                 <CardFooter>

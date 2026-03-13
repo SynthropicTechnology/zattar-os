@@ -4,6 +4,8 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ThumbsUp, ThumbsDown, Bot, User, FileText } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Collapsible,
   CollapsibleContent,
@@ -56,10 +58,14 @@ export function DifyMessage({
               : 'bg-muted'
           )}
         >
-          <div className="whitespace-pre-wrap break-words">
-            {content}
-            {isStreaming && <span className="inline-block w-1.5 h-4 bg-current animate-pulse ml-0.5" />}
-          </div>
+          {isUser ? (
+            <div className="whitespace-pre-wrap wrap-break-word">{content}</div>
+          ) : (
+            <div className="prose prose-sm dark:prose-invert max-w-none wrap-break-word">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+              {isStreaming && <span className="inline-block w-1.5 h-4 bg-current animate-pulse ml-0.5" />}
+            </div>
+          )}
         </div>
 
         {/* Sources */}

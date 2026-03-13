@@ -13,7 +13,6 @@ import {
   X,
   FileText,
   Loader2,
-  Bot,
   AlertCircle,
 } from 'lucide-react';
 import {
@@ -199,66 +198,58 @@ export function DifyInputForm({
   });
 
   return (
-    <div className={cn('flex flex-col h-full', className)}>
-      {/* Header */}
-      <div className="flex items-center gap-2 border-b px-4 py-3">
-        <Bot className="h-5 w-5 text-muted-foreground" />
-        <h3 className="text-sm font-medium">Preencha os campos para iniciar</h3>
-      </div>
-
-      <ScrollArea className="flex-1">
-        <form onSubmit={handleSubmit} className="p-4 space-y-6 max-w-3xl mx-auto">
-          {/* Opening statement */}
-          {openingStatement && (
-            <div className="rounded-lg bg-muted/50 p-4 text-sm prose prose-sm dark:prose-invert max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {openingStatement}
-              </ReactMarkdown>
-            </div>
-          )}
-
-          {/* Dynamic fields */}
-          {fields.map((field) => {
-            if (field.type === 'paragraph' && field.hide) return null;
-            return (
-              <DifyFormField
-                key={field.variable}
-                field={field}
-                value={values[field.variable] || ''}
-                uploadedFiles={uploadedFiles[field.variable] || []}
-                isUploading={uploadingFields[field.variable] || false}
-                error={errors[field.variable]}
-                onTextChange={handleTextChange}
-                onFileUpload={handleFileUpload}
-                onRemoveFile={handleRemoveFile}
-              />
-            );
-          })}
-
-          {/* Submit */}
-          <div className="pt-2">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={!requiredFieldsFilled || isAnyUploading}
-              size="lg"
-            >
-              {isAnyUploading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Enviando arquivos...
-                </>
-              ) : (
-                <>
-                  Iniciar Conversa
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </>
-              )}
-            </Button>
+    <ScrollArea className={cn('h-full', className)}>
+      <form onSubmit={handleSubmit} className="p-4 space-y-6 max-w-3xl mx-auto">
+        {/* Opening statement */}
+        {openingStatement && (
+          <div className="rounded-lg bg-muted/50 p-4 text-sm prose prose-sm dark:prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {openingStatement}
+            </ReactMarkdown>
           </div>
-        </form>
-      </ScrollArea>
-    </div>
+        )}
+
+        {/* Dynamic fields */}
+        {fields.map((field) => {
+          if (field.type === 'paragraph' && field.hide) return null;
+          return (
+            <DifyFormField
+              key={field.variable}
+              field={field}
+              value={values[field.variable] || ''}
+              uploadedFiles={uploadedFiles[field.variable] || []}
+              isUploading={uploadingFields[field.variable] || false}
+              error={errors[field.variable]}
+              onTextChange={handleTextChange}
+              onFileUpload={handleFileUpload}
+              onRemoveFile={handleRemoveFile}
+            />
+          );
+        })}
+
+        {/* Submit */}
+        <div className="pt-2 pb-2">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!requiredFieldsFilled || isAnyUploading}
+            size="lg"
+          >
+            {isAnyUploading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Enviando arquivos...
+              </>
+            ) : (
+              <>
+                Iniciar Conversa
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </>
+            )}
+          </Button>
+        </div>
+      </form>
+    </ScrollArea>
   );
 }
 

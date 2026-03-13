@@ -27,7 +27,7 @@ export function DifyChatPanel({
     user,
     onFinish,
     className,
-    assistantName = 'Assistente Dify',
+    assistantName = 'Assistente',
     assistantAvatar,
 }: DifyChatPanelProps) {
     const { messages, input, setInput, sendMessage, isLoading, stop } = useDifyChat({

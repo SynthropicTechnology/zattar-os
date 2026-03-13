@@ -27,7 +27,10 @@ export const actionListarProcessoWorkspaceAnotacoes = authenticatedAction(
 export const actionCriarProcessoWorkspaceAnotacao = authenticatedAction(
   criarProcessoWorkspaceAnotacaoSchema,
   async (data, { user }) => {
-    const result = await createProcessoWorkspaceAnnotation(user.id, data);
+    const result = await createProcessoWorkspaceAnnotation(user.id, {
+      ...data,
+      anchor: data.anchor ?? {},
+    });
     if (!result.success) {
       throw new Error(result.error.message);
     }
