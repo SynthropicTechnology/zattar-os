@@ -1,3 +1,5 @@
+import { resolveAvatarUrl } from '@/lib/avatar-url';
+
 
 import { GENERO_LABELS } from './domain';
 
@@ -137,15 +139,7 @@ export function formatarGenero(genero: string | null | undefined): string {
  * Assume que avatar_url já contém a URL completa
  */
 export function getAvatarUrl(avatarUrl: string | null | undefined): string | null {
-  if (!avatarUrl) return null;
-  // Se já é uma URL completa, retornar diretamente
-  if (avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://')) {
-    return avatarUrl;
-  }
-  // Caso contrário, construir URL (bucket: "avatar")
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!supabaseUrl) return null;
-  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarUrl}`;
+  return resolveAvatarUrl(avatarUrl);
 }
 
 /**

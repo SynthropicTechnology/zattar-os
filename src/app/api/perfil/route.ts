@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
+import { resolveAvatarUrl } from '@/lib/avatar-url';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 type PerfilResponseData = {
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
       nomeExibicao: data.nome_exibicao,
       emailCorporativo: data.email_corporativo,
       emailPessoal: data.email_pessoal ?? null,
-      avatarUrl: data.avatar_url ?? null,
+      avatarUrl: resolveAvatarUrl(data.avatar_url),
     };
 
     return NextResponse.json(

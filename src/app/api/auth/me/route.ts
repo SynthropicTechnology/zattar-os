@@ -11,6 +11,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
+import { resolveAvatarUrl } from '@/lib/avatar-url';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { listarPermissoesUsuario } from '@/features/usuarios/repository';
 
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
           nomeExibicao: usuario.nome_exibicao,
           emailCorporativo: usuario.email_corporativo,
           emailPessoal: usuario.email_pessoal ?? null,
-          avatarUrl: usuario.avatar_url ?? null,
+          avatarUrl: resolveAvatarUrl(usuario.avatar_url),
           isSuperAdmin: usuario.is_super_admin || false,
           permissoes: permissoes.map((p) => ({
             recurso: p.recurso,

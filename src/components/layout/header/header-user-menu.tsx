@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Switch } from "@/components/ui/switch"
+import { resolveAvatarUrl } from "@/lib/avatar-url"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useUser, useAuthSession } from "@/providers/user-provider"
 
@@ -41,16 +42,6 @@ function getInitials(name: string): string {
   }
 
   return ((parts[0]?.[0] ?? '') + (parts[parts.length - 1]?.[0] ?? '')).toUpperCase() || "U"
-}
-
-function getAvatarPublicUrl(avatarPath: string | null | undefined): string {
-  if (!avatarPath) return ""
-  if (avatarPath.startsWith("http://") || avatarPath.startsWith("https://")) {
-    return avatarPath
-  }
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  if (!supabaseUrl) return ""
-  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarPath}`
 }
 
 export function HeaderUserMenu() {
@@ -74,7 +65,7 @@ export function HeaderUserMenu() {
 
   const name = userData.nomeExibicao || userData.nomeCompleto || "Usuário"
   const email = userData.emailCorporativo || userData.emailPessoal || ""
-  const avatar = getAvatarPublicUrl(userData.avatarUrl)
+  const avatar = resolveAvatarUrl(userData.avatarUrl) || ""
   const isSuperAdmin = userData.isSuperAdmin || false
   const initials = getInitials(name)
 

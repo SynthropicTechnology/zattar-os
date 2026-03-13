@@ -24,6 +24,7 @@ import {
 } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { resolveAvatarUrl } from '@/lib/avatar-url';
 import type { Permissao } from '@/features/usuarios/domain';
 
 // ─── Tipos ───────────────────────────────────────────────
@@ -209,7 +210,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           nomeExibicao: data.data.nomeExibicao,
           emailCorporativo: data.data.emailCorporativo,
           emailPessoal: data.data.emailPessoal,
-          avatarUrl: data.data.avatarUrl,
+          avatarUrl: resolveAvatarUrl(data.data.avatarUrl),
           isSuperAdmin: data.data.isSuperAdmin,
         });
         setPermissoes(data.data.permissoes);
