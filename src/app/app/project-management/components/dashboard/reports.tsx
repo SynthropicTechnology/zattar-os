@@ -108,7 +108,6 @@ export function Reports({ projetos }: ReportsProps) {
       header={
         table ? (
           <DataTableToolbar
-            title="Relatório de Projetos"
             table={table}
             density={density}
             onDensityChange={setDensity}
