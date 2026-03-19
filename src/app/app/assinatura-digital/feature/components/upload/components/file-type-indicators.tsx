@@ -68,8 +68,8 @@ export function FileTypeIndicators({
           <div key={fileType.type} className="flex items-center gap-4">
             <div
               className={cn(
-                'group/type flex items-center gap-2 transition-all duration-500',
-                'opacity-60 grayscale hover:opacity-100 hover:grayscale-0',
+                'group/type flex items-center gap-2 transition-all duration-300',
+                'opacity-80 hover:opacity-100',
                 'cursor-default'
               )}
             >

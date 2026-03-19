@@ -167,8 +167,8 @@ interface MailEditorProps {
   className?: string;
   editorRef?: React.RefObject<MailEditorRef | null>;
   autoFocus?: boolean;
-  /** 'default' shows fixed toolbar; 'inline' uses only floating toolbar */
-  variant?: 'default' | 'inline';
+  /** 'default' shows fixed toolbar; 'inline' uses only floating toolbar; 'compose' is borderless full-height for panel compose */
+  variant?: 'default' | 'inline' | 'compose';
 }
 
 const defaultValue: Descendant[] = [
@@ -182,7 +182,7 @@ function MailEditorContent({
 }: {
   editorRef?: React.RefObject<MailEditorRef | null>;
   placeholder?: string;
-  variant?: 'default' | 'inline';
+  variant?: 'default' | 'inline' | 'compose';
 }) {
   const editor = useEditorRef();
 
@@ -259,7 +259,9 @@ function MailEditorContent({
       variant="none"
       className={cn(
         "overflow-y-auto px-3 py-2 text-sm",
-        variant === 'default' ? "min-h-30 max-h-75" : "min-h-40"
+        variant === 'default' && "min-h-30 max-h-75",
+        variant === 'inline' && "min-h-40",
+        variant === 'compose' && "min-h-0 flex-1"
       )}
       placeholder={placeholder}
     />
@@ -285,17 +287,28 @@ export function MailEditor({
     >
       <div
         className={cn(
-          'rounded-lg border bg-background transition-colors focus-within:ring-1 focus-within:ring-ring',
+          variant !== 'compose' && 'rounded-lg border bg-background transition-colors focus-within:ring-1 focus-within:ring-ring',
+          variant === 'compose' && 'flex flex-1 flex-col min-h-0',
           className
         )}
       >
         <Toolbar
-          className="scrollbar-hide flex-wrap justify-start border-b border-border bg-muted/30 p-1"
+          className={cn(
+            "scrollbar-hide flex-wrap justify-start p-1",
+            variant !== 'compose' && "border-b border-border bg-muted/30",
+            variant === 'compose' && "shrink-0 border-b border-border"
+          )}
         >
           <MailToolbarButtons />
         </Toolbar>
 
-        <EditorContainer variant="default" className="[&_.slate-selection-area]:bg-transparent">
+        <EditorContainer
+          variant="default"
+          className={cn(
+            "[&_.slate-selection-area]:bg-transparent",
+            variant === 'compose' && "flex flex-1 flex-col min-h-0 overflow-y-auto"
+          )}
+        >
           <MailEditorContent
             editorRef={editorRef}
             placeholder={placeholder}

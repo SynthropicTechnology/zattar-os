@@ -1,6 +1,6 @@
 'use client';
 
-import { CloudUpload, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { CloudUpload, X, CheckCircle, AlertCircle, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
@@ -155,6 +155,19 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
           Suportamos PDF, DOCX e PNG até 10MB
         </p>
       </div>
+
+      {/* Botão CTA — reforça a ação de clique */}
+      {!isDragActive && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="pointer-events-none gap-2"
+        >
+          <Upload className="size-4" />
+          Selecionar arquivo
+        </Button>
+      )}
 
       {/* Indicadores de tipo de arquivo */}
       <FileTypeIndicators className="mt-4" />

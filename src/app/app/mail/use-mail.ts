@@ -77,7 +77,11 @@ export const useMailStore = create<MailStore>((set) => ({
   messages: [],
   setMessages: (messages) => set({ messages }),
   appendMessages: (newMessages) =>
-    set((state) => ({ messages: [...state.messages, ...newMessages] })),
+    set((state) => {
+      const existingUids = new Set(state.messages.map((m) => m.uid));
+      const unique = newMessages.filter((m) => !existingUids.has(m.uid));
+      return { messages: [...state.messages, ...unique] };
+    }),
   folders: [],
   setFolders: (folders) => set({ folders }),
   totalMessages: 0,

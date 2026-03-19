@@ -104,73 +104,72 @@ export function ComposeMailPanel() {
 
       <Separator />
 
-      {/* Form */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-auto p-4">
-        <div className="grid gap-3">
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="compose-panel-to">Para</Label>
-              {!showCcBcc && (
-                <button
-                  type="button"
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                  onClick={() => setShowCcBcc(true)}>
-                  Cc / Cco
-                </button>
-              )}
-            </div>
-            <Input
-              id="compose-panel-to"
-              type="text"
-              placeholder="email@exemplo.com (separar com vírgula)"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              autoFocus
-            />
+      {/* Fields */}
+      <div className="shrink-0 grid gap-3 px-4 py-3">
+        <div className="grid gap-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="compose-panel-to">Para</Label>
+            {!showCcBcc && (
+              <button
+                type="button"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                onClick={() => setShowCcBcc(true)}>
+                Cc / Cco
+              </button>
+            )}
           </div>
-
-          {showCcBcc && (
-            <>
-              <div className="grid gap-2">
-                <Label htmlFor="compose-panel-cc">Cc</Label>
-                <Input
-                  id="compose-panel-cc"
-                  type="text"
-                  placeholder="email@exemplo.com"
-                  value={cc}
-                  onChange={(e) => setCc(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="compose-panel-bcc">Cco</Label>
-                <Input
-                  id="compose-panel-bcc"
-                  type="text"
-                  placeholder="email@exemplo.com"
-                  value={bcc}
-                  onChange={(e) => setBcc(e.target.value)}
-                />
-              </div>
-            </>
-          )}
-
-          <div className="grid gap-2">
-            <Label htmlFor="compose-panel-subject">Assunto</Label>
-            <Input
-              id="compose-panel-subject"
-              type="text"
-              placeholder="Assunto do e-mail"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-          </div>
-
-          <Separator />
-
-          <div className="grid min-h-0 flex-1 gap-2">
-            <MailEditor editorRef={editorRef} placeholder="Escreva sua mensagem..." />
-          </div>
+          <Input
+            id="compose-panel-to"
+            type="text"
+            placeholder="email@exemplo.com (separar com vírgula)"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            autoFocus
+          />
         </div>
+
+        {showCcBcc && (
+          <>
+            <div className="grid gap-2">
+              <Label htmlFor="compose-panel-cc">Cc</Label>
+              <Input
+                id="compose-panel-cc"
+                type="text"
+                placeholder="email@exemplo.com"
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="compose-panel-bcc">Cco</Label>
+              <Input
+                id="compose-panel-bcc"
+                type="text"
+                placeholder="email@exemplo.com"
+                value={bcc}
+                onChange={(e) => setBcc(e.target.value)}
+              />
+            </div>
+          </>
+        )}
+
+        <div className="grid gap-2">
+          <Label htmlFor="compose-panel-subject">Assunto</Label>
+          <Input
+            id="compose-panel-subject"
+            type="text"
+            placeholder="Assunto do e-mail"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Editor — fills all remaining space */}
+      <div className="flex min-h-0 flex-1 flex-col">
+        <MailEditor variant="compose" editorRef={editorRef} placeholder="Escreva sua mensagem..." />
       </div>
 
       <Separator />

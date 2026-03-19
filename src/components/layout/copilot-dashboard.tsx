@@ -58,7 +58,7 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
       >
         <SidebarProvider>
           <AppSidebar />
-          <SidebarInset className="h-screen overflow-hidden flex flex-col bg-muted/30">
+          <SidebarInset className="h-svh min-h-svh overflow-hidden flex flex-col bg-muted/30">
             <DashboardHeader />
             <div
               id="portal-content"
