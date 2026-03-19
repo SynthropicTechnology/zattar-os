@@ -91,7 +91,7 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
         <CardHeader className="flex flex-row justify-between">
           <CardTitle>Clientes por Estado</CardTitle>
           <CardAction className="relative">
-            <ExportButton className="absolute end-0 top-0" />
+            <ExportButton className="absolute inset-e-0 top-0" />
           </CardAction>
         </CardHeader>
         <CardContent className="flex-1">
@@ -110,7 +110,7 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
       <CardHeader className="flex flex-row justify-between">
         <CardTitle>Clientes por Estado</CardTitle>
         <CardAction className="relative">
-          <ExportButton className="absolute end-0 top-0" items={exportItems} />
+          <ExportButton className="absolute inset-e-0 top-0" items={exportItems} />
         </CardAction>
       </CardHeader>
       <CardContent className="flex-1">

@@ -222,12 +222,12 @@ export function ComunicaCNJResultsTable({
       cell: ({ row }) => {
         const c = row.original;
         return (
-          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
+          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0">
             {/* Tribunal */}
             <TribunalBadge codigo={c.siglaTribunal} className="text-xs" />
 
             {/* Número do processo */}
-            <span className="text-xs font-mono font-medium text-foreground" title={c.numeroProcessoComMascara}>
+            <span className="text-xs font-mono font-medium text-foreground break-all" title={c.numeroProcessoComMascara}>
               {c.numeroProcessoComMascara}
             </span>
 

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Check, ChevronDown, Mail as MailIcon, Pencil, Plus, Settings } from "lucide-react";
 import { Nav } from "./nav";
-import { ComposeMailDialog } from "./compose-mail-dialog";
 import { Separator } from "@/components/ui/separator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,7 @@ interface NavDesktopProps {
 }
 
 export function NavDesktop({ isCollapsed }: NavDesktopProps) {
-  const { folders, selectedFolder, setSelectedFolder, accounts, selectedAccountId, setSelectedAccountId } = useMailStore();
+  const { folders, selectedFolder, setSelectedFolder, accounts, selectedAccountId, setSelectedAccountId, setIsComposing } = useMailStore();
   const folderLinks = buildFolderLinks(folders, selectedFolder);
   const currentAccount = accounts.find((a) => a.id === selectedAccountId) ?? accounts[0] ?? null;
 
@@ -97,24 +96,22 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
       <Separator />
 
       <div className={cn("shrink-0 px-2 py-2", isCollapsed && "px-1")}>
-        <ComposeMailDialog>
-          {isCollapsed ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="default" size="icon" className="w-full">
-                  <Pencil className="h-4 w-4" />
-                  <span className="sr-only">Novo E-mail</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right">Novo E-mail</TooltipContent>
-            </Tooltip>
-          ) : (
-            <Button variant="default" className="w-full gap-2">
-              <Pencil className="h-4 w-4" />
-              Novo E-mail
-            </Button>
-          )}
-        </ComposeMailDialog>
+        {isCollapsed ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="default" size="icon" className="w-full" onClick={() => setIsComposing(true)}>
+                <Pencil className="h-4 w-4" />
+                <span className="sr-only">Novo E-mail</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">Novo E-mail</TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button variant="default" className="w-full gap-2" onClick={() => setIsComposing(true)}>
+            <Pencil className="h-4 w-4" />
+            Novo E-mail
+          </Button>
+        )}
       </div>
 
       <Separator />

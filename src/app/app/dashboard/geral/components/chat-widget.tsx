@@ -71,7 +71,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
     },
   });
 
-  const carregarSalas = async () => {
+  const carregarSalas = async (tentativa = 1) => {
     try {
       setLoading(true);
       const result = await actionListarSalas({
@@ -86,10 +86,20 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
         if (salasArray.length > 0) {
           setSalaAtiva(salasArray[0]);
         }
+      } else if (!result.success && tentativa < 3) {
+        // Retry com backoff exponencial para cold starts do Supabase
+        const delay = tentativa * 1500;
+        await new Promise((r) => setTimeout(r, delay));
+        return carregarSalas(tentativa + 1);
       }
     } catch (error) {
-      console.error("Erro ao carregar salas:", error);
-      toast.error("Erro ao carregar conversas");
+      if (tentativa < 3) {
+        const delay = tentativa * 1500;
+        await new Promise((r) => setTimeout(r, delay));
+        return carregarSalas(tentativa + 1);
+      }
+      console.error("Erro ao carregar salas após 3 tentativas:", error);
+      toast.error("Erro ao carregar conversas. Tente recarregar a página.");
     } finally {
       setLoading(false);
     }
@@ -178,7 +188,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
           </CardAction>
         </CardHeader>
         <CardContent className="flex-1">
-          <Skeleton className="h-full min-h-[300px] w-full" />
+          <Skeleton className="h-full min-h-75 w-full" />
         </CardContent>
       </Card>
     );
@@ -278,7 +288,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
                           {mensagem.usuario.nomeExibicao}
                         </span>
                       )}
-                      <p className="break-words">{mensagem.conteudo}</p>
+                      <p className="wrap-break-word">{mensagem.conteudo}</p>
                       <span className="text-xs opacity-60">
                         {formatarHoraMensagem(mensagem.createdAt)}
                       </span>

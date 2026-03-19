@@ -81,7 +81,7 @@ export default function Summary() {
         <div className="mb-6 flex flex-1 items-center justify-center">
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square max-h-[250px] w-full">
+            className="mx-auto aspect-square max-h-62.5l">
             <PieChart>
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
               <Pie

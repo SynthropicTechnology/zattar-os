@@ -41,6 +41,8 @@ type MailStore = {
   setSearchQuery: (query: string) => void;
   serviceUnavailable: boolean;
   setServiceUnavailable: (unavailable: boolean) => void;
+  isComposing: boolean;
+  setIsComposing: (composing: boolean) => void;
   isMailExpanded: boolean;
   setIsMailExpanded: (expanded: boolean) => void;
   toggleMailExpanded: () => void;
@@ -66,7 +68,7 @@ export const useMailStore = create<MailStore>((set) => ({
       selectedUids: new Set<number>(),
     }),
   selectedMail: null,
-  setSelectedMail: (mail) => set({ selectedMail: mail }),
+  setSelectedMail: (mail) => set({ selectedMail: mail, isComposing: false }),
   fullMessage: null,
   setFullMessage: (msg) => set({ fullMessage: msg }),
   selectedFolder: "INBOX",
@@ -94,6 +96,8 @@ export const useMailStore = create<MailStore>((set) => ({
   setSearchQuery: (query) => set({ searchQuery: query }),
   serviceUnavailable: false,
   setServiceUnavailable: (unavailable) => set({ serviceUnavailable: unavailable }),
+  isComposing: false,
+  setIsComposing: (composing) => set({ isComposing: composing, ...(composing ? { selectedMail: null, fullMessage: null } : {}) }),
   isMailExpanded: false,
   setIsMailExpanded: (expanded) => set({ isMailExpanded: expanded }),
   toggleMailExpanded: () => set((state) => ({ isMailExpanded: !state.isMailExpanded })),

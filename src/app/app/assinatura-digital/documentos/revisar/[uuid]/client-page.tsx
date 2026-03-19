@@ -116,8 +116,8 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
 
-  // PDF URL presigned
-  const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(documento?.pdf_original_url);
+  // PDF URL via proxy route (avoids CORS with Backblaze)
+  const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(documento?.pdf_original_url, uuid);
 
   // Carregar documento
   useEffect(() => {

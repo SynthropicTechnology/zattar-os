@@ -277,12 +277,12 @@ export function ComunicaCNJCapturadas() {
         const partesAutoras = c.destinatarios?.filter((d) => d.polo === 'A').map((d) => d.nome) || [];
         const partesReus = c.destinatarios?.filter((d) => d.polo === 'P').map((d) => d.nome) || [];
         return (
-          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
+          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0">
             {/* Tribunal */}
             <TribunalBadge codigo={c.siglaTribunal} className="text-xs" />
 
             {/* Número do processo */}
-            <span className="text-xs font-mono font-medium text-foreground" title={c.numeroProcessoMascara || c.numeroProcesso}>
+            <span className="text-xs font-mono font-medium text-foreground break-all" title={c.numeroProcessoMascara || c.numeroProcesso}>
               {c.numeroProcessoMascara || c.numeroProcesso}
             </span>
 

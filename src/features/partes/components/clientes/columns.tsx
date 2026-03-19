@@ -385,7 +385,7 @@ export const getClientesColumns = (
         const processosRaw = record.processos_relacionados ?? record.processosRelacionados;
         const processos = Array.isArray(processosRaw) ? (processosRaw as ProcessoRelacionado[]) : [];
         return (
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             <ProcessosRelacionadosCell
               processos={processos}
             />

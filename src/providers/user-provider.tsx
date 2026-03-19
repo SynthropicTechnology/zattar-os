@@ -155,21 +155,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return;
 
     try {
-      // Validar sessão Supabase primeiro
-      const [userResult, sessionResult] = await Promise.all([
-        supabase.auth.getUser(),
-        supabase.auth.getSession(),
-      ]);
+      // Validar sessão Supabase via getUser() — faz chamada ao servidor Auth
+      // para garantir que o token é válido. Não usar getSession() aqui pois
+      // ele apenas lê do storage local e pode retornar dados desatualizados.
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
 
       if (signal?.aborted) return;
 
-      if (userResult.error || !userResult.data.user) {
+      if (authError || !authUser) {
         hasFetchedRef.current = false;
         await invalidateSession();
         return;
       }
 
-      setSessionToken(sessionResult.data.session?.access_token ?? null);
+      // Obter token da sessão local (já atualizado pelo middleware/getClaims)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (signal?.aborted) return;
+      setSessionToken(session?.access_token ?? null);
 
       // Buscar dados consolidados da API
       const response = await fetch('/api/auth/me', {
@@ -262,8 +264,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
     init();
 
     // Revalidar quando a aba volta a receber foco e também periodicamente.
+    // visibilitychange deve checar o estado para evitar validações
+    // desnecessárias quando o usuário SAI da aba (hidden).
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        validateSession();
+      }
+    };
     window.addEventListener('focus', validateSession);
-    document.addEventListener('visibilitychange', validateSession);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     intervalId = setInterval(validateSession, 60000);
 
     // Escutar mudanças de autenticação
@@ -278,13 +287,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
           hasFetchedRef.current = false;
           await fetchUserData(controller.signal);
         }
-      } else {
+      } else if (event === 'SIGNED_OUT') {
+        // Apenas reagir ao SIGNED_OUT explícito.
+        // INITIAL_SESSION com session=null é ignorado aqui pois o
+        // fetchUserData() já é a fonte de verdade para o estado inicial.
+        // Reagir ao INITIAL_SESSION causava race condition no CTRL+R:
+        // o evento disparava antes do Supabase restaurar a sessão dos cookies,
+        // resultando em logout prematuro.
         hasFetchedRef.current = false;
         clearAuthState();
-
-        if (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION') {
-          await invalidateSession();
-        }
+        await invalidateSession();
       }
     });
 
@@ -293,7 +305,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       controller.abort();
       if (intervalId) clearInterval(intervalId);
       window.removeEventListener('focus', validateSession);
-      document.removeEventListener('visibilitychange', validateSession);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       subscription.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -91,14 +91,14 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
       const processo = row.original.processo;
       if (!processo) return <span className="text-muted-foreground">-</span>;
       return (
-        <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
+        <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0">
           {/* Badge Tribunal + Grau */}
           <div className="flex items-center gap-1.5 flex-wrap">
             <TribunalGrauBadge trt={processo.trt} grau={processo.grau} />
           </div>
 
           {/* Número do processo */}
-          <span className="text-xs font-mono font-medium text-foreground" title={processo.numero_processo}>
+          <span className="text-xs font-mono font-medium text-foreground break-all" title={processo.numero_processo}>
             {processo.numero_processo}
           </span>
 

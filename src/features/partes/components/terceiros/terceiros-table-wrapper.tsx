@@ -259,7 +259,7 @@ export function TerceirosTableWrapper() {
         cell: ({ row }) => {
           const terceiro = row.original;
           return (
-            <div className="flex items-center">
+            <div className="flex items-center min-w-0">
               <ProcessosRelacionadosCell
                 processos={terceiro.processos_relacionados || []}
               />

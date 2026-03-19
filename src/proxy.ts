@@ -43,10 +43,6 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_P
  * 4. Não interferir em rotas de API (elas têm sua própria autenticação)
  */
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
-
   const pathname = request.nextUrl.pathname;
 
   // Assets públicos que não precisam de processamento
@@ -60,7 +56,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/apple-touch-icon");
 
   if (isPublicRootAsset) {
-    return supabaseResponse;
+    return NextResponse.next({ request });
   }
 
   // ============================================================================
@@ -108,8 +104,16 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Gerar nonce para CSP
+  // Gerar nonce para CSP ANTES de criar o response
+  // O nonce precisa estar nos request headers para que o Next.js
+  // o aplique automaticamente aos seus inline scripts
   const nonce = generateNonce();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  let supabaseResponse = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 
   // Headers de debug e segurança
   const applyHeaders = (response: NextResponse) => {
@@ -266,8 +270,11 @@ export async function proxy(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
+          // Preservar os request headers com nonce ao recriar o response
+          const updatedHeaders = new Headers(request.headers);
+          updatedHeaders.set("x-nonce", nonce);
           supabaseResponse = NextResponse.next({
-            request,
+            request: { headers: updatedHeaders },
           });
           cookiesToSet.forEach(({ name, value, options }) => {
             supabaseResponse.cookies.set(name, value, options);
@@ -277,13 +284,14 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Atualizar e validar sessão
-  await supabase.auth.getSession();
+  // IMPORTANTE: Não executar código entre createServerClient e getClaims().
+  // getClaims() valida o JWT localmente e dispara o refresh de tokens
+  // quando necessário, mantendo os cookies sincronizados entre browser e server.
+  // Usar getSession() aqui causava perda aleatória de sessão no refresh (CTRL+R).
+  // Ref: https://supabase.com/docs/guides/troubleshooting/how-to-migrate-from-supabase-auth-helpers-to-ssr-package-5NRunM
+  const { data, error: authError } = await supabase.auth.getClaims();
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+  const user = data?.claims;
 
   // Se não está autenticado e não é rota pública, redirecionar para login
   if ((!user || authError) && !isPublicRoute) {

@@ -612,14 +612,14 @@ export function getAudienciasColumns(
       cell: ({ row }) => {
         const a = row.original;
         return (
-          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
+          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0">
             {/* Linha 1: Badge Tribunal + Grau */}
             <div className="flex items-center gap-1.5 flex-wrap">
               <TribunalGrauBadge trt={a.trt} grau={a.grau} />
             </div>
 
             {/* Linha 2: Número do processo */}
-            <span className="text-xs font-mono font-medium text-foreground" title={a.numeroProcesso}>
+            <span className="text-xs font-mono font-medium text-foreground break-all" title={a.numeroProcesso}>
               {a.numeroProcesso}
             </span>
 

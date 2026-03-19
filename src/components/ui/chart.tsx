@@ -47,10 +47,32 @@ function ChartContainer({
 }) {
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [ready, setReady] = React.useState(false);
+
+  // Aguarda o container ter dimensões válidas antes de renderizar o chart
+  // Evita o warning "width(-1) height(-1)" do Recharts ResponsiveContainer
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const check = () => {
+      const { width, height } = el.getBoundingClientRect();
+      if (width > 0 && height > 0) {
+        setReady(true);
+      } else {
+        // Tenta novamente no próximo frame
+        requestAnimationFrame(check);
+      }
+    };
+
+    requestAnimationFrame(check);
+  }, []);
 
   return (
     <ChartContext.Provider value={{ config }}>
       <div
+        ref={containerRef}
         data-slot="chart"
         data-chart={chartId}
         suppressHydrationWarning
@@ -61,9 +83,11 @@ function ChartContainer({
         {...props}>
         <ClientOnly>
           <ChartStyle id={chartId} config={config} />
-          <RechartsPrimitive.ResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={50}>
-            {children}
-          </RechartsPrimitive.ResponsiveContainer>
+          {ready && (
+            <RechartsPrimitive.ResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={50}>
+              {children}
+            </RechartsPrimitive.ResponsiveContainer>
+          )}
         </ClientOnly>
       </div>
     </ChartContext.Provider>

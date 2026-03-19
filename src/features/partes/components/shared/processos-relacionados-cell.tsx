@@ -55,7 +55,7 @@ export function ProcessosRelacionadosCell({
   const processosRestantes = processos.slice(maxExibidos);
 
   return (
-    <div className="min-h-10 flex flex-col gap-1 py-1">
+    <div className="min-h-10 flex flex-col gap-1 py-1 min-w-0">
       {processosExibidos.map((processo) => (
         <ProcessoItem key={processo.processo_id} processo={processo} />
       ))}
@@ -115,14 +115,14 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
       : processo.nome_parte_autora;
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-start gap-1 min-w-0 max-w-full">
       <HoverCard openDelay={200} closeDelay={100}>
         <HoverCardTrigger asChild>
           <Link
             href={`/app/processos/${processo.processo_id}`}
-            className="inline-flex items-center text-xs h-6 px-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="inline-flex items-center text-xs min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0"
           >
-            {numeroFormatado}
+            <span className="break-all">{numeroFormatado}</span>
           </Link>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-80 p-3">

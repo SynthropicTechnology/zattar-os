@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import {
   actionGetDocumento,
   actionSetDocumentoAnchors,
-  actionGetPresignedPdfUrl,
   actionAddDocumentoSigner,
   actionRemoveDocumentoSigner,
   actionUpdateDocumentoSettings,
@@ -152,19 +151,9 @@ export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
         ancoras: docData.ancoras,
       } as AssinaturaDigitalDocumentoCompleto);
 
-      // Load PDF URL
+      // Load PDF URL via proxy route (avoids CORS with Backblaze presigned URLs)
       if (docData.documento.pdf_original_url) {
-        try {
-          const urlRes = await actionGetPresignedPdfUrl({
-            url: docData.documento.pdf_original_url,
-          });
-          if (urlRes.success && urlRes.data.presignedUrl) {
-            setPdfUrl(urlRes.data.presignedUrl);
-          }
-        } catch (e) {
-          console.error("Erro ao gerar link temporário:", e);
-          toast.error("Erro ao carregar PDF do documento.");
-        }
+        setPdfUrl(`/api/assinatura-digital/documentos/${uuid}/pdf`);
       }
 
       // Convert Anchors to Fields

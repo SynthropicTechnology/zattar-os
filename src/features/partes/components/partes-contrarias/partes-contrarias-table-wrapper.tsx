@@ -273,7 +273,7 @@ export function PartesContrariasTableWrapper() {
         cell: ({ row }) => {
           const parte = row.original;
           return (
-            <div className="flex items-center">
+            <div className="flex items-center min-w-0">
               <ProcessosRelacionadosCell
                 processos={parte.processos_relacionados || []}
               />

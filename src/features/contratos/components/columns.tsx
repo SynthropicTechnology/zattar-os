@@ -268,13 +268,13 @@ export function getContratosColumns(
         const remaining = processos.length - shown.length;
 
         return (
-          <div className="flex flex-wrap items-center gap-1.5 max-w-[min(92vw,13.75rem)]">
+          <div className="flex flex-wrap items-center gap-1.5 max-w-[min(92vw,13.75rem)] min-w-0">
             {shown.map((p) => {
               const numero = p.processo?.numeroProcesso ?? null;
               const label = numero || `Processo #${p.processoId}`;
               return (
-                <Link key={p.id} href={`/processos/${p.processoId}`} className="inline-flex">
-                  <AppBadge variant="outline" className="text-xs px-2 py-0">
+                <Link key={p.id} href={`/processos/${p.processoId}`} className="inline-flex min-w-0 max-w-full">
+                  <AppBadge variant="outline" className="text-xs px-2 py-0 break-all">
                     {label}
                   </AppBadge>
                 </Link>

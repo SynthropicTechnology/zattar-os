@@ -17,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
 import { ComposeMailDialog } from "./compose-mail-dialog";
+import { ComposeMailPanel } from "./compose-mail-panel";
 import { MailDisplay } from "./mail-display";
 import { MailList } from "./mail-list";
 import { NavDesktop } from "./nav-desktop";
@@ -39,7 +40,7 @@ export function Mail({
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const isMobile = useIsMobile();
-  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, isMailExpanded, selectedUids, selectAllUids, clearSelectedUids } =
+  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, isMailExpanded, isComposing, setIsComposing, selectedUids, selectAllUids, clearSelectedUids } =
     useMailStore();
   const [tab, setTab] = React.useState("all");
   const [searchInput, setSearchInput] = React.useState("");
@@ -326,7 +327,7 @@ export function Mail({
           defaultSize={defaultLayout[2]}
           minSize={30}
           className="bg-card">
-          <MailDisplay mail={currentMail} />
+          {isComposing ? <ComposeMailPanel /> : <MailDisplay mail={currentMail} />}
         </ResizablePanel>
       </ResizablePanelGroup>
 

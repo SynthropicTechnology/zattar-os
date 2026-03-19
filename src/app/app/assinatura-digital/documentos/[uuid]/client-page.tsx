@@ -108,7 +108,8 @@ export function DocumentoVerificacaoClient({
 }: DocumentoVerificacaoClientProps) {
   const router = useRouter();
   const { presignedUrl, isLoading: isPdfLoading } = usePresignedPdfUrl(
-    data.pdfUrl
+    data.pdfUrl,
+    data.uuid
   );
 
   const statusConfig = STATUS_CONFIG[data.status] ?? STATUS_CONFIG.rascunho;

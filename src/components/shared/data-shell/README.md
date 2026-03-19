@@ -220,7 +220,7 @@ O `filtersSlot` é onde você coloca filtros customizados (Select, DatePicker, e
           setPageIndex(0);  // IMPORTANTE: Reset página
         }}
       >
-        <SelectTrigger className="h-10 w-[150px]">
+        <SelectTrigger className="h-10 w-37.5">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>

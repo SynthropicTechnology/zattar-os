@@ -297,7 +297,7 @@ export function RepresentantesTableWrapper() {
         cell: ({ row }) => {
           const representante = row.original;
           return (
-            <div className="flex items-center">
+            <div className="flex items-center min-w-0">
               <ProcessosRelacionadosCell processos={representante.processos_relacionados || []} />
             </div>
           );
