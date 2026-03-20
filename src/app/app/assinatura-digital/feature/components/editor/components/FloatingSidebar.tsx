@@ -17,7 +17,6 @@ import { Switch } from '@/components/ui/switch';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { useViewport } from '@/hooks/use-viewport';
 import type { EditorField, Signatario, SignatureFieldType } from '../types';
 import SignerCard from './SignerCard';
 import SignerDialog from './SignerDialog';
@@ -119,9 +118,9 @@ function SidebarContent(props: FloatingSidebarProps) {
   const hasFieldsAndSigners = signers.length > 0 && props.fields.length > 0;
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex h-full min-h-0 flex-col bg-background">
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+      <div className="flex-1 min-h-0 space-y-6 overflow-y-auto px-6 py-6">
         {/* Document Settings Section */}
         <div className="space-y-4">
           <SectionHeader title="Configurações" />
@@ -243,7 +242,7 @@ function SidebarContent(props: FloatingSidebarProps) {
       </div>
 
       {/* Footer */}
-      <div className="p-6 border-t">
+      <div className="shrink-0 border-t p-6">
         <Button
           className="w-full h-12 text-base font-semibold shadow-md active:scale-[0.98] transition-all"
           onClick={onReviewAndSend}
@@ -277,36 +276,35 @@ function SidebarContent(props: FloatingSidebarProps) {
  * Mobile: Sheet (drawer) triggered by FAB
  */
 export default function FloatingSidebar(props: FloatingSidebarProps) {
-  const { isMobile } = useViewport();
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  if (isMobile) {
-    return (
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetTrigger asChild>
-          <Button
-            size="icon"
-            className={cn(
-              'fixed bottom-6 right-6 z-50',
-              'size-14 rounded-full shadow-xl',
-              'bg-primary hover:bg-primary/90',
-              'hover:scale-110 active:scale-95 transition-transform duration-200'
-            )}
-            aria-label="Abrir configurações do documento"
-          >
-            <Settings className="size-6" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="bottom" className="h-[85vh] p-0 rounded-t-xl">
-          <SidebarContent {...props} />
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
   return (
-    <div className={cn('flex flex-col h-full', props.className)}>
-      <SidebarContent {...props} />
-    </div>
+    <>
+      <div className={cn('hidden h-full min-h-0 flex-col lg:flex', props.className)}>
+        <SidebarContent {...props} />
+      </div>
+
+      <div className="lg:hidden">
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+          <SheetTrigger asChild>
+            <Button
+              size="icon"
+              className={cn(
+                'fixed bottom-6 right-6 z-50',
+                'size-14 rounded-full shadow-xl',
+                'bg-primary hover:bg-primary/90',
+                'hover:scale-110 active:scale-95 transition-transform duration-200'
+              )}
+              aria-label="Abrir configurações do documento"
+            >
+              <Settings className="size-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-[85vh] p-0 rounded-t-xl">
+            <SidebarContent {...props} />
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   );
 }

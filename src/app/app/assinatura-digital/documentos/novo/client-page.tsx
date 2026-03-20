@@ -13,7 +13,10 @@ import { DocumentUploadDropzone } from "../../feature/components/upload";
 
 export function NovoDocumentoClient() {
   return (
-    <div className="-m-6 h-[calc(100svh-(--spacing(14))-(--spacing(12)))] flex flex-col overflow-hidden bg-background">
+    <div
+      className="-m-6 flex flex-col overflow-hidden bg-background"
+      style={{ height: 'calc(100% + 3rem)', minHeight: 'calc(100% + 3rem)' }}
+    >
       {/* Header */}
       <div className="shrink-0 border-b bg-background px-8 py-5">
         <div className="flex items-center gap-3">

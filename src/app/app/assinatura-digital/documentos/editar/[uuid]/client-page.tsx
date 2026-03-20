@@ -66,9 +66,12 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   }
 
   return (
-    <div className="-m-6 h-[calc(100svh-(--spacing(14))-(--spacing(12)))] flex overflow-hidden bg-background">
+    <div
+      className="-m-6 flex overflow-hidden bg-background"
+      style={{ height: 'calc(100% + 3rem)', minHeight: 'calc(100% + 3rem)' }}
+    >
       {/* PDF Canvas Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <div className="relative flex h-full min-h-0 flex-1 flex-col overflow-hidden">
         {/* Indicador de salvamento — discreto no topo */}
         {isSaving && (
           <div className="absolute top-3 right-6 z-20">
@@ -125,7 +128,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
       </div>
 
       {/* Right Sidebar */}
-      <div className="hidden lg:flex w-85 shrink-0 border-l bg-background">
+      <div className="hidden h-full min-h-0 w-85 shrink-0 border-l bg-background lg:flex">
         <FloatingSidebar
           className="h-full flex flex-col"
           signers={signers}
