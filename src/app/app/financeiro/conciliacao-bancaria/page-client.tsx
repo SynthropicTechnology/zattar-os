@@ -340,7 +340,6 @@ export default function ConciliacaoBancariaPage() {
               searchValue={busca}
               onSearchValueChange={setBusca}
               searchPlaceholder="Buscar por descrição ou documento..."
-              onExport={() => {}}
               filtersSlot={
                 <>
                   <FilterPopover

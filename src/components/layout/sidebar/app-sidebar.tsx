@@ -152,6 +152,8 @@ const navGestao = [
   },
 ]
 
+const DASHBOARD_URL = "/app/dashboard"
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data, temPermissao, isLoading: loadingPermissoes } = usePermissoes()
   const canSeePangea = !loadingPermissoes && temPermissao("pangea", "listar")
@@ -179,7 +181,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     if (isSuperAdmin) {
       items.push(...navGestao)
     }
-    return items.sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
+
+    return items.sort((a, b) => {
+      if (a.url === DASHBOARD_URL) {
+        return -1
+      }
+
+      if (b.url === DASHBOARD_URL) {
+        return 1
+      }
+
+      return a.title.localeCompare(b.title, "pt-BR")
+    })
   }, [navServicosFiltrado, isSuperAdmin])
 
   return (

@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Collapsible,
   CollapsibleContent,
@@ -132,106 +131,97 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
 
       {/* Geolocation */}
       {hasGeolocation && (
-        <>
-          <Separator className="my-2" />
-          <InfoRow
-            icon={Globe}
-            label="Geolocalização"
-            value={
-              <div className="space-y-1">
-                <p className="text-sm font-mono">
-                  {signatario.geolocation!.latitude?.toFixed(6)},{" "}
-                  {signatario.geolocation!.longitude?.toFixed(6)}
+        <InfoRow
+          icon={Globe}
+          label="Geolocalização"
+          value={
+            <div className="space-y-1">
+              <p className="text-sm font-mono">
+                {signatario.geolocation!.latitude?.toFixed(6)}, {" "}
+                {signatario.geolocation!.longitude?.toFixed(6)}
+              </p>
+              {signatario.geolocation!.accuracy != null && (
+                <p className="text-xs text-muted-foreground">
+                  Precisão: ~{Math.round(signatario.geolocation!.accuracy)}m
                 </p>
-                {signatario.geolocation!.accuracy != null && (
-                  <p className="text-xs text-muted-foreground">
-                    Precisão: ~{Math.round(signatario.geolocation!.accuracy)}m
-                  </p>
-                )}
-                {signatario.geolocation!.timestamp && (
-                  <p className="text-xs text-muted-foreground">
-                    Capturado em:{" "}
-                    {new Date(
-                      signatario.geolocation!.timestamp
-                    ).toLocaleString("pt-BR")}
-                  </p>
-                )}
-              </div>
-            }
-          />
-        </>
+              )}
+              {signatario.geolocation!.timestamp && (
+                <p className="text-xs text-muted-foreground">
+                  Capturado em:{" "}
+                  {new Date(
+                    signatario.geolocation!.timestamp
+                  ).toLocaleString("pt-BR")}
+                </p>
+              )}
+            </div>
+          }
+        />
       )}
 
       {/* Termos de Aceite */}
       {signatario.termosAceiteVersao && (
-        <>
-          <Separator className="my-2" />
-          <InfoRow
-            icon={FileCheck}
-            label="Termos de Aceite"
-            value={
-              <div className="space-y-1">
-                <Badge variant="outline" className="text-xs">
-                  {signatario.termosAceiteVersao}
-                </Badge>
-                {signatario.termosAceiteData && (
-                  <p className="text-xs text-muted-foreground">
-                    Aceito em:{" "}
-                    {new Date(signatario.termosAceiteData).toLocaleString(
-                      "pt-BR"
-                    )}
-                  </p>
-                )}
-              </div>
-            }
-          />
-        </>
+        <InfoRow
+          icon={FileCheck}
+          label="Termos de Aceite"
+          value={
+            <div className="space-y-1">
+              <Badge variant="outline" className="text-xs">
+                {signatario.termosAceiteVersao}
+              </Badge>
+              {signatario.termosAceiteData && (
+                <p className="text-xs text-muted-foreground">
+                  Aceito em:{" "}
+                  {new Date(signatario.termosAceiteData).toLocaleString(
+                    "pt-BR"
+                  )}
+                </p>
+              )}
+            </div>
+          }
+        />
       )}
 
       {/* Device Fingerprint (Collapsible) */}
       {hasFingerprint && (
-        <>
-          <Separator className="my-2" />
-          <Collapsible open={fingerprintOpen} onOpenChange={setFingerprintOpen}>
-            <CollapsibleTrigger asChild>
-              <Button
-                variant="ghost"
-                className="w-full justify-between px-0 hover:bg-transparent"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
-                    <Fingerprint className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <div className="text-left">
-                    <span className="text-xs text-muted-foreground">
-                      Device Fingerprint
-                    </span>
-                    <p className="text-sm">
-                      {Object.keys(signatario.dispositivoFingerprint!).length}{" "}
-                      campos coletados
-                    </p>
-                  </div>
+        <Collapsible open={fingerprintOpen} onOpenChange={setFingerprintOpen}>
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-auto w-full justify-between rounded-lg px-0 py-2 hover:bg-transparent"
+            >
+              <div className="flex min-w-0 items-start gap-3 text-left">
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
+                  <Fingerprint className="h-4 w-4 text-muted-foreground" />
                 </div>
-                {fingerprintOpen ? (
-                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                )}
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="mt-2 rounded-md bg-muted/50 p-3 max-h-64 overflow-auto">
-                <pre className="text-xs font-mono whitespace-pre-wrap break-all">
-                  {JSON.stringify(
-                    signatario.dispositivoFingerprint,
-                    null,
-                    2
-                  )}
-                </pre>
+                <div className="min-w-0 flex-1">
+                  <span className="text-xs text-muted-foreground">
+                    Device Fingerprint
+                  </span>
+                  <p className="text-sm">
+                    {Object.keys(signatario.dispositivoFingerprint!).length}{" "}
+                    campos coletados
+                  </p>
+                </div>
               </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </>
+              {fingerprintOpen ? (
+                <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+              )}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="mt-2 rounded-md bg-muted/50 p-3 max-h-64 overflow-auto">
+              <pre className="text-xs font-mono whitespace-pre-wrap break-all">
+                {JSON.stringify(
+                  signatario.dispositivoFingerprint,
+                  null,
+                  2
+                )}
+              </pre>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       )}
     </div>
   );

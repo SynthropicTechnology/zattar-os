@@ -138,8 +138,10 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
     editorRef,
     isSending,
     actionLoading,
-    senderName,
-    senderInitials,
+    participantName,
+    participantInitials,
+    participantLabel,
+    participantLine,
     replyMode,
     startReply,
     cancelReply,
@@ -315,20 +317,20 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
           {mail && (
             <div className="flex flex-1 flex-col overflow-hidden">
-              <div className="flex items-start p-4">
-                <div className="flex items-start gap-4 text-sm">
+              <div className="flex flex-wrap items-start gap-3 p-4">
+                <div className="flex min-w-0 flex-1 items-start gap-4 text-sm">
                   <Avatar>
-                    <AvatarFallback>{senderInitials}</AvatarFallback>
+                    <AvatarFallback>{participantInitials}</AvatarFallback>
                   </Avatar>
-                  <div className="grid gap-1">
-                    <div className="font-semibold">{senderName}</div>
-                    <div className="line-clamp-1 text-xs">{mail.subject}</div>
-                    <div className="line-clamp-1 text-xs">
-                      <span className="font-medium">De:</span> {mail.from.address}
+                  <div className="min-w-0 grid flex-1 gap-1">
+                    <div className="whitespace-normal wrap-break-word font-semibold">{participantName}</div>
+                    <div className="text-xs whitespace-normal wrap-break-word">{mail.subject}</div>
+                    <div className="text-xs whitespace-normal wrap-break-word">
+                      <span className="font-medium">{participantLabel}:</span> {participantLine}
                     </div>
                   </div>
                 </div>
-                <div className="text-muted-foreground ml-auto text-xs">
+                <div className="text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right">
                   {format(new Date(mail.date), "PPpp", { locale: ptBR })}
                 </div>
               </div>
@@ -350,7 +352,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                           ? "Responder a todos"
                           : "Responder para"}{" "}
                         <span className="font-medium text-foreground">
-                          {senderName}
+                          {participantName}
                         </span>
                       </div>
                       <MailEditor

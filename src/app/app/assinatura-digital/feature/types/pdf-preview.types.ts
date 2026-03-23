@@ -42,6 +42,9 @@ export interface PdfPreviewProps {
   /** Classe CSS adicional */
   className?: string;
 
+  /** Classe CSS adicional aplicada ao viewport interno do preview */
+  viewportClassName?: string;
+
   /** Modo de renderização: default (com controles/layout) ou background (apenas PDF) */
   mode?: 'default' | 'background';
 

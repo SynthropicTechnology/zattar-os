@@ -282,7 +282,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="p-0 w-120"
+              className="w-[calc(100vw-2rem)] max-w-lg p-0"
               align="start"
             >
               <Command>
@@ -356,7 +356,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                   </span>
                 ) : selectedAdvogado ? (
                   <span className="truncate text-left">
-                    {selectedAdvogado.nome_completo.split(' ')[0]} - {formatOab(selectedAdvogado.oabs[selectedOabIndex] || getPrimaryOab(selectedAdvogado)!)}
+                    {selectedAdvogado.nome_completo} - {formatOab(selectedAdvogado.oabs[selectedOabIndex] || getPrimaryOab(selectedAdvogado)!)}
                   </span>
                 ) : (
                   <span className="text-muted-foreground">Selecione</span>
@@ -364,7 +364,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 <ChevronDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-87.5 p-0" align="start">
+            <PopoverContent className="w-[calc(100vw-2rem)] max-w-md p-0" align="start">
               <Command>
                 <CommandInput placeholder="Buscar advogado..." className="h-9" />
                 <CommandList>
@@ -408,8 +408,8 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         {/* Botões */}
         <div className="space-y-1.5 lg:col-span-2">
           <Label className="text-xs invisible" aria-hidden="true">Ações</Label>
-          <div className="flex gap-2 justify-end">
-            <Button type="submit" disabled={isLoading} className="h-9">
+          <div className="flex w-full gap-2 justify-stretch sm:justify-end">
+            <Button type="submit" disabled={isLoading} className="h-9 flex-1 sm:flex-none">
               {isLoading ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
@@ -419,7 +419,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 {isLoading ? 'Buscando...' : 'Buscar'}
               </span>
             </Button>
-            <Button type="button" variant="outline" onClick={handleReset} className="h-9" aria-label="Limpar filtros">
+            <Button type="button" variant="outline" onClick={handleReset} className="h-9 shrink-0" aria-label="Limpar filtros">
               <RotateCcw className="h-3 w-3" />
             </Button>
           </div>

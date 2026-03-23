@@ -39,10 +39,19 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
 
   useEffect(() => {
     if (!hash || !open) {
-      setPdfUrl(null);
+      setPdfUrl((currentUrl) => {
+        if (currentUrl?.startsWith('blob:')) {
+          URL.revokeObjectURL(currentUrl);
+        }
+
+        return null;
+      });
       setError(null);
       return;
     }
+
+    let isActive = true;
+    let objectUrl: string | null = null;
 
     const fetchPdf = async () => {
       setIsLoading(true);
@@ -64,22 +73,40 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
         const blob = new Blob([byteArray], { type: 'application/pdf' });
 
         const url = URL.createObjectURL(blob);
-        setPdfUrl(url);
+        objectUrl = url;
+
+        if (!isActive) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+
+        setPdfUrl((currentUrl) => {
+          if (currentUrl && currentUrl !== url && currentUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(currentUrl);
+          }
+
+          return url;
+        });
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao carregar certidão');
+        if (isActive) {
+          setError(err instanceof Error ? err.message : 'Erro ao carregar certidão');
+        }
       } finally {
-        setIsLoading(false);
+        if (isActive) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchPdf();
 
     return () => {
-      if (pdfUrl && pdfUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(pdfUrl);
+      isActive = false;
+
+      if (objectUrl?.startsWith('blob:')) {
+        URL.revokeObjectURL(objectUrl);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- pdfUrl é gerenciado internamente pelo effect
   }, [hash, open]);
 
   const handleDownload = () => {

@@ -5,6 +5,7 @@ import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import { useMailStore } from "../use-mail";
 import { useMailMessages, useMailActions } from "../hooks/use-mail-api";
+import { getMailListPreview, getMailPrimaryName } from "../lib/display";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -134,23 +135,23 @@ export function MailList({ items }: MailListProps) {
               <Checkbox
                 checked={selectedUids.has(item.uid)}
                 onCheckedChange={() => toggleSelectedUid(item.uid)}
-                aria-label={`Selecionar e-mail de ${item.from.name || item.from.address}`}
+                aria-label={`Selecionar e-mail de ${getMailPrimaryName(item)}`}
               />
             </div>
             <button
               role="option"
               aria-selected={selectedMail?.uid === item.uid}
-              aria-label={`${!item.read ? "Não lido: " : ""}${item.from.name || item.from.address} — ${item.subject}`}
+              aria-label={`${!item.read ? "Não lido: " : ""}${getMailPrimaryName(item)} — ${item.subject}`}
               data-mail-index={index}
               tabIndex={selectedMail?.uid === item.uid ? 0 : -1}
-              className="flex min-w-0 flex-1 flex-col items-start gap-2 text-left"
+              className="flex min-w-0 flex-1 flex-col items-start gap-1.5 text-left"
               onClick={() => setSelectedMail(item)}
               onKeyDown={(e) => handleKeyDown(e, index)}>
-              <div className="flex w-full flex-col gap-1">
-                <div className="flex items-center">
-                  <div className="flex items-center gap-2">
-                    <div className="font-semibold">
-                      {item.from.name || item.from.address}
+              <div className="flex w-full flex-wrap items-start gap-x-3 gap-y-1">
+                <div className="min-w-0 flex-1">
+                  <div className="flex min-w-0 flex-wrap items-center gap-2">
+                    <div className="text-foreground whitespace-normal wrap-break-word font-semibold leading-5">
+                      {getMailPrimaryName(item)}
                     </div>
                     {!item.read && (
                       <span
@@ -159,23 +160,29 @@ export function MailList({ items }: MailListProps) {
                       />
                     )}
                   </div>
-                  <div
-                    className={cn(
-                      "ml-auto text-xs",
-                      selectedMail?.uid === item.uid
-                        ? "text-foreground"
-                        : "text-muted-foreground"
-                    )}>
-                    {formatDistanceToNow(new Date(item.date), {
-                      addSuffix: true,
-                      locale: ptBR,
-                    })}
-                  </div>
                 </div>
-                <div className="text-xs font-medium">{item.subject}</div>
+                <div
+                  className={cn(
+                    "text-[11px] leading-4 whitespace-normal break-words text-left sm:text-right",
+                    selectedMail?.uid === item.uid
+                      ? "text-foreground"
+                      : "text-muted-foreground"
+                  )}>
+                  {formatDistanceToNow(new Date(item.date), {
+                    addSuffix: true,
+                    locale: ptBR,
+                  })}
+                </div>
               </div>
-              <div className="text-muted-foreground line-clamp-2 text-xs">
-                {item.preview || item.subject}
+              <div className="grid w-full gap-1 text-xs leading-5">
+                <div className="font-medium text-foreground whitespace-normal break-words">
+                  {item.subject}
+                </div>
+                {getMailListPreview(item) ? (
+                  <div className="text-muted-foreground whitespace-normal wrap-break-word">
+                    {getMailListPreview(item)}
+                  </div>
+                ) : null}
               </div>
             </button>
           </div>

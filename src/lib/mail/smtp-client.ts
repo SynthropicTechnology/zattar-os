@@ -4,6 +4,19 @@ import type { MailConfig } from "./config";
 import { appendMessage } from "./imap-client";
 import type { MailMessage, SendEmailRequest } from "./types";
 
+function buildRawPlainTextMessage(headers: Array<string | undefined>, text: string): string {
+  return [
+    ...headers,
+    "MIME-Version: 1.0",
+    'Content-Type: text/plain; charset="utf-8"',
+    "Content-Transfer-Encoding: 8bit",
+    "",
+    text,
+  ]
+    .filter(Boolean)
+    .join("\r\n");
+}
+
 function createTransporter(config: MailConfig): Transporter {
   const { smtp } = config;
   return nodemailer.createTransport({
@@ -48,18 +61,18 @@ export async function sendEmail(
 
   // Save copy to Sent
   if (info.response) {
-    const raw = [
-      `From: ${from}`,
-      `To: ${req.to.join(", ")}`,
-      req.cc ? `Cc: ${req.cc.join(", ")}` : "",
-      `Subject: ${req.subject}`,
-      `Date: ${new Date().toUTCString()}`,
-      `Message-ID: ${info.messageId}`,
-      "",
-      req.text,
-    ]
-      .filter(Boolean)
-      .join("\r\n");
+    const raw = buildRawPlainTextMessage(
+      [
+        `From: ${from}`,
+        `To: ${req.to.join(", ")}`,
+        req.cc ? `Cc: ${req.cc.join(", ")}` : undefined,
+        req.bcc ? `Bcc: ${req.bcc.join(", ")}` : undefined,
+        `Subject: ${req.subject}`,
+        `Date: ${new Date().toUTCString()}`,
+        `Message-ID: ${info.messageId}`,
+      ],
+      req.text
+    );
     await saveToSent(config, raw);
   }
 }
@@ -122,20 +135,19 @@ export async function replyToEmail(
   });
 
   if (info.response) {
-    const raw = [
-      `From: ${from}`,
-      `To: ${to.join(", ")}`,
-      cc.length > 0 ? `Cc: ${cc.join(", ")}` : "",
-      `Subject: ${subject}`,
-      `Date: ${new Date().toUTCString()}`,
-      `Message-ID: ${info.messageId}`,
-      `In-Reply-To: ${original.messageId}`,
-      `References: ${references}`,
-      "",
-      quotedBody,
-    ]
-      .filter(Boolean)
-      .join("\r\n");
+    const raw = buildRawPlainTextMessage(
+      [
+        `From: ${from}`,
+        `To: ${to.join(", ")}`,
+        cc.length > 0 ? `Cc: ${cc.join(", ")}` : undefined,
+        `Subject: ${subject}`,
+        `Date: ${new Date().toUTCString()}`,
+        `Message-ID: ${info.messageId}`,
+        `In-Reply-To: ${original.messageId}`,
+        `References: ${references}`,
+      ],
+      quotedBody
+    );
     await saveToSent(config, raw);
   }
 }
@@ -175,15 +187,16 @@ export async function forwardEmail(
   });
 
   if (info.response) {
-    const raw = [
-      `From: ${from}`,
-      `To: ${to.join(", ")}`,
-      `Subject: ${subject}`,
-      `Date: ${new Date().toUTCString()}`,
-      `Message-ID: ${info.messageId}`,
-      "",
-      forwardedBody,
-    ].join("\r\n");
+    const raw = buildRawPlainTextMessage(
+      [
+        `From: ${from}`,
+        `To: ${to.join(", ")}`,
+        `Subject: ${subject}`,
+        `Date: ${new Date().toUTCString()}`,
+        `Message-ID: ${info.messageId}`,
+      ],
+      forwardedBody
+    );
     await saveToSent(config, raw);
   }
 }

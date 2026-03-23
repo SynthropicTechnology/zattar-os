@@ -25,7 +25,7 @@ import { NavMobile } from "./nav-mobile";
 import { MailDisplayMobile } from "./mail-display-mobile";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_LAYOUT = [16, 30, 54];
+const DEFAULT_LAYOUT = [16, 36, 48];
 
 export function Mail({
   defaultLayout = DEFAULT_LAYOUT,
@@ -165,7 +165,7 @@ export function Mail({
           <NavDesktop isCollapsed={isCollapsed} />
         </ResizablePanel>
         <ResizableHandle hidden={isMobile || isMailExpanded} withHandle />
-        <ResizablePanel id="middle-panel" hidden={isMailExpanded} defaultSize={defaultLayout[1]} minSize={20}>
+        <ResizablePanel id="middle-panel" hidden={isMailExpanded} defaultSize={defaultLayout[1]} minSize={28}>
           <Tabs
             defaultValue="all"
             className="flex h-full flex-col gap-0 bg-card"
@@ -325,7 +325,7 @@ export function Mail({
           id="right-panel"
           hidden={isMobile}
           defaultSize={defaultLayout[2]}
-          minSize={30}
+          minSize={24}
           className="bg-card">
           {isComposing ? <ComposeMailPanel /> : <MailDisplay mail={currentMail} />}
         </ResizablePanel>

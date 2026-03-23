@@ -100,7 +100,7 @@ function ImagePreview({
       <button
         type="button"
         onClick={() => url && setShowDialog(true)}
-        className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-dashed hover:bg-muted/50 transition-colors cursor-pointer"
+        className="flex min-w-24 flex-col items-center gap-2 rounded-2xl border border-dashed border-border/70 bg-background/80 px-3 py-3 transition-colors hover:bg-muted/40 cursor-pointer"
       >
         {isLoading ? (
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -108,12 +108,12 @@ function ImagePreview({
           <img
             src={url}
             alt={label}
-            className="h-16 w-16 object-contain rounded"
+            className="h-16 w-16 rounded-xl object-cover"
           />
         ) : (
           <Icon className="h-8 w-8 text-muted-foreground" />
         )}
-        <span className="text-xs text-muted-foreground">{label}</span>
+        <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </button>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -158,16 +158,21 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-base">
+    <Card className="overflow-hidden rounded-3xl border-border/60 bg-muted/15 py-0 shadow-none hover:shadow-sm">
+      <CardHeader className="border-b border-border/60 px-5 py-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <CardTitle className="text-base">
               {signatario.nome || `Assinante ${index + 1}`}
-            </CardTitle>
-            <Badge variant="outline" className="text-xs">
-              {TIPO_LABELS[signatario.tipo] || signatario.tipo}
-            </Badge>
+              </CardTitle>
+              <Badge variant="outline" className="text-xs">
+                {TIPO_LABELS[signatario.tipo] || signatario.tipo}
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Registro individual com evidências e telemetria da assinatura.
+            </p>
           </div>
           <Badge
             variant="secondary"
@@ -181,39 +186,47 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 px-5 py-4">
         {/* Dados pessoais */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {signatario.cpf && (
-            <div className="flex items-center gap-2 text-sm">
-              <CreditCard className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">CPF:</span>
-              <span className="font-medium">{signatario.cpf}</span>
+            <div className="rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <CreditCard className="h-3.5 w-3.5 shrink-0" />
+                <span>CPF</span>
+              </div>
+              <p className="mt-1 font-medium text-foreground">{signatario.cpf}</p>
             </div>
           )}
           {signatario.email && (
-            <div className="flex items-center gap-2 text-sm">
-              <Mail className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">Email:</span>
-              <span className="font-medium truncate">{signatario.email}</span>
+            <div className="rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Mail className="h-3.5 w-3.5 shrink-0" />
+                <span>Email</span>
+              </div>
+              <p className="mt-1 truncate font-medium text-foreground">{signatario.email}</p>
             </div>
           )}
           {signatario.telefone && (
-            <div className="flex items-center gap-2 text-sm">
-              <Phone className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">Telefone:</span>
-              <span className="font-medium">{signatario.telefone}</span>
+            <div className="rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Phone className="h-3.5 w-3.5 shrink-0" />
+                <span>Telefone</span>
+              </div>
+              <p className="mt-1 font-medium text-foreground">{signatario.telefone}</p>
             </div>
           )}
           {signatario.concluidoEm && (
-            <div className="flex items-center gap-2 text-sm">
-              <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground">Assinado em:</span>
-              <span className="font-medium">
+            <div className="rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Clock className="h-3.5 w-3.5 shrink-0" />
+                <span>Assinado em</span>
+              </div>
+              <p className="mt-1 font-medium text-foreground">
                 {format(new Date(signatario.concluidoEm), "dd/MM/yyyy HH:mm", {
                   locale: ptBR,
                 })}
-              </span>
+              </p>
             </div>
           )}
         </div>
@@ -224,8 +237,8 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           signatario.rubricaUrl) && (
           <>
             <Separator />
-            <div>
-              <h4 className="text-sm font-medium mb-2 flex items-center gap-1.5">
+            <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
+              <h4 className="mb-3 flex items-center gap-1.5 text-sm font-medium">
                 <ImageIcon className="h-3.5 w-3.5" />
                 Evidências Visuais
               </h4>
@@ -254,8 +267,8 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
         {isConcluido && (
           <>
             <Separator />
-            <div>
-              <h4 className="text-sm font-medium mb-2 flex items-center gap-1.5">
+            <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
+              <h4 className="mb-3 flex items-center gap-1.5 text-sm font-medium">
                 <Shield className="h-3.5 w-3.5" />
                 Dados de Segurança
               </h4>
@@ -268,7 +281,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
         {signatario.token && !isConcluido && (
           <>
             <Separator />
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
                 size="sm"

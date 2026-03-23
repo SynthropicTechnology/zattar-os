@@ -35,7 +35,7 @@ export function ComunicaCNJTabsContent({ initialTab = 'consulta' }: ComunicaCNJT
 
     return (
         <div className="flex flex-col min-h-0">
-            <div className="flex items-center justify-between pb-4">
+            <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:items-center sm:justify-between">
                 <h1 className="text-2xl font-bold tracking-tight font-heading">
                     Diário Oficial
                 </h1>
@@ -45,20 +45,30 @@ export function ComunicaCNJTabsContent({ initialTab = 'consulta' }: ComunicaCNJT
                     onValueChange={handleTabChange}
                     variant="outline"
                     size="sm"
-                    className="bg-card"
+                    className="w-full justify-start bg-card sm:w-auto"
                 >
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <ToggleGroupItem value="consulta" aria-label="Consulta">
+                            <ToggleGroupItem
+                                value="consulta"
+                                aria-label="Consulta"
+                                className="flex-1 gap-2 px-3 sm:flex-none"
+                            >
                                 <Search className="h-4 w-4" />
+                                <span>Consulta</span>
                             </ToggleGroupItem>
                         </TooltipTrigger>
                         <TooltipContent>Consulta</TooltipContent>
                     </Tooltip>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <ToggleGroupItem value="capturadas" aria-label="Capturadas">
+                            <ToggleGroupItem
+                                value="capturadas"
+                                aria-label="Capturadas"
+                                className="flex-1 gap-2 px-3 sm:flex-none"
+                            >
                                 <Archive className="h-4 w-4" />
+                                <span>Capturadas</span>
                             </ToggleGroupItem>
                         </TooltipTrigger>
                         <TooltipContent>Capturadas</TooltipContent>

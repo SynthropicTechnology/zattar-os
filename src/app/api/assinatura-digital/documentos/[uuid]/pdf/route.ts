@@ -5,6 +5,7 @@ import {
   getAssinaturaById,
 } from "@/app/app/assinatura-digital/feature/services/documentos.service";
 import { downloadFromStorageUrl } from "@/app/app/assinatura-digital/feature/services/signature";
+import { validatePdfBuffer } from "@/app/app/assinatura-digital/feature/utils/file-validation";
 
 /**
  * Proxy para servir PDFs de documentos de assinatura digital.
@@ -76,6 +77,17 @@ export async function GET(
       operation: "preview",
       uuid,
     });
+
+    const validation = validatePdfBuffer(buffer);
+    if (!validation.valid) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: validation.error || "O arquivo recuperado do storage não é um PDF válido.",
+        },
+        { status: 502 }
+      );
+    }
 
     return new Response(new Uint8Array(buffer), {
       headers: {

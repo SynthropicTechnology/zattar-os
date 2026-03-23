@@ -5,6 +5,11 @@ import { useMailActions } from "./use-mail-api";
 import { useMailStore } from "../use-mail";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import type { MailEditorRef } from "../components/mail-editor";
+import {
+  getMailParticipantLabel,
+  getMailParticipantLine,
+  getMailPrimaryName,
+} from "../lib/display";
 import { toast } from "sonner";
 
 type ReplyMode = "reply" | "reply-all" | null;
@@ -28,21 +33,28 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
     }
   }, [mail?.uid, toggleMailExpanded]);
 
-  const senderName = useMemo(
-    () => (mail ? mail.from.name || mail.from.address : ""),
+  const participantName = useMemo(() => (mail ? getMailPrimaryName(mail) : ""), [mail]);
+
+  const participantLabel = useMemo(
+    () => (mail ? getMailParticipantLabel(mail) : "De"),
     [mail]
   );
 
-  const senderInitials = useMemo(
+  const participantLine = useMemo(
+    () => (mail ? getMailParticipantLine(mail) : ""),
+    [mail]
+  );
+
+  const participantInitials = useMemo(
     () =>
-      senderName
+      participantName
         .split(" ")
         .map((chunk) => chunk[0])
         .filter(Boolean)
         .join("")
         .substring(0, 2)
         .toUpperCase(),
-    [senderName]
+    [participantName]
   );
 
   const startReply = useCallback(
@@ -162,8 +174,10 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
     editorRef,
     isSending,
     actionLoading,
-    senderName,
-    senderInitials,
+    participantName,
+    participantInitials,
+    participantLabel,
+    participantLine,
     replyMode,
     startReply,
     cancelReply,

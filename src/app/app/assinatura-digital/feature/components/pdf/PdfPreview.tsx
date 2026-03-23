@@ -47,6 +47,7 @@ export default function PdfPreview({
   maxHeight = '100%',
   maxWidth = '100%',
   className = '',
+  viewportClassName = '',
   mode = 'default',
   renderTextLayer = true,
   renderAnnotationLayer = true,
@@ -141,8 +142,8 @@ export default function PdfPreview({
   // Se não há URL, mostrar estado de espera
   if (!fileSource) {
     const emptyState = (
-      <div className="flex flex-col items-center justify-center h-full text-gray-500 p-4">
-        <Loader2 className="w-8 h-8 animate-spin mb-2" />
+      <div className="flex h-full flex-col items-center justify-center p-4 text-muted-foreground">
+        <Loader2 className="mb-2 h-8 w-8 animate-spin" />
         <p className="text-sm">Aguardando URL do PDF...</p>
       </div>
     );
@@ -158,7 +159,7 @@ export default function PdfPreview({
     return (
       <div className={`flex flex-col h-full ${className}`}>
         {showControls && (
-          <div className="flex items-center justify-between p-2 bg-gray-100 border-b">
+          <div className="flex items-center justify-between border-b border-border/60 bg-background/90 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-background/80">
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" disabled>
                 <ZoomOut className="w-4 h-4" />
@@ -173,7 +174,7 @@ export default function PdfPreview({
           </div>
         )}
         <div
-          className="flex-1 overflow-auto bg-gray-200 flex items-center justify-center p-4"
+          className={`scrollbar-custom flex flex-1 items-center justify-center overflow-auto overscroll-contain scroll-smooth bg-[radial-gradient(circle_at_top,rgba(30,58,138,0.06),transparent_32%),linear-gradient(180deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_100%)] p-4 dark:bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.12),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.94)_0%,rgba(15,23,42,0.98)_100%)] ${viewportClassName}`}
           style={{ maxHeight, maxWidth }}
         >
           {emptyState}
@@ -204,19 +205,19 @@ export default function PdfPreview({
         </Document>
         {/* Overlay for loading/error states */}
         {loadState.isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+          <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         )}
         {loadState.error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white">
-            <div className="text-center text-gray-600 p-4">
-              <AlertCircle className="w-8 h-8 mx-auto mb-2 text-orange-500" />
-              <p className="text-sm font-medium text-gray-900 mb-1">Preview não disponível</p>
-              <p className="text-xs text-gray-600 mb-2">
+          <div className="absolute inset-0 flex items-center justify-center bg-background/95">
+            <div className="p-4 text-center text-muted-foreground">
+              <AlertCircle className="mx-auto mb-2 h-8 w-8 text-orange-500" />
+              <p className="mb-1 text-sm font-medium text-foreground">Preview não disponível</p>
+              <p className="mb-2 text-xs text-muted-foreground">
                 Não foi possível carregar o PDF para visualização
               </p>
-              <p className="text-xs text-gray-500 italic">
+              <p className="text-xs italic text-muted-foreground">
                 Você ainda pode mapear campos nas coordenadas
               </p>
             </div>
@@ -228,10 +229,10 @@ export default function PdfPreview({
 
   // Default mode: full preview with controls
   return (
-    <div className={`flex flex-col h-full ${className}`}>
+    <div className={`flex h-full flex-col ${className}`}>
       {/* Controles */}
       {showControls && (
-        <div className="flex items-center justify-between p-2 bg-gray-100 border-b">
+        <div className="flex items-center justify-between border-b border-border/60 bg-background/90 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-background/80">
           {/* Controles de Zoom */}
           <div className="flex items-center gap-2">
             <Button
@@ -286,7 +287,7 @@ export default function PdfPreview({
 
       {/* Área de Preview */}
       <div
-        className="flex-1 overflow-auto bg-gray-200 flex items-center justify-center p-4 relative"
+        className={`scrollbar-custom relative flex flex-1 items-center justify-center overflow-auto overscroll-contain scroll-smooth bg-[radial-gradient(circle_at_top,rgba(30,58,138,0.06),transparent_32%),linear-gradient(180deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_100%)] p-4 dark:bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.12),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.94)_0%,rgba(15,23,42,0.98)_100%)] ${viewportClassName}`}
         style={{ maxHeight, maxWidth }}
       >
         <Document
@@ -294,26 +295,26 @@ export default function PdfPreview({
           onLoadSuccess={handleLoadSuccess}
           onLoadError={handleLoadError}
           loading={
-            <div className="flex flex-col items-center gap-2 text-gray-600">
-              <Loader2 className="w-8 h-8 animate-spin" />
+            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+              <Loader2 className="h-8 w-8 animate-spin" />
               <p className="text-sm">Carregando PDF...</p>
             </div>
           }
           error={
-            <div className="flex flex-col items-center gap-3 p-6 max-w-md">
-              <AlertCircle className="w-12 h-12 text-orange-500" />
+            <div className="flex max-w-md flex-col items-center gap-3 p-6">
+              <AlertCircle className="h-12 w-12 text-orange-500" />
               <div className="text-center space-y-2">
-                <p className="text-base font-medium text-gray-900">Preview não disponível</p>
-                <p className="text-sm text-gray-600">
+                <p className="text-base font-medium text-foreground">Preview não disponível</p>
+                <p className="text-sm text-muted-foreground">
                   Não foi possível carregar o arquivo PDF para visualização
                 </p>
                 {loadState.error?.message && (
-                  <p className="text-xs text-gray-500 font-mono bg-gray-100 p-2 rounded">
+                  <p className="rounded bg-muted px-2 py-2 font-mono text-xs text-muted-foreground">
                     {loadState.error.message}
                   </p>
                 )}
-                <p className="text-xs text-gray-500 italic mt-3">
-                  💡 Você ainda pode adicionar e editar campos usando as coordenadas do painel lateral
+                <p className="mt-3 text-xs italic text-muted-foreground">
+                  Você ainda pode continuar a operação usando os controles do painel lateral.
                 </p>
               </div>
             </div>

@@ -26,7 +26,7 @@ import {
 import { cn } from '@/lib/utils';
 import type { ComunicacaoItem } from '../../comunica-cnj/domain';
 import { DataShell, DataTableToolbar, DataTable, DataTableColumnHeader, DataPagination } from '@/components/shared/data-shell';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 /**
  * Configuração de tipos de comunicação (cores + ícones para acessibilidade).
@@ -189,6 +189,7 @@ export function ComunicaCNJResultsTable({
   const [selectedComunicacao, setSelectedComunicacao] = useState<ComunicacaoItem | null>(null);
   const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
   const [selectedPdfHash, setSelectedPdfHash] = useState<string | null>(null);
+  const [table, setTable] = useState<TanstackTable<ComunicacaoItem> | undefined>();
 
   const handleViewDetails = useCallback((c: ComunicacaoItem) => {
     setSelectedComunicacao(c);
@@ -311,7 +312,7 @@ export function ComunicaCNJResultsTable({
       <DataShell
         header={
           <DataTableToolbar
-            onExport={() => {/* handled by toolbar default with table ref */}}
+            table={table}
           />
         }
         footer={pagination && (
@@ -332,6 +333,7 @@ export function ComunicaCNJResultsTable({
           isLoading={isLoading}
           emptyMessage="Nenhuma comunicação encontrada"
           pagination={pagination}
+          onTableReady={setTable}
         />
       </DataShell>
 
