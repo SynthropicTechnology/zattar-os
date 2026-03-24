@@ -152,7 +152,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
           {isDragActive ? 'Solte o arquivo aqui' : 'Arraste seu documento ou clique aqui'}
         </p>
         <p className="text-sm text-muted-foreground">
-          Suportamos PDF, DOCX e PNG até 10MB
+          Suportamos arquivos PDF com até 10MB
         </p>
       </div>
 

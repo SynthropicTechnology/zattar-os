@@ -14,7 +14,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { FileText, CheckCircle2, RotateCcw, Eye } from 'lucide-react';
+import { FileText, CheckCircle2, RotateCcw, Eye, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { cn } from '@/lib/utils';
@@ -251,13 +251,10 @@ export function TipoDescricaoCell({
         title="Editar Descrição"
         maxWidth="md"
         footer={
-          <div className="flex justify-end gap-2 w-full">
-            <Button variant="outline" onClick={() => setIsDescricaoDialogOpen(false)} disabled={isLoadingDescricao}>Cancelar</Button>
-            <Button onClick={handleSaveDescricao} disabled={isLoadingDescricao}>
-              {isLoadingDescricao && <span className="mr-2 animate-spin">⏳</span>}
-              Salvar
-            </Button>
-          </div>
+          <Button onClick={handleSaveDescricao} disabled={isLoadingDescricao}>
+            {isLoadingDescricao && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Salvar
+          </Button>
         }
       >
         <div className="py-2">

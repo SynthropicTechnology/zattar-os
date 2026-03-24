@@ -1,12 +1,13 @@
 'use client';
 
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Tooltip, XAxis, YAxis } from 'recharts';
 import Link from 'next/link';
 import { TrendingUp } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ClientOnly } from '@/components/shared/client-only';
+import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 import { useFluxoCaixa } from '../../hooks';
 
 const formatarValor = (valor: number) =>
@@ -55,7 +56,7 @@ export function WidgetFluxoCaixa() {
       <CardContent className="flex-1 min-h-70 overflow-x-auto">
         <div className="w-full h-64 sm:h-72 lg:h-80" style={{ minHeight: 200 }}>
           <ClientOnly>
-            <ResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={50}>
+            <SafeResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={50}>
               <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
                 <XAxis
                   dataKey="mes"
@@ -76,7 +77,7 @@ export function WidgetFluxoCaixa() {
                 <Bar dataKey="receitas" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
               </BarChart>
-            </ResponsiveContainer>
+            </SafeResponsiveContainer>
           </ClientOnly>
         </div>
       </CardContent>

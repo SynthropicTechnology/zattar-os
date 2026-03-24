@@ -32,11 +32,11 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
 import { cn } from '@/lib/utils';
 import { ClientOnly } from '@/components/shared/client-only';
+import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 
 // Cores padrão para gráficos
 export const CHART_COLORS = {
@@ -93,7 +93,7 @@ export function MiniLineChart({
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
           <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
             {showXAxis && (
@@ -124,7 +124,7 @@ export function MiniLineChart({
               activeDot={{ r: 4, fill: color }}
             />
           </LineChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
     </div>
   );
@@ -163,7 +163,7 @@ export function MiniAreaChart({
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
           <AreaChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <defs>
               <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
@@ -200,7 +200,7 @@ export function MiniAreaChart({
               fillOpacity={gradient ? 1 : 0.2}
             />
           </AreaChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
     </div>
   );
@@ -240,7 +240,7 @@ export function MiniBarChart({
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
           <BarChart
             data={data}
             layout={layout}
@@ -292,7 +292,7 @@ export function MiniBarChart({
             )}
             <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} maxBarSize={40} />
           </BarChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
     </div>
   );
@@ -324,7 +324,7 @@ export function MiniPieChart({
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
           <PieChart>
             {showTooltip && (
               <Tooltip
@@ -357,7 +357,7 @@ export function MiniPieChart({
               ))}
             </Pie>
           </PieChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
     </div>
   );
@@ -384,7 +384,7 @@ export function MiniDonutChart({
   return (
     <div className={cn('w-full min-w-0 relative', className)} style={{ height }}>
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
           <PieChart>
             {showTooltip && (
               <Tooltip
@@ -410,7 +410,7 @@ export function MiniDonutChart({
               ))}
             </Pie>
           </PieChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
       {centerContent && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -445,7 +445,7 @@ export function Sparkline({
   return (
     <div className={cn('inline-block min-w-0', className)} style={{ width, height }}>
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
           <LineChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
             <Line
               type="monotone"
@@ -455,7 +455,7 @@ export function Sparkline({
               dot={false}
             />
           </LineChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
     </div>
   );

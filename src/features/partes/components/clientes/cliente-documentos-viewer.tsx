@@ -162,7 +162,7 @@ export function ClienteDocumentosViewer({
         </h3>
       </div>
 
-      <ScrollArea className="h-[400px]">
+      <ScrollArea className="h-100">
         <div className="grid gap-3">
           {documentos.map((doc) => (
             <Card

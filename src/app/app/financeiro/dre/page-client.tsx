@@ -55,7 +55,6 @@ import type {
   VariacoesDRE,
 } from '@/features/financeiro';
 import {
-  ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
@@ -68,6 +67,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { ClientOnly } from '@/components/shared/client-only';
+import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 
 // ============================================================================
 // Constantes e Helpers
@@ -429,7 +429,7 @@ function CategoriaPieChart({ categorias }: { categorias: CategoriaDRE[] }) {
   return (
     <div className="h-72">
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={200}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={200}>
           <PieChart>
             <Pie
               data={data}
@@ -458,7 +458,7 @@ function CategoriaPieChart({ categorias }: { categorias: CategoriaDRE[] }) {
               labelFormatter={(name) => name}
             />
           </PieChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
     </div>
   );
@@ -540,7 +540,7 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
   return (
     <div className="h-72">
       <ClientOnly>
-        <ResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={200}>
+        <SafeResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={200}>
           <LineChart data={evolucao}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis
@@ -591,7 +591,7 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
               dot={{ r: 3 }}
             />
           </LineChart>
-        </ResponsiveContainer>
+        </SafeResponsiveContainer>
       </ClientOnly>
     </div>
   );

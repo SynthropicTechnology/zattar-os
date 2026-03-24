@@ -105,7 +105,7 @@ export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzo
     if (errorCode === "file-too-large") {
       toast.error("Arquivo muito grande. O limite é 10MB.");
     } else if (errorCode === "file-invalid-type") {
-      toast.error("Tipo de arquivo não suportado. Use PDF, DOCX ou PNG.");
+      toast.error("Tipo de arquivo não suportado. Envie um arquivo PDF.");
     } else {
       toast.error("Erro ao processar o arquivo.");
     }

@@ -1,12 +1,13 @@
 'use client';
 
-import { Pie, PieChart, ResponsiveContainer, Tooltip, Cell } from 'recharts';
+import { Pie, PieChart, Tooltip, Cell } from 'recharts';
 import Link from 'next/link';
 import { PieChart as PieIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ClientOnly } from '@/components/shared/client-only';
+import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 import { useDespesasPorCategoria } from '../../hooks';
 
 // Cores do gráfico devem vir do tema (tokens), sem hardcode em componentes de feature
@@ -84,7 +85,7 @@ export function WidgetDespesasCategoria() {
         <div className="flex items-center justify-center min-h-55">
           <div className="w-full h-64 sm:h-72 lg:h-80" style={{ minHeight: 220 }}>
             <ClientOnly>
-              <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
+              <SafeResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
                 <PieChart>
                   <Pie
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -103,7 +104,7 @@ export function WidgetDespesasCategoria() {
                     contentStyle={{ fontSize: '12px' }}
                   />
                 </PieChart>
-              </ResponsiveContainer>
+              </SafeResponsiveContainer>
             </ClientOnly>
           </div>
         </div>

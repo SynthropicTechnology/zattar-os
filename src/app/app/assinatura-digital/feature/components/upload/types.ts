@@ -57,10 +57,6 @@ export interface UseDocumentUploadState {
  */
 export const ALLOWED_TYPES: Record<string, string[]> = {
   'application/pdf': ['.pdf'],
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [
-    '.docx',
-  ],
-  'image/png': ['.png'],
 };
 
 /**
@@ -71,7 +67,7 @@ export const MAX_FILE_SIZE = 10 * 1024 * 1024;
 /**
  * Tipos de arquivo para exibição visual
  */
-export type FileType = 'pdf' | 'docx' | 'png';
+export type FileType = 'pdf';
 
 /**
  * Configuração visual por tipo de arquivo

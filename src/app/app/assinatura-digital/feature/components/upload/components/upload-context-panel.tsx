@@ -60,9 +60,7 @@ export function UploadContextPanel({
 
       {/* Descrição */}
       <p className="relative text-lg leading-relaxed text-muted-foreground">
-        Suportamos arquivos <strong className="text-foreground">PDF</strong>,{" "}
-        <strong className="text-foreground">DOCX</strong> e{" "}
-        <strong className="text-foreground">PNG</strong> com até{" "}
+        Suportamos arquivos <strong className="text-foreground">PDF</strong> com até{" "}
         <strong className="text-foreground">10MB</strong>.
       </p>
 

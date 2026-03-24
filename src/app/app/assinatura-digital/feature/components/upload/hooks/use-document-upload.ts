@@ -84,7 +84,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
           error: {
             code: "INVALID_TYPE",
             message:
-              "Tipo de arquivo não suportado. Por favor, envie um arquivo PDF, DOCX ou PNG.",
+              "Tipo de arquivo não suportado. Por favor, envie um arquivo PDF.",
           },
         };
       }
@@ -103,7 +103,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
             error: {
               code: "INVALID_TYPE",
               message:
-                "Tipo de arquivo não suportado. Por favor, envie um arquivo PDF, DOCX ou PNG.",
+                "Tipo de arquivo não suportado. Por favor, envie um arquivo PDF.",
             },
           };
         }

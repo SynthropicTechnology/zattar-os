@@ -7,7 +7,6 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
   CartesianGrid,
   Legend,
 } from 'recharts';
@@ -15,6 +14,7 @@ import { BarChart3 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ClientOnly } from '@/components/shared/client-only';
+import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 
 // ============================================================================
 // Helpers
@@ -105,7 +105,7 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
       <CardContent className="flex-1 min-h-0">
         <div className="w-full h-72 lg:h-80">
           <ClientOnly>
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
               <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis
@@ -164,7 +164,7 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
                   activeDot={{ r: 4, fill: 'hsl(var(--primary))' }}
                 />
               </ComposedChart>
-            </ResponsiveContainer>
+            </SafeResponsiveContainer>
           </ClientOnly>
         </div>
       </CardContent>

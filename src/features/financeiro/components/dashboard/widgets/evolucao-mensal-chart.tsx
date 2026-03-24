@@ -7,13 +7,13 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
   CartesianGrid,
   Legend,
 } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ClientOnly } from '@/components/shared/client-only';
+import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 
 // ============================================================================
 // Helpers
@@ -83,7 +83,7 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
       <CardContent className="flex-1 min-h-0">
         <div className="w-full h-72 lg:h-80">
           <ClientOnly>
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <SafeResponsiveContainer width="100%" height="100%" minWidth={0}>
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id={gradientReceitas} x1="0" y1="0" x2="0" y2="1">
@@ -162,7 +162,7 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
                   activeDot={{ r: 4, fill: 'hsl(var(--primary))' }}
                 />
               </AreaChart>
-            </ResponsiveContainer>
+            </SafeResponsiveContainer>
           </ClientOnly>
         </div>
       </CardContent>

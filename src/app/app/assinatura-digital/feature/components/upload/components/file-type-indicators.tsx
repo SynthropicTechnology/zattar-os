@@ -15,20 +15,6 @@ const FILE_TYPES = [
     color: 'text-destructive',
     hoverColor: 'group-hover/type:text-destructive/80',
   },
-  {
-    type: 'docx' as const,
-    label: 'DOCX',
-    icon: FileType,
-    color: 'text-primary',
-    hoverColor: 'group-hover/type:text-primary/80',
-  },
-  {
-    type: 'png' as const,
-    label: 'PNG',
-    icon: Image,
-    color: 'text-highlight',
-    hoverColor: 'group-hover/type:text-highlight/80',
-  },
 ];
 
 interface FileTypeIndicatorsProps {
