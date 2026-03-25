@@ -12,25 +12,27 @@ import { CopilotKit } from "@copilotkit/react-core"
 import "@copilotkit/react-ui/styles.css"
 import { CopilotSidebar, useChatContext } from "@copilotkit/react-ui"
 import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt"
-import { cn } from "@/lib/utils"
 
 function DashboardHeader() {
   const { open, setOpen } = useChatContext()
 
   return (
-    <header
-      className={cn(
-        "flex h-16 mt-4 mx-4 shrink-0 items-center justify-between gap-4 px-6 transition-all duration-200 rounded-xl z-40 sticky top-4",
-        "bg-surface-container-highest/60 backdrop-blur-xl border border-white/10 shadow-2xl font-headline font-medium"
-      )}
-    >
+    <div className="flex h-16 shrink-0 items-center justify-between gap-4 px-6 pt-2 z-40">
       <div className="flex items-center gap-3">
+        <Image
+          src="/logos/logo-small-light.svg"
+          alt="Zattar"
+          width={32}
+          height={32}
+          className="h-8 w-8 object-contain dark:hidden"
+          priority
+        />
         <Image
           src="/logos/logo-small-dark.svg"
           alt="Zattar"
           width={32}
           height={32}
-          className="h-8 w-8 object-contain"
+          className="h-8 w-8 object-contain hidden dark:block"
           priority
         />
         <Separator orientation="vertical" className="h-4 bg-border" />
@@ -43,7 +45,7 @@ function DashboardHeader() {
         <Separator orientation="vertical" className="h-4 bg-border" />
         <HeaderUserMenu />
       </div>
-    </header>
+    </div>
   )
 }
 
@@ -59,7 +61,7 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
         }}
         Button={() => null}
       >
-        <div className="h-svh min-h-svh overflow-hidden flex flex-col bg-background">
+        <div className="fixed inset-0 flex flex-col bg-background canvas-dots">
           <DashboardHeader />
           <div
             id="portal-content"

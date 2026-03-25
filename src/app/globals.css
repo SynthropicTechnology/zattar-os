@@ -867,6 +867,16 @@
 }
 
 @layer utilities {
+  /* Canvas dot pattern — estilo React Flow */
+  .canvas-dots {
+    background-image: radial-gradient(circle, var(--dot-color, oklch(0 0 0 / 0.1)) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .dark .canvas-dots {
+    --dot-color: oklch(1 0 0 / 0.07);
+  }
+
   .scrollbar-custom {
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
