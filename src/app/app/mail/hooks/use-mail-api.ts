@@ -271,12 +271,12 @@ export function useMailActions() {
   );
 
   const reply = useCallback(
-    async (uid: number, folder: string, text: string, replyAll: boolean = false) => {
+    async (uid: number, folder: string, text: string, replyAll: boolean = false, html?: string) => {
       const url = withAccountId("/api/mail/messages/reply", selectedAccountId);
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid, folder, text, replyAll }),
+        body: JSON.stringify({ uid, folder, text, replyAll, html }),
       });
       if (!res.ok) throw new Error("Erro ao enviar resposta");
     },
@@ -284,12 +284,12 @@ export function useMailActions() {
   );
 
   const forwardMessage = useCallback(
-    async (uid: number, folder: string, to: string[], text: string) => {
+    async (uid: number, folder: string, to: string[], text: string, html?: string) => {
       const url = withAccountId("/api/mail/messages/forward", selectedAccountId);
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid, folder, to, text }),
+        body: JSON.stringify({ uid, folder, to, text, html }),
       });
       if (!res.ok) throw new Error("Erro ao encaminhar mensagem");
     },
@@ -297,12 +297,12 @@ export function useMailActions() {
   );
 
   const sendNewEmail = useCallback(
-    async (to: string[], subject: string, text: string, cc?: string[], bcc?: string[]) => {
+    async (to: string[], subject: string, text: string, html?: string, cc?: string[], bcc?: string[]) => {
       const url = withAccountId("/api/mail/messages/send", selectedAccountId);
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to, subject, text, cc, bcc }),
+        body: JSON.stringify({ to, subject, text, html, cc, bcc }),
       });
       if (!res.ok) throw new Error("Erro ao enviar e-mail");
     },

@@ -867,16 +867,78 @@
 }
 
 @layer utilities {
-  /* Canvas dot pattern — estilo React Flow */
+  /* Canvas dot pattern — estilo React Flow / macOS canvas */
   .canvas-dots {
-    background-image: radial-gradient(circle, var(--dot-color, oklch(0 0 0 / 0.1)) 1px, transparent 1px);
-    background-size: 24px 24px;
+    --dot-color: oklch(0 0 0 / 0.12);
+    --dot-size: 1.2px;
+    --dot-gap: 20px;
+    background-image:
+      radial-gradient(circle, var(--dot-color) var(--dot-size), transparent var(--dot-size));
+    background-size: var(--dot-gap) var(--dot-gap);
+    background-position: center center;
   }
 
-  .dark .canvas-dots {
-    --dot-color: oklch(1 0 0 / 0.07);
+  :is(.dark) .canvas-dots,
+  .canvas-dots:is(.dark *) {
+    --dot-color: oklch(1 0 0 / 0.06);
   }
 
+  /* macOS-style overlay scrollbar */
+  .scrollbar-macos {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar-macos:hover {
+    scrollbar-color: oklch(0 0 0 / 0.18) transparent;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar-thumb {
+    background: oklch(0 0 0 / 0);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background 0.2s ease;
+  }
+
+  .scrollbar-macos:hover::-webkit-scrollbar-thumb {
+    background: oklch(0 0 0 / 0.18);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar-thumb:hover {
+    background: oklch(0 0 0 / 0.3);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  :is(.dark) .scrollbar-macos:hover {
+    scrollbar-color: oklch(1 0 0 / 0.15) transparent;
+  }
+
+  :is(.dark) .scrollbar-macos:hover::-webkit-scrollbar-thumb {
+    background: oklch(1 0 0 / 0.15);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  :is(.dark) .scrollbar-macos::-webkit-scrollbar-thumb:hover {
+    background: oklch(1 0 0 / 0.25);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Legacy scrollbar-custom (fallback) */
   .scrollbar-custom {
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
@@ -1013,19 +1075,112 @@
 }
 
 /* =============================================================================
- * COPILOTKIT SIDEBAR - Layout Fix
+ * COPILOTKIT SIDEBAR - Floating Card Style
  * =============================================================================
- * O CopilotSidebar cria um wrapper div interno que quebra layouts flexbox.
- * Usamos display:contents para "neutralizar" o wrapper e manter o layout.
+ * Refatoração: transforma a sidebar de painel full-height em card flutuante.
+ * Overrides das classes internas do @copilotkit/react-ui.
+ *
+ * Estrutura DOM do CopilotSidebar:
+ *   div.copilotKitSidebarContentWrapper
+ *     {children}  ← conteúdo do app
+ *     div.copilotKitSidebar
+ *       div.copilotKitWindow  ← janela de chat
+ *         div.copilotKitHeader
+ *         div.copilotKitChat
+ *
  * @see https://github.com/CopilotKit/CopilotKit/issues/273
  */
+
+/* --- Layout Fix: neutraliza wrapper que quebra flexbox --- */
 .copilot-sidebar-wrapper {
   display: contents !important;
 }
 
-/* O container interno do CopilotSidebar também precisa ser neutralizado */
 .copilot-sidebar-wrapper > div:first-child {
   display: contents !important;
+}
+
+/* --- Floating Card: overlay (não empurra conteúdo) --- */
+@media (min-width: 640px) {
+  .copilotKitSidebarContentWrapper.sidebarExpanded {
+    margin-right: 0 !important;
+  }
+}
+
+/* --- Window: tall floating card com canvas dots --- */
+.copilotKitSidebar .copilotKitWindow {
+  border-radius: 1.25rem !important;
+  border: 1px solid hsl(var(--border) / 0.5) !important;
+  overflow: hidden !important;
+}
+
+@media (min-width: 640px) {
+  .copilotKitSidebar .copilotKitWindow {
+    min-height: auto !important;
+    max-height: calc(100vh - 2rem) !important;
+    height: calc(100vh - 2rem) !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+    width: 26rem !important;
+    box-shadow:
+      0 0 0 1px hsl(var(--border) / 0.15),
+      0 1px 2px hsl(var(--foreground) / 0.04),
+      0 4px 16px hsl(var(--foreground) / 0.06),
+      0 12px 48px hsl(var(--foreground) / 0.1) !important;
+  }
+}
+
+/* --- Header: polished com border-radius e estilo refinado --- */
+.copilotKitSidebar .copilotKitHeader {
+  border-top-left-radius: 1.25rem !important;
+  border-top-right-radius: 1.25rem !important;
+  background-color: hsl(var(--background)) !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.5) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* --- Chat area: canvas dots background --- */
+.copilotKitSidebar .copilotKitChat {
+  --dot-color: oklch(0 0 0 / 0.07);
+  --dot-size: 1px;
+  --dot-gap: 18px;
+  background-color: hsl(var(--background)) !important;
+  background-image:
+    radial-gradient(circle, var(--dot-color) var(--dot-size), transparent var(--dot-size)) !important;
+  background-size: var(--dot-gap) var(--dot-gap) !important;
+  background-position: center center !important;
+}
+
+:is(.dark) .copilotKitSidebar .copilotKitChat {
+  --dot-color: oklch(1 0 0 / 0.04);
+}
+
+/* --- Messages area: sem double scroll --- */
+.copilotKitSidebar .copilotKitMessages {
+  background: transparent !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: hsl(var(--border)) transparent !important;
+}
+
+/* --- Input: bottom rounded e estilo limpo --- */
+.copilotKitSidebar .copilotKitInput {
+  background-color: hsl(var(--background)) !important;
+  border-top: 1px solid hsl(var(--border) / 0.5) !important;
+  border-bottom-left-radius: 1.25rem !important;
+  border-bottom-right-radius: 1.25rem !important;
+}
+
+/* --- Message bubbles: integração com design tokens --- */
+.copilotKitSidebar .copilotKitAssistantMessage {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-radius: 0.875rem !important;
+}
+
+.copilotKitSidebar .copilotKitUserMessage {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border-radius: 0.875rem !important;
 }
 
 /* =============================================================================

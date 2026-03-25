@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import type { Descendant } from 'platejs';
+import type { Descendant, Value } from 'platejs';
 import {
   BoldPlugin,
   ItalicPlugin,
@@ -277,14 +277,11 @@ export function MailEditor({
 }: MailEditorProps) {
   const editor = usePlateEditor({
     plugins: MailEditorKit,
+    value: defaultValue as Value,
   });
 
   return (
-    <Plate
-      editor={editor}
-      // @ts-expect-error - Plate v52 type definitions issue
-      initialValue={defaultValue}
-    >
+    <Plate editor={editor}>
       <div
         className={cn(
           variant !== 'compose' && 'rounded-lg border bg-background transition-colors focus-within:ring-1 focus-within:ring-ring',

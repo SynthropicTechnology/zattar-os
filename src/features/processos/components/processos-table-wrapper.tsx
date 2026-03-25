@@ -12,6 +12,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useCopilotReadable } from '@copilotkit/react-core';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
@@ -700,6 +701,23 @@ export function ProcessosTableWrapper({
     if (origem) setOrigemFilter(origem);
     isHydratedRef.current = true;
   }, [searchParams]);
+
+  // ── Copilot: expor contexto de processos ──
+  useCopilotReadable({
+    description: 'Dados da tela de processos: total, filtros ativos e página atual',
+    value: {
+      total_processos: total,
+      pagina: pageIndex + 1,
+      total_paginas: totalPages,
+      filtros_ativos: {
+        busca: globalFilter || null,
+        trt: trtFilter.length > 0 ? trtFilter : null,
+        origem: origemFilter !== 'all' ? origemFilter : null,
+      },
+      processos_visiveis: processos.length,
+      carregando: isLoading,
+    },
+  });
 
   // Estado do dialog de configuração de atribuição
   const [configAtribuicaoOpen, setConfigAtribuicaoOpen] = React.useState(false);

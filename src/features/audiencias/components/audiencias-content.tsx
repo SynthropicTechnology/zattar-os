@@ -18,6 +18,7 @@
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useCopilotReadable } from '@copilotkit/react-core';
 import { Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -106,6 +107,18 @@ export function AudienciasContent({
 
   // Week Navigator (apenas para view semana)
   const weekNav = useWeekNavigator();
+
+  // ── Copilot: expor contexto de audiências ──
+  useCopilotReadable({
+    description: 'Contexto da tela de audiências: visualização atual e semana selecionada',
+    value: {
+      visualizacao_atual: visualizacao,
+      semana_inicio: weekNav.weekStart?.toISOString() ?? null,
+      semana_fim: weekNav.weekEnd?.toISOString() ?? null,
+      total_usuarios: usuarios.length,
+      total_tipos_audiencia: tiposAudiencia.length,
+    },
+  });
 
   // Handle visualization change - navigate to the correct URL
   const handleVisualizacaoChange = React.useCallback((value: string) => {

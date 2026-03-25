@@ -1,7 +1,23 @@
 import { createBrowserClient } from '@supabase/ssr';
 import { Database } from '@/lib/supabase/database.types';
 
-let browserClient: ReturnType<typeof createBrowserClient<Database>> | undefined;
+type BrowserSupabaseClient = ReturnType<typeof createBrowserClient<Database>>;
+
+const SUPABASE_BROWSER_CLIENT_KEY = '__zattar_supabase_browser_client__';
+
+type GlobalWithSupabaseClient = typeof globalThis & {
+  [SUPABASE_BROWSER_CLIENT_KEY]?: BrowserSupabaseClient;
+};
+
+let browserClient: BrowserSupabaseClient | undefined;
+
+function getGlobalBrowserClient() {
+  return (globalThis as GlobalWithSupabaseClient)[SUPABASE_BROWSER_CLIENT_KEY];
+}
+
+function setGlobalBrowserClient(client: BrowserSupabaseClient) {
+  (globalThis as GlobalWithSupabaseClient)[SUPABASE_BROWSER_CLIENT_KEY] = client;
+}
 
 /**
  * Cliente Supabase para Client Components / browser.
@@ -23,8 +39,15 @@ export function createClient() {
     return createBrowserClient<Database>(url, anonKey);
   }
 
+  const globalBrowserClient = getGlobalBrowserClient();
+  if (globalBrowserClient) {
+    browserClient = globalBrowserClient;
+    return globalBrowserClient;
+  }
+
   if (!browserClient) {
     browserClient = createBrowserClient<Database>(url, anonKey);
+    setGlobalBrowserClient(browserClient);
   }
 
   return browserClient;

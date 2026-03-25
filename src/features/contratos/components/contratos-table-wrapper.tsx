@@ -16,6 +16,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useCopilotReadable } from '@copilotkit/react-core';
 import { Settings, List, Kanban } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
@@ -181,6 +182,25 @@ export function ContratosTableWrapper({
 
   // Debounce da busca (500ms)
   const buscaDebounced = useDebounce(busca, 500);
+
+  // ── Copilot: expor contexto de contratos ──
+  useCopilotReadable({
+    description: 'Dados da tela de contratos: total, filtros ativos e página atual',
+    value: {
+      total_contratos: total,
+      pagina: pageIndex + 1,
+      total_paginas: totalPages,
+      contratos_visiveis: contratos.length,
+      filtros_ativos: {
+        busca: busca || null,
+        tipo_contrato: tipoContrato || null,
+        tipo_cobranca: tipoCobranca || null,
+        status: status || null,
+        segmento: segmentoId || null,
+      },
+      carregando: isLoading,
+    },
+  });
 
   // ---------- Maps para lookup O(1) ----------
   const clientesMap = React.useMemo(() => {

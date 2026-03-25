@@ -12,6 +12,7 @@ import { CopilotKit } from "@copilotkit/react-core"
 import "@copilotkit/react-ui/styles.css"
 import { CopilotSidebar, useChatContext } from "@copilotkit/react-ui"
 import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt"
+import { CopilotGlobalActions } from "@/lib/copilotkit/components/copilot-global-actions"
 
 function DashboardHeader() {
   const { open, setOpen } = useChatContext()
@@ -61,11 +62,13 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
         }}
         Button={() => null}
       >
+        {/* Registra ações globais + contexto de rota como readable state */}
+        <CopilotGlobalActions />
         <div className="fixed inset-0 flex flex-col bg-background canvas-dots">
           <DashboardHeader />
           <div
             id="portal-content"
-            className="flex min-h-0 flex-1 flex-col overflow-y-auto scroll-smooth gap-6 p-6 pb-24"
+            className="flex min-h-0 flex-1 flex-col overflow-y-auto scroll-smooth gap-6 p-6 pb-24 scrollbar-macos"
           >
             {children}
           </div>

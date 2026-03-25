@@ -2,16 +2,16 @@
 
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
+import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock } from 'lucide-react'
 
-export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -82,48 +82,47 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
   return (
     <div className={cn('flex flex-col', className)} {...props}>
-      {/* Mobile-only logo (hidden on lg+ where brand panel shows) */}
-      <div className="mb-10 flex justify-center lg:hidden">
-        <Image
-          src="/logos/logomarca-light.svg"
-          alt="Zattar Advogados"
-          width={200}
-          height={30}
-          className="h-auto w-[200px] object-contain dark:hidden"
-          priority
-        />
-        <Image
-          src="/logos/logomarca-dark.svg"
-          alt="Zattar Advogados"
-          width={200}
-          height={30}
-          className="hidden h-auto w-[200px] object-contain dark:block"
-          priority
-        />
+      <div className="mb-10 flex flex-col items-center gap-4 lg:hidden">
+        <div className="relative h-16 w-80">
+            <Image
+              src="/logos/logomarca-dark.svg"
+              alt="Zattar Advogados"
+              fill
+              priority
+              className="object-contain object-center"
+            />
+          </div>
+        <span className="inline-flex rounded-full border border-outline-variant/30 bg-surface-container-highest/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+          Ambiente interno
+        </span>
       </div>
 
-      {/* Heading */}
-      <div className="mb-8">
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-          Bem-vindo de volta
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          Entre com suas credenciais para acessar o portal
+      <div className="text-center lg:text-left mb-10">
+        <h2 className="font-headline text-2xl font-bold text-on-surface mb-2">
+          Entrar no Zattar OS
+        </h2>
+        <p className="text-sm text-on-surface-variant">
+          Acesse a plataforma interna com suas credenciais corporativas.
         </p>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleLogin} className="space-y-5">
-        {/* Email */}
+      <form onSubmit={handleLogin} className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <label
+            htmlFor="email"
+            className="block text-[10px] uppercase tracking-widest text-primary font-bold"
+          >
+            E-mail corporativo
+          </label>
           <div className="relative">
-            <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <AtSign className="h-4 w-4 text-outline" />
+            </div>
+            <input
               id="email"
               type="email"
-              placeholder="seu@email.com"
-              className="h-11 pl-10 bg-white dark:bg-input/30"
+              placeholder="voce@zattar.com.br"
+              className="w-full bg-surface-container-high border-none rounded-lg py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/40 focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all font-mono text-sm"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -132,23 +131,28 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           </div>
         </div>
 
-        {/* Password */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="password">Senha</Label>
-            <Link
-              href="/app/forgot-password"
-              className="text-sm text-primary transition-colors hover:text-primary/80"
-            >
-              Esqueceu a senha?
-            </Link>
-          </div>
+          <label
+            htmlFor="email"
+            className="sr-only"
+          >
+            E-mail corporativo
+          </label>
+          <label
+            htmlFor="password"
+            className="block text-[10px] uppercase tracking-widest text-primary font-bold"
+          >
+            Senha
+          </label>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <Lock className="h-4 w-4 text-outline" />
+            </div>
+            <input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              className="h-11 pl-10 pr-10 bg-white dark:bg-input/30"
+              placeholder="••••••••••••"
+              className="w-full bg-surface-container-high border-none rounded-lg py-4 pl-12 pr-12 text-on-surface placeholder:text-outline/40 focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all font-mono text-sm"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -157,9 +161,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
+              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-outline transition-colors hover:text-on-surface"
               aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-              tabIndex={-1}
             >
               {showPassword ? (
                 <EyeOff className="h-4 w-4" />
@@ -170,7 +173,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           </div>
         </div>
 
-        {/* Error */}
         {error && (
           <div className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/5 p-3">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
@@ -178,12 +180,10 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           </div>
         )}
 
-        {/* Submit */}
-        <Button
+        <button
           type="submit"
-          size="lg"
-          className="w-full h-11"
           disabled={isLoading}
+          className="w-full bg-primary hover:bg-primary-container text-on-primary-fixed font-headline font-extrabold py-4 px-6 rounded-lg transition-all duration-300 active:scale-[0.98] shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>
@@ -191,11 +191,27 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
               Entrando...
             </>
           ) : (
-            'Entrar'
+            <>
+              Entrar
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </>
           )}
-        </Button>
+        </button>
       </form>
 
+      <div className="flex flex-col items-center gap-4 pt-8">
+        <Link
+          href="/app/forgot-password"
+          className="text-[10px] text-outline uppercase tracking-widest hover:text-primary transition-colors"
+        >
+          Esqueci minha senha
+        </Link>
+        <div className="flex gap-4">
+          <span className="w-1 h-1 rounded-full bg-outline-variant" />
+          <span className="w-1 h-1 rounded-full bg-outline-variant" />
+          <span className="w-1 h-1 rounded-full bg-outline-variant" />
+        </div>
+      </div>
     </div>
   )
 }

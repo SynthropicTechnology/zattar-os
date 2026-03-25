@@ -120,7 +120,11 @@ describe("useNotificacoesRealtime", () => {
       const onNovaNotificacao = jest.fn();
 
       renderHook(() =>
-        useNotificacoesRealtime({ onNovaNotificacao })
+        useNotificacoesRealtime({
+          usuarioId: 1,
+          sessionToken: "session-token",
+          onNovaNotificacao,
+        })
       );
 
       await waitFor(() => {
@@ -153,7 +157,9 @@ describe("useNotificacoesRealtime", () => {
         }
       });
 
-      renderHook(() => useNotificacoesRealtime());
+      renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: "session-token" })
+      );
 
       await waitFor(() => {
         expect(mockSubscribe).toHaveBeenCalledTimes(1);
@@ -183,7 +189,9 @@ describe("useNotificacoesRealtime", () => {
         callback(REALTIME_SUBSCRIBE_STATES.TIMED_OUT, null);
       });
 
-      renderHook(() => useNotificacoesRealtime());
+      renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: "session-token" })
+      );
 
       await waitFor(() => {
         expect(mockSubscribe).toHaveBeenCalledTimes(1);
@@ -224,13 +232,15 @@ describe("useNotificacoesRealtime", () => {
         },
       });
 
-      const { result } = renderHook(() => useNotificacoesRealtime());
+      const { result } = renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: "session-token" })
+      );
 
       await waitFor(() => {
         expect(mockSubscribe).toHaveBeenCalledTimes(1);
       });
 
-      // Avançar todos os delays de retry (1s + 2s + 4s = 7s)
+      // Avançar todos os delays de retry (1s + 2s + 4s + 8s + 16s)
       await act(async () => {
         jest.advanceTimersByTime(1000); // Retry 1
       });
@@ -251,7 +261,27 @@ describe("useNotificacoesRealtime", () => {
         jest.advanceTimersByTime(4000); // Retry 3 (último)
       });
 
-      // Após 3 retries, polling deve ser ativado
+      await waitFor(() => {
+        expect(mockSubscribe).toHaveBeenCalledTimes(4);
+      });
+
+      await act(async () => {
+        jest.advanceTimersByTime(8000); // Retry 4
+      });
+
+      await waitFor(() => {
+        expect(mockSubscribe).toHaveBeenCalledTimes(5);
+      });
+
+      await act(async () => {
+        jest.advanceTimersByTime(16000); // Retry 5
+      });
+
+      await waitFor(() => {
+        expect(mockSubscribe).toHaveBeenCalledTimes(6);
+      });
+
+      // Após o limite de retries, polling deve ser ativado
       await waitFor(() => {
         expect(result.current.isUsingPolling).toBe(true);
       });
@@ -260,7 +290,9 @@ describe("useNotificacoesRealtime", () => {
 
   describe("Channel Cleanup", () => {
     it("deve remover canal no cleanup", async () => {
-      const { unmount } = renderHook(() => useNotificacoesRealtime());
+      const { unmount } = renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: "session-token" })
+      );
 
       await waitFor(() => {
         expect(mockChannel).toHaveBeenCalled();
@@ -280,7 +312,9 @@ describe("useNotificacoesRealtime", () => {
 
       mockGetChannels.mockReturnValue([existingChannel]);
 
-      renderHook(() => useNotificacoesRealtime());
+      renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: "session-token" })
+      );
 
       await waitFor(() => {
         expect(mockRemoveChannel).toHaveBeenCalledWith(existingChannel);
@@ -298,7 +332,9 @@ describe("useNotificacoesRealtime", () => {
 
       mockGetChannels.mockReturnValue([existingChannel]);
 
-      renderHook(() => useNotificacoesRealtime());
+      renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: "session-token" })
+      );
 
       await waitFor(() => {
         expect(mockGetChannels).toHaveBeenCalled();
@@ -322,7 +358,11 @@ describe("useNotificacoesRealtime", () => {
       });
 
       renderHook(() =>
-        useNotificacoesRealtime({ onNovaNotificacao })
+        useNotificacoesRealtime({
+          usuarioId: 1,
+          sessionToken: "session-token",
+          onNovaNotificacao,
+        })
       );
 
       await waitFor(() => {
@@ -393,7 +433,11 @@ describe("useNotificacoesRealtime", () => {
       });
 
       const { result } = renderHook(() =>
-        useNotificacoesRealtime({ onContadorChange })
+        useNotificacoesRealtime({
+          usuarioId: 1,
+          sessionToken: "session-token",
+          onContadorChange,
+        })
       );
 
       // Aguardar primeira tentativa
@@ -419,9 +463,29 @@ describe("useNotificacoesRealtime", () => {
         expect(subscribeCallCount).toBe(3);
       });
 
-      // Avançar para retry 3 (4000ms) - após isso polling deve ser ativado
+      // Avançar para retry 3 (4000ms)
       await act(async () => {
         jest.advanceTimersByTime(4000);
+      });
+
+      await waitFor(() => {
+        expect(subscribeCallCount).toBe(4);
+      });
+
+      await act(async () => {
+        jest.advanceTimersByTime(8000);
+      });
+
+      await waitFor(() => {
+        expect(subscribeCallCount).toBe(5);
+      });
+
+      await act(async () => {
+        jest.advanceTimersByTime(16000);
+      });
+
+      await waitFor(() => {
+        expect(subscribeCallCount).toBe(6);
       });
 
       // Aguardar polling ser ativado
@@ -441,40 +505,26 @@ describe("useNotificacoesRealtime", () => {
   });
 
   describe("Edge Cases", () => {
-    it("não deve configurar Realtime se usuário não autenticado", async () => {
-      mockAuthGetUser.mockResolvedValue({
-        data: { user: null },
-      });
-
-      renderHook(() => useNotificacoesRealtime());
-
-      await waitFor(() => {
-        expect(mockAuthGetUser).toHaveBeenCalled();
-      });
+    it("não deve configurar Realtime sem usuarioId", async () => {
+      renderHook(() => useNotificacoesRealtime({ sessionToken: "session-token" }));
 
       // Não deve criar canal
       expect(mockChannel).not.toHaveBeenCalled();
       expect(mockRealtimeSetAuth).not.toHaveBeenCalled();
     });
 
-    it("não deve configurar Realtime se usuário não encontrado na tabela usuarios", async () => {
-      mockFrom.mockReturnValue({
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockReturnThis(),
-        single: jest.fn().mockResolvedValue({
-          data: null,
-          error: { message: "User not found" },
-        }),
-      });
-
-      renderHook(() => useNotificacoesRealtime());
+    it("deve ativar polling quando sessionToken estiver ausente", async () => {
+      const { result } = renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: null })
+      );
 
       await waitFor(() => {
-        expect(mockFrom).toHaveBeenCalledWith("usuarios");
+        expect(result.current.isUsingPolling).toBe(true);
       });
 
-      // Não deve criar canal
+      // Sem token não deve tentar abrir o canal Realtime
       expect(mockChannel).not.toHaveBeenCalled();
+      expect(mockRealtimeSetAuth).not.toHaveBeenCalled();
     });
 
     it("deve limpar timeout de retry no unmount", async () => {
@@ -482,7 +532,9 @@ describe("useNotificacoesRealtime", () => {
         callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, new Error("Error"));
       });
 
-      const { unmount } = renderHook(() => useNotificacoesRealtime());
+      const { unmount } = renderHook(() =>
+        useNotificacoesRealtime({ usuarioId: 1, sessionToken: "session-token" })
+      );
 
       await waitFor(() => {
         expect(mockSubscribe).toHaveBeenCalledTimes(1);

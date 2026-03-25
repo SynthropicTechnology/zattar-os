@@ -8,6 +8,7 @@
  */
 
 import * as React from 'react';
+import { useCopilotReadable } from '@copilotkit/react-core';
 import { format, startOfMonth, endOfMonth, startOfYear, endOfYear, startOfQuarter, endOfQuarter, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
@@ -623,6 +624,33 @@ export default function DREClient() {
   const anoAtual = hoje.getFullYear();
   const { evolucao, isLoading: loadingEvolucao } = useEvolucaoDRE({ ano: anoAtual });
   const { isExporting, exportarPDF, exportarCSV } = useExportarDRE();
+
+  // ── Copilot: expor contexto do DRE ──
+  useCopilotReadable({
+    description: 'Dados do DRE na tela: período selecionado e resumo financeiro',
+    value: {
+      periodo_selecionado: {
+        tipo: periodo.tipo,
+        data_inicio: periodo.dataInicio,
+        data_fim: periodo.dataFim,
+      },
+      resumo: dre?.resumo ? {
+        receita_bruta: dre.resumo.receitaBruta,
+        receita_liquida: dre.resumo.receitaLiquida,
+        lucro_bruto: dre.resumo.lucroBruto,
+        margem_bruta: dre.resumo.margemBruta,
+        lucro_operacional: dre.resumo.lucroOperacional,
+        margem_operacional: dre.resumo.margemOperacional,
+        ebitda: dre.resumo.ebitda,
+        margem_ebitda: dre.resumo.margemEBITDA,
+        lucro_liquido: dre.resumo.lucroLiquido,
+        margem_liquida: dre.resumo.margemLiquida,
+      } : null,
+      carregando: isLoading,
+      comparativo_ativo: incluirComparativo,
+      orcado_ativo: incluirOrcado,
+    },
+  });
 
   // Options para FilterPopover
   const periodoOptions = React.useMemo(() => [

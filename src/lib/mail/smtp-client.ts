@@ -25,6 +25,9 @@ function createTransporter(config: MailConfig): Transporter {
     secure: false, // STARTTLS
     auth: { user: smtp.user, pass: smtp.pass },
     tls: { rejectUnauthorized: false },
+    connectionTimeout: 15_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 30_000,
   });
 }
 
@@ -57,6 +60,7 @@ export async function sendEmail(
     bcc: req.bcc?.join(", "),
     subject: req.subject,
     text: req.text,
+    html: req.html || undefined,
   });
 
   // Save copy to Sent
@@ -83,7 +87,8 @@ export async function replyToEmail(
   config: MailConfig,
   original: MailMessage,
   text: string,
-  replyAll: boolean
+  replyAll: boolean,
+  html?: string
 ): Promise<void> {
   const transporter = createTransporter(config);
   const from = getFromAddress(config);
@@ -124,12 +129,21 @@ export async function replyToEmail(
     ...original.text.split("\n").map((line) => `> ${line}`),
   ].join("\n");
 
+  // Build HTML reply with quoted original
+  const quotedHtml = html
+    ? `${html}<br><br><div style="border-left:2px solid #ccc;padding-left:12px;color:#555">
+        <p>Em ${original.date}, ${original.from.name || original.from.address} escreveu:</p>
+        ${original.html || original.text.split("\n").map((l) => `<p>${l}</p>`).join("")}
+      </div>`
+    : undefined;
+
   const info = await transporter.sendMail({
     from,
     to: to.join(", "),
     cc: cc.length > 0 ? cc.join(", ") : undefined,
     subject,
     text: quotedBody,
+    html: quotedHtml,
     inReplyTo: original.messageId,
     references,
   });
@@ -158,7 +172,8 @@ export async function forwardEmail(
   config: MailConfig,
   original: MailMessage,
   to: string[],
-  text: string
+  text: string,
+  html?: string
 ): Promise<void> {
   const transporter = createTransporter(config);
   const from = getFromAddress(config);
@@ -179,11 +194,21 @@ export async function forwardEmail(
     original.text,
   ].join("\n");
 
+  const forwardedHtml = html
+    ? `${html}<br><br><hr><p><b>---------- Mensagem encaminhada ----------</b></p>
+      <p>De: ${original.from.name} &lt;${original.from.address}&gt;<br>
+      Data: ${original.date}<br>
+      Assunto: ${original.subject}<br>
+      Para: ${original.to.map((a) => a.address).join(", ")}</p>
+      ${original.html || original.text.split("\n").map((l) => `<p>${l}</p>`).join("")}`
+    : undefined;
+
   const info = await transporter.sendMail({
     from,
     to: to.join(", "),
     subject,
     text: forwardedBody,
+    html: forwardedHtml,
   });
 
   if (info.response) {

@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       return errorResponse("Mensagem original não encontrada", 404);
     }
 
-    await replyToEmail(config, original, body.text, body.replyAll);
+    await replyToEmail(config, original, body.text, body.replyAll, body.html);
     return NextResponse.json({ success: true });
   } catch (err) {
     return handleMailError(err);

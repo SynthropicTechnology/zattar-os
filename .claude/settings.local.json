@@ -37,7 +37,11 @@
       "WebFetch(domain:macosicons.com)",
       "WebFetch(domain:www.macosicongallery.com)",
       "WebFetch(domain:beta.macosicons.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "mcp__copilotkit-mcp__search-docs",
+      "mcp__copilotkit-mcp__search-code",
+      "WebFetch(domain:docs.copilotkit.ai)",
+      "WebFetch(domain:www.copilotkit.ai)"
     ]
   },
   "enableAllProjectMcpServers": true,

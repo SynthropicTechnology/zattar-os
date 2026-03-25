@@ -106,14 +106,22 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
       if (!mail || !replyMode) return;
 
       const editor = editorRef.current;
-      if (!editor || editor.isEmpty()) return;
+      if (!editor) {
+        toast.error("Editor não está pronto. Tente novamente.");
+        return;
+      }
+      if (editor.isEmpty()) {
+        toast.error("Escreva o conteúdo da resposta");
+        return;
+      }
 
       const text = editor.getText();
+      const html = editor.getHtml();
       const isReplyAll = replyMode === "reply-all";
 
       setIsSending(true);
       try {
-        await reply(mail.uid, mail.folder, text, isReplyAll);
+        await reply(mail.uid, mail.folder, text, isReplyAll, html);
         editor.reset();
         toast.success(
           isReplyAll ? "Resposta enviada a todos" : "Resposta enviada"

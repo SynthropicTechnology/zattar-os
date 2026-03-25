@@ -45,12 +45,14 @@ export type SendEmailRequest = {
   bcc?: string[];
   subject: string;
   text: string;
+  html?: string;
 };
 
 export type ReplyRequest = {
   uid: number;
   folder: string;
   text: string;
+  html?: string;
   replyAll: boolean;
 };
 
@@ -59,6 +61,7 @@ export type ForwardRequest = {
   folder: string;
   to: string[];
   text: string;
+  html?: string;
 };
 
 export type FlagUpdateRequest = {

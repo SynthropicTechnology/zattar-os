@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import {
   Scale,
   Calendar,
@@ -12,6 +13,7 @@ import {
   ArrowUpRight,
   type LucideIcon,
 } from 'lucide-react';
+import { useCopilotReadable } from '@copilotkit/react-core';
 import Link from 'next/link';
 import {
   Card,
@@ -456,6 +458,53 @@ export function DashboardUnificada({
   initialTarefas,
 }: DashboardUnificadaProps) {
   const { data, isAdmin, isLoading, error, refetch } = useDashboard();
+
+  // ── Copilot: expor contexto do dashboard ──
+  const dashboardContext = useMemo(() => {
+    if (!data) return { usuario: currentUserName, perfil: isAdmin ? 'administrador' : 'usuario', carregando: isLoading };
+
+    if (data.role === 'admin') {
+      const d = data as DashboardAdminData;
+      return {
+        usuario: currentUserName,
+        perfil: 'administrador',
+        metricas: {
+          processos_ativos: d.metricas.processosAtivos,
+          processos_arquivados: d.metricas.processosArquivados,
+          audiencias_mes: d.metricas.audienciasMes,
+          expedientes_pendentes: d.metricas.expedientesPendentes,
+          expedientes_vencidos: d.metricas.expedientesVencidos,
+          total_usuarios: d.metricas.totalUsuarios,
+          taxa_resolucao: d.metricas.taxaResolucao,
+        },
+        tarefas_pendentes: initialTarefas.filter(t => t.status !== 'done').length,
+        total_lembretes: initialLembretes.length,
+        carregando: false,
+      };
+    }
+
+    const d = data as DashboardUsuarioData;
+    return {
+      usuario: currentUserName,
+      perfil: 'usuario',
+      metricas: {
+        processos_ativos: d.processos.ativos,
+        processos_total: d.processos.total,
+        audiencias_hoje: d.audiencias.hoje,
+        audiencias_proximos_7_dias: d.audiencias.proximos7dias,
+        expedientes_vencidos: d.expedientes.vencidos,
+        expedientes_vence_hoje: d.expedientes.venceHoje,
+      },
+      tarefas_pendentes: initialTarefas.filter(t => t.status !== 'done').length,
+      total_lembretes: initialLembretes.length,
+      carregando: false,
+    };
+  }, [data, isAdmin, currentUserName, initialTarefas, initialLembretes, isLoading]);
+
+  useCopilotReadable({
+    description: 'Resumo do dashboard: métricas do escritório, tarefas e lembretes',
+    value: dashboardContext,
+  });
 
   if (isLoading) return <DashboardSkeleton />;
   if (error) return <DashboardError error={error} onRetry={refetch} />;

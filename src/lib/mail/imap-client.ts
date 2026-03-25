@@ -22,6 +22,8 @@ async function withImapConnection<T>(
     secure: true,
     auth: { user: imap.user, pass: imap.pass },
     logger: false,
+    emitLogs: false,
+    maxIdleTime: 30_000,
   });
 
   await client.connect();

@@ -212,11 +212,13 @@ function ForwardDialog({
     setIsSending(true);
     try {
       const text = fwdEditorRef.current?.getText() || "";
+      const html = fwdEditorRef.current?.getHtml() || "";
       await forwardMessage(
         mail.uid,
         mail.folder,
         to.split(",").map((e) => e.trim()),
-        text
+        text,
+        html || undefined
       );
       toast.success("E-mail encaminhado");
       setOpen(false);

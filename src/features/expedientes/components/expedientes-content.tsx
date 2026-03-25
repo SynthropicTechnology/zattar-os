@@ -18,6 +18,7 @@
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useCopilotReadable } from '@copilotkit/react-core';
 import { Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -97,6 +98,17 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
 
   // Week Navigator (apenas para view semana)
   const weekNav = useWeekNavigator();
+
+  // ── Copilot: expor contexto de expedientes ──
+  useCopilotReadable({
+    description: 'Contexto da tela de expedientes: visualização atual e semana selecionada',
+    value: {
+      visualizacao_atual: visualizacao,
+      semana_inicio: weekNav.weekStart?.toISOString() ?? null,
+      semana_fim: weekNav.weekEnd?.toISOString() ?? null,
+      total_tipos_expedientes: tiposExpedientes?.length ?? 0,
+    },
+  });
 
   // Handle visualization change - navigate to the correct URL
   const handleVisualizacaoChange = React.useCallback((value: string) => {

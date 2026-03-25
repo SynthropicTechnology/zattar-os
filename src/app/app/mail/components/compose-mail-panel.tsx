@@ -55,11 +55,18 @@ export function ComposeMailPanel() {
       return;
     }
 
-    const text = editorRef.current?.getText() || "";
+    if (!editorRef.current) {
+      toast.error("Editor não está pronto. Tente novamente.");
+      return;
+    }
+
+    const text = editorRef.current.getText();
     if (!text.trim()) {
       toast.error("Escreva o conteúdo do e-mail");
       return;
     }
+
+    const html = editorRef.current.getHtml();
 
     setIsSending(true);
     try {
@@ -69,6 +76,7 @@ export function ComposeMailPanel() {
         toEmails,
         subject.trim(),
         text,
+        html || undefined,
         ccEmails.length > 0 ? ccEmails : undefined,
         bccEmails.length > 0 ? bccEmails : undefined
       );
