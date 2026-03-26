@@ -9,9 +9,6 @@
 
 import Link from "next/link";
 import {
-  Gavel,
-  Wallet,
-  Stethoscope,
   ArrowRight,
   TrendingUp,
   ShieldCheck,

@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { PortalShell } from "@/features/portal";
 import { EditorialHeader } from "@/features/website";
 import { GlassCard } from "@/features/website";
-import { ShieldCheck, FileDown, Share, SlidersHorizontal } from "lucide-react";
+import { ShieldCheck, FileDown, Share } from "lucide-react";
 import { TrustTicker } from "@/features/website";
 
 // ─── Formatters ───────────────────────────────────────────────────────────────

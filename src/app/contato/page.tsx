@@ -1,6 +1,5 @@
 import { WebsiteShell } from "@/features/website";
 import { MapPin, Mail, Smartphone, Send, Share2, Globe, Network, Radar } from "lucide-react";
-import Image from "next/image";
 
 export default function ContatoPage() {
   return (

@@ -75,7 +75,7 @@ export function DataTableToolbar<TData>({
   onDensityChange,
   actionSlot,
   viewModeSlot,
-  searchValue,
+  searchValue: _searchValue,
   onSearchValueChange,
   searchPlaceholder = 'Buscar...',
   filtersSlot,

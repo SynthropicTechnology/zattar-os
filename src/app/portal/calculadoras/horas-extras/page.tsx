@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { PortalShell } from "@/features/portal";
 import { EditorialHeader } from "@/features/website";
 import { GlassCard } from "@/features/website";
@@ -78,7 +78,6 @@ function ResultRow({
 
 function NumberInput({
   label,
-  value,
   raw,
   onChange,
   placeholder,
@@ -86,7 +85,6 @@ function NumberInput({
   prefix,
 }: {
   label: string;
-  value: number;
   raw: string;
   onChange: (raw: string, parsed: number) => void;
   placeholder: string;
@@ -161,7 +159,6 @@ export default function HorasExtrasCalculatorPage() {
               {/* Salário Bruto */}
               <NumberInput
                 label="Salário Bruto"
-                value={salarioBruto}
                 raw={salarioRaw}
                 placeholder="0,00"
                 prefix="R$"
@@ -171,7 +168,6 @@ export default function HorasExtrasCalculatorPage() {
               {/* Horas / Mês */}
               <NumberInput
                 label="Horas / Mês"
-                value={horasMes}
                 raw={horasMesRaw}
                 placeholder="220"
                 suffix="hrs"
@@ -181,7 +177,6 @@ export default function HorasExtrasCalculatorPage() {
               {/* Horas Extras Trabalhadas */}
               <NumberInput
                 label="Horas Extras Trabalhadas"
-                value={horasExtras}
                 raw={horasExtrasRaw}
                 placeholder="0"
                 suffix="hrs"

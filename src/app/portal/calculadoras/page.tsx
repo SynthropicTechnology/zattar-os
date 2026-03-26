@@ -2,7 +2,7 @@
 
 import { PortalShell } from "@/features/portal";
 import Link from "next/link";
-import { Calculator, Calendar, Clock, DollarSign } from "lucide-react";
+import { Calendar, Clock, DollarSign } from "lucide-react";
 
 export default function CalculadorasPortalIndex() {
   return (

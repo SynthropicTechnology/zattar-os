@@ -369,6 +369,8 @@ export async function actionBaixarExpediente(
     }
 
     // Monta objeto com tipagem superficial - validação será feita no service
+    const resultadoDecisao = formData.get("resultadoDecisao");
+
     const rawData = {
       expedienteId: id,
       protocoloId: formData.get("protocoloId")
@@ -377,7 +379,9 @@ export async function actionBaixarExpediente(
       justificativaBaixa:
         (formData.get("justificativaBaixa") as string | null) || undefined,
       resultadoDecisao:
-        (formData.get("resultadoDecisao") as any) || undefined,
+        typeof resultadoDecisao === "string" && resultadoDecisao.length > 0
+          ? resultadoDecisao
+          : undefined,
       dataBaixa: (formData.get("dataBaixa") as string | null) || undefined,
     };
 
