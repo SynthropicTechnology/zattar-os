@@ -3,14 +3,13 @@
 import Image from "next/image"
 import CommandMenu from "@/components/layout/header/search"
 import Notifications from "@/components/layout/header/notifications"
-import { AiSphere } from "@/components/layout/header/ai-sphere"
 import { AuthenticatorPopover } from "@/components/layout/header/authenticator-popover"
 import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
 import { Separator } from "@/components/ui/separator"
 import { GooeySearchBar } from "@/components/ui/animated-search-bar"
 import { AppDock } from "@/components/layout/dock/app-dock"
 import "@copilotkit/react-core/v2/styles.css"
-import { CopilotKitProvider, CopilotPopup, useCopilotChatConfiguration } from "@copilotkit/react-core/v2"
+import { CopilotKitProvider, CopilotPopup } from "@copilotkit/react-core/v2"
 import { X } from "lucide-react"
 import { CopilotGlobalActions } from "@/lib/copilotkit/components/copilot-global-actions"
 import { PageSearchProvider, usePageSearch } from "@/contexts/page-search-context"
@@ -29,8 +28,6 @@ function HeaderSearchBar() {
 }
 
 function DashboardHeader() {
-  const config = useCopilotChatConfiguration()
-
   return (
     <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
       {/* Esquerda: Logo */}
@@ -62,10 +59,6 @@ function DashboardHeader() {
       <div className="flex items-center gap-2">
         <AuthenticatorPopover />
         <Notifications />
-        <AiSphere
-          onClick={() => config?.setModalOpen(!config.isModalOpen)}
-          size={30}
-        />
         <Separator orientation="vertical" className="h-4 bg-border" />
         <HeaderUserMenu />
       </div>
