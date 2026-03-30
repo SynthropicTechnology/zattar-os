@@ -6,20 +6,22 @@ import Image from 'next/image'
 import { MacOSDock, type DockItem } from '@/components/ui/mac-os-dock'
 import { usePermissoes } from '@/providers/user-provider'
 
-// ─── macOS-style icon images ────────────────────────────────────────────
-// Icons sourced from macOS Icon Gallery (cdn.jim-nielsen.com)
-// Stored locally at public/icons/dock/ for reliability + caching
+// ─── Dock icons (icons8 outline style + Liquid Glass) ──────────────────
+// Icons sourced from icons8.com — white outline 96px PNGs
+// Liquid Glass effect applied via mac-os-dock.tsx container
 
 function DockIcon({ src, alt }: { src: string; alt: string }) {
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={256}
-      height={256}
-      className="w-full h-full object-contain"
-      draggable={false}
-    />
+    <div className="w-full h-full p-[22%]">
+      <Image
+        src={src}
+        alt={alt}
+        width={96}
+        height={96}
+        className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(255,255,255,0.3)]"
+        draggable={false}
+      />
+    </div>
   )
 }
 

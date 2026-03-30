@@ -259,18 +259,42 @@ function MacOSDock({
               onMouseEnter={() => setHoveredIndex(index)}
               onClick={(e) => handleItemClick(item.id, index, e)}
             >
-              {/* Icon — renders whatever ReactNode is passed */}
+              {/* Icon — Liquid Glass container */}
               <div
-                className="w-full h-full rounded-[22%] overflow-hidden"
+                className="w-full h-full rounded-[22%] overflow-hidden relative"
                 style={{
-                  filter: `drop-shadow(0 ${
-                    scale > 1.2 ? 3 : 1
-                  }px ${scale > 1.2 ? 6 : 3}px rgba(0,0,0,${
-                    0.25 + (scale - 1) * 0.2
-                  }))`,
+                  background: `linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.14) 0%,
+                    rgba(255, 255, 255, 0.05) 40%,
+                    rgba(255, 255, 255, 0.10) 100%
+                  )`,
+                  backdropFilter: 'blur(24px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                  border: '0.5px solid rgba(255, 255, 255, 0.20)',
+                  boxShadow: [
+                    'inset 0 1px 1px rgba(255, 255, 255, 0.18)',
+                    'inset 0 -1px 1px rgba(0, 0, 0, 0.06)',
+                    `0 ${scale > 1.2 ? 6 : 3}px ${scale > 1.2 ? 16 : 8}px rgba(0, 0, 0, ${0.18 + (scale - 1) * 0.15})`,
+                  ].join(', '),
                 }}
               >
-                {item.icon}
+                {/* Specular highlight — top light refraction */}
+                <div
+                  className="absolute inset-0 pointer-events-none rounded-[22%]"
+                  style={{
+                    background: `linear-gradient(
+                      170deg,
+                      rgba(255, 255, 255, 0.22) 0%,
+                      rgba(255, 255, 255, 0.06) 35%,
+                      transparent 55%
+                    )`,
+                  }}
+                />
+                {/* Icon content */}
+                <div className="relative w-full h-full">
+                  {item.icon}
+                </div>
               </div>
 
               {/* Active route indicator dot */}
