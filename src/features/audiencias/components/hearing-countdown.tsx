@@ -31,7 +31,7 @@ function getTimeLeft(target: Date) {
 }
 
 function getUrgencyColor(totalMs: number) {
-  if (totalMs <= 0) return "text-muted-foreground/30";
+  if (totalMs <= 0) return "text-muted-foreground/55";
   if (totalMs <= 15 * 60 * 1000) return "text-destructive"; // < 15min
   if (totalMs <= 60 * 60 * 1000) return "text-warning"; // < 1h
   return "text-primary"; // > 1h
@@ -60,7 +60,7 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
 
   if (timeLeft.total <= 0) {
     return (
-      <span className={cn("text-[11px] font-medium text-muted-foreground/40", className)}>
+      <span className={cn("text-[11px] font-medium text-muted-foreground/60", className)}>
         Agora
       </span>
     );
@@ -80,11 +80,11 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
         {timeLeft.hours > 0 && (
           <>
             <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.hours)}</span>
-            <span className="text-[9px] text-muted-foreground/30">:</span>
+            <span className="text-[9px] text-muted-foreground/55">:</span>
           </>
         )}
         <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.minutes)}</span>
-        <span className="text-[9px] text-muted-foreground/30">:</span>
+        <span className="text-[9px] text-muted-foreground/55">:</span>
         <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.seconds)}</span>
       </div>
     </div>

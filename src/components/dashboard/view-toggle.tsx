@@ -56,7 +56,7 @@ export function ViewToggle({ mode, onChange, options = DEFAULT_OPTIONS }: ViewTo
           className={`p-1.5 rounded-md transition-all cursor-pointer ${
             mode === opt.id
               ? 'bg-primary/12 text-primary'
-              : 'text-muted-foreground/30 hover:text-muted-foreground/50'
+              : 'text-muted-foreground/55 hover:text-muted-foreground/50'
           }`}
         >
           <opt.icon className="size-3.5" />

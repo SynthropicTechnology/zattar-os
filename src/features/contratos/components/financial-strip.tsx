@@ -43,9 +43,9 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
       <div className="flex items-center gap-6 overflow-x-auto">
         {/* Em Carteira */}
         <div className="flex items-center gap-2 shrink-0">
-          <DollarSign className="size-4 text-muted-foreground/30" />
+          <DollarSign className="size-4 text-muted-foreground/55" />
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Em Carteira
             </p>
             {stats.emCarteira !== undefined ? (
@@ -53,7 +53,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
                 <AnimatedNumber value={stats.emCarteira} prefix="R$ " duration={1200} />
               </p>
             ) : (
-              <p className="font-display text-lg font-bold tabular-nums text-muted-foreground/25">
+              <p className="font-display text-lg font-bold tabular-nums text-muted-foreground/50">
                 ---
               </p>
             )}
@@ -64,7 +64,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
 
         {/* Ticket Médio */}
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Ticket Médio
           </p>
           {stats.ticketMedio !== undefined ? (
@@ -72,7 +72,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
               {fmtMoeda(stats.ticketMedio)}
             </p>
           ) : (
-            <p className="font-display text-base font-bold tabular-nums text-muted-foreground/25">
+            <p className="font-display text-base font-bold tabular-nums text-muted-foreground/50">
               ---
             </p>
           )}
@@ -82,7 +82,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
 
         {/* Taxa de Conversão */}
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Conversão
           </p>
           <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
         {/* Tendência 6m */}
         <div className="flex items-center gap-3 shrink-0">
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Tendência 6m
             </p>
             <p className="text-xs font-semibold text-success/60">
@@ -121,7 +121,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
 
         {/* Total */}
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Total</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Total</p>
           <p className="font-display text-lg font-bold tabular-nums">
             <AnimatedNumber value={stats.total} duration={800} />
           </p>

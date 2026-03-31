@@ -42,7 +42,7 @@ export function PulseStrip({ items }: PulseStripProps) {
             <item.icon className={`size-4 ${item.color}/40`} />
             <div>
               <p className="font-display text-lg font-bold tabular-nums">{item.total}</p>
-              <p className="text-[10px] text-muted-foreground/40">
+              <p className="text-[10px] text-muted-foreground/60">
                 {item.label}
                 {item.delta && (
                   <span className="text-success/60 ml-1">{item.delta}</span>

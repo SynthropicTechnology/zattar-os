@@ -48,7 +48,7 @@ export function WidgetFluxoComTabs() {
         subtitle="Receita vs despesa — 6 meses"
         icon={RefreshCw}
       >
-        <p className="text-[11px] text-muted-foreground/40 py-6 text-center">
+        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
           Dados de fluxo de caixa indisponíveis.
         </p>
       </WidgetContainer>
@@ -108,7 +108,7 @@ export function WidgetFluxoComTabs() {
           />
           <div className="flex justify-between mt-3 pt-3 border-t border-border/10">
             <div>
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
                 Receita {ultimoLabel}
               </p>
               <p className="text-sm font-semibold font-display tabular-nums">
@@ -116,7 +116,7 @@ export function WidgetFluxoComTabs() {
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
                 Despesa {ultimoLabel}
               </p>
               <p className="text-sm font-semibold font-display tabular-nums">
@@ -129,7 +129,7 @@ export function WidgetFluxoComTabs() {
 
       {tab === 'acumulado' && (
         <div>
-          <p className="text-[10px] text-muted-foreground/40 mb-3">
+          <p className="text-[10px] text-muted-foreground/60 mb-3">
             Resultado líquido acumulado — {primeiroLabel} a {ultimoLabel}
           </p>
           <div className="w-full">
@@ -140,13 +140,13 @@ export function WidgetFluxoComTabs() {
               color="hsl(var(--success))"
             />
             <div className="flex justify-between mt-1">
-              <span className="text-[9px] text-muted-foreground/30 tabular-nums">{primeiroLabel}</span>
-              <span className="text-[9px] text-muted-foreground/30 tabular-nums">{ultimoLabel}</span>
+              <span className="text-[9px] text-muted-foreground/55 tabular-nums">{primeiroLabel}</span>
+              <span className="text-[9px] text-muted-foreground/55 tabular-nums">{ultimoLabel}</span>
             </div>
           </div>
           <div className="mt-3 pt-3 border-t border-border/10 flex items-end justify-between">
             <div>
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
                 Acumulado total
               </p>
               <p className="text-sm font-semibold font-display tabular-nums text-success/80">
@@ -154,7 +154,7 @@ export function WidgetFluxoComTabs() {
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
                 Saldo último período
               </p>
               <p className="text-sm font-semibold font-display tabular-nums text-success/80">

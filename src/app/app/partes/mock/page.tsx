@@ -141,7 +141,7 @@ function TabPills({ active, onChange }: { active: TabId; onChange: (id: TabId) =
           `}
         >
           {tab.label}
-          <span className={`text-[10px] tabular-nums ${active === tab.id ? 'text-primary/50' : 'text-muted-foreground/30'}`}>
+          <span className={`text-[10px] tabular-nums ${active === tab.id ? 'text-primary/50' : 'text-muted-foreground/55'}`}>
             {tab.count}
           </span>
         </button>
@@ -177,13 +177,13 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
               )}
             </div>
             {parte.nomeSocial && (
-              <p className="text-[10px] text-muted-foreground/40 truncate">{parte.nomeSocial}</p>
+              <p className="text-[10px] text-muted-foreground/60 truncate">{parte.nomeSocial}</p>
             )}
             <div className="flex items-center gap-2 mt-1">
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}
               </span>
-              <span className="text-[10px] text-muted-foreground/40 tabular-nums">
+              <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                 {parte.documentoMasked}
               </span>
             </div>
@@ -213,13 +213,13 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
         {/* Footer: Processos + atualização */}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/10">
           <div className="flex items-center gap-1.5">
-            <Scale className="size-3 text-muted-foreground/30" />
+            <Scale className="size-3 text-muted-foreground/55" />
             <span className="text-[10px] font-medium">
               {parte.processosAtivos}
-              <span className="text-muted-foreground/30"> / {parte.processosTotal} processos</span>
+              <span className="text-muted-foreground/55"> / {parte.processosTotal} processos</span>
             </span>
           </div>
-          <span className="text-[9px] text-muted-foreground/30 flex items-center gap-1">
+          <span className="text-[9px] text-muted-foreground/55 flex items-center gap-1">
             <Clock className="size-2.5" />
             {timeAgo(parte.ultimaAtualizacao)}
           </span>
@@ -276,12 +276,12 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}
               </span>
-              <span className="text-[10px] text-muted-foreground/40">{parte.tipo === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}</span>
+              <span className="text-[10px] text-muted-foreground/60">{parte.tipo === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}</span>
             </div>
           </div>
         </div>
         <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer">
-          <X className="size-4 text-muted-foreground/40" />
+          <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
 
@@ -297,24 +297,24 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
       <div className="flex gap-4 p-3 rounded-xl bg-white/3 border border-border/10 mb-5">
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold">{parte.processosAtivos}</p>
-          <p className="text-[9px] text-muted-foreground/40">Ativos</p>
+          <p className="text-[9px] text-muted-foreground/60">Ativos</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold text-muted-foreground/50">{parte.processosTotal - parte.processosAtivos}</p>
-          <p className="text-[9px] text-muted-foreground/40">Encerrados</p>
+          <p className="text-[9px] text-muted-foreground/60">Encerrados</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold text-primary/70">{parte.processosTotal}</p>
-          <p className="text-[9px] text-muted-foreground/40">Total</p>
+          <p className="text-[9px] text-muted-foreground/60">Total</p>
         </div>
       </div>
 
       {/* Processos relacionados */}
       <div className="mb-5">
         <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
-          <Scale className="size-3.5 text-muted-foreground/40" />
+          <Scale className="size-3.5 text-muted-foreground/60" />
           Processos
         </h3>
         <div className="space-y-1.5">
@@ -323,9 +323,9 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
               <div className={`size-1.5 rounded-full ${p.status === 'Ativo' ? 'bg-success/60' : 'bg-muted-foreground/20'}`} />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-mono text-muted-foreground/60 truncate">{p.numero}</p>
-                <p className="text-[9px] text-muted-foreground/35">{p.tipo} &middot; {p.fase}</p>
+                <p className="text-[9px] text-muted-foreground/55">{p.tipo} &middot; {p.fase}</p>
               </div>
-              <ChevronRight className="size-3 text-muted-foreground/20" />
+              <ChevronRight className="size-3 text-muted-foreground/45" />
             </div>
           ))}
         </div>
@@ -334,7 +334,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
       {/* Timeline */}
       <div>
         <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
-          <Clock className="size-3.5 text-muted-foreground/40" />
+          <Clock className="size-3.5 text-muted-foreground/60" />
           Atividade Recente
         </h3>
         <div className="relative">
@@ -344,7 +344,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
               <div className="size-2.5 rounded-full bg-primary/30 mt-1 relative z-10" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px]">{ev.acao}</p>
-                <p className="text-[9px] text-muted-foreground/30">{ev.data}</p>
+                <p className="text-[9px] text-muted-foreground/55">{ev.data}</p>
               </div>
             </div>
           ))}
@@ -368,9 +368,9 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
 function InfoRow({ icon: Icon, label, value }: { icon: typeof Mail; label: string; value: string; copyable?: boolean }) {
   return (
     <div className="flex items-start gap-2">
-      <Icon className="size-3 text-muted-foreground/30 mt-0.5 shrink-0" />
+      <Icon className="size-3 text-muted-foreground/55 mt-0.5 shrink-0" />
       <div className="min-w-0">
-        <p className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">{label}</p>
+        <p className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">{label}</p>
         <p className="text-[11px] font-medium truncate">{value}</p>
       </div>
     </div>
@@ -438,7 +438,7 @@ export default function PartesMockPage() {
               <s.icon className={`size-4 ${s.color}/40`} />
               <div>
                 <p className="font-display text-lg font-bold tabular-nums">{s.total}</p>
-                <p className="text-[10px] text-muted-foreground/40">
+                <p className="text-[10px] text-muted-foreground/60">
                   {s.label}
                   {s.novos > 0 && <span className="text-success/60 ml-1">+{s.novos}</span>}
                 </p>
@@ -461,26 +461,26 @@ export default function PartesMockPage() {
         <div className="flex items-center gap-2 flex-1 justify-end">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/30" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/55" />
             <input
               type="text"
               placeholder="Buscar por nome, CPF, CNPJ..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-56 pl-8 pr-3 py-1.5 rounded-lg bg-white/4 border border-border/15 text-xs placeholder:text-muted-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20 transition-all"
+              className="w-56 pl-8 pr-3 py-1.5 rounded-lg bg-white/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20 transition-all"
             />
           </div>
           {/* View toggle */}
           <div className="flex p-0.5 rounded-lg bg-border/6">
             <button
               onClick={() => setViewMode('cards')}
-              className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === 'cards' ? 'bg-primary/12 text-primary' : 'text-muted-foreground/30 hover:text-muted-foreground/50'}`}
+              className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === 'cards' ? 'bg-primary/12 text-primary' : 'text-muted-foreground/55 hover:text-muted-foreground/50'}`}
             >
               <LayoutGrid className="size-3.5" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === 'list' ? 'bg-primary/12 text-primary' : 'text-muted-foreground/30 hover:text-muted-foreground/50'}`}
+              className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === 'list' ? 'bg-primary/12 text-primary' : 'text-muted-foreground/55 hover:text-muted-foreground/50'}`}
             >
               <List className="size-3.5" />
             </button>
@@ -505,9 +505,9 @@ export default function PartesMockPage() {
 
           {filteredPartes.length === 0 && (
             <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-              <Users className="size-8 text-muted-foreground/20 mb-3" />
+              <Users className="size-8 text-muted-foreground/45 mb-3" />
               <p className="text-sm font-medium text-muted-foreground/50">Nenhuma parte encontrada</p>
-              <p className="text-xs text-muted-foreground/30 mt-1">Tente ajustar os filtros ou a busca</p>
+              <p className="text-xs text-muted-foreground/55 mt-1">Tente ajustar os filtros ou a busca</p>
             </div>
           )}
         </div>
@@ -521,7 +521,7 @@ export default function PartesMockPage() {
       </div>
 
       {/* ── Footer ──────────────────────────────────────────────── */}
-      <p className="text-center text-[10px] text-muted-foreground/25 pb-4">
+      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
         {'Protótipo — Partes com Glass Briefing — dados fictícios'}
       </p>
     </div>
@@ -553,7 +553,7 @@ function EntityListRow({ parte, onSelect, selected }: { parte: Parte; onSelect: 
       {/* Name + doc */}
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{parte.nome}</p>
-        <p className="text-[10px] text-muted-foreground/35 tabular-nums">{parte.documentoMasked}</p>
+        <p className="text-[10px] text-muted-foreground/55 tabular-nums">{parte.documentoMasked}</p>
       </div>
 
       {/* Type */}
@@ -562,18 +562,18 @@ function EntityListRow({ parte, onSelect, selected }: { parte: Parte; onSelect: 
       </span>
 
       {/* Location */}
-      <span className="text-[10px] text-muted-foreground/35 shrink-0 hidden md:block w-16 text-right">{parte.estado}</span>
+      <span className="text-[10px] text-muted-foreground/55 shrink-0 hidden md:block w-16 text-right">{parte.estado}</span>
 
       {/* Processos */}
       <span className="text-[10px] font-medium tabular-nums shrink-0 w-12 text-right">
         {parte.processosAtivos}
-        <span className="text-muted-foreground/25"> proc</span>
+        <span className="text-muted-foreground/50"> proc</span>
       </span>
 
       {/* Time */}
-      <span className="text-[9px] text-muted-foreground/25 shrink-0 w-14 text-right hidden lg:block">{timeAgo(parte.ultimaAtualizacao)}</span>
+      <span className="text-[9px] text-muted-foreground/50 shrink-0 w-14 text-right hidden lg:block">{timeAgo(parte.ultimaAtualizacao)}</span>
 
-      <ChevronRight className="size-3.5 text-muted-foreground/15 shrink-0" />
+      <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
     </div>
   );
 }

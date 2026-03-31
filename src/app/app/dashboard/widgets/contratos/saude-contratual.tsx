@@ -39,7 +39,7 @@ export function WidgetSaudeContratual() {
             status="neutral"
             size={120}
           />
-          <p className="text-[10px] text-muted-foreground/40 -mt-1">
+          <p className="text-[10px] text-muted-foreground/60 -mt-1">
             Conectando ao módulo de contratos...
           </p>
         </div>
@@ -52,10 +52,10 @@ export function WidgetSaudeContratual() {
             { label: 'Em Renovação', value: '—' },
           ].map((item) => (
             <div key={item.label} className="flex flex-col items-center gap-0.5">
-              <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider text-center">
+              <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider text-center">
                 {item.label}
               </span>
-              <span className="font-display text-xl font-bold text-muted-foreground/30">
+              <span className="font-display text-xl font-bold text-muted-foreground/55">
                 {item.value}
               </span>
             </div>

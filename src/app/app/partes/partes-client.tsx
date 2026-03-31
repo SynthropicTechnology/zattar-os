@@ -128,7 +128,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}
               </span>
-              <span className="text-[10px] text-muted-foreground/40">
+              <span className="text-[10px] text-muted-foreground/60">
                 {data.tipo === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}
               </span>
               {!data.ativo && (
@@ -144,7 +144,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
           aria-label="Fechar painel de detalhes"
           className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer"
         >
-          <X className="size-4 text-muted-foreground/40" />
+          <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
 
@@ -167,19 +167,19 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       <div className="flex gap-4 p-3 rounded-xl bg-white/3 border border-border/10 mb-5">
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold">{data.metricas.ativos}</p>
-          <p className="text-[9px] text-muted-foreground/40">Ativos</p>
+          <p className="text-[9px] text-muted-foreground/60">Ativos</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold text-muted-foreground/50">
             {Math.max(0, data.metricas.total - data.metricas.ativos)}
           </p>
-          <p className="text-[9px] text-muted-foreground/40">Encerrados</p>
+          <p className="text-[9px] text-muted-foreground/60">Encerrados</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold text-primary/70">{data.metricas.total}</p>
-          <p className="text-[9px] text-muted-foreground/40">Total</p>
+          <p className="text-[9px] text-muted-foreground/60">Total</p>
         </div>
       </div>
 
@@ -197,7 +197,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       {/* Nome social */}
       {data.nomeSocial && (
         <div className="mb-4 p-2.5 rounded-lg bg-white/2.5 border border-border/10">
-          <p className="text-[9px] text-muted-foreground/35 uppercase tracking-wider mb-0.5">Nome fantasia / Social</p>
+          <p className="text-[9px] text-muted-foreground/55 uppercase tracking-wider mb-0.5">Nome fantasia / Social</p>
           <p className="text-xs text-muted-foreground/70">{data.nomeSocial}</p>
         </div>
       )}
@@ -231,9 +231,9 @@ function InfoRow({
 }) {
   return (
     <div className="flex items-start gap-2">
-      <Icon className="size-3 text-muted-foreground/30 mt-0.5 shrink-0" />
+      <Icon className="size-3 text-muted-foreground/55 mt-0.5 shrink-0" />
       <div className="min-w-0">
-        <p className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">{label}</p>
+        <p className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">{label}</p>
         <p className="text-[11px] font-medium truncate">{value}</p>
       </div>
     </div>
@@ -414,11 +414,11 @@ export function PartesClient({ initialStats }: PartesClientProps) {
 
           {!isLoading && !error && partes.length === 0 && (
             <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-              <Users className="size-8 text-muted-foreground/20 mb-3" />
+              <Users className="size-8 text-muted-foreground/45 mb-3" />
               <p className="text-sm font-medium text-muted-foreground/50">
                 Nenhuma parte encontrada
               </p>
-              <p className="text-xs text-muted-foreground/30 mt-1">
+              <p className="text-xs text-muted-foreground/55 mt-1">
                 {search ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
               </p>
             </div>

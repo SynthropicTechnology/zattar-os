@@ -391,7 +391,7 @@ export default function RecrutamentoScorecardPage() {
                       {stats.total}
                     </p>
                   </div>
-                  <Users className="h-8 w-8 text-muted-foreground/20" />
+                  <Users className="h-8 w-8 text-muted-foreground/45" />
                 </div>
               </CardContent>
             </Card>
@@ -404,7 +404,7 @@ export default function RecrutamentoScorecardPage() {
                       {stats.avgScore.toFixed(1)}
                     </p>
                   </div>
-                  <BarChart3 className="h-8 w-8 text-muted-foreground/20" />
+                  <BarChart3 className="h-8 w-8 text-muted-foreground/45" />
                 </div>
               </CardContent>
             </Card>
@@ -417,7 +417,7 @@ export default function RecrutamentoScorecardPage() {
                       {stats.approved}
                     </p>
                   </div>
-                  <Trophy className="h-8 w-8 text-muted-foreground/20" />
+                  <Trophy className="h-8 w-8 text-muted-foreground/45" />
                 </div>
               </CardContent>
             </Card>
@@ -430,7 +430,7 @@ export default function RecrutamentoScorecardPage() {
                       {stats.analyzing}
                     </p>
                   </div>
-                  <Clock className="h-8 w-8 text-muted-foreground/20" />
+                  <Clock className="h-8 w-8 text-muted-foreground/45" />
                 </div>
               </CardContent>
             </Card>

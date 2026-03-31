@@ -146,16 +146,16 @@ function Toolbar({
       <div className="flex items-center gap-2 flex-wrap">
         {/* Search */}
         <div className="relative flex-1 max-w-56">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/30" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/55" />
           <input
             type="text"
             placeholder="Buscar eventos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white/4 border border-border/15 text-xs placeholder:text-muted-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/20"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20"
           />
           {search && (
-            <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground/30 hover:text-muted-foreground/50 cursor-pointer">
+            <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
               <X className="size-3" />
             </button>
           )}
@@ -193,7 +193,7 @@ function Toolbar({
                       <div className={cn("size-3.5 rounded border flex items-center justify-center", active ? "bg-primary border-primary" : "border-border/30")}>
                         {active && <Check className="size-2.5 text-primary-foreground" />}
                       </div>
-                      <cfg.icon className="size-3 text-muted-foreground/40" />
+                      <cfg.icon className="size-3 text-muted-foreground/60" />
                       <span className={cn(active ? "text-foreground" : "text-muted-foreground/60")}>{cfg.label}</span>
                     </button>
                   );
@@ -207,13 +207,13 @@ function Toolbar({
 
         {/* Date Nav */}
         <div className="flex items-center gap-1">
-          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/30 hover:text-muted-foreground/50 cursor-pointer">
+          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
             <ChevronLeft className="size-4" />
           </button>
           <button onClick={onToday} className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer">
             Hoje
           </button>
-          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/30 hover:text-muted-foreground/50 cursor-pointer">
+          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
             <ChevronRight className="size-4" />
           </button>
         </div>
@@ -222,7 +222,7 @@ function Toolbar({
         <div className="relative">
           <button
             onClick={() => setViewOpen(!viewOpen)}
-            className="p-1.5 rounded-lg hover:bg-white/4 border border-border/15 transition-colors text-muted-foreground/40 hover:text-muted-foreground/60 cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-white/4 border border-border/15 transition-colors text-muted-foreground/60 hover:text-muted-foreground/60 cursor-pointer"
           >
             <Eye className="size-4" />
           </button>
@@ -241,7 +241,7 @@ function Toolbar({
                   >
                     <span>{opt.label}</span>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[9px] text-muted-foreground/25">{opt.shortcut}</span>
+                      <span className="text-[9px] text-muted-foreground/50">{opt.shortcut}</span>
                       {view === opt.id && <Check className="size-3" />}
                     </div>
                   </button>
@@ -288,7 +288,7 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.c)} />
             <div className="flex items-baseline gap-1.5">
               <span className="font-display text-sm font-bold tabular-nums">{s.v}</span>
-              <span className="text-[9px] text-muted-foreground/35 hidden sm:inline">{s.l}</span>
+              <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.l}</span>
             </div>
           </div>
         ))}
@@ -300,14 +300,14 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
           const h = day.horas > 0 ? Math.max(14, (day.horas / maxH) * 100) : 6;
           return (
             <div key={day.dia} className="flex flex-col items-center gap-1 flex-1">
-              <span className={cn("text-[9px] tabular-nums font-medium", day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/40" : "text-muted-foreground/15")}>
+              <span className={cn("text-[9px] tabular-nums font-medium", day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60")}>
                 {day.eventos || "–"}
               </span>
               <div
                 className={cn("w-2.5 sm:w-3 rounded-full transition-all duration-500", intColor(day.horas), day.hoje && "ring-1 ring-primary/25 ring-offset-1 ring-offset-transparent")}
                 style={{ height: `${h}%`, minHeight: 4, maxHeight: 36 }}
               />
-              <span className={cn("text-[9px] font-medium", day.hoje ? "text-primary font-semibold" : "text-muted-foreground/30")}>
+              <span className={cn("text-[9px] font-medium", day.hoje ? "text-primary font-semibold" : "text-muted-foreground/55")}>
                 {day.dia}
               </span>
             </div>
@@ -357,7 +357,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
         {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((d) => (
-          <div key={d} className="text-center text-[10px] text-muted-foreground/40 font-medium py-1">{d}</div>
+          <div key={d} className="text-center text-[10px] text-muted-foreground/60 font-medium py-1">{d}</div>
         ))}
       </div>
 
@@ -382,7 +382,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
               <div className="flex items-center justify-center mb-0.5">
                 <span className={cn(
                   "text-[11px] tabular-nums font-medium size-6 flex items-center justify-center rounded-full",
-                  isDateToday ? "bg-primary text-primary-foreground font-bold" : isCurrentMonth ? "text-foreground/70" : "text-muted-foreground/25",
+                  isDateToday ? "bg-primary text-primary-foreground font-bold" : isCurrentMonth ? "text-foreground/70" : "text-muted-foreground/50",
                 )}>
                   {date.getDate()}
                 </span>
@@ -394,7 +394,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
                   <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
                 ))}
                 {overflow > 0 && (
-                  <button className="w-full text-center text-[9px] text-muted-foreground/40 hover:text-muted-foreground/60 py-0.5 cursor-pointer">
+                  <button className="w-full text-center text-[9px] text-muted-foreground/60 hover:text-muted-foreground/60 py-0.5 cursor-pointer">
                     +{overflow} mais
                   </button>
                 )}
@@ -420,7 +420,7 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
     <GlassPanel className="p-2 sm:p-3 overflow-hidden">
       {/* Header row: time + day labels */}
       <div className="grid grid-cols-8 border-b border-border/10 pb-1 mb-1">
-        <div className="text-[9px] text-muted-foreground/25" />
+        <div className="text-[9px] text-muted-foreground/50" />
         {days.map((d) => (
           <div key={d.toISOString()} className="text-center">
             <span className={cn("text-[10px] font-medium", isToday(d) ? "text-primary" : "text-muted-foreground/50")}>{weekdayShort(d)}</span>
@@ -441,7 +441,7 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
         if (!hasAllDay) return null;
         return (
           <div className="grid grid-cols-8 border-b border-border/10 pb-1 mb-1">
-            <div className="text-[8px] text-muted-foreground/20 flex items-center justify-end pr-2">dia inteiro</div>
+            <div className="text-[8px] text-muted-foreground/45 flex items-center justify-end pr-2">dia inteiro</div>
             {allDayByDay.map((dayEvents, i) => (
               <div key={i} className="px-0.5 space-y-0.5">
                 {dayEvents.map((ev) => (
@@ -459,7 +459,7 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
         {HOURS.map((hour) => (
           <div key={hour} className="contents">
             {/* Time label */}
-            <div className="text-[9px] tabular-nums text-muted-foreground/25 text-right pr-2 h-16 flex items-start -mt-1.5">
+            <div className="text-[9px] tabular-nums text-muted-foreground/50 text-right pr-2 h-16 flex items-start -mt-1.5">
               {String(hour).padStart(2, "0")}:00
             </div>
             {/* Day cells */}
@@ -519,14 +519,14 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
         </div>
         <div>
           <p className={cn("text-sm font-medium", isViewToday ? "text-primary" : "text-foreground/70")}>{weekdayFull(currentDate)}</p>
-          <p className="text-[10px] text-muted-foreground/40">{fmtDate(currentDate)} · {dayEvents.length} evento{dayEvents.length !== 1 ? "s" : ""}</p>
+          <p className="text-[10px] text-muted-foreground/60">{fmtDate(currentDate)} · {dayEvents.length} evento{dayEvents.length !== 1 ? "s" : ""}</p>
         </div>
       </div>
 
       {/* All-day events */}
       {allDay.length > 0 && (
         <div className="mb-3 pb-2 border-b border-border/10">
-          <span className="text-[9px] text-muted-foreground/25 uppercase tracking-wider font-medium">Dia inteiro</span>
+          <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider font-medium">Dia inteiro</span>
           <div className="mt-1 space-y-1">
             {allDay.map((ev) => (
               <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
@@ -544,7 +544,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
           return (
             <div key={hour} className="flex gap-3 h-16 relative">
               {/* Time label */}
-              <div className="w-12 shrink-0 text-right text-[10px] tabular-nums text-muted-foreground/25 -mt-1.5 pr-2">
+              <div className="w-12 shrink-0 text-right text-[10px] tabular-nums text-muted-foreground/50 -mt-1.5 pr-2">
                 {String(hour).padStart(2, "0")}:00
               </div>
               {/* Events area */}
@@ -597,9 +597,9 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
       <div className="space-y-0">
         {days.length === 0 && (
           <div className="py-16 flex flex-col items-center text-center">
-            <Calendar className="size-8 text-muted-foreground/20 mb-3" />
-            <p className="text-sm font-medium text-muted-foreground/40">Nenhum evento encontrado</p>
-            <p className="text-xs text-muted-foreground/25">nos próximos 30 dias</p>
+            <Calendar className="size-8 text-muted-foreground/45 mb-3" />
+            <p className="text-sm font-medium text-muted-foreground/60">Nenhum evento encontrado</p>
+            <p className="text-xs text-muted-foreground/50">nos próximos 30 dias</p>
           </div>
         )}
         {days.map(({ date, events: dayEvents }) => {
@@ -616,9 +616,9 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                 </div>
                 <div>
                   <span className={cn("text-xs font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
-                  <span className="text-[10px] text-muted-foreground/30 ml-2">{fmtDate(date)}</span>
+                  <span className="text-[10px] text-muted-foreground/55 ml-2">{fmtDate(date)}</span>
                 </div>
-                <span className="text-[9px] text-muted-foreground/20 ml-auto tabular-nums">{dayEvents.length}</span>
+                <span className="text-[9px] text-muted-foreground/45 ml-auto tabular-nums">{dayEvents.length}</span>
               </div>
 
               {/* Events */}
@@ -646,18 +646,18 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                       <div className="min-w-0 flex-1">
                         <p className={cn("text-xs font-medium truncate", c.text, past && "line-through")}>{ev.title}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] text-muted-foreground/40 tabular-nums">
+                          <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                             {ev.allDay ? "Dia inteiro" : `${fmtTime(ev.start)} – ${fmtTime(ev.end)}`}
                           </span>
                           {ev.location && (
                             <>
-                              <span className="text-muted-foreground/15">·</span>
-                              <span className="text-[10px] text-muted-foreground/30 truncate">{ev.location}</span>
+                              <span className="text-muted-foreground/60">·</span>
+                              <span className="text-[10px] text-muted-foreground/55 truncate">{ev.location}</span>
                             </>
                           )}
                         </div>
                       </div>
-                      <SrcIcon className="size-3 text-muted-foreground/20 shrink-0" />
+                      <SrcIcon className="size-3 text-muted-foreground/45 shrink-0" />
                     </button>
                   );
                 })}
@@ -714,14 +714,14 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
           <GlassPanel className="p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Clock className="size-3 text-muted-foreground/25" />
+                <Clock className="size-3 text-muted-foreground/50" />
                 <span className="text-[11px] font-medium text-muted-foreground/50">Linha do Tempo</span>
               </div>
               <div className="flex items-center gap-2">
                 {(["audiencias", "agenda", "expedientes"] as EventSource[]).map((s) => (
                   <div key={s} className="flex items-center gap-1">
                     <div className={cn("size-1.5 rounded-full", COLOR_MAP[SOURCE_CONFIG[s].defaultColor].dot)} />
-                    <span className="text-[8px] text-muted-foreground/25">{SOURCE_CONFIG[s].label}</span>
+                    <span className="text-[8px] text-muted-foreground/50">{SOURCE_CONFIG[s].label}</span>
                   </div>
                 ))}
               </div>
@@ -731,7 +731,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className="mb-3 pb-2 border-b border-border/8">
-                  <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/20 font-semibold">Dia inteiro</span>
+                  <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold">Dia inteiro</span>
                   <div className="mt-1 space-y-1">
                     {allDay.map((ev) => <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />)}
                   </div>
@@ -824,7 +824,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
                 { label: "Pauta da semana", icon: Calendar },
               ].map((a) => (
                 <button key={a.label} className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-white/4 transition-all cursor-pointer group">
-                  <a.icon className="size-2.5 text-muted-foreground/20 group-hover:text-primary/40 transition-colors" />
+                  <a.icon className="size-2.5 text-muted-foreground/45 group-hover:text-primary/40 transition-colors" />
                   {a.label}
                   <ArrowRight className="size-2 ml-auto opacity-0 group-hover:opacity-40 transition-opacity" />
                 </button>
@@ -850,7 +850,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
     <div className="flex items-stretch gap-3 py-1 group">
       <div className="w-11 shrink-0 flex flex-col items-end pt-2.5">
         <span className="text-[11px] tabular-nums font-medium text-foreground/60">{fmtTime(event.start)}</span>
-        <span className="text-[9px] tabular-nums text-muted-foreground/25">{fmtTime(event.end)}</span>
+        <span className="text-[9px] tabular-nums text-muted-foreground/50">{fmtTime(event.end)}</span>
       </div>
       <div className="flex flex-col items-center pt-3 shrink-0">
         <div className={cn("size-2 rounded-full", c.dot)} />
@@ -871,15 +871,15 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
                 </span>
               )}
             </div>
-            {event.processo && <span className="text-[9px] font-mono text-muted-foreground/30 tabular-nums">{event.processo}</span>}
+            {event.processo && <span className="text-[9px] font-mono text-muted-foreground/55 tabular-nums">{event.processo}</span>}
           </div>
         </div>
-        {event.description && <p className="text-[10px] text-muted-foreground/40 mt-1 truncate ml-8">{event.description}</p>}
+        {event.description && <p className="text-[10px] text-muted-foreground/60 mt-1 truncate ml-8">{event.description}</p>}
         <div className="flex items-center gap-2 mt-2 ml-8 flex-wrap">
           {event.location && (
             <div className="flex items-center gap-1">
-              <ModalIcon className="size-2 text-muted-foreground/25" />
-              <span className="text-[9px] text-muted-foreground/30 truncate max-w-40">{event.location}</span>
+              <ModalIcon className="size-2 text-muted-foreground/50" />
+              <span className="text-[9px] text-muted-foreground/55 truncate max-w-40">{event.location}</span>
             </div>
           )}
           {event.trt && <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{event.trt}</span>}
@@ -892,12 +892,12 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
             <>
               <div className="w-px h-3 bg-border/8 mx-0.5" />
               <div className="flex items-center gap-0.5">
-                <FileText className="size-2 text-muted-foreground/20" />
+                <FileText className="size-2 text-muted-foreground/45" />
                 <span className={cn("text-[9px] tabular-nums", event.prepDocsOk === event.prepDocs ? "text-success/50" : "text-warning/50")}>{event.prepDocsOk ?? 0}/{event.prepDocs}</span>
               </div>
               {event.prepTestemunhas !== undefined && event.prepTestemunhas > 0 && (
                 <div className="flex items-center gap-0.5">
-                  <Users className="size-2 text-muted-foreground/20" />
+                  <Users className="size-2 text-muted-foreground/45" />
                   <span className={cn("text-[9px] tabular-nums", event.prepTestemunhasOk === event.prepTestemunhas ? "text-success/50" : "text-warning/50")}>{event.prepTestemunhasOk ?? 0}/{event.prepTestemunhas}</span>
                 </div>
               )}
@@ -912,8 +912,8 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
 function PhaseLabel({ label, icon: Icon }: { label: string; icon: LucideIcon }) {
   return (
     <div className="flex items-center gap-2 pt-4 pb-1.5 first:pt-0">
-      <Icon className="size-2.5 text-muted-foreground/15" />
-      <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/20 font-semibold">{label}</span>
+      <Icon className="size-2.5 text-muted-foreground/60" />
+      <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold">{label}</span>
       <div className="flex-1 h-px bg-border/6" />
     </div>
   );
@@ -922,12 +922,12 @@ function PhaseLabel({ label, icon: Icon }: { label: string; icon: LucideIcon }) 
 function FocusSlot({ inicio, fim, label }: { inicio: string; fim: string; label?: string }) {
   return (
     <div className="flex items-center gap-3 py-1">
-      <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/20 shrink-0">{inicio}</span>
+      <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/45 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-success/25 shrink-0" />
       <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-success/10 bg-success/1.5">
         <Brain className="size-2.5 text-success/30" />
         <span className="text-[9px] text-success/40 font-medium">{label ?? "Foco"}</span>
-        <span className="text-[9px] tabular-nums text-muted-foreground/15 ml-auto">{inicio}–{fim}</span>
+        <span className="text-[9px] tabular-nums text-muted-foreground/60 ml-auto">{inicio}–{fim}</span>
       </div>
     </div>
   );
@@ -949,11 +949,11 @@ function TravelSlot({ minutes }: { minutes: number }) {
 function BreakSlot({ inicio, fim, label, icon: Icon }: { inicio: string; fim: string; label: string; icon: LucideIcon }) {
   return (
     <div className="flex items-center gap-3 py-1">
-      <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/15 shrink-0">{inicio}</span>
+      <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/60 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-muted-foreground/10 shrink-0" />
       <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-muted-foreground/8 bg-muted/1">
-        <Icon className="size-2.5 text-muted-foreground/20" />
-        <span className="text-[9px] text-muted-foreground/20 font-medium">{label}</span>
+        <Icon className="size-2.5 text-muted-foreground/45" />
+        <span className="text-[9px] text-muted-foreground/45 font-medium">{label}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/10 ml-auto">{inicio}–{fim}</span>
       </div>
     </div>
@@ -987,15 +987,15 @@ function PrepRadarItem({ event }: { event: MockCalendarEvent }) {
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-2">
           <h4 className="text-[10px] font-medium text-foreground truncate">{event.title}</h4>
-          <span className="text-[9px] tabular-nums text-muted-foreground/30 shrink-0">{fmtTime(event.start)}</span>
+          <span className="text-[9px] tabular-nums text-muted-foreground/55 shrink-0">{fmtTime(event.start)}</span>
         </div>
         <div className="mt-1.5 h-0.5 rounded-full bg-border/8 overflow-hidden">
           <div className={cn("h-full rounded-full transition-all duration-700", pct === 100 ? "bg-success/50" : pct >= 50 ? "bg-warning/50" : "bg-destructive/50")} style={{ width: `${pct}%` }} />
         </div>
         <div className="flex items-center justify-between mt-1">
-          <span className="text-[8px] text-muted-foreground/25">{event.prepDocsOk ?? 0}/{event.prepDocs} docs</span>
+          <span className="text-[8px] text-muted-foreground/50">{event.prepDocsOk ?? 0}/{event.prepDocs} docs</span>
           {event.prepTestemunhas !== undefined && event.prepTestemunhas > 0 && (
-            <span className="text-[8px] text-muted-foreground/25">{event.prepTestemunhasOk ?? 0}/{event.prepTestemunhas} test.</span>
+            <span className="text-[8px] text-muted-foreground/50">{event.prepTestemunhasOk ?? 0}/{event.prepTestemunhas} test.</span>
           )}
         </div>
       </div>
@@ -1015,7 +1015,7 @@ function AlertCard({ icon: Icon, title, desc, variant = "warning" }: { icon: Luc
       <Icon className={cn("size-3 mt-0.5 shrink-0", cfg.icon)} />
       <div className="min-w-0">
         <h4 className={cn("text-[10px] font-medium leading-tight", cfg.title)}>{title}</h4>
-        <p className="text-[9px] text-muted-foreground/30 mt-0.5 leading-relaxed">{desc}</p>
+        <p className="text-[9px] text-muted-foreground/55 mt-0.5 leading-relaxed">{desc}</p>
       </div>
     </div>
   );
@@ -1044,11 +1044,11 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
               <SrcIcon className={cn("size-4", c.text)} />
             </div>
             <div>
-              <p className="text-[9px] font-medium text-muted-foreground/40 uppercase tracking-wider">{isAgenda ? "Editar Evento" : "Detalhes do Evento"}</p>
+              <p className="text-[9px] font-medium text-muted-foreground/60 uppercase tracking-wider">{isAgenda ? "Editar Evento" : "Detalhes do Evento"}</p>
               <h2 className="text-sm font-heading font-semibold">{event.title}</h2>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/4 text-muted-foreground/30 cursor-pointer">
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/4 text-muted-foreground/55 cursor-pointer">
             <X className="size-4" />
           </button>
         </div>
@@ -1056,17 +1056,17 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
         {/* Source badge */}
         <div className="flex items-center gap-2">
           <span className={cn("text-[9px] font-semibold px-2 py-0.5 rounded-full", c.bg, c.text)}>{srcCfg.label}</span>
-          {event.processo && <span className="text-[10px] font-mono text-muted-foreground/30 tabular-nums">{event.processo}</span>}
+          {event.processo && <span className="text-[10px] font-mono text-muted-foreground/55 tabular-nums">{event.processo}</span>}
         </div>
 
         {/* Fields */}
         <div className="space-y-3">
           {/* Date/Time */}
           <div className="flex items-center gap-3 text-xs">
-            <Calendar className="size-3.5 text-muted-foreground/30" />
+            <Calendar className="size-3.5 text-muted-foreground/55" />
             <div>
               <p className="text-foreground/70">{fmtDateFull(event.start)}</p>
-              <p className="text-muted-foreground/40 tabular-nums">
+              <p className="text-muted-foreground/60 tabular-nums">
                 {event.allDay ? "Dia inteiro" : `${fmtTime(event.start)} – ${fmtTime(event.end)}`}
               </p>
             </div>
@@ -1075,7 +1075,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           {/* Location */}
           {event.location && (
             <div className="flex items-center gap-3 text-xs">
-              <MapPin className="size-3.5 text-muted-foreground/30" />
+              <MapPin className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.location}</p>
             </div>
           )}
@@ -1083,7 +1083,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           {/* Description */}
           {event.description && (
             <div className="flex items-start gap-3 text-xs">
-              <FileText className="size-3.5 text-muted-foreground/30 mt-0.5" />
+              <FileText className="size-3.5 text-muted-foreground/55 mt-0.5" />
               <p className="text-foreground/70">{event.description}</p>
             </div>
           )}
@@ -1091,7 +1091,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           {/* Responsável */}
           {event.responsavel && (
             <div className="flex items-center gap-3 text-xs">
-              <Users className="size-3.5 text-muted-foreground/30" />
+              <Users className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.responsavel}</p>
             </div>
           )}
@@ -1099,7 +1099,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           {/* Modalidade */}
           {event.modalidade && (
             <div className="flex items-center gap-3 text-xs">
-              {event.modalidade === "virtual" ? <Video className="size-3.5 text-muted-foreground/30" /> : <Building2 className="size-3.5 text-muted-foreground/30" />}
+              {event.modalidade === "virtual" ? <Video className="size-3.5 text-muted-foreground/55" /> : <Building2 className="size-3.5 text-muted-foreground/55" />}
               <p className="text-foreground/70 capitalize">{event.modalidade}</p>
             </div>
           )}
@@ -1107,7 +1107,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           {/* TRT */}
           {event.trt && (
             <div className="flex items-center gap-3 text-xs">
-              <Gavel className="size-3.5 text-muted-foreground/30" />
+              <Gavel className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.trt}</p>
             </div>
           )}

@@ -270,7 +270,7 @@ export default function SchemaCanvas({
     <div className="space-y-3">
       {schema.sections.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-12 gap-3">
-          <AlertCircle className="size-8 text-muted-foreground/40" />
+          <AlertCircle className="size-8 text-muted-foreground/60" />
           <div className="text-center space-y-1">
             <p className="text-xs font-medium text-muted-foreground">Nenhuma seção criada</p>
             <p className="text-[11px] text-muted-foreground/70">

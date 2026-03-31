@@ -221,11 +221,11 @@ export function WidgetScorePessoal() {
             { label: 'Documentos', val: 4, suffix: '', sub: 'editados' },
           ] as const).map((s) => (
             <div key={s.label} className="flex flex-col gap-0.5">
-              <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">{s.label}</span>
+              <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">{s.label}</span>
               <span className="font-display text-lg font-bold tabular-nums">
                 <AnimatedNumber value={s.val} suffix={s.suffix} />
               </span>
-              <span className="text-[9px] text-muted-foreground/35">{s.sub}</span>
+              <span className="text-[9px] text-muted-foreground/55">{s.sub}</span>
             </div>
           ))}
         </div>
@@ -265,11 +265,11 @@ export function WidgetHeatmapProdutividade() {
 
       {/* Legenda de intensidade */}
       <div className="flex items-center gap-1.5 mb-4">
-        <span className="text-[9px] text-muted-foreground/35">menos</span>
+        <span className="text-[9px] text-muted-foreground/55">menos</span>
         {['bg-border/10', 'bg-success/15', 'bg-success/30', 'bg-success/50', 'bg-success/80'].map((c, i) => (
           <div key={i} className={`size-3 rounded-[3px] ${c}`} />
         ))}
-        <span className="text-[9px] text-muted-foreground/35">mais</span>
+        <span className="text-[9px] text-muted-foreground/55">mais</span>
       </div>
 
       {/* Métricas abaixo */}
@@ -281,11 +281,11 @@ export function WidgetHeatmapProdutividade() {
           format="number"
         />
         <div className="flex flex-col gap-0.5">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Melhor dia
           </span>
           <span className="font-display text-lg font-bold">Quarta</span>
-          <span className="text-[9px] text-muted-foreground/35">avg 5.2 tarefas/dia</span>
+          <span className="text-[9px] text-muted-foreground/55">avg 5.2 tarefas/dia</span>
         </div>
       </div>
     </WidgetContainer>
@@ -432,7 +432,7 @@ export function WidgetMeuDia() {
                     <span
                       className={`text-[10px] font-medium truncate flex-1 ${
                         item.done
-                          ? 'line-through text-muted-foreground/30'
+                          ? 'line-through text-muted-foreground/55'
                           : isNext
                           ? 'text-foreground/90'
                           : 'text-foreground/70'
@@ -449,13 +449,13 @@ export function WidgetMeuDia() {
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <Icon
                       className={`size-2.5 shrink-0 ${
-                        item.done ? 'text-muted-foreground/20' : 'text-muted-foreground/40'
+                        item.done ? 'text-muted-foreground/45' : 'text-muted-foreground/60'
                       }`}
                     />
                     {item.time && (
                       <span
                         className={`text-[9px] tabular-nums ${
-                          item.done ? 'text-muted-foreground/25' : 'text-muted-foreground/40'
+                          item.done ? 'text-muted-foreground/50' : 'text-muted-foreground/60'
                         }`}
                       >
                         {item.time}
@@ -463,7 +463,7 @@ export function WidgetMeuDia() {
                     )}
                     <span
                       className={`text-[9px] capitalize ${
-                        item.done ? 'text-muted-foreground/20' : 'text-muted-foreground/35'
+                        item.done ? 'text-muted-foreground/45' : 'text-muted-foreground/55'
                       }`}
                     >
                       {item.type}
@@ -555,11 +555,11 @@ export function WidgetProdutividadeSemanal() {
           deltaType="neutral"
         />
         <div className="flex flex-col items-end gap-0.5">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">melhor dia</span>
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">melhor dia</span>
           <span className="text-base font-bold tabular-nums">
             {Math.max(...PRODUTIVIDADE_SEMANAL.map((d) => d.value))}
           </span>
-          <span className="text-[9px] text-muted-foreground/40">
+          <span className="text-[9px] text-muted-foreground/60">
             {PRODUTIVIDADE_SEMANAL.find((d) => d.value === maxVal)?.label}
           </span>
         </div>
@@ -607,13 +607,13 @@ export function WidgetLembretesAtivos() {
             <div className="flex items-center gap-1 shrink-0">
               {item.time ? (
                 <>
-                  <Clock className="size-2.5 text-muted-foreground/30" />
+                  <Clock className="size-2.5 text-muted-foreground/55" />
                   <span className="text-[10px] text-muted-foreground/50 tabular-nums">
                     {item.time}
                   </span>
                 </>
               ) : (
-                <span className="text-[9px] text-muted-foreground/30 italic">sem hora</span>
+                <span className="text-[9px] text-muted-foreground/55 italic">sem hora</span>
               )}
             </div>
           </ListItem>
@@ -621,7 +621,7 @@ export function WidgetLembretesAtivos() {
       </div>
 
       <div className="mt-3 pt-2 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">
+        <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
           próximo
         </span>
         <span className="text-[10px] text-primary/60 font-medium">
@@ -652,7 +652,7 @@ export function WidgetCapturaStatus() {
     >
       {/* Strip de status geral */}
       <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/3 border border-border/10 mb-3">
-        <RefreshCw className="size-3 text-muted-foreground/30" />
+        <RefreshCw className="size-3 text-muted-foreground/55" />
         <span className="text-[10px] text-muted-foreground/50 flex-1">
           Última sincronização
         </span>
@@ -693,7 +693,7 @@ export function WidgetCapturaStatus() {
 
       {(erros > 0 || sincronizando > 0) && (
         <div className="mt-3 pt-2 border-t border-border/10">
-          <p className="text-[9px] text-muted-foreground/35">
+          <p className="text-[9px] text-muted-foreground/55">
             {erros > 0 && (
               <span className="text-destructive/50">{erros} tribunal(is) com erro. </span>
             )}
@@ -734,9 +734,9 @@ export function WidgetChatAtivo() {
           <p className="text-lg font-bold tabular-nums">{CHAT_NAO_LIDAS}</p>
         </div>
         <div className="flex flex-col items-end gap-0.5">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">salas</span>
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">salas</span>
           <span className="text-base font-bold tabular-nums">{CHAT_SALAS}</span>
-          <span className="text-[9px] text-muted-foreground/35">ativas</span>
+          <span className="text-[9px] text-muted-foreground/55">ativas</span>
         </div>
       </div>
 
@@ -747,7 +747,7 @@ export function WidgetChatAtivo() {
           <span className="text-[10px] font-semibold text-foreground/70">
             {CHAT_ULTIMA_MSG.autor}
           </span>
-          <span className="text-[9px] text-muted-foreground/35 ml-auto tabular-nums">
+          <span className="text-[9px] text-muted-foreground/55 ml-auto tabular-nums">
             {CHAT_ULTIMA_MSG.tempo}
           </span>
         </div>
@@ -757,7 +757,7 @@ export function WidgetChatAtivo() {
       </div>
 
       <div className="mt-3 pt-2 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">
+        <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
           {CHAT_SALAS} salas — {CHAT_NAO_LIDAS} pendentes
         </span>
         <span className="text-[9px] text-primary/50 font-medium">ver todas</span>
@@ -798,7 +798,7 @@ export function WidgetDocumentosRecentes() {
                 <p className="text-[10px] font-medium text-foreground/75 truncate">
                   {doc.nome}
                 </p>
-                <p className="text-[9px] text-muted-foreground/40 mt-0.5">
+                <p className="text-[9px] text-muted-foreground/60 mt-0.5">
                   editado {doc.tempo}
                 </p>
               </div>
@@ -817,7 +817,7 @@ export function WidgetDocumentosRecentes() {
       </div>
 
       <div className="mt-3 pt-2 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">
+        <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
           {DOCUMENTOS_RECENTES.length} recentes
         </span>
         <span className="text-[9px] text-primary/50 font-medium">abrir todos</span>

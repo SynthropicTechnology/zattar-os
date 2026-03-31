@@ -37,7 +37,7 @@ import {
 const STATUS_SEGMENTS = [
   { value: 89, color: 'hsl(var(--primary))',       label: 'Ativos' },
   { value: 7,  color: 'hsl(var(--warning))',        label: 'Suspensos' },
-  { value: 31, color: 'hsl(var(--muted-foreground) / 0.3)', label: 'Arquivados' },
+  { value: 31, color: 'hsl(var(--muted-foreground) / 0.55)', label: 'Arquivados' },
   { value: 12, color: 'hsl(220 70% 60%)',           label: 'Em Recurso' },
 ];
 
@@ -109,7 +109,7 @@ export function WidgetStatusDistribuicao() {
               <span className="text-[10px] font-medium tabular-nums">
                 {fmtNum(seg.value)}
               </span>
-              <span className="text-[9px] text-muted-foreground/40 w-7 text-right tabular-nums">
+              <span className="text-[9px] text-muted-foreground/60 w-7 text-right tabular-nums">
                 {Math.round((seg.value / total) * 100)}%
               </span>
             </div>
@@ -189,8 +189,8 @@ export function WidgetTendenciaNovos() {
       <div className="flex items-end justify-between pt-2 border-t border-border/10">
         {MONTHLY_TREND.map((v, i) => (
           <div key={i} className="flex flex-col items-center gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 tabular-nums">{v}</span>
-            <span className="text-[8px] text-muted-foreground/30">{MONTH_LABELS[i]}</span>
+            <span className="text-[9px] text-muted-foreground/60 tabular-nums">{v}</span>
+            <span className="text-[8px] text-muted-foreground/55">{MONTH_LABELS[i]}</span>
           </div>
         ))}
       </div>
@@ -339,13 +339,13 @@ export function WidgetKpiPulse() {
             <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
               Taxa de Resolução
             </p>
-            <p className="text-[10px] text-muted-foreground/40 mt-0.5">
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">
               encerrados / (enc. + novos)
             </p>
           </div>
         </div>
         <div className="flex-1 flex flex-col items-end gap-1">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Tendência 8m
           </p>
           <Sparkline
@@ -425,14 +425,14 @@ export function WidgetSaudeProcessual() {
               format="number"
             />
             <div className="flex flex-col gap-1">
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
                 Tempo médio
               </p>
               <div className="flex items-baseline gap-2">
                 <span className="font-display text-lg font-bold">8,2 meses</span>
                 <span className="text-[10px] font-medium text-success/70">-9,9%</span>
               </div>
-              <p className="text-[9px] text-muted-foreground/30">anterior: 9,1 meses</p>
+              <p className="text-[9px] text-muted-foreground/55">anterior: 9,1 meses</p>
             </div>
           </div>
         </div>
@@ -472,7 +472,7 @@ export function WidgetHeatmapAtividade() {
         <CalendarHeatmap data={HEATMAP_DATA} colorScale="primary" />
         {/* Legend */}
         <div className="flex items-center gap-2">
-          <span className="text-[9px] text-muted-foreground/30">0</span>
+          <span className="text-[9px] text-muted-foreground/55">0</span>
           <div className="flex gap-0.5">
             {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map(
               (cls, i) => (
@@ -480,8 +480,8 @@ export function WidgetHeatmapAtividade() {
               )
             )}
           </div>
-          <span className="text-[9px] text-muted-foreground/30">5+</span>
-          <span className="text-[9px] text-muted-foreground/20 ml-1">
+          <span className="text-[9px] text-muted-foreground/55">5+</span>
+          <span className="text-[9px] text-muted-foreground/45 ml-1">
             baixo → alto
           </span>
         </div>
@@ -549,7 +549,7 @@ export function WidgetProcessosComTabs() {
               />
               <span className="text-[9px] text-muted-foreground/50">
                 {seg.label}{' '}
-                <span className="text-muted-foreground/30">
+                <span className="text-muted-foreground/55">
                   ({Math.round((seg.value / total) * 100)}%)
                 </span>
               </span>

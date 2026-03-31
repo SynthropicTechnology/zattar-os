@@ -126,7 +126,7 @@ export function AudienciasDayList({
       ) : (
         /* Empty state */
         <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-          <Calendar className="h-12 w-12 text-muted-foreground/30 mb-3" />
+          <Calendar className="h-12 w-12 text-muted-foreground/55 mb-3" />
           <p className="text-sm text-muted-foreground">
             Nenhuma audiência neste dia
           </p>

@@ -55,7 +55,7 @@ export function EntityListRow({ data, onClick, selected = false }: EntityListRow
       {/* Nome + documento */}
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{data.nome}</p>
-        <p className="text-[10px] text-muted-foreground/35 tabular-nums">{data.documentoMasked}</p>
+        <p className="text-[10px] text-muted-foreground/55 tabular-nums">{data.documentoMasked}</p>
       </div>
 
       {/* Tipo */}
@@ -66,22 +66,22 @@ export function EntityListRow({ data, onClick, selected = false }: EntityListRow
       </span>
 
       {/* Localização */}
-      <span className="text-[10px] text-muted-foreground/35 shrink-0 hidden md:block w-16 text-right">
+      <span className="text-[10px] text-muted-foreground/55 shrink-0 hidden md:block w-16 text-right">
         {data.localizacao.split(', ').at(-1)}
       </span>
 
       {/* Processos */}
       <span className="text-[10px] font-medium tabular-nums shrink-0 w-12 text-right">
         {data.metricas.ativos}
-        <span className="text-muted-foreground/25"> proc</span>
+        <span className="text-muted-foreground/50"> proc</span>
       </span>
 
       {/* Tempo */}
-      <span className="text-[9px] text-muted-foreground/25 shrink-0 w-14 text-right hidden lg:block">
+      <span className="text-[9px] text-muted-foreground/50 shrink-0 w-14 text-right hidden lg:block">
         {timeAgo(data.ultimaAtualizacao)}
       </span>
 
-      <ChevronRight className="size-3.5 text-muted-foreground/15 shrink-0" />
+      <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
     </div>
   );
 }

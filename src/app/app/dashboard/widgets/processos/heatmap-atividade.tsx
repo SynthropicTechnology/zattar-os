@@ -76,7 +76,7 @@ export function WidgetHeatmapAtividade() {
 
         {/* Legenda de intensidade */}
         <div className="flex items-center gap-2">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Intensidade:
           </span>
           <div className="flex items-center gap-1">
@@ -87,8 +87,8 @@ export function WidgetHeatmapAtividade() {
             <div className="size-3 rounded-[3px] bg-primary/80" />
           </div>
           <div className="flex items-center gap-1 ml-1">
-            <span className="text-[9px] text-muted-foreground/30">Nenhum</span>
-            <span className="text-[9px] text-muted-foreground/30">→</span>
+            <span className="text-[9px] text-muted-foreground/55">Nenhum</span>
+            <span className="text-[9px] text-muted-foreground/55">→</span>
             <span className="text-[9px] text-primary/60">Alto</span>
           </div>
         </div>
@@ -96,25 +96,25 @@ export function WidgetHeatmapAtividade() {
         {/* Estatísticas */}
         <div className="pt-3 border-t border-border/10 grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Média diária
             </span>
             <span className="font-display text-lg font-bold">{mediaFmt}</span>
-            <span className="text-[9px] text-muted-foreground/30">baixas / dia</span>
+            <span className="text-[9px] text-muted-foreground/55">baixas / dia</span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Pico
             </span>
             <span className="font-display text-lg font-bold">
               {fmtNum(pico)}
             </span>
-            <span className="text-[9px] text-muted-foreground/30">maior valor do período</span>
+            <span className="text-[9px] text-muted-foreground/55">maior valor do período</span>
           </div>
         </div>
 
         {porDia.length === 0 && (
-          <p className="text-[9px] text-muted-foreground/30 text-center">
+          <p className="text-[9px] text-muted-foreground/55 text-center">
             Dados de atividade diária em desenvolvimento para o perfil admin
           </p>
         )}

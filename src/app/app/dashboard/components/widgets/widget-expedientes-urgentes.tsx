@@ -62,7 +62,7 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
       <CardContent>
         {data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <AlertTriangle className="h-10 w-10 text-muted-foreground/30 mb-3" />
+            <AlertTriangle className="h-10 w-10 text-muted-foreground/55 mb-3" />
             <p className="text-sm text-muted-foreground">Nenhum expediente urgente</p>
           </div>
         ) : (

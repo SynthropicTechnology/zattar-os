@@ -254,10 +254,10 @@ export default function DashboardMockPage() {
             {/* Countdown */}
             <div className="flex items-baseline gap-1 tabular-nums shrink-0">
               <span className="text-4xl sm:text-5xl font-display font-bold tracking-tight">
-                {countdown.h > 0 && <>{countdown.h}<span className="text-muted-foreground/40">h</span>{' '}</>}
-                {String(countdown.m).padStart(2, '0')}<span className="text-muted-foreground/40">m</span>
+                {countdown.h > 0 && <>{countdown.h}<span className="text-muted-foreground/60">h</span>{' '}</>}
+                {String(countdown.m).padStart(2, '0')}<span className="text-muted-foreground/60">m</span>
               </span>
-              <span className="text-lg text-muted-foreground/40 font-mono">
+              <span className="text-lg text-muted-foreground/60 font-mono">
                 {String(countdown.s).padStart(2, '0')}s
               </span>
             </div>
@@ -347,7 +347,7 @@ export default function DashboardMockPage() {
                 <AlertCircle className="size-4 text-muted-foreground/50" />
                 <h2 className="font-heading text-sm font-semibold">Requer Atenção</h2>
               </div>
-              <span className="text-[10px] text-muted-foreground/40">
+              <span className="text-[10px] text-muted-foreground/60">
                 {MOCK.atencao.length} itens
               </span>
             </div>
@@ -367,7 +367,7 @@ export default function DashboardMockPage() {
                     </div>
                     <p className="text-[11px] text-muted-foreground/50 mt-0.5">{item.detalhe}</p>
                   </div>
-                  <ChevronRight className="size-4 text-muted-foreground/20 group-hover:text-muted-foreground/50 transition-colors shrink-0" />
+                  <ChevronRight className="size-4 text-muted-foreground/45 group-hover:text-muted-foreground/50 transition-colors shrink-0" />
                 </div>
               ))}
             </div>
@@ -380,7 +380,7 @@ export default function DashboardMockPage() {
                 <Clock className="size-4 text-muted-foreground/50" />
                 <h2 className="font-heading text-sm font-semibold">Meu Dia</h2>
               </div>
-              <span className="text-[10px] text-muted-foreground/40">
+              <span className="text-[10px] text-muted-foreground/60">
                 {MOCK.meuDia.filter(d => d.done).length}/{MOCK.meuDia.length}
               </span>
             </div>
@@ -407,12 +407,12 @@ export default function DashboardMockPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-baseline gap-2">
                           <span className={`text-[11px] tabular-nums shrink-0 ${
-                            isPast ? 'text-muted-foreground/30' : 'text-muted-foreground/60'
+                            isPast ? 'text-muted-foreground/55' : 'text-muted-foreground/60'
                           }`}>
                             {item.hora}
                           </span>
                           <span className={`text-sm truncate ${
-                            isPast ? 'text-muted-foreground/40 line-through' : ''
+                            isPast ? 'text-muted-foreground/60 line-through' : ''
                           } ${isNext ? 'font-medium' : ''}`}>
                             {item.titulo}
                           </span>
@@ -441,7 +441,7 @@ export default function DashboardMockPage() {
               {/* Mini sparkline */}
               <div className="flex items-center gap-3 shrink-0">
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground/40">Receita 6m</span>
+                  <span className="text-[10px] text-muted-foreground/60">Receita 6m</span>
                   <span className="text-sm font-semibold tabular-nums">{fmtMoeda(67500)}</span>
                 </div>
                 <Sparkline data={MOCK.financeiro.receita} />
@@ -451,7 +451,7 @@ export default function DashboardMockPage() {
 
               <div className="flex items-center gap-3 shrink-0">
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground/40">Despesa 6m</span>
+                  <span className="text-[10px] text-muted-foreground/60">Despesa 6m</span>
                   <span className="text-sm font-semibold tabular-nums">{fmtMoeda(32100)}</span>
                 </div>
                 <Sparkline data={MOCK.financeiro.despesa} alert />
@@ -478,7 +478,7 @@ export default function DashboardMockPage() {
         </GlassPanel>
 
         {/* Footer */}
-        <p className="text-center text-[10px] text-muted-foreground/25 pb-8">
+        <p className="text-center text-[10px] text-muted-foreground/50 pb-8">
           {'Protótipo v2 — "The Glass Briefing" — dados fictícios'}
         </p>
       </div>

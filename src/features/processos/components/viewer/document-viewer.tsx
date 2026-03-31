@@ -240,7 +240,7 @@ export function DocumentViewer({
           // Estado vazio — nenhum item selecionado
           <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
             <FileText
-              className="h-12 w-12 text-muted-foreground/30"
+              className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
             />
             <p className="text-sm text-muted-foreground">
@@ -270,7 +270,7 @@ export function DocumentViewer({
           // Item selecionado mas sem presigned URL (ex: sem backblaze)
           <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
             <FileText
-              className="h-12 w-12 text-muted-foreground/30"
+              className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
             />
             <p className="text-sm text-muted-foreground">

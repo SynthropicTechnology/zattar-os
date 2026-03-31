@@ -31,7 +31,7 @@ export const STATUS_CONFIG: Record<
   rascunho: {
     label: "Rascunho",
     color: "text-muted-foreground/50",
-    cssColor: "hsl(var(--muted-foreground) / 0.3)",
+    cssColor: "hsl(var(--muted-foreground) / 0.55)",
     icon: FileText,
     bg: "bg-muted-foreground/8",
   },
@@ -112,7 +112,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && (
-                <Camera className="size-3 text-muted-foreground/25" />
+                <Camera className="size-3 text-muted-foreground/50" />
               )}
               {doc.origem === "formulario" && (
                 <span className="text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40">
@@ -145,17 +145,17 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
         )}
 
         {doc.assinantes.length === 0 && doc.status === "rascunho" && (
-          <div className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/30">
+          <div className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/55">
             <Users className="size-3" />
             Sem assinantes configurados
           </div>
         )}
 
         <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-border/10">
-          <span className="text-[9px] text-muted-foreground/30">
+          <span className="text-[9px] text-muted-foreground/55">
             {doc.criadoPor}
           </span>
-          <span className="text-[9px] text-muted-foreground/25 flex items-center gap-1">
+          <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
             <Clock className="size-2.5" />
             {timeAgo(doc.atualizadoEm)}
           </span>

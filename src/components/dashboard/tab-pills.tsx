@@ -51,7 +51,7 @@ export function TabPills({ tabs, active, onChange }: TabPillsProps) {
           {tab.count !== undefined && (
             <span
               className={`text-[10px] tabular-nums ${
-                active === tab.id ? 'text-primary/50' : 'text-muted-foreground/30'
+                active === tab.id ? 'text-primary/50' : 'text-muted-foreground/55'
               }`}
             >
               {tab.count}

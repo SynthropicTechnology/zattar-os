@@ -112,7 +112,7 @@ export function WidgetTarefasStatus() {
       {/* Barra de progresso semanal */}
       <div className="mt-4 pt-3 border-t border-border/10 space-y-1.5">
         <div className="flex items-center justify-between">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Taxa de conclusão semanal
           </span>
           <span className="text-[10px] font-semibold tabular-nums">
@@ -125,7 +125,7 @@ export function WidgetTarefasStatus() {
             style={{ width: `${taxaSemana}%` }}
           />
         </div>
-        <p className="text-[9px] text-muted-foreground/30">
+        <p className="text-[9px] text-muted-foreground/55">
           Estimativa — dados completos de tarefas em desenvolvimento
         </p>
       </div>

@@ -80,7 +80,7 @@ export function PulseOrb({
             </div>
             <button
               onClick={handleDismissNudge}
-              className="shrink-0 mt-0.5 p-0.5 rounded-md text-muted-foreground/30 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
+              className="shrink-0 mt-0.5 p-0.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
             >
               <X className="size-3" />
             </button>
@@ -101,7 +101,7 @@ export function PulseOrb({
             >
               <Terminal className="size-3.5 text-primary/50" />
               Comando
-              <kbd className="ml-auto text-[8px] text-muted-foreground/25 font-mono">⌘J</kbd>
+              <kbd className="ml-auto text-[8px] text-muted-foreground/50 font-mono">⌘J</kbd>
             </button>
             <button
               onClick={() => handleMenuAction('briefing')}
@@ -109,7 +109,7 @@ export function PulseOrb({
             >
               <MessageSquare className="size-3.5 text-primary/50" />
               Conversa
-              <kbd className="ml-auto text-[8px] text-muted-foreground/25 font-mono">⌘⇧J</kbd>
+              <kbd className="ml-auto text-[8px] text-muted-foreground/50 font-mono">⌘⇧J</kbd>
             </button>
           </div>
         </div>

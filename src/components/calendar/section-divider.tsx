@@ -20,8 +20,8 @@ export interface SectionDividerProps {
 export function SectionDivider({ label, icon: Icon, className }: SectionDividerProps) {
   return (
     <div className={cn("flex items-center gap-2 pt-4 pb-1.5 first:pt-0", className)}>
-      {Icon && <Icon className="size-2.5 text-muted-foreground/15" />}
-      <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/20 font-semibold">
+      {Icon && <Icon className="size-2.5 text-muted-foreground/60" />}
+      <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold">
         {label}
       </span>
       <div className="flex-1 h-px bg-border/6" />

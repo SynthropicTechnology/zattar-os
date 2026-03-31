@@ -85,7 +85,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
         <div className="flex items-center gap-2 mb-3">
           <BarChart3 className="size-3 text-primary/40" />
           <span className="text-[11px] font-medium text-muted-foreground/50">Distribuição por tipo</span>
-          <span className="text-[9px] tabular-nums text-muted-foreground/25 ml-auto">{audiencias.length} total</span>
+          <span className="text-[9px] tabular-nums text-muted-foreground/50 ml-auto">{audiencias.length} total</span>
         </div>
 
         <div className="space-y-2">
@@ -95,7 +95,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
                 <span className="text-[10px] text-foreground/60 truncate max-w-[60%]">{item.tipo}</span>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-[10px] font-bold tabular-nums">{item.count}</span>
-                  <span className="text-[8px] text-muted-foreground/25 tabular-nums">{item.percent}%</span>
+                  <span className="text-[8px] text-muted-foreground/50 tabular-nums">{item.percent}%</span>
                 </div>
               </div>
               <div className="h-1 rounded-full bg-border/8 overflow-hidden">

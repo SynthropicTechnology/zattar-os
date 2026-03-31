@@ -81,14 +81,14 @@ export function WidgetLembretesAtivos() {
               <span className="text-[10px] text-foreground/75 flex-1 truncate leading-snug">
                 {lembrete.texto}
               </span>
-              <span className="text-[9px] text-muted-foreground/40 shrink-0 tabular-nums">
+              <span className="text-[9px] text-muted-foreground/60 shrink-0 tabular-nums">
                 {formatarHoraLembrete(lembrete.data_lembrete)}
               </span>
             </ListItem>
           ))}
 
           {ativos.length > 5 && (
-            <p className="text-[9px] text-muted-foreground/35 mt-1 pl-1">
+            <p className="text-[9px] text-muted-foreground/55 mt-1 pl-1">
               +{ativos.length - 5} lembrete{ativos.length - 5 > 1 ? 's' : ''} adicionais
             </p>
           )}

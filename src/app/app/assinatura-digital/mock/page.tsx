@@ -153,7 +153,7 @@ const STATS = {
 // ─── Helpers ────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<DocStatus, { label: string; color: string; cssColor: string; icon: typeof Clock; bg: string }> = {
-  rascunho: { label: 'Rascunho', color: 'text-muted-foreground/50', cssColor: 'hsl(var(--muted-foreground) / 0.3)', icon: FileText, bg: 'bg-muted-foreground/8' },
+  rascunho: { label: 'Rascunho', color: 'text-muted-foreground/50', cssColor: 'hsl(var(--muted-foreground) / 0.55)', icon: FileText, bg: 'bg-muted-foreground/8' },
   pronto: { label: 'Aguardando', color: 'text-warning/70', cssColor: 'hsl(var(--warning))', icon: Send, bg: 'bg-warning/8' },
   concluido: { label: 'Concluído', color: 'text-success/70', cssColor: 'hsl(var(--success))', icon: CheckCircle2, bg: 'bg-success/8' },
   cancelado: { label: 'Cancelado', color: 'text-destructive/50', cssColor: 'hsl(var(--destructive))', icon: XCircle, bg: 'bg-destructive/8' },
@@ -189,7 +189,7 @@ function SignaturePipeline() {
       <div className="flex items-center gap-2 mb-4">
         <GitBranch className="size-4 text-muted-foreground/50" />
         <h2 className="font-heading text-sm font-semibold">Pipeline de Assinaturas</h2>
-        <span className="text-[10px] text-muted-foreground/30 ml-auto">
+        <span className="text-[10px] text-muted-foreground/55 ml-auto">
           {STATS.cancelados} cancelado{STATS.cancelados !== 1 ? 's' : ''}
         </span>
       </div>
@@ -235,9 +235,9 @@ function StatsStrip() {
     <GlassPanel className="px-5 py-3">
       <div className="flex items-center gap-6 overflow-x-auto">
         <div className="flex items-center gap-2 shrink-0">
-          <FileSignature className="size-4 text-muted-foreground/30" />
+          <FileSignature className="size-4 text-muted-foreground/55" />
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Total</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Total</p>
             <p className="font-display text-lg font-bold tabular-nums">
               <AnimatedNumber value={STATS.total} />
             </p>
@@ -247,7 +247,7 @@ function StatsStrip() {
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Taxa Conclusão</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Taxa Conclusão</p>
           <div className="flex items-center gap-2">
             <ProgressRing percent={STATS.taxaConclusao} size={32} color="hsl(var(--success))" />
             <span className="text-xs font-bold text-success/70">{STATS.taxaConclusao}%</span>
@@ -257,16 +257,16 @@ function StatsStrip() {
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Tempo Médio</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tempo Médio</p>
           <p className="font-display text-base font-bold tabular-nums">{STATS.tempoMedio}d</p>
-          <p className="text-[9px] text-muted-foreground/30">para conclusão</p>
+          <p className="text-[9px] text-muted-foreground/55">para conclusão</p>
         </div>
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="flex items-center gap-3 shrink-0">
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Tendência 6m</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tendência 6m</p>
             <p className="text-xs font-semibold text-success/60">+3 este mês</p>
           </div>
           <Sparkline data={STATS.trendMensal} width={60} height={20} color="hsl(var(--success))" />
@@ -297,7 +297,7 @@ function DocumentCard({ doc, onSelect }: { doc: Documento; onSelect: (d: Documen
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}>
                 {cfg.label}
               </span>
-              {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/25" />}
+              {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/50" />}
               {doc.origem === 'formulario' && (
                 <span className="text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40">formulário</span>
               )}
@@ -323,15 +323,15 @@ function DocumentCard({ doc, onSelect }: { doc: Documento; onSelect: (d: Documen
         )}
 
         {doc.assinantes.length === 0 && doc.status === 'rascunho' && (
-          <div className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/30">
+          <div className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/55">
             <Users className="size-3" />
             Sem assinantes configurados
           </div>
         )}
 
         <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-border/10">
-          <span className="text-[9px] text-muted-foreground/30">{doc.criadoPor}</span>
-          <span className="text-[9px] text-muted-foreground/25 flex items-center gap-1">
+          <span className="text-[9px] text-muted-foreground/55">{doc.criadoPor}</span>
+          <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
             <Clock className="size-2.5" />
             {timeAgo(doc.atualizadoEm)}
           </span>
@@ -352,7 +352,7 @@ function SignerPill({ assinante: a }: { assinante: Assinante }) {
           ? 'bg-success/6 border-success/15 text-success/60'
           : isLate
           ? 'bg-warning/6 border-warning/15 text-warning/60'
-          : 'bg-border/6 border-border/15 text-muted-foreground/40'
+          : 'bg-border/6 border-border/15 text-muted-foreground/60'
       }`}
     >
       {isDone ? <CheckCircle2 className="size-2.5" /> : <Clock className="size-2.5" />}
@@ -384,7 +384,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && (
-                <span className="text-[8px] flex items-center gap-0.5 text-muted-foreground/30">
+                <span className="text-[8px] flex items-center gap-0.5 text-muted-foreground/55">
                   <Camera className="size-2.5" /> Selfie
                 </span>
               )}
@@ -397,7 +397,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
           </div>
         </div>
         <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer">
-          <X className="size-4 text-muted-foreground/40" />
+          <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
 
@@ -411,7 +411,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
           />
           <div>
             <p className="text-sm font-bold">{progress.signed}/{progress.total} assinantes</p>
-            <p className="text-[10px] text-muted-foreground/40">
+            <p className="text-[10px] text-muted-foreground/60">
               {progress.percent === 100 ? 'Todos assinaram' : `${progress.total - progress.signed} pendente${progress.total - progress.signed > 1 ? 's' : ''}`}
             </p>
           </div>
@@ -421,7 +421,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
       {/* Signers list */}
       <div className="mb-4">
         <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
-          <Users className="size-3.5 text-muted-foreground/40" />
+          <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
         </h3>
         <div className="space-y-1.5">
@@ -436,7 +436,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
                   <p className="text-[11px] font-medium">{a.nome}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     {a.email && (
-                      <span className="text-[9px] text-muted-foreground/30 flex items-center gap-0.5">
+                      <span className="text-[9px] text-muted-foreground/55 flex items-center gap-0.5">
                         <Mail className="size-2" />{a.email}
                       </span>
                     )}
@@ -451,14 +451,14 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
                   ) : isLate ? (
                     <span className="text-[9px] text-warning/60">{a.diasPendente}d pendente</span>
                   ) : (
-                    <span className="text-[9px] text-muted-foreground/30">Pendente</span>
+                    <span className="text-[9px] text-muted-foreground/55">Pendente</span>
                   )}
                 </div>
               </div>
             );
           })}
           {doc.assinantes.length === 0 && (
-            <p className="text-[10px] text-muted-foreground/30 text-center py-4">Sem assinantes configurados</p>
+            <p className="text-[10px] text-muted-foreground/55 text-center py-4">Sem assinantes configurados</p>
           )}
         </div>
       </div>
@@ -466,19 +466,19 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
       {/* Metadata */}
       <div className="grid grid-cols-2 gap-2 mb-4 text-[10px]">
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">Criado por</p>
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Criado por</p>
           <p className="font-medium mt-0.5">{doc.criadoPor}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">Criado em</p>
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Criado em</p>
           <p className="font-medium mt-0.5">{new Date(doc.criadoEm).toLocaleDateString('pt-BR')}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">Atualizado</p>
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Atualizado</p>
           <p className="font-medium mt-0.5">{timeAgo(doc.atualizadoEm)}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">Verificação</p>
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Verificação</p>
           <p className="font-medium mt-0.5 flex items-center gap-1 text-success/60">
             <Shield className="size-2.5" /> Íntegro
           </p>
@@ -527,13 +527,13 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
 
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{doc.titulo}</p>
-        <p className="text-[10px] text-muted-foreground/30">{doc.criadoPor} &middot; {timeAgo(doc.criadoEm)}</p>
+        <p className="text-[10px] text-muted-foreground/55">{doc.criadoPor} &middot; {timeAgo(doc.criadoEm)}</p>
       </div>
 
       {doc.assinantes.length > 0 && (
         <div className="flex items-center gap-1.5 shrink-0">
           <ProgressRing percent={progress.percent} size={24} color={progress.percent === 100 ? 'hsl(var(--success))' : 'hsl(var(--primary))'} />
-          <span className="text-[10px] tabular-nums text-muted-foreground/40">{progress.signed}/{progress.total}</span>
+          <span className="text-[10px] tabular-nums text-muted-foreground/60">{progress.signed}/{progress.total}</span>
         </div>
       )}
 
@@ -542,11 +542,11 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
       </span>
 
       <div className="items-center gap-1 shrink-0 hidden md:flex">
-        {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/20" />}
+        {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/45" />}
         {doc.origem === 'formulario' && <FileText className="size-3 text-info/30" />}
       </div>
 
-      <ChevronRight className="size-3.5 text-muted-foreground/15 shrink-0" />
+      <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
     </div>
   );
 }
@@ -651,9 +651,9 @@ export default function AssinaturaDigitalMockPage() {
             )
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FileSignature className="size-8 text-muted-foreground/20 mb-3" />
+              <FileSignature className="size-8 text-muted-foreground/45 mb-3" />
               <p className="text-sm font-medium text-muted-foreground/50">Nenhum documento encontrado</p>
-              <p className="text-xs text-muted-foreground/30 mt-1">Tente ajustar os filtros ou a busca</p>
+              <p className="text-xs text-muted-foreground/55 mt-1">Tente ajustar os filtros ou a busca</p>
             </div>
           )}
         </div>
@@ -667,7 +667,7 @@ export default function AssinaturaDigitalMockPage() {
       </div>
 
       {/* ── Footer ──────────────────────────────────────── */}
-      <p className="text-center text-[10px] text-muted-foreground/25 pb-4">
+      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
         {'Protótipo — Signature Command Center — dados fictícios'}
       </p>
     </div>

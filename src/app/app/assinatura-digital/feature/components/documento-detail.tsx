@@ -48,7 +48,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && (
-                <span className="text-[8px] flex items-center gap-0.5 text-muted-foreground/30">
+                <span className="text-[8px] flex items-center gap-0.5 text-muted-foreground/55">
                   <Camera className="size-2.5" /> Selfie
                 </span>
               )}
@@ -64,7 +64,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           onClick={onClose}
           className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer"
         >
-          <X className="size-4 text-muted-foreground/40" />
+          <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
 
@@ -84,7 +84,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             <p className="text-sm font-bold">
               {progress.signed}/{progress.total} assinantes
             </p>
-            <p className="text-[10px] text-muted-foreground/40">
+            <p className="text-[10px] text-muted-foreground/60">
               {progress.percent === 100
                 ? "Todos assinaram"
                 : `${progress.total - progress.signed} pendente${progress.total - progress.signed > 1 ? "s" : ""}`}
@@ -96,7 +96,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       {/* Signers list */}
       <div className="mb-4">
         <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
-          <Users className="size-3.5 text-muted-foreground/40" />
+          <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
         </h3>
         <div className="space-y-1.5">
@@ -123,7 +123,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                   <p className="text-[11px] font-medium">{a.nome}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     {a.email && (
-                      <span className="text-[9px] text-muted-foreground/30 flex items-center gap-0.5">
+                      <span className="text-[9px] text-muted-foreground/55 flex items-center gap-0.5">
                         <Mail className="size-2" />
                         {a.email}
                       </span>
@@ -141,7 +141,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                       {a.diasPendente}d pendente
                     </span>
                   ) : (
-                    <span className="text-[9px] text-muted-foreground/30">
+                    <span className="text-[9px] text-muted-foreground/55">
                       Pendente
                     </span>
                   )}
@@ -150,7 +150,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             );
           })}
           {doc.assinantes.length === 0 && (
-            <p className="text-[10px] text-muted-foreground/30 text-center py-4">
+            <p className="text-[10px] text-muted-foreground/55 text-center py-4">
               Sem assinantes configurados
             </p>
           )}
@@ -160,13 +160,13 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       {/* Metadata */}
       <div className="grid grid-cols-2 gap-2 mb-4 text-[10px]">
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
             Criado por
           </p>
           <p className="font-medium mt-0.5">{doc.criadoPor}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
             Criado em
           </p>
           <p className="font-medium mt-0.5">
@@ -174,13 +174,13 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           </p>
         </div>
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
             Atualizado
           </p>
           <p className="font-medium mt-0.5">{timeAgo(doc.atualizadoEm)}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/30 uppercase tracking-wider text-[9px]">
+          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
             Verificação
           </p>
           <p className="font-medium mt-0.5 flex items-center gap-1 text-success/60">

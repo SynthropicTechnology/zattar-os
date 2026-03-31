@@ -118,7 +118,7 @@ describe('SignerPill', () => {
 
     const pill = container.firstElementChild!;
     expect(pill.className).toContain('bg-border/6');
-    expect(pill.className).toContain('text-muted-foreground/40');
+    expect(pill.className).toContain('text-muted-foreground/60');
   });
 
   it('deve renderizar assinante atrasado (>7d) com estilo warning', () => {

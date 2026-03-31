@@ -63,7 +63,7 @@ export function WidgetContainer({
           {Icon && <Icon className="size-4 text-muted-foreground/50" />}
           <div>
             <h3 className="font-heading text-sm font-semibold">{title}</h3>
-            {subtitle && <p className="text-[10px] text-muted-foreground/40">{subtitle}</p>}
+            {subtitle && <p className="text-[10px] text-muted-foreground/60">{subtitle}</p>}
           </div>
         </div>
         {action}
@@ -197,7 +197,7 @@ export function MiniBar({
               />
             )}
           </div>
-          <span className="text-[9px] text-muted-foreground/40">{d.label}</span>
+          <span className="text-[9px] text-muted-foreground/60">{d.label}</span>
         </div>
       ))}
     </div>
@@ -509,7 +509,7 @@ export function CalendarHeatmap({
       {/* Day labels */}
       <div className="flex flex-col gap-0.5 mr-0.5">
         {days.map((d, i) => (
-          <div key={i} className="size-3.5 flex items-center justify-center text-[7px] text-muted-foreground/30">
+          <div key={i} className="size-3.5 flex items-center justify-center text-[7px] text-muted-foreground/55">
             {d}
           </div>
         ))}
@@ -596,7 +596,7 @@ export function GaugeMeter({
       </svg>
       <div className="flex flex-col items-center -mt-5">
         <span className="font-display text-xl font-bold">{value}</span>
-        {label && <span className="text-[9px] text-muted-foreground/40">{label}</span>}
+        {label && <span className="text-[9px] text-muted-foreground/60">{label}</span>}
       </div>
     </div>
   );
@@ -723,14 +723,14 @@ export function ComparisonStat({
 
   return (
     <div className="flex flex-col gap-1">
-      <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">{label}</p>
+      <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">{label}</p>
       <div className="flex items-baseline gap-2">
         <span className="font-display text-lg font-bold">{fmt(current)}</span>
         <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
           {isPositive ? '+' : ''}{pctChange.toFixed(1)}%
         </span>
       </div>
-      <p className="text-[9px] text-muted-foreground/30">
+      <p className="text-[9px] text-muted-foreground/55">
         anterior: {fmt(previous)}
       </p>
     </div>

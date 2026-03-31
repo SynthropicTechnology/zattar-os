@@ -45,8 +45,8 @@ const VARIANT_CONFIG: Record<TimeSlotVariant, {
     icon: Coffee,
     defaultLabel: "Intervalo",
     containerClass: "border-dashed border-muted-foreground/8 bg-muted/[0.01]",
-    iconClass: "text-muted-foreground/20",
-    labelClass: "text-muted-foreground/20",
+    iconClass: "text-muted-foreground/45",
+    labelClass: "text-muted-foreground/45",
     dotClass: "border-dashed border-muted-foreground/10",
   },
   travel: {
@@ -89,7 +89,7 @@ export function TimeSlotIndicator({
   // Focus and break variants: full width with time range
   return (
     <div className={cn("flex items-center gap-3 py-1", className)}>
-      <span className={cn("text-right text-[10px] tabular-nums shrink-0", labelWidth, variant === "break" ? "text-muted-foreground/15" : "text-muted-foreground/20")}>
+      <span className={cn("text-right text-[10px] tabular-nums shrink-0", labelWidth, variant === "break" ? "text-muted-foreground/60" : "text-muted-foreground/45")}>
         {startTime}
       </span>
       <div className={cn("size-1.5 rounded-full border shrink-0", cfg.dotClass)} />
@@ -97,7 +97,7 @@ export function TimeSlotIndicator({
         <Icon className={cn("size-2.5", cfg.iconClass)} />
         <span className={cn("text-[9px] font-medium", cfg.labelClass)}>{displayLabel}</span>
         {endTime && (
-          <span className="text-[9px] tabular-nums text-muted-foreground/15 ml-auto">
+          <span className="text-[9px] tabular-nums text-muted-foreground/60 ml-auto">
             {startTime}–{endTime}
           </span>
         )}

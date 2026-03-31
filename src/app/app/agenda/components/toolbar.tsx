@@ -161,13 +161,13 @@ export function AgendaToolbar({
 
         {/* Date Nav */}
         <div className="flex items-center gap-1">
-          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/30 hover:text-muted-foreground/50 cursor-pointer">
+          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
             <ChevronLeft className="size-4" />
           </button>
           <button onClick={onToday} className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer">
             Hoje
           </button>
-          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/30 hover:text-muted-foreground/50 cursor-pointer">
+          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
             <ChevronRight className="size-4" />
           </button>
         </div>

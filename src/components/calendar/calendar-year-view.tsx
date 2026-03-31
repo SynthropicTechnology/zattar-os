@@ -101,7 +101,7 @@ export function CalendarYearView({ singleDayEvents, multiDayEvents }: IProps) {
 											key={cell.date.toISOString()}
 											className={cn(
 												"flex flex-col items-center justify-start p-1 min-h-[2rem] relative",
-												!isCurrentMonth && "text-muted-foreground/40",
+												!isCurrentMonth && "text-muted-foreground/60",
 												hasEvents && isCurrentMonth
 													? "cursor-pointer hover:bg-accent/20 hover:rounded-md"
 													: "cursor-default",

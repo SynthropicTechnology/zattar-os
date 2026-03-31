@@ -82,7 +82,7 @@ export function AlertCard({
       <div className="min-w-0">
         <h4 className={cn("text-[10px] font-medium leading-tight", styles.title)}>{title}</h4>
         {description && (
-          <p className="text-[9px] text-muted-foreground/30 mt-0.5 leading-relaxed">{description}</p>
+          <p className="text-[9px] text-muted-foreground/55 mt-0.5 leading-relaxed">{description}</p>
         )}
       </div>
     </div>

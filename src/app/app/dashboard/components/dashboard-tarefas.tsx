@@ -143,7 +143,7 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
       <CardContent className="space-y-3">
         {tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <CheckSquare className="size-12 text-muted-foreground/30" />
+            <CheckSquare className="size-12 text-muted-foreground/55" />
             <p className="mt-4 text-sm text-muted-foreground">Nenhuma tarefa por aqui!</p>
             <p className="text-sm text-muted-foreground">
               Clique no <span className="font-medium text-primary">+</span> para criar uma.

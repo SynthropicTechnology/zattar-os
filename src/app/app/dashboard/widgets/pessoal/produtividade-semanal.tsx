@@ -97,7 +97,7 @@ export function WidgetProdutividadeSemanal() {
     >
       <div className="flex items-end justify-between gap-2 mb-3">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Total semana
           </span>
           <span className="font-display text-lg font-bold tabular-nums">
@@ -105,7 +105,7 @@ export function WidgetProdutividadeSemanal() {
           </span>
         </div>
         <div className="flex flex-col items-end gap-0.5">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Média diária
           </span>
           <span className="font-display text-base font-bold tabular-nums text-primary/80">
@@ -118,7 +118,7 @@ export function WidgetProdutividadeSemanal() {
 
       {melhorDia && (
         <div className="mt-3 pt-3 border-t border-border/10 flex items-center justify-between">
-          <span className="text-[9px] text-muted-foreground/40">
+          <span className="text-[9px] text-muted-foreground/60">
             Melhor dia: {getDiaSemanaLabel(melhorDia.data)}
           </span>
           <span className="text-[9px] font-semibold tabular-nums text-primary/70">

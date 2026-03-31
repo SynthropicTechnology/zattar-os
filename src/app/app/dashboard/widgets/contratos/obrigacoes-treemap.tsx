@@ -34,7 +34,7 @@ export function WidgetObrigacoesTreemap() {
           className="rounded-lg border border-border/10 bg-border/5 flex items-center justify-center"
           style={{ height: 80 }}
         >
-          <p className="text-[10px] text-muted-foreground/30 italic">
+          <p className="text-[10px] text-muted-foreground/55 italic">
             Aguardando dados de contratos...
           </p>
         </div>
@@ -52,10 +52,10 @@ export function WidgetObrigacoesTreemap() {
                 className="size-2.5 rounded-[3px] shrink-0"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-[10px] text-muted-foreground/35 truncate">
+              <span className="text-[10px] text-muted-foreground/55 truncate">
                 {item.label}
               </span>
-              <span className="text-[10px] text-muted-foreground/25 ml-auto tabular-nums">
+              <span className="text-[10px] text-muted-foreground/50 ml-auto tabular-nums">
                 —
               </span>
             </div>

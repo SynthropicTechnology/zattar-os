@@ -179,7 +179,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
     <GlassPanel depth={1} className="p-12">
       <div className="flex flex-col items-center justify-center text-center gap-4">
         <div className="size-14 rounded-2xl border border-border/20 bg-white/3 flex items-center justify-center">
-          <LayoutGrid className="size-6 text-muted-foreground/30" />
+          <LayoutGrid className="size-6 text-muted-foreground/55" />
         </div>
         <div>
           <p className="font-heading text-base font-semibold text-foreground/70">

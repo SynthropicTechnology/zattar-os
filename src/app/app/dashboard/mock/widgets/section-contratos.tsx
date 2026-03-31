@@ -208,7 +208,7 @@ export function WidgetStatusContratos() {
               <span className="text-[10px] font-medium tabular-nums">
                 {fmtNum(seg.value)}
               </span>
-              <span className="text-[9px] text-muted-foreground/40 w-7 text-right tabular-nums">
+              <span className="text-[9px] text-muted-foreground/60 w-7 text-right tabular-nums">
                 {Math.round((seg.value / total) * 100)}%
               </span>
             </div>
@@ -281,7 +281,7 @@ export function WidgetObrigacoesVencer() {
                 >
                   {ob.tipo}
                 </span>
-                <span className="text-[9px] text-muted-foreground/40">
+                <span className="text-[9px] text-muted-foreground/60">
                   vence {fmtData(ob.vencimento)}
                 </span>
               </div>
@@ -320,7 +320,7 @@ export function WidgetParcelasStatus() {
               <div className="min-w-0">
                 <p className="text-[9px] text-muted-foreground/50 truncate">{seg.label}</p>
                 <p className="text-[10px] font-semibold tabular-nums">{seg.value}</p>
-                <p className="text-[9px] text-muted-foreground/40 tabular-nums">{pct}%</p>
+                <p className="text-[9px] text-muted-foreground/60 tabular-nums">{pct}%</p>
               </div>
             </div>
           );
@@ -374,26 +374,26 @@ export function WidgetRepassesPendentes() {
                     {statusInfo.label}
                   </span>
                 </div>
-                <span className="text-[9px] text-muted-foreground/35 font-mono truncate">
+                <span className="text-[9px] text-muted-foreground/55 font-mono truncate">
                   {rep.processo}
                 </span>
                 <div className="flex items-center gap-3 mt-0.5">
                   <div className="flex items-center gap-1">
-                    <span className="text-[9px] text-muted-foreground/40">Cliente</span>
+                    <span className="text-[9px] text-muted-foreground/60">Cliente</span>
                     <span className="text-[9px] font-semibold text-primary/70 tabular-nums">
                       {fmtMoeda(valorCliente)}
                     </span>
-                    <span className="text-[8px] text-muted-foreground/30">
+                    <span className="text-[8px] text-muted-foreground/55">
                       ({rep.pctCliente}%)
                     </span>
                   </div>
-                  <span className="text-[9px] text-muted-foreground/20">·</span>
+                  <span className="text-[9px] text-muted-foreground/45">·</span>
                   <div className="flex items-center gap-1">
-                    <span className="text-[9px] text-muted-foreground/40">Escrit.</span>
+                    <span className="text-[9px] text-muted-foreground/60">Escrit.</span>
                     <span className="text-[9px] font-semibold tabular-nums text-muted-foreground/60">
                       {fmtMoeda(valorEscritorio)}
                     </span>
-                    <span className="text-[8px] text-muted-foreground/30">
+                    <span className="text-[8px] text-muted-foreground/55">
                       ({rep.pctEscritorio}%)
                     </span>
                   </div>
@@ -406,7 +406,7 @@ export function WidgetRepassesPendentes() {
 
       <div className="border-t border-border/10 mt-1 pt-2.5">
         <div className="flex items-center justify-between">
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Total pendente de repasse
           </span>
           <span className="text-[10px] font-bold tabular-nums text-warning/80">
@@ -482,7 +482,7 @@ export function WidgetModeloCobranca() {
             <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
               Taxa de Realizacao
             </p>
-            <p className="text-[10px] text-muted-foreground/40 mt-0.5">
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">
               exito efetivamente cobrado
             </p>
           </div>
@@ -491,7 +491,7 @@ export function WidgetModeloCobranca() {
 
       {/* Trend bar: pro labore vs pro êxito por mês */}
       <div>
-        <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider mb-2">
+        <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-2">
           Receita realizada — ultimos 3 meses
         </p>
         <MiniBar
@@ -503,11 +503,11 @@ export function WidgetModeloCobranca() {
         <div className="flex items-center gap-3 mt-2">
           <div className="flex items-center gap-1.5">
             <span className="size-2 rounded-sm bg-muted-foreground/30" />
-            <span className="text-[9px] text-muted-foreground/40">Pro Labore</span>
+            <span className="text-[9px] text-muted-foreground/60">Pro Labore</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="size-2 rounded-sm bg-primary/50" />
-            <span className="text-[9px] text-muted-foreground/40">Pro Exito</span>
+            <span className="text-[9px] text-muted-foreground/60">Pro Exito</span>
           </div>
         </div>
       </div>
@@ -537,7 +537,7 @@ export function WidgetSaudeContratual() {
             status="good"
             size={110}
           />
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider mt-1">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mt-1">
             Score contratual
           </p>
         </div>

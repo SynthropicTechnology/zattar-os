@@ -76,7 +76,7 @@ export function ContratoListRow({
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{c.cliente}</p>
         {c.parteContraria && (
-          <p className="text-[10px] text-muted-foreground/30 truncate">vs. {c.parteContraria}</p>
+          <p className="text-[10px] text-muted-foreground/55 truncate">vs. {c.parteContraria}</p>
         )}
       </div>
 
@@ -103,13 +103,13 @@ export function ContratoListRow({
       {/* Days */}
       <span
         className={`text-[9px] shrink-0 w-10 text-right ${
-          isStuck ? 'text-warning/60' : 'text-muted-foreground/25'
+          isStuck ? 'text-warning/60' : 'text-muted-foreground/50'
         }`}
       >
         {c.diasNoEstagio}d
       </span>
 
-      <ChevronRight className="size-3.5 text-muted-foreground/15 shrink-0" />
+      <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
     </div>
   );
 }

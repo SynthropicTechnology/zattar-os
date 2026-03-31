@@ -60,8 +60,8 @@ function fmtDataAudiencia(dateStr: string): string {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-8 gap-2">
-      <Calendar className="size-8 text-muted-foreground/20" />
-      <p className="text-[11px] text-muted-foreground/40 text-center">
+      <Calendar className="size-8 text-muted-foreground/45" />
+      <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhuma audiência agendada nos próximos 30 dias
       </p>
     </div>
@@ -103,7 +103,7 @@ function AudienciaItem({
             )}
           </div>
           <p className="text-[11px] font-medium mt-1 truncate">{parte}</p>
-          <p className="text-[9px] text-muted-foreground/40 font-mono truncate">
+          <p className="text-[9px] text-muted-foreground/60 font-mono truncate">
             {audiencia.numero_processo}
           </p>
         </div>
@@ -121,7 +121,7 @@ function AudienciaItem({
         </div>
       </div>
       {audiencia.local && (
-        <div className="flex items-center gap-1 mt-1.5 text-[9px] text-muted-foreground/40">
+        <div className="flex items-center gap-1 mt-1.5 text-[9px] text-muted-foreground/60">
           <MapPin className="size-2.5 shrink-0" />
           <span className="truncate">{audiencia.local}</span>
         </div>
@@ -147,7 +147,7 @@ export function ProximasAudiencias() {
         subtitle="Agenda dos próximos 30 dias"
         className="md:col-span-2"
       >
-        <p className="text-[11px] text-muted-foreground/40 py-4 text-center">
+        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
           Não foi possível carregar as audiências.
         </p>
       </WidgetContainer>

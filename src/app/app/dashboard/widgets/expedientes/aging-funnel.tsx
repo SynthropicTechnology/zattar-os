@@ -81,7 +81,7 @@ export function AgingFunnel() {
       label: 'Restantes',
       count: restantes,
       level: 'baixo',
-      color: 'hsl(var(--muted-foreground) / 0.35)',
+      color: 'hsl(var(--muted-foreground) / 0.55)',
     },
   ];
 
@@ -126,7 +126,7 @@ export function AgingFunnel() {
       </div>
 
       <div className="mt-4 pt-3 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground/40 uppercase tracking-wide">
+        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">
           Total
         </span>
         <span className="text-sm font-bold">{fmtNum(totalExibido)}</span>

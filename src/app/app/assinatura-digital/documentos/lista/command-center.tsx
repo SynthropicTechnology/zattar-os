@@ -158,11 +158,11 @@ export function DocumentosCommandCenter({
             )
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FileSignature className="size-8 text-muted-foreground/20 mb-3" />
+              <FileSignature className="size-8 text-muted-foreground/45 mb-3" />
               <p className="text-sm font-medium text-muted-foreground/50">
                 Nenhum documento encontrado
               </p>
-              <p className="text-xs text-muted-foreground/30 mt-1">
+              <p className="text-xs text-muted-foreground/55 mt-1">
                 Tente ajustar os filtros ou a busca
               </p>
             </div>

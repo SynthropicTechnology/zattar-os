@@ -30,8 +30,8 @@ function getSegmentColor(index: number): string {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-8 gap-2">
-      <BarChart2 className="size-8 text-muted-foreground/20" />
-      <p className="text-[11px] text-muted-foreground/40 text-center">
+      <BarChart2 className="size-8 text-muted-foreground/45" />
+      <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhuma despesa por categoria disponível
       </p>
     </div>
@@ -54,7 +54,7 @@ export function WidgetDespesasTreemap() {
         subtitle="Proporção visual por categoria"
         icon={BarChart2}
       >
-        <p className="text-[11px] text-muted-foreground/40 py-6 text-center">
+        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
           Dados de despesas indisponíveis.
         </p>
       </WidgetContainer>
@@ -108,7 +108,7 @@ export function WidgetDespesasTreemap() {
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}
               />
-              <span className="text-[9px] text-muted-foreground/40">{seg.label}</span>
+              <span className="text-[9px] text-muted-foreground/60">{seg.label}</span>
             </div>
           ))}
         </div>

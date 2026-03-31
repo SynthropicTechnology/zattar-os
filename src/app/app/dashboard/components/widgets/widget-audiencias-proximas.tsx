@@ -83,7 +83,7 @@ export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienc
       <CardContent>
         {data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Calendar className="h-10 w-10 text-muted-foreground/30 mb-3" />
+            <Calendar className="h-10 w-10 text-muted-foreground/55 mb-3" />
             <p className="text-sm text-muted-foreground">Não há audiências próximas</p>
           </div>
         ) : (

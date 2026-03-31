@@ -140,7 +140,7 @@ export function MissionCard({
         <div className="grid grid-cols-2 gap-3 mb-4">
           {/* Time */}
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">Horário</span>
+            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Horário</span>
             <span className="text-sm font-medium tabular-nums">
               {format(dataInicio, "HH:mm", { locale: ptBR })} – {format(dataFim, "HH:mm", { locale: ptBR })}
             </span>
@@ -148,18 +148,18 @@ export function MissionCard({
 
           {/* Tribunal */}
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">Tribunal</span>
+            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Tribunal</span>
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-medium">{audiencia.trt || "–"}</span>
               {audiencia.grau && (
-                <span className="text-[9px] text-muted-foreground/40">{audiencia.grau === "primeiro_grau" ? "1º grau" : audiencia.grau === "segundo_grau" ? "2º grau" : "Superior"}</span>
+                <span className="text-[9px] text-muted-foreground/60">{audiencia.grau === "primeiro_grau" ? "1º grau" : audiencia.grau === "segundo_grau" ? "2º grau" : "Superior"}</span>
               )}
             </div>
           </div>
 
           {/* Processo */}
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">Processo</span>
+            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Processo</span>
             <span className="text-[11px] font-mono text-foreground/70 tabular-nums truncate">
               {audiencia.numeroProcesso}
             </span>
@@ -167,9 +167,9 @@ export function MissionCard({
 
           {/* Modalidade */}
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/35 uppercase tracking-wider">Modalidade</span>
+            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Modalidade</span>
             <div className="flex items-center gap-1.5">
-              <ModalIcon className="size-3 text-muted-foreground/40" />
+              <ModalIcon className="size-3 text-muted-foreground/60" />
               <span className="text-sm font-medium">{modalidadeLabel || "–"}</span>
             </div>
           </div>
@@ -179,7 +179,7 @@ export function MissionCard({
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
           <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-border/5">
             <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloAtivoNome || "–"}</span>
-            <span className="text-[9px] text-muted-foreground/25 shrink-0">vs</span>
+            <span className="text-[9px] text-muted-foreground/50 shrink-0">vs</span>
             <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloPassivoNome || "–"}</span>
           </div>
         )}

@@ -43,7 +43,7 @@ export function KanbanColumn({ stage, contratos, onCardClick }: KanbanColumnProp
             {contratos.length}
           </span>
         </div>
-        <span className="text-[10px] text-muted-foreground/40 tabular-nums font-medium">
+        <span className="text-[10px] text-muted-foreground/60 tabular-nums font-medium">
           {fmtMoeda(total)}
         </span>
       </div>
@@ -59,7 +59,7 @@ export function KanbanColumn({ stage, contratos, onCardClick }: KanbanColumnProp
           />
         ))}
         {contratos.length === 0 && (
-          <div className="py-8 text-center text-[10px] text-muted-foreground/25">
+          <div className="py-8 text-center text-[10px] text-muted-foreground/50">
             Nenhum contrato
           </div>
         )}

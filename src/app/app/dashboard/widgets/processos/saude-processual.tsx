@@ -151,7 +151,7 @@ export function WidgetSaudeProcessual() {
             />
             {stats.taxaResolucao !== undefined && (
               <div className="flex flex-col gap-1">
-                <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+                <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
                   Taxa resolução
                 </p>
                 <div className="flex items-baseline gap-1">
@@ -159,7 +159,7 @@ export function WidgetSaudeProcessual() {
                     {stats.taxaResolucao}%
                   </span>
                 </div>
-                <p className="text-[9px] text-muted-foreground/30">
+                <p className="text-[9px] text-muted-foreground/55">
                   encerrados / total
                 </p>
               </div>

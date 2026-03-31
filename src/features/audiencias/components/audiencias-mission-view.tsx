@@ -155,7 +155,7 @@ export function AudienciasMissionView({
         <div className="flex items-center justify-between mb-3">
           {/* Date nav */}
           <div className="flex items-center gap-2">
-            <button onClick={handlePrev} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/30 hover:text-muted-foreground/50 cursor-pointer">
+            <button onClick={handlePrev} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
               <ChevronLeft className="size-4" />
             </button>
             <button onClick={handleToday} className={cn(
@@ -164,7 +164,7 @@ export function AudienciasMissionView({
             )}>
               Hoje
             </button>
-            <button onClick={handleNext} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/30 hover:text-muted-foreground/50 cursor-pointer">
+            <button onClick={handleNext} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
               <ChevronRight className="size-4" />
             </button>
             <div className="ml-2">
@@ -178,25 +178,25 @@ export function AudienciasMissionView({
           <div className="flex items-center gap-2 min-w-max">
             <Gavel className="size-3 text-primary/40" />
             <span className="font-display text-sm font-bold tabular-nums">{stats.total}</span>
-            <span className="text-[9px] text-muted-foreground/35">audiências</span>
+            <span className="text-[9px] text-muted-foreground/55">audiências</span>
           </div>
           <div className="w-px h-6 bg-border/8" />
           <div className="flex items-center gap-2 min-w-max">
             <Video className="size-3 text-info/40" />
             <span className="font-display text-sm font-bold tabular-nums">{stats.virtual}</span>
-            <span className="text-[9px] text-muted-foreground/35">virtuais</span>
+            <span className="text-[9px] text-muted-foreground/55">virtuais</span>
           </div>
           <div className="w-px h-6 bg-border/8" />
           <div className="flex items-center gap-2 min-w-max">
             <Building2 className="size-3 text-warning/40" />
             <span className="font-display text-sm font-bold tabular-nums">{stats.presencial}</span>
-            <span className="text-[9px] text-muted-foreground/35">presenciais</span>
+            <span className="text-[9px] text-muted-foreground/55">presenciais</span>
           </div>
           <div className="w-px h-6 bg-border/8" />
           <div className="flex items-center gap-2 min-w-max">
             <CheckCircle2 className="size-3 text-success/40" />
             <span className="font-display text-sm font-bold tabular-nums">{stats.avgPrep}%</span>
-            <span className="text-[9px] text-muted-foreground/35">prep. média</span>
+            <span className="text-[9px] text-muted-foreground/55">prep. média</span>
           </div>
         </div>
       </GlassPanel>
@@ -220,10 +220,10 @@ export function AudienciasMissionView({
           <GlassPanel className="p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Clock className="size-3 text-muted-foreground/25" />
+                <Clock className="size-3 text-muted-foreground/50" />
                 <span className="text-[11px] font-medium text-muted-foreground/50">Timeline do dia</span>
               </div>
-              <span className="text-[9px] tabular-nums text-muted-foreground/25">
+              <span className="text-[9px] tabular-nums text-muted-foreground/50">
                 {dayAudiencias.length} audiência{dayAudiencias.length !== 1 ? "s" : ""}
               </span>
             </div>
@@ -231,7 +231,7 @@ export function AudienciasMissionView({
             {dayAudiencias.length === 0 ? (
               <div className="py-12 text-center">
                 <CalendarDays className="size-8 text-muted-foreground/10 mx-auto mb-2" />
-                <p className="text-[11px] text-muted-foreground/30">Nenhuma audiência neste dia</p>
+                <p className="text-[11px] text-muted-foreground/55">Nenhuma audiência neste dia</p>
               </div>
             ) : (
               <div className="space-y-0">
@@ -311,7 +311,7 @@ export function AudienciasMissionView({
                   <>
                     <div className="flex items-center gap-2 py-2 mt-2">
                       <div className="flex-1 h-px bg-border/8" />
-                      <span className="text-[9px] text-muted-foreground/25 uppercase tracking-wider">Concluídas</span>
+                      <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">Concluídas</span>
                       <div className="flex-1 h-px bg-border/8" />
                     </div>
                     {finalizadas.map((a) => (
@@ -350,11 +350,11 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
       <div className="w-11 shrink-0 flex flex-col items-end pt-2.5">
         <span className={cn(
           "text-[11px] tabular-nums font-medium",
-          isPast ? "text-muted-foreground/30" : "text-foreground/60",
+          isPast ? "text-muted-foreground/55" : "text-foreground/60",
         )}>
           {fmtTime(audiencia.dataInicio)}
         </span>
-        <span className="text-[9px] tabular-nums text-muted-foreground/25">
+        <span className="text-[9px] tabular-nums text-muted-foreground/50">
           {fmtTime(audiencia.dataFim)}
         </span>
       </div>
@@ -388,7 +388,7 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
               {isOngoing && <span className="text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10">Agora</span>}
               <PrepScoreBadge audiencia={audiencia} />
             </div>
-            <span className="text-[9px] font-mono text-muted-foreground/30 tabular-nums mt-0.5 block">
+            <span className="text-[9px] font-mono text-muted-foreground/55 tabular-nums mt-0.5 block">
               {audiencia.numeroProcesso}
             </span>
           </div>
@@ -401,16 +401,16 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
 
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <p className="text-[10px] text-muted-foreground/40 mt-1 truncate ml-5">
-            {audiencia.poloAtivoNome || "–"} <span className="text-muted-foreground/20">vs</span> {audiencia.poloPassivoNome || "–"}
+          <p className="text-[10px] text-muted-foreground/60 mt-1 truncate ml-5">
+            {audiencia.poloAtivoNome || "–"} <span className="text-muted-foreground/45">vs</span> {audiencia.poloPassivoNome || "–"}
           </p>
         )}
 
         {/* Tags */}
         <div className="flex items-center gap-2 mt-2 ml-5 flex-wrap">
           <div className="flex items-center gap-1">
-            <ModalIcon className="size-2 text-muted-foreground/25" />
-            <span className="text-[9px] text-muted-foreground/30">
+            <ModalIcon className="size-2 text-muted-foreground/50" />
+            <span className="text-[9px] text-muted-foreground/55">
               {audiencia.modalidade === "presencial" ? "Presencial" : audiencia.modalidade === "hibrida" ? "Híbrida" : "Virtual"}
             </span>
           </div>

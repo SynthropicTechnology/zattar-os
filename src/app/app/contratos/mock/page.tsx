@@ -115,7 +115,7 @@ function PipelineFunnel() {
       <div className="flex items-center gap-2 mb-5">
         <GitBranch className="size-4 text-muted-foreground/50" />
         <h2 className="font-heading text-sm font-semibold">Pipeline de Conversão</h2>
-        <span className="text-[10px] text-muted-foreground/30 ml-auto">
+        <span className="text-[10px] text-muted-foreground/55 ml-auto">
           {desistencias.length} desistência{desistencias.length !== 1 ? 's' : ''} ({fmtMoeda(getStageTotal('desistencia'))})
         </span>
       </div>
@@ -151,7 +151,7 @@ function PipelineFunnel() {
               {/* Conversion rate */}
               {i > 0 && (
                 <div className="flex items-center gap-1 text-[10px]">
-                  <ArrowRight className="size-2.5 text-muted-foreground/30" />
+                  <ArrowRight className="size-2.5 text-muted-foreground/55" />
                   <span className={convRate >= 70 ? 'text-success/60' : convRate >= 50 ? 'text-warning/60' : 'text-destructive/60'}>
                     {convRate}%
                   </span>
@@ -181,7 +181,7 @@ function KanbanColumn({ stage, contratos }: { stage: typeof PIPELINE_STAGES[0]; 
             {contratos.length}
           </span>
         </div>
-        <span className="text-[10px] text-muted-foreground/40 tabular-nums font-medium">
+        <span className="text-[10px] text-muted-foreground/60 tabular-nums font-medium">
           {fmtMoeda(total)}
         </span>
       </div>
@@ -192,7 +192,7 @@ function KanbanColumn({ stage, contratos }: { stage: typeof PIPELINE_STAGES[0]; 
           <KanbanCard key={c.id} contrato={c} stageColor={stage.color} />
         ))}
         {contratos.length === 0 && (
-          <div className="py-8 text-center text-[10px] text-muted-foreground/25">
+          <div className="py-8 text-center text-[10px] text-muted-foreground/50">
             Nenhum contrato
           </div>
         )}
@@ -220,13 +220,13 @@ function KanbanCard({ contrato: c, stageColor: _stageColor }: { contrato: Contra
           {/* Client name */}
           <p className="text-[11px] font-semibold truncate leading-tight">{c.cliente}</p>
           {c.parteContraria && (
-            <p className="text-[9px] text-muted-foreground/35 truncate">vs. {c.parteContraria}</p>
+            <p className="text-[9px] text-muted-foreground/55 truncate">vs. {c.parteContraria}</p>
           )}
 
           {/* Tags */}
           <div className="flex items-center gap-1 mt-1.5 flex-wrap">
             <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50">{c.tipo}</span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-border/10 text-muted-foreground/40">{c.cobranca}</span>
+            <span className="text-[8px] px-1.5 py-0.5 rounded bg-border/10 text-muted-foreground/60">{c.cobranca}</span>
             {c.processosVinculados > 0 && (
               <span className="text-[8px] px-1.5 py-0.5 rounded bg-info/6 text-info/50">
                 {c.processosVinculados} proc.
@@ -237,7 +237,7 @@ function KanbanCard({ contrato: c, stageColor: _stageColor }: { contrato: Contra
           {/* Bottom: valor + dias */}
           <div className="flex items-center justify-between mt-2">
             <span className="text-[11px] font-bold tabular-nums text-primary/70">{fmtMoeda(c.valor)}</span>
-            <span className={`text-[9px] flex items-center gap-0.5 ${isStuck ? 'text-warning/60' : 'text-muted-foreground/30'}`}>
+            <span className={`text-[9px] flex items-center gap-0.5 ${isStuck ? 'text-warning/60' : 'text-muted-foreground/55'}`}>
               <Clock className="size-2.5" />
               {c.diasNoEstagio}d
             </span>
@@ -271,7 +271,7 @@ function ContratoListRow({ contrato: c }: { contrato: ContratoCard }) {
       {/* Name */}
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{c.cliente}</p>
-        {c.parteContraria && <p className="text-[10px] text-muted-foreground/30 truncate">vs. {c.parteContraria}</p>}
+        {c.parteContraria && <p className="text-[10px] text-muted-foreground/55 truncate">vs. {c.parteContraria}</p>}
       </div>
 
       {/* Type */}
@@ -284,11 +284,11 @@ function ContratoListRow({ contrato: c }: { contrato: ContratoCard }) {
       <span className="text-[11px] font-bold tabular-nums shrink-0 w-24 text-right">{fmtMoeda(c.valor)}</span>
 
       {/* Days */}
-      <span className={`text-[9px] shrink-0 w-10 text-right ${isStuck ? 'text-warning/60' : 'text-muted-foreground/25'}`}>
+      <span className={`text-[9px] shrink-0 w-10 text-right ${isStuck ? 'text-warning/60' : 'text-muted-foreground/50'}`}>
         {c.diasNoEstagio}d
       </span>
 
-      <ChevronRight className="size-3.5 text-muted-foreground/15 shrink-0" />
+      <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
     </div>
   );
 }
@@ -300,9 +300,9 @@ function FinancialStrip() {
     <GlassPanel className="px-5 py-3">
       <div className="flex items-center gap-6 overflow-x-auto">
         <div className="flex items-center gap-2 shrink-0">
-          <DollarSign className="size-4 text-muted-foreground/30" />
+          <DollarSign className="size-4 text-muted-foreground/55" />
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Em Carteira</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Em Carteira</p>
             <p className="font-display text-lg font-bold tabular-nums">
               <AnimatedNumber value={STATS.emCarteira} prefix="R$ " duration={1200} />
             </p>
@@ -312,14 +312,14 @@ function FinancialStrip() {
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Ticket Médio</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Ticket Médio</p>
           <p className="font-display text-base font-bold tabular-nums">{fmtMoeda(STATS.ticketMedio)}</p>
         </div>
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Conversão</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Conversão</p>
           <div className="flex items-center gap-2">
             <ProgressRing percent={STATS.taxaConversao} size={32} color="hsl(var(--success))" />
             <span className="text-xs font-bold text-success/70">{STATS.taxaConversao}%</span>
@@ -330,7 +330,7 @@ function FinancialStrip() {
 
         <div className="flex items-center gap-3 shrink-0">
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Tendência 6m</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tendência 6m</p>
             <p className="text-xs font-semibold text-success/60">+{STATS.novosMes} este mês</p>
           </div>
           <Sparkline data={STATS.trendMensal} width={60} height={20} color="hsl(var(--success))" />
@@ -416,7 +416,7 @@ export default function ContratosMockPage() {
                 key={v.mode}
                 onClick={() => setViewMode(v.mode)}
                 aria-label={v.label}
-                className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === v.mode ? 'bg-primary/12 text-primary' : 'text-muted-foreground/30 hover:text-muted-foreground/50'}`}
+                className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === v.mode ? 'bg-primary/12 text-primary' : 'text-muted-foreground/55 hover:text-muted-foreground/50'}`}
               >
                 <v.icon className="size-3.5" />
               </button>
@@ -452,7 +452,7 @@ export default function ContratosMockPage() {
           ))}
           {filteredContratos.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FileText className="size-8 text-muted-foreground/20 mb-3" />
+              <FileText className="size-8 text-muted-foreground/45 mb-3" />
               <p className="text-sm font-medium text-muted-foreground/50">Nenhum contrato encontrado</p>
             </div>
           )}
@@ -460,7 +460,7 @@ export default function ContratosMockPage() {
       )}
 
       {/* ── Footer ──────────────────────────────────────── */}
-      <p className="text-center text-[10px] text-muted-foreground/25 pb-4">
+      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
         {'Protótipo — Contract Pipeline Intelligence — dados fictícios'}
       </p>
     </div>

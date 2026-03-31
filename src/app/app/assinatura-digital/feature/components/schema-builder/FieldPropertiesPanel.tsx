@@ -266,7 +266,7 @@ export default function FieldPropertiesPanel({
     return (
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
         <div className="text-center space-y-2 px-6">
-          <Info className="size-8 text-muted-foreground/40 mx-auto" />
+          <Info className="size-8 text-muted-foreground/60 mx-auto" />
           <p className="text-xs font-medium text-muted-foreground">Nenhum campo selecionado</p>
           <p className="text-[11px] text-muted-foreground/70">
             Selecione um campo no canvas para editar suas propriedades

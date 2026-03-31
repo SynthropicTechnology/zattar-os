@@ -18,7 +18,7 @@ export function SignerPill({ assinante: a }: SignerPillProps) {
           ? "bg-success/6 border-success/15 text-success/60"
           : isLate
             ? "bg-warning/6 border-warning/15 text-warning/60"
-            : "bg-border/6 border-border/15 text-muted-foreground/40"
+            : "bg-border/6 border-border/15 text-muted-foreground/60"
       }`}
     >
       {isDone ? (

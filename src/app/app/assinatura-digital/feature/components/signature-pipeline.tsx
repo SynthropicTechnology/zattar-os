@@ -25,7 +25,7 @@ export function SignaturePipeline({ stats }: SignaturePipelineProps) {
         <h2 className="font-heading text-sm font-semibold">
           Pipeline de Assinaturas
         </h2>
-        <span className="text-[10px] text-muted-foreground/30 ml-auto">
+        <span className="text-[10px] text-muted-foreground/55 ml-auto">
           {stats.cancelados} cancelado{stats.cancelados !== 1 ? "s" : ""}
         </span>
       </div>

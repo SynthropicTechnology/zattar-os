@@ -57,7 +57,7 @@ export function WidgetScorePessoal() {
       >
         <div className="flex items-center gap-5 flex-wrap">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Lembretes pendentes
             </span>
             <span className="font-display text-2xl font-bold tabular-nums">
@@ -126,43 +126,43 @@ export function WidgetScorePessoal() {
         {/* Stats em linha */}
         <div className="flex items-center gap-5 flex-1 min-w-0 flex-wrap">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Baixas hoje
             </span>
             <span className="font-display text-lg font-bold tabular-nums">
               <AnimatedNumber value={baixasHoje} duration={800} />
             </span>
-            <span className="text-[9px] text-muted-foreground/35">concluídas</span>
+            <span className="text-[9px] text-muted-foreground/55">concluídas</span>
           </div>
 
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Lembretes
             </span>
             <span className="font-display text-lg font-bold tabular-nums">
               <AnimatedNumber value={isPending ? 0 : lembretePendentes} duration={900} />
             </span>
-            <span className="text-[9px] text-muted-foreground/35">pendentes</span>
+            <span className="text-[9px] text-muted-foreground/55">pendentes</span>
           </div>
 
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Audiências
             </span>
             <span className="font-display text-lg font-bold tabular-nums">
               <AnimatedNumber value={audienciasHoje} duration={1000} />
             </span>
-            <span className="text-[9px] text-muted-foreground/35">hoje</span>
+            <span className="text-[9px] text-muted-foreground/55">hoje</span>
           </div>
 
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Documentos
             </span>
             <span className="font-display text-lg font-bold tabular-nums">
               <AnimatedNumber value={0} duration={1100} />
             </span>
-            <span className="text-[9px] text-muted-foreground/35">editados</span>
+            <span className="text-[9px] text-muted-foreground/55">editados</span>
           </div>
         </div>
 

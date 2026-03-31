@@ -123,14 +123,14 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
           <GlassPanel className="p-4 sm:p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Clock className="size-3 text-muted-foreground/25" />
+                <Clock className="size-3 text-muted-foreground/50" />
                 <span className="text-[11px] font-medium text-muted-foreground/50">Linha do Tempo</span>
               </div>
               <div className="flex items-center gap-2">
                 {(["audiencias", "agenda", "expedientes"] as const).map((s) => (
                   <div key={s} className="flex items-center gap-1">
                     <div className={cn("size-1.5 rounded-full", COLOR_MAP[SOURCE_CONFIG[s].defaultColor].dot)} />
-                    <span className="text-[8px] text-muted-foreground/25">{SOURCE_CONFIG[s].label}</span>
+                    <span className="text-[8px] text-muted-foreground/50">{SOURCE_CONFIG[s].label}</span>
                   </div>
                 ))}
               </div>
@@ -140,7 +140,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className="mb-3 pb-2 border-b border-border/8">
-                  <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/20 font-semibold">Dia inteiro</span>
+                  <span className="text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold">Dia inteiro</span>
                   <div className="mt-1 space-y-1">
                     {allDay.map((ev) => (
                       <EventChip key={ev.id} title={ev.title} color={ev.color} past={ev.end < new Date()} onClick={() => onEventClick(ev)} />
@@ -258,7 +258,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
                 { label: "Pauta da semana", icon: Calendar },
               ].map((a) => (
                 <button key={a.label} className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-white/4 transition-all cursor-pointer group">
-                  <a.icon className="size-2.5 text-muted-foreground/20 group-hover:text-primary/40 transition-colors" />
+                  <a.icon className="size-2.5 text-muted-foreground/45 group-hover:text-primary/40 transition-colors" />
                   {a.label}
                   <ArrowRight className="size-2 ml-auto opacity-0 group-hover:opacity-40 transition-opacity" />
                 </button>
@@ -291,9 +291,9 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
       <div className="w-11 shrink-0 flex flex-col items-end pt-2.5">
         <span className={cn(
           "text-[11px] tabular-nums font-medium",
-          isPast ? "text-muted-foreground/30" : "text-foreground/60",
+          isPast ? "text-muted-foreground/55" : "text-foreground/60",
         )}>{fmtTime(event.start)}</span>
-        <span className="text-[9px] tabular-nums text-muted-foreground/25">{fmtTime(event.end)}</span>
+        <span className="text-[9px] tabular-nums text-muted-foreground/50">{fmtTime(event.end)}</span>
       </div>
       <div className="flex flex-col items-center pt-3 shrink-0">
         <div className={cn(
@@ -333,15 +333,15 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
                 <NearbyCountdown target={event.start} />
               )}
             </div>
-            {event.meta.processo && <span className="text-[9px] font-mono text-muted-foreground/30 tabular-nums">{event.meta.processo}</span>}
+            {event.meta.processo && <span className="text-[9px] font-mono text-muted-foreground/55 tabular-nums">{event.meta.processo}</span>}
           </div>
         </div>
-        {event.meta.descricao && <p className="text-[10px] text-muted-foreground/40 mt-1 truncate ml-8">{event.meta.descricao}</p>}
+        {event.meta.descricao && <p className="text-[10px] text-muted-foreground/60 mt-1 truncate ml-8">{event.meta.descricao}</p>}
         <div className="flex items-center gap-2 mt-2 ml-8 flex-wrap">
           {event.meta.local && (
             <div className="flex items-center gap-1">
-              <ModalIcon className="size-2 text-muted-foreground/25" />
-              <span className="text-[9px] text-muted-foreground/30 truncate max-w-40">{event.meta.local}</span>
+              <ModalIcon className="size-2 text-muted-foreground/50" />
+              <span className="text-[9px] text-muted-foreground/55 truncate max-w-40">{event.meta.local}</span>
             </div>
           )}
           {event.meta.trt && <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{event.meta.trt}</span>}

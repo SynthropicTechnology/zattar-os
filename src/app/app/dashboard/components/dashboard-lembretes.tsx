@@ -49,7 +49,7 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
       <CardContent>
         {lembretes.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Bell className="size-12 text-muted-foreground/30" />
+            <Bell className="size-12 text-muted-foreground/55" />
             <p className="mt-4 text-sm text-muted-foreground">Nenhum lembrete por aqui!</p>
             <p className="text-sm text-muted-foreground">
               Clique no <span className="font-medium text-primary">+</span> para criar um.

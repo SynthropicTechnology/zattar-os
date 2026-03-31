@@ -36,7 +36,7 @@ const COLORS = {
   critico: 'hsl(var(--destructive))',
   alto:    'hsl(35 95% 58%)',   // warning amber
   medio:   'hsl(217 91% 60%)',  // blue
-  baixo:   'hsl(var(--muted-foreground) / 0.35)',
+  baixo:   'hsl(var(--muted-foreground) / 0.55)',
   ok:      'hsl(142 71% 45%)',  // success green
   parcial: 'hsl(35 95% 58%)',
 };
@@ -110,7 +110,7 @@ export function UrgencyList() {
             <UrgencyDot level={item.level} />
             <div className="flex-1 min-w-0">
               <p className="text-[12px] font-medium leading-tight truncate">{item.title}</p>
-              <p className="text-[10px] text-muted-foreground/40 mt-0.5">
+              <p className="text-[10px] text-muted-foreground/60 mt-0.5">
                 {URGENCY_LABELS[item.level]} · {fmtData(item.prazo)}
               </p>
             </div>
@@ -173,7 +173,7 @@ export function AgingFunnel() {
         ))}
       </div>
       <div className="mt-4 pt-3 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground/40 uppercase tracking-wide">Total</span>
+        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Total</span>
         <span className="text-sm font-bold">
           {fmtNum(AGING_DATA.reduce((s, d) => s + d.count, 0))}
         </span>
@@ -224,7 +224,7 @@ export function OrigemDistribution() {
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <span className="text-[11px] font-semibold">{seg.value}</span>
-                  <span className="text-[10px] text-muted-foreground/40">{pct}%</span>
+                  <span className="text-[10px] text-muted-foreground/60">{pct}%</span>
                 </div>
               </div>
             );
@@ -269,7 +269,7 @@ export function ResultadoDecisao() {
               />
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-medium leading-tight">{item.label}</p>
-                <p className="text-[10px] text-muted-foreground/40">{item.value} expedientes</p>
+                <p className="text-[10px] text-muted-foreground/60">{item.value} expedientes</p>
               </div>
             </div>
           );
@@ -316,7 +316,7 @@ export function VolumeSemanal() {
           <span className="text-[10px] text-muted-foreground/50">Baixados</span>
         </div>
         <div className="ml-auto">
-          <span className="text-[10px] text-muted-foreground/40">
+          <span className="text-[10px] text-muted-foreground/60">
             Total:{' '}
             <span className="font-semibold text-foreground/70">
               {fmtNum(VOLUME_DATA.reduce((s, d) => s + d.value, 0))}
@@ -364,22 +364,22 @@ export function PrazoMedio() {
             height={32}
             color={COLORS.ok}
           />
-          <span className="text-[9px] text-muted-foreground/30 uppercase tracking-wide">
+          <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wide">
             8 semanas
           </span>
         </div>
       </div>
       <div className="mt-4 pt-3 border-t border-border/10 grid grid-cols-3 gap-3">
         <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wide">Minimo</p>
+          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Minimo</p>
           <p className="text-sm font-bold text-success/80">1,0 d</p>
         </div>
         <div className="text-center border-x border-border/10">
-          <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wide">Media</p>
+          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Media</p>
           <p className="text-sm font-bold">4,2 d</p>
         </div>
         <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wide">Maximo</p>
+          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Maximo</p>
           <p className="text-sm font-bold text-destructive/80">18,0 d</p>
         </div>
       </div>
@@ -411,14 +411,14 @@ export function SaudePrazos() {
             status="warning"
             size={120}
           />
-          <p className="text-[10px] text-muted-foreground/40 -mt-1">
+          <p className="text-[10px] text-muted-foreground/60 -mt-1">
             Abaixo de 70 indica atenção necessária
           </p>
         </div>
 
         <div className="grid grid-cols-3 gap-4 w-full pt-3 border-t border-border/10">
           <div className="flex flex-col items-center gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Vencidos
             </span>
             <span className="font-display text-xl font-bold text-destructive/80">
@@ -426,7 +426,7 @@ export function SaudePrazos() {
             </span>
           </div>
           <div className="flex flex-col items-center gap-0.5 border-x border-border/10">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Vencem hoje
             </span>
             <span className="font-display text-xl font-bold text-warning/80">
@@ -434,7 +434,7 @@ export function SaudePrazos() {
             </span>
           </div>
           <div className="flex flex-col items-center gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Prazo médio
             </span>
             <span className="font-display text-base font-bold">
@@ -488,7 +488,7 @@ export function CalendarioPrazos() {
             small
           />
           <div className="flex items-center gap-3 mt-1">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Intensidade:
             </span>
             <div className="flex items-center gap-1">
@@ -499,8 +499,8 @@ export function CalendarioPrazos() {
               <div className="size-3 rounded-[3px] bg-destructive/80" />
             </div>
             <div className="flex items-center gap-1 ml-1">
-              <span className="text-[9px] text-muted-foreground/30">Vazio</span>
-              <span className="text-[9px] text-muted-foreground/30">→</span>
+              <span className="text-[9px] text-muted-foreground/55">Vazio</span>
+              <span className="text-[9px] text-muted-foreground/55">→</span>
               <span className="text-[9px] text-destructive/60">Crítico</span>
             </div>
           </div>
@@ -543,7 +543,7 @@ export function TendenciaResponsividade() {
         />
         {/* Backlog: queda é positiva — invertemos current e previous para o sinal */}
         <div className="flex flex-col gap-1">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Backlog atual
           </p>
           <div className="flex items-baseline gap-2">
@@ -552,7 +552,7 @@ export function TendenciaResponsividade() {
               −22,2%
             </span>
           </div>
-          <p className="text-[9px] text-muted-foreground/30">anterior: 18</p>
+          <p className="text-[9px] text-muted-foreground/55">anterior: 18</p>
         </div>
       </div>
 

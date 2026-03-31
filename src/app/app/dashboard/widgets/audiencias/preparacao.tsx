@@ -29,7 +29,7 @@ function formatarDataAudiencia(isoDate: string): string {
 
 // Mapear tipo de audiência para cor de destaque
 function corPorTipo(tipo: string | null): string {
-  if (!tipo) return 'hsl(var(--muted-foreground) / 0.35)';
+  if (!tipo) return 'hsl(var(--muted-foreground) / 0.55)';
   const t = tipo.toLowerCase();
   if (t.includes('instrução') || t.includes('instrucao')) return 'hsl(var(--primary))';
   if (t.includes('conciliação') || t.includes('conciliacao')) return 'hsl(var(--warning))';
@@ -57,7 +57,7 @@ export function WidgetPreparacao() {
     >
       {audiencias.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-6 gap-2">
-          <p className="text-[11px] text-muted-foreground/40">
+          <p className="text-[11px] text-muted-foreground/60">
             Nenhuma audiência próxima registrada.
           </p>
         </div>
@@ -83,7 +83,7 @@ export function WidgetPreparacao() {
                     {audiencia.tipo_audiencia ?? 'Audiência'} —{' '}
                     {audiencia.polo_ativo_nome ?? audiencia.numero_processo}
                   </p>
-                  <p className="text-[9px] text-muted-foreground/40 font-mono truncate mt-0.5">
+                  <p className="text-[9px] text-muted-foreground/60 font-mono truncate mt-0.5">
                     {audiencia.numero_processo}
                   </p>
                   <div className="flex items-center gap-3 mt-1">
@@ -98,7 +98,7 @@ export function WidgetPreparacao() {
                       </div>
                     )}
                     {audiencia.local && (
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground/40 truncate">
+                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground/60 truncate">
                         <MapPin className="size-2.5 shrink-0" />
                         <span className="truncate">{audiencia.local}</span>
                       </div>

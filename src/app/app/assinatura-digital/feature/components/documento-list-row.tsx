@@ -36,7 +36,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
 
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{doc.titulo}</p>
-        <p className="text-[10px] text-muted-foreground/30">
+        <p className="text-[10px] text-muted-foreground/55">
           {doc.criadoPor} &middot; {timeAgo(doc.criadoEm)}
         </p>
       </div>
@@ -52,7 +52,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
                 : "hsl(var(--primary))"
             }
           />
-          <span className="text-[10px] tabular-nums text-muted-foreground/40">
+          <span className="text-[10px] tabular-nums text-muted-foreground/60">
             {progress.signed}/{progress.total}
           </span>
         </div>
@@ -66,14 +66,14 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
 
       <div className="items-center gap-1 shrink-0 hidden md:flex">
         {doc.selfieHabilitada && (
-          <Camera className="size-3 text-muted-foreground/20" />
+          <Camera className="size-3 text-muted-foreground/45" />
         )}
         {doc.origem === "formulario" && (
           <FileText className="size-3 text-info/30" />
         )}
       </div>
 
-      <ChevronRight className="size-3.5 text-muted-foreground/15 shrink-0" />
+      <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />
     </div>
   );
 }

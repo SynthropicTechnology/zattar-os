@@ -46,8 +46,8 @@ const ORIGEM_LABELS: Record<string, string> = {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-8 gap-2">
-      <AlertTriangle className="size-8 text-muted-foreground/20" />
-      <p className="text-[11px] text-muted-foreground/40 text-center">
+      <AlertTriangle className="size-8 text-muted-foreground/45" />
+      <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhum expediente urgente no momento
       </p>
     </div>
@@ -67,7 +67,7 @@ function ExpedienteItem({ item }: { item: ExpedienteUrgente }) {
       <UrgencyDot level={level} />
       <div className="flex-1 min-w-0">
         <p className="text-[12px] font-medium leading-tight truncate">{title}</p>
-        <p className="text-[10px] text-muted-foreground/40 mt-0.5">
+        <p className="text-[10px] text-muted-foreground/60 mt-0.5">
           {URGENCY_LABELS[level]} · {fmtData(item.prazo_fatal)} · {getDiasLabel(item.dias_restantes)}
         </p>
       </div>
@@ -98,7 +98,7 @@ export function UrgencyList() {
         depth={1}
         className="md:col-span-2"
       >
-        <p className="text-[11px] text-muted-foreground/40 py-4 text-center">
+        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
           Não foi possível carregar os expedientes.
         </p>
       </WidgetContainer>

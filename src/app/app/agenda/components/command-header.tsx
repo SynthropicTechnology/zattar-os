@@ -60,7 +60,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.color)} />
             <div className="flex items-baseline gap-1.5">
               <span className="font-display text-sm font-bold tabular-nums">{s.value}</span>
-              <span className="text-[9px] text-muted-foreground/35 hidden sm:inline">{s.label}</span>
+              <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.label}</span>
             </div>
           </div>
         ))}
@@ -74,7 +74,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
             <div key={day.dia} className="flex flex-col items-center gap-1 flex-1">
               <span className={cn(
                 "text-[9px] tabular-nums font-medium",
-                day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/40" : "text-muted-foreground/15",
+                day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60",
               )}>
                 {day.eventos || "–"}
               </span>
@@ -88,7 +88,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
               />
               <span className={cn(
                 "text-[9px] font-medium",
-                day.hoje ? "text-primary font-semibold" : "text-muted-foreground/30",
+                day.hoje ? "text-primary font-semibold" : "text-muted-foreground/55",
               )}>
                 {day.dia}
               </span>

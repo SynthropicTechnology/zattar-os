@@ -60,7 +60,7 @@ export function ProgressItem({
         <div className="flex items-baseline justify-between gap-2">
           <h4 className="text-[10px] font-medium text-foreground truncate">{title}</h4>
           {subtitle && (
-            <span className="text-[9px] tabular-nums text-muted-foreground/30 shrink-0">{subtitle}</span>
+            <span className="text-[9px] tabular-nums text-muted-foreground/55 shrink-0">{subtitle}</span>
           )}
         </div>
         <div className="mt-1.5 h-0.5 rounded-full bg-border/8 overflow-hidden">
@@ -74,8 +74,8 @@ export function ProgressItem({
         </div>
         {(leftLabel || rightLabel) && (
           <div className="flex items-center justify-between mt-1">
-            {leftLabel && <span className="text-[8px] text-muted-foreground/25">{leftLabel}</span>}
-            {rightLabel && <span className="text-[8px] text-muted-foreground/25">{rightLabel}</span>}
+            {leftLabel && <span className="text-[8px] text-muted-foreground/50">{leftLabel}</span>}
+            {rightLabel && <span className="text-[8px] text-muted-foreground/50">{rightLabel}</span>}
           </div>
         )}
       </div>

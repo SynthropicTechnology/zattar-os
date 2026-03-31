@@ -187,7 +187,7 @@ export function WidgetPicker({
 
           {availableWidgets.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 px-5 text-center">
-              <LayoutGrid className="size-8 text-muted-foreground/20 mb-3" />
+              <LayoutGrid className="size-8 text-muted-foreground/45 mb-3" />
               <p className="text-sm text-muted-foreground/50">
                 Nenhum widget disponivel para o seu perfil.
               </p>

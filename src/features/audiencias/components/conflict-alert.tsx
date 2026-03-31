@@ -169,8 +169,8 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
 
                 {conflict.suggestion && (
                   <div className="flex items-center gap-1 ml-4">
-                    <ArrowRight className="size-2 text-muted-foreground/20" />
-                    <span className="text-[9px] text-muted-foreground/35 italic">{conflict.suggestion}</span>
+                    <ArrowRight className="size-2 text-muted-foreground/45" />
+                    <span className="text-[9px] text-muted-foreground/55 italic">{conflict.suggestion}</span>
                   </div>
                 )}
               </div>

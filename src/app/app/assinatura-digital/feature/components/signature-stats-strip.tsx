@@ -25,9 +25,9 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
       <div className="flex items-center gap-6 overflow-x-auto">
         {/* Total */}
         <div className="flex items-center gap-2 shrink-0">
-          <FileSignature className="size-4 text-muted-foreground/30" />
+          <FileSignature className="size-4 text-muted-foreground/55" />
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Total
             </p>
             <p className="font-display text-lg font-bold tabular-nums">
@@ -40,7 +40,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
 
         {/* Taxa Conclusão */}
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Taxa Conclusão
           </p>
           <div className="flex items-center gap-2">
@@ -59,13 +59,13 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
 
         {/* Tempo Médio */}
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Tempo Médio
           </p>
           <p className="font-display text-base font-bold tabular-nums">
             {stats.tempoMedio}d
           </p>
-          <p className="text-[9px] text-muted-foreground/30">para conclusão</p>
+          <p className="text-[9px] text-muted-foreground/55">para conclusão</p>
         </div>
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
@@ -73,7 +73,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
         {/* Tendência */}
         <div className="flex items-center gap-3 shrink-0">
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Tendência 6m
             </p>
             <p className="text-xs font-semibold text-success/60">

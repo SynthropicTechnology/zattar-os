@@ -200,7 +200,7 @@ const Notifications = () => {
             </div>
           ) : notificacoes.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-2 py-12">
-              <BellIcon className="size-8 text-muted-foreground/40" />
+              <BellIcon className="size-8 text-muted-foreground/60" />
               <span className="text-sm text-muted-foreground">
                 Nenhuma notificação
               </span>

@@ -79,7 +79,7 @@ export function ContratoCard({ contrato: c, stageColor, onClick }: ContratoCardP
           {/* Client name */}
           <p className="text-[11px] font-semibold truncate leading-tight">{c.cliente}</p>
           {c.parteContraria && (
-            <p className="text-[9px] text-muted-foreground/35 truncate">vs. {c.parteContraria}</p>
+            <p className="text-[9px] text-muted-foreground/55 truncate">vs. {c.parteContraria}</p>
           )}
 
           {/* Tags */}
@@ -87,7 +87,7 @@ export function ContratoCard({ contrato: c, stageColor, onClick }: ContratoCardP
             <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50">
               {c.tipo}
             </span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-border/10 text-muted-foreground/40">
+            <span className="text-[8px] px-1.5 py-0.5 rounded bg-border/10 text-muted-foreground/60">
               {c.cobranca}
             </span>
             {c.processosVinculados > 0 && (
@@ -104,7 +104,7 @@ export function ContratoCard({ contrato: c, stageColor, onClick }: ContratoCardP
             </span>
             <span
               className={`text-[9px] flex items-center gap-0.5 ${
-                isStuck ? 'text-warning/60' : 'text-muted-foreground/30'
+                isStuck ? 'text-warning/60' : 'text-muted-foreground/55'
               }`}
             >
               <Clock className="size-2.5" />

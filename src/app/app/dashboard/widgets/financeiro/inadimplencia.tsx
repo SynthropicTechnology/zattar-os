@@ -31,7 +31,7 @@ export function WidgetInadimplencia() {
         subtitle="Sobre carteira a receber"
         icon={AlertTriangle}
       >
-        <p className="text-[11px] text-muted-foreground/40 py-6 text-center">
+        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
           Dados de inadimplência indisponíveis.
         </p>
       </WidgetContainer>
@@ -58,7 +58,7 @@ export function WidgetInadimplencia() {
         />
         <div className="flex flex-col gap-1">
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">
               Em atraso
             </p>
             <p
@@ -69,7 +69,7 @@ export function WidgetInadimplencia() {
             </p>
           </div>
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">
               Carteira total
             </p>
             <p className="text-sm font-semibold font-display tabular-nums text-muted-foreground/70">

@@ -496,11 +496,11 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
 
           {!isLoading && filteredContratos.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FileText className="size-8 text-muted-foreground/20 mb-3" />
+              <FileText className="size-8 text-muted-foreground/45 mb-3" />
               <p className="text-sm font-medium text-muted-foreground/50">
                 Nenhum contrato encontrado
               </p>
-              <p className="text-xs text-muted-foreground/30 mt-1">
+              <p className="text-xs text-muted-foreground/55 mt-1">
                 {search ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
               </p>
             </div>

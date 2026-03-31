@@ -44,7 +44,7 @@ export function PipelineFunnel({ stages, desistencias }: PipelineFunnelProps) {
         <GitBranch className="size-4 text-muted-foreground/50" />
         <h2 className="font-heading text-sm font-semibold">Pipeline de Conversão</h2>
         {desistCount > 0 && (
-          <span className="text-[10px] text-muted-foreground/30 ml-auto">
+          <span className="text-[10px] text-muted-foreground/55 ml-auto">
             {desistCount} desistência{desistCount !== 1 ? 's' : ''}
             {desistValor !== undefined ? ` (${fmtMoeda(desistValor)})` : ''}
           </span>
@@ -85,7 +85,7 @@ export function PipelineFunnel({ stages, desistencias }: PipelineFunnelProps) {
               {/* Conversion rate */}
               {i > 0 ? (
                 <div className="flex items-center gap-1 text-[10px]">
-                  <ArrowRight className="size-2.5 text-muted-foreground/30" />
+                  <ArrowRight className="size-2.5 text-muted-foreground/55" />
                   <span
                     className={
                       convRate >= 70

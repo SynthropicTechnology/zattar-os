@@ -96,13 +96,13 @@ export function EntityCard({ data, onClick }: EntityCardProps) {
               )}
             </div>
             {data.nomeSocial && (
-              <p className="text-[10px] text-muted-foreground/40 truncate">{data.nomeSocial}</p>
+              <p className="text-[10px] text-muted-foreground/60 truncate">{data.nomeSocial}</p>
             )}
             <div className="flex items-center gap-2 mt-1">
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}
               </span>
-              <span className="text-[10px] text-muted-foreground/40 tabular-nums">
+              <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                 {data.documentoMasked}
               </span>
             </div>
@@ -132,13 +132,13 @@ export function EntityCard({ data, onClick }: EntityCardProps) {
         {/* Rodapé: Métricas + atualização */}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/10">
           <div className="flex items-center gap-1.5">
-            <Scale className="size-3 text-muted-foreground/30" />
+            <Scale className="size-3 text-muted-foreground/55" />
             <span className="text-[10px] font-medium">
               {data.metricas.ativos}
-              <span className="text-muted-foreground/30"> / {data.metricas.total} {data.metricas.label}</span>
+              <span className="text-muted-foreground/55"> / {data.metricas.total} {data.metricas.label}</span>
             </span>
           </div>
-          <span className="text-[9px] text-muted-foreground/30 flex items-center gap-1">
+          <span className="text-[9px] text-muted-foreground/55 flex items-center gap-1">
             <Clock className="size-2.5" />
             {timeAgo(data.ultimaAtualizacao)}
           </span>

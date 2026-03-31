@@ -162,7 +162,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
         </CardHeader>
         <CardContent className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center justify-center text-center">
-            <MessageSquare className="size-12 text-muted-foreground/30" />
+            <MessageSquare className="size-12 text-muted-foreground/55" />
             <p className="mt-4 text-sm text-muted-foreground">Nenhuma conversa iniciada!</p>
             <p className="text-sm text-muted-foreground">
               Clique no <span className="font-medium text-primary">+</span> para começar.

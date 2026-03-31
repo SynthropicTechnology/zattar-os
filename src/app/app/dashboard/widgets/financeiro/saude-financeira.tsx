@@ -129,7 +129,7 @@ export function WidgetSaúdeFinanceira() {
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-6 flex-1 min-w-0">
 
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Saldo
             </p>
             <p className={`font-display text-base font-bold tabular-nums ${saldo < 0 ? 'text-destructive/80' : ''}`}>
@@ -139,13 +139,13 @@ export function WidgetSaúdeFinanceira() {
                 duration={1200}
               />
             </p>
-            <p className="text-[10px] text-muted-foreground/30">caixa consolidado</p>
+            <p className="text-[10px] text-muted-foreground/55">caixa consolidado</p>
           </div>
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               A receber
             </p>
             <p className="font-display text-base font-bold tabular-nums text-success/80">
@@ -155,7 +155,7 @@ export function WidgetSaúdeFinanceira() {
                 duration={1400}
               />
             </p>
-            <p className="text-[10px] text-muted-foreground/30">
+            <p className="text-[10px] text-muted-foreground/55">
               {fin.contasReceber.quantidade} conta{fin.contasReceber.quantidade !== 1 ? 's' : ''}
             </p>
           </div>
@@ -163,7 +163,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               A pagar
             </p>
             <p className="font-display text-base font-bold tabular-nums text-destructive/70">
@@ -173,7 +173,7 @@ export function WidgetSaúdeFinanceira() {
                 duration={1600}
               />
             </p>
-            <p className="text-[10px] text-muted-foreground/30">
+            <p className="text-[10px] text-muted-foreground/55">
               {fin.contasPagar.quantidade} vencimento{fin.contasPagar.quantidade !== 1 ? 's' : ''}
             </p>
           </div>
@@ -181,7 +181,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Resultado
             </p>
             <p className={`font-display text-base font-bold tabular-nums ${resultado >= 0 ? 'text-primary/90' : 'text-destructive/80'}`}>
@@ -191,7 +191,7 @@ export function WidgetSaúdeFinanceira() {
                 duration={1800}
               />
             </p>
-            <p className="text-[10px] text-muted-foreground/30">saldo menos pagar</p>
+            <p className="text-[10px] text-muted-foreground/55">saldo menos pagar</p>
           </div>
 
         </div>

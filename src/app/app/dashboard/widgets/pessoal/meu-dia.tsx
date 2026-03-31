@@ -235,7 +235,7 @@ export function WidgetMeuDia() {
                     <span
                       className={`text-[10px] font-medium truncate flex-1 ${
                         isDone
-                          ? 'line-through text-muted-foreground/30'
+                          ? 'line-through text-muted-foreground/55'
                           : isNext
                           ? 'text-foreground/90'
                           : 'text-foreground/70'
@@ -253,13 +253,13 @@ export function WidgetMeuDia() {
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <Icon
                       className={`size-2.5 shrink-0 ${
-                        isDone ? 'text-muted-foreground/20' : 'text-muted-foreground/40'
+                        isDone ? 'text-muted-foreground/45' : 'text-muted-foreground/60'
                       }`}
                     />
                     {evento.hora && (
                       <span
                         className={`text-[9px] tabular-nums ${
-                          isDone ? 'text-muted-foreground/25' : 'text-muted-foreground/40'
+                          isDone ? 'text-muted-foreground/50' : 'text-muted-foreground/60'
                         }`}
                       >
                         {evento.hora}
@@ -267,7 +267,7 @@ export function WidgetMeuDia() {
                     )}
                     <span
                       className={`text-[9px] capitalize ${
-                        isDone ? 'text-muted-foreground/20' : 'text-muted-foreground/35'
+                        isDone ? 'text-muted-foreground/45' : 'text-muted-foreground/55'
                       }`}
                     >
                       {evento.tipo}

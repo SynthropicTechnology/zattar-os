@@ -82,7 +82,7 @@ const PROXIMAS_AUDIENCIAS = [
 const MODALIDADE_SEGMENTS = [
   { value: 18, color: 'hsl(var(--primary))', label: 'Virtual' },
   { value: 12, color: 'hsl(var(--warning))', label: 'Presencial' },
-  { value: 5, color: 'hsl(var(--muted-foreground) / 0.35)', label: 'Híbrida' },
+  { value: 5, color: 'hsl(var(--muted-foreground) / 0.55)', label: 'Híbrida' },
 ];
 
 const STATUS_MENSAL_DATA = [
@@ -98,7 +98,7 @@ const TIPO_BARS = [
   { label: 'Instrução', value: 14, color: 'hsl(var(--primary))' },
   { label: 'Conciliação', value: 8, color: 'hsl(var(--warning))' },
   { label: 'Julgamento', value: 5, color: 'hsl(var(--destructive))' },
-  { label: 'UNA', value: 3, color: 'hsl(var(--muted-foreground) / 0.35)' },
+  { label: 'UNA', value: 3, color: 'hsl(var(--muted-foreground) / 0.55)' },
   { label: 'Perícia', value: 2, color: 'hsl(var(--primary) / 0.4)' },
 ];
 const TIPO_MAX = Math.max(...TIPO_BARS.map((b) => b.value));
@@ -185,7 +185,7 @@ export function ProximasAudiencias() {
                   )}
                 </div>
                 <p className="text-[11px] font-medium mt-1 truncate">{a.parte}</p>
-                <p className="text-[9px] text-muted-foreground/40 font-mono truncate">
+                <p className="text-[9px] text-muted-foreground/60 font-mono truncate">
                   {a.processo}
                 </p>
               </div>
@@ -200,7 +200,7 @@ export function ProximasAudiencias() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1 mt-1.5 text-[9px] text-muted-foreground/40">
+            <div className="flex items-center gap-1 mt-1.5 text-[9px] text-muted-foreground/60">
               <MapPin className="size-2.5 shrink-0" />
               <span className="truncate">{a.local}</span>
             </div>
@@ -243,7 +243,7 @@ export function ModalidadeDistribution() {
               </div>
               <div className="text-right shrink-0 flex items-baseline gap-1.5">
                 <span className="text-sm font-semibold font-display">{seg.value}</span>
-                <span className="text-[10px] text-muted-foreground/40">
+                <span className="text-[10px] text-muted-foreground/60">
                   {Math.round((seg.value / total) * 100)}%
                 </span>
               </div>
@@ -251,7 +251,7 @@ export function ModalidadeDistribution() {
           ))}
         </div>
         <div className="w-full pt-2 border-t border-border/15">
-          <div className="flex justify-between text-[10px] text-muted-foreground/40">
+          <div className="flex justify-between text-[10px] text-muted-foreground/60">
             <span>TOTAL</span>
             <span className="font-semibold text-foreground/60">{fmtNum(total)}</span>
           </div>
@@ -294,7 +294,7 @@ export function StatusMensal() {
           {STATUS_MENSAL_DATA.slice(-3).map((d) => (
             <div key={d.label} className="text-center">
               <p className="text-[10px] font-display font-bold">{d.value}</p>
-              <p className="text-[9px] text-muted-foreground/40">{d.label}</p>
+              <p className="text-[9px] text-muted-foreground/60">{d.label}</p>
             </div>
           ))}
         </div>
@@ -327,26 +327,26 @@ export function KpiStrip() {
             size={44}
             color="hsl(var(--primary))"
           />
-          <p className="text-[9px] text-muted-foreground/40">de 8 aud.</p>
+          <p className="text-[9px] text-muted-foreground/60">de 8 aud.</p>
         </div>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2 pt-3 border-t border-border/15">
         <div>
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Adiamentos
           </p>
           <p className="text-sm font-display font-bold mt-0.5">
             2{' '}
-            <span className="text-[10px] font-normal text-muted-foreground/40">este mês</span>
+            <span className="text-[10px] font-normal text-muted-foreground/60">este mês</span>
           </p>
         </div>
         <div>
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
             Duração Média
           </p>
           <p className="text-sm font-display font-bold mt-0.5">
             47{' '}
-            <span className="text-[10px] font-normal text-muted-foreground/40">min</span>
+            <span className="text-[10px] font-normal text-muted-foreground/60">min</span>
           </p>
         </div>
       </div>
@@ -377,7 +377,7 @@ export function AudienciasPorTipo() {
             </div>
           </div>
         ))}
-        <div className="pt-2 border-t border-border/15 flex justify-between text-[9px] text-muted-foreground/40">
+        <div className="pt-2 border-t border-border/15 flex justify-between text-[9px] text-muted-foreground/60">
           <span>TOTAL</span>
           <span className="font-semibold text-foreground/50">
             {fmtNum(TIPO_BARS.reduce((acc, b) => acc + b.value, 0))} audiências
@@ -412,11 +412,11 @@ export function TrendMensal() {
           small
         />
         <div className="text-right">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Média</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Média</p>
           <p className="text-sm font-display font-bold mt-0.5">
             {(TREND_MENSAL.reduce((a, b) => a + b, 0) / TREND_MENSAL.length).toFixed(1)}
           </p>
-          <p className="text-[9px] text-muted-foreground/40">por mês</p>
+          <p className="text-[9px] text-muted-foreground/60">por mês</p>
         </div>
       </div>
 
@@ -424,7 +424,7 @@ export function TrendMensal() {
       <TrendAreaChart data={TREND_MENSAL} />
 
       <div className="flex justify-between mt-2">
-        <span className="text-[9px] text-muted-foreground/40">{months[0]}</span>
+        <span className="text-[9px] text-muted-foreground/60">{months[0]}</span>
         <span className="text-[9px] text-primary/60 font-medium">{months[months.length - 1]}</span>
       </div>
     </WidgetContainer>
@@ -539,7 +539,7 @@ export function WidgetHeatmapSemanal() {
         <CalendarHeatmap data={HEATMAP_DATA} colorScale="warning" />
         <div className="grid grid-cols-1 gap-1.5 pt-1 border-t border-border/15">
           <div className="flex items-center justify-between">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Dia mais cheio
             </span>
             <span className="text-[10px] font-semibold text-foreground/70">
@@ -547,7 +547,7 @@ export function WidgetHeatmapSemanal() {
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Horário pico
             </span>
             <span className="text-[10px] font-semibold text-foreground/70">
@@ -586,8 +586,8 @@ export function WidgetPreparacao() {
                 <span className={`text-[9px] font-medium ${item.statusColor}`}>
                   {item.statusText}
                 </span>
-                <span className="text-[9px] text-muted-foreground/30">·</span>
-                <span className="text-[9px] text-muted-foreground/40">{item.data}</span>
+                <span className="text-[9px] text-muted-foreground/55">·</span>
+                <span className="text-[9px] text-muted-foreground/60">{item.data}</span>
               </div>
             </div>
           </div>

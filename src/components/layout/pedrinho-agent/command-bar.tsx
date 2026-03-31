@@ -110,7 +110,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Pergunte ao Pedrinho..."
-              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/30 outline-none"
+              className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/55 outline-none"
               autoComplete="off"
               spellCheck={false}
             />
@@ -119,7 +119,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
               {agent.isRunning ? (
                 <button
                   onClick={() => agent.abortRun()}
-                  className="p-1.5 rounded-lg text-muted-foreground/30 hover:text-destructive/60 hover:bg-destructive/6 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg text-muted-foreground/55 hover:text-destructive/60 hover:bg-destructive/6 transition-colors cursor-pointer"
                   title="Parar"
                 >
                   <Square className="size-3.5" />
@@ -132,7 +132,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
                   <ArrowRight className="size-3.5" />
                 </button>
               ) : (
-                <kbd className="text-[9px] text-muted-foreground/15 px-1.5 py-0.5 rounded border border-border/10 bg-white/2 font-mono">
+                <kbd className="text-[9px] text-muted-foreground/60 px-1.5 py-0.5 rounded border border-border/10 bg-white/2 font-mono">
                   ⌘J
                 </kbd>
               )}
@@ -190,7 +190,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
               {/* Bottom bar: expand to briefing */}
               <div className="h-px bg-border/6" />
               <div className="flex items-center justify-between px-4 py-2">
-                <span className="text-[9px] text-muted-foreground/15">
+                <span className="text-[9px] text-muted-foreground/60">
                   {agent.messages.length} mensagens na conversa
                 </span>
                 <button
@@ -258,7 +258,7 @@ function CommandBarMessage({ message }: { message: any }) {
         <PedrinhoAvatar size="sm" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[9px] text-muted-foreground/25 font-semibold">Pedrinho</span>
+            <span className="text-[9px] text-muted-foreground/50 font-semibold">Pedrinho</span>
           </div>
           <div className="text-[12px] text-foreground/70 leading-relaxed pedrinho-markdown">
             {message.content}

@@ -117,7 +117,7 @@ export function WidgetSaúdeFinanceira() {
         {/* Stats horizontais */}
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-6 flex-1 min-w-0">
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Saldo</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Saldo</p>
             <p className="font-display text-base font-bold tabular-nums">
               <AnimatedNumber value={124350} prefix="R$\u00a0" duration={1200} />
             </p>
@@ -127,27 +127,27 @@ export function WidgetSaúdeFinanceira() {
           <div className="w-px self-stretch bg-border/10" />
 
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">A receber</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">A receber</p>
             <p className="font-display text-base font-bold tabular-nums text-success/80">
               <AnimatedNumber value={67500} prefix="R$\u00a0" duration={1400} />
             </p>
-            <p className="text-[10px] text-muted-foreground/30">carteira ativa</p>
+            <p className="text-[10px] text-muted-foreground/55">carteira ativa</p>
           </div>
 
           <div className="w-px self-stretch bg-border/10" />
 
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">A pagar</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">A pagar</p>
             <p className="font-display text-base font-bold tabular-nums text-destructive/70">
               <AnimatedNumber value={32100} prefix="R$\u00a0" duration={1600} />
             </p>
-            <p className="text-[10px] text-muted-foreground/30">vencimentos próx.</p>
+            <p className="text-[10px] text-muted-foreground/55">vencimentos próx.</p>
           </div>
 
           <div className="w-px self-stretch bg-border/10" />
 
           <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Resultado mês</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Resultado mês</p>
             <p className="font-display text-base font-bold tabular-nums text-primary/90">
               <AnimatedNumber value={35400} prefix="R$\u00a0" duration={1800} />
             </p>
@@ -197,11 +197,11 @@ export function WidgetFluxoCaixa() {
       />
       <div className="flex justify-between mt-3 pt-3 border-t border-border/10">
         <div>
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Receita mar</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Receita mar</p>
           <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(67500)}</p>
         </div>
         <div className="text-right">
-          <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Despesa mar</p>
+          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Despesa mar</p>
           <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(32100)}</p>
         </div>
       </div>
@@ -238,8 +238,8 @@ export function WidgetSaldoTrend() {
           color="hsl(var(--primary))"
         />
         <div className="flex justify-between mt-1">
-          <span className="text-[9px] text-muted-foreground/30 tabular-nums">Abr/25</span>
-          <span className="text-[9px] text-muted-foreground/30 tabular-nums">Mar/26</span>
+          <span className="text-[9px] text-muted-foreground/55 tabular-nums">Abr/25</span>
+          <span className="text-[9px] text-muted-foreground/55 tabular-nums">Mar/26</span>
         </div>
       </div>
     </WidgetContainer>
@@ -471,7 +471,7 @@ export function WidgetInadimplencia() {
         />
         <div className="flex flex-col gap-1">
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">
               Em atraso
             </p>
             <p
@@ -482,7 +482,7 @@ export function WidgetInadimplencia() {
             </p>
           </div>
           <div>
-            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">
               Carteira total
             </p>
             <p className="text-sm font-semibold font-display tabular-nums text-muted-foreground/70">
@@ -549,7 +549,7 @@ export function WidgetDespesasTreemap() {
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}
               />
-              <span className="text-[9px] text-muted-foreground/40">{seg.label}</span>
+              <span className="text-[9px] text-muted-foreground/60">{seg.label}</span>
             </div>
           ))}
         </div>
@@ -619,11 +619,11 @@ export function WidgetFluxoComTabs() {
           />
           <div className="flex justify-between mt-3 pt-3 border-t border-border/10">
             <div>
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Receita mar</p>
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Receita mar</p>
               <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(67500)}</p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Despesa mar</p>
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Despesa mar</p>
               <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(32100)}</p>
             </div>
           </div>
@@ -632,7 +632,7 @@ export function WidgetFluxoComTabs() {
 
       {tab === 'acumulado' && (
         <div>
-          <p className="text-[10px] text-muted-foreground/40 mb-3">
+          <p className="text-[10px] text-muted-foreground/60 mb-3">
             Resultado líquido acumulado (R$ mil) — Out/25 a Mar/26
           </p>
           <div className="w-full">
@@ -643,17 +643,17 @@ export function WidgetFluxoComTabs() {
               color="hsl(var(--success))"
             />
             <div className="flex justify-between mt-1">
-              <span className="text-[9px] text-muted-foreground/30 tabular-nums">Out/25</span>
-              <span className="text-[9px] text-muted-foreground/30 tabular-nums">Mar/26</span>
+              <span className="text-[9px] text-muted-foreground/55 tabular-nums">Out/25</span>
+              <span className="text-[9px] text-muted-foreground/55 tabular-nums">Mar/26</span>
             </div>
           </div>
           <div className="mt-3 pt-3 border-t border-border/10 flex items-end justify-between">
             <div>
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Acumulado total</p>
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Acumulado total</p>
               <p className="text-sm font-semibold font-display tabular-nums text-success/80">{fmtMoeda(108400)}</p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Crescimento</p>
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Crescimento</p>
               <p className="text-sm font-semibold font-display tabular-nums text-success/80">+734%</p>
             </div>
           </div>

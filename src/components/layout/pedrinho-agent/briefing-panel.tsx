@@ -79,7 +79,7 @@ export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelPr
             <h2 className="text-[13px] font-heading font-semibold text-foreground/90 leading-tight">
               Pedrinho
             </h2>
-            <p className="text-[9px] text-muted-foreground/30 mt-0.5">
+            <p className="text-[9px] text-muted-foreground/55 mt-0.5">
               Contexto: {moduleLabel}
             </p>
           </div>
@@ -88,14 +88,14 @@ export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelPr
         <div className="flex items-center gap-0.5">
           <button
             onClick={onMinimize}
-            className="p-1.5 rounded-lg text-muted-foreground/25 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
             title="Minimizar (Esc)"
           >
             <Minus className="size-3.5" />
           </button>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-muted-foreground/25 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
             title="Fechar"
           >
             <X className="size-3.5" />
@@ -124,14 +124,14 @@ export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelPr
       <div className="flex items-center gap-2 px-5 py-2 border-t border-border/6 dark:border-border/4">
         <button
           onClick={handleAddFile}
-          className="flex items-center gap-1.5 text-[9px] text-muted-foreground/25 hover:text-muted-foreground/50 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-[9px] text-muted-foreground/50 hover:text-muted-foreground/50 transition-colors cursor-pointer"
           title="Anexar arquivo"
         >
           <Paperclip className="size-3" />
           <span>Anexar</span>
         </button>
         <div className="flex-1" />
-        <kbd className="text-[8px] text-muted-foreground/15 font-mono">Esc para fechar</kbd>
+        <kbd className="text-[8px] text-muted-foreground/60 font-mono">Esc para fechar</kbd>
       </div>
     </div>
   )
