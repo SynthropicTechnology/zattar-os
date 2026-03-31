@@ -58,12 +58,19 @@ WORKDIR /app/code
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/cache-handler.js ./cache-handler.js
 
-# Symlink cache para diretorio writable (/app/data é persistente no Cloudron)
-# /app/code é READ-ONLY em runtime, mas symlinks criados no build funcionam
+# Symlink cache para diretorio writable (/app/data e persistente no Cloudron)
+# /app/code e READ-ONLY em runtime, mas symlinks criados no build funcionam
 RUN ln -sf /app/data/cache/next .next/cache
+
+# Preparar diretorios de dados persistentes
+RUN mkdir -p /app/data/cache/next /app/data/logs /app/data/tmp \
+    && chown -R cloudron:cloudron /app/data
 
 COPY cloudron/start.sh /app/code/start.sh
 RUN chmod +x /app/code/start.sh
+
+EXPOSE 3000
 
 CMD [ "/app/code/start.sh" ]

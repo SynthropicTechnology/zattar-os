@@ -25,7 +25,7 @@ interface ProcessoStats {
 }
 
 function calcularScore(stats: ProcessoStats): { score: number; status: 'good' | 'warning' | 'danger' } {
-  const { total, ativos, arquivados, taxaResolucao } = stats;
+  const { total, ativos, taxaResolucao } = stats;
   if (total === 0) return { score: 0, status: 'danger' };
 
   const pctAtivos = (ativos / total) * 100;

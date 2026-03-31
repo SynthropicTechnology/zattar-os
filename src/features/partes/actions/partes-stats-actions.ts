@@ -93,7 +93,7 @@ export async function actionContarPartesPorTipo(): Promise<
         },
       },
     };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: 'Erro ao contar partes' };
   }
 }

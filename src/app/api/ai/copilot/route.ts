@@ -46,6 +46,7 @@
 import type { NextRequest } from 'next/server';
 
 import { generateText } from 'ai';
+import { createOpenAI } from '@ai-sdk/openai';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -66,10 +67,15 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const openrouter = createOpenAI({
+      apiKey,
+      baseURL: 'https://openrouter.ai/api/v1',
+    });
+
     const result = await generateText({
       abortSignal: req.signal,
       maxOutputTokens: 50,
-      model: `openai/${model}`,
+      model: openrouter(model),
       prompt,
       system,
       temperature: 0.7,

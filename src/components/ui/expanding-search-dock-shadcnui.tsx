@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type ExpandingSearchDockProps = {
   onSearch?: (query: string) => void;
@@ -39,10 +39,10 @@ export function ExpandingSearchDock({
     setIsExpanded(true);
   };
 
-  const handleCollapse = () => {
+  const handleCollapse = useCallback(() => {
     setIsExpanded(false);
     setQuery("");
-  };
+  }, [setQuery]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +61,7 @@ export function ExpandingSearchDock({
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isExpanded]);
+  }, [isExpanded, handleCollapse]);
 
   // Fecha com Escape
   useEffect(() => {
@@ -71,7 +71,7 @@ export function ExpandingSearchDock({
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isExpanded]);
+  }, [isExpanded, handleCollapse]);
 
   return (
     <div ref={wrapperRef} className="relative">

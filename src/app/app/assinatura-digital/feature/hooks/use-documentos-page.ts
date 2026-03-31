@@ -8,7 +8,6 @@ import {
   type DocumentoCardData,
   type DocumentoListItem,
 } from "../adapters/documento-card-adapter";
-import type { AssinaturaDigitalDocumentoStatus } from "../domain";
 
 interface UseDocumentosPageParams {
   initialData?: DocumentoListItem[];

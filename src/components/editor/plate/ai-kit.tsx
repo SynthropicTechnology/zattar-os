@@ -9,7 +9,7 @@ import {
   useChatChunk,
 } from '@platejs/ai/react';
 import { type AnyPluginConfig, type Path, getPluginType, KEYS, PathApi } from 'platejs';
-import { type PlateEditor, usePluginOption } from 'platejs/react';
+import { usePluginOption } from 'platejs/react';
 
 import { AILoadingBar, AIMenu } from '@/components/editor/plate-ui/ai-menu';
 import { AIAnchorElement, AILeaf } from '@/components/editor/plate-ui/ai-node';

@@ -3,7 +3,6 @@
 import {
   Camera,
   CheckCircle2,
-  Clock,
   Copy,
   Download,
   ExternalLink,

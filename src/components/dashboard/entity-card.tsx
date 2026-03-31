@@ -11,7 +11,7 @@
 
 'use client';
 
-import { Building2, Mail, Phone, MapPin, Scale, Clock, ChevronRight } from 'lucide-react';
+import { Building2, Mail, Phone, MapPin, Scale, Clock } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
 import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
 

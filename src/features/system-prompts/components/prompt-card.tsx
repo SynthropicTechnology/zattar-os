@@ -84,7 +84,7 @@ interface DefaultPromptCardProps {
 }
 
 export function DefaultPromptCard({
-  slug,
+  slug: _slug,
   nome,
   descricao,
   categoria,

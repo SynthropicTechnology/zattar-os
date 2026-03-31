@@ -142,7 +142,7 @@ const TIPO_ICONS: Record<TipoEvento, React.ComponentType<{ className?: string }>
 
 export function WidgetMeuDia() {
   const { data, isLoading: isDashLoading } = useDashboard();
-  const { lembretes, isPending } = useReminders();
+  const { lembretes } = useReminders();
 
   if (isDashLoading) return <WidgetSkeleton size="md" />;
 

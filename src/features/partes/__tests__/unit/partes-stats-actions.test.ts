@@ -11,14 +11,6 @@ import { actionContarPartesPorTipo } from '../../actions/partes-stats-actions';
 // Helpers de mock
 // =============================================================================
 
-function mockSucesso<T>(valor: T) {
-  return Promise.resolve({ success: true as const, data: valor });
-}
-
-function mockErro(msg = 'Erro simulado') {
-  return Promise.resolve({ success: false as const, error: msg });
-}
-
 function configurarTodosSucesso(opcoes: {
   clientes?: number;
   clientesMes?: number;

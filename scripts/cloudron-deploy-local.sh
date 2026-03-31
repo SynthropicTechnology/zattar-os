@@ -28,7 +28,9 @@ REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
 
 # Variaveis providas automaticamente pelos addons do Cloudron (nao setar)
-ADDON_VARS="ENABLE_REDIS_CACHE REDIS_URL REDIS_PASSWORD"
+# Redis: mapeadas pelo start.sh de CLOUDRON_REDIS_* -> REDIS_*
+# Mail:  mapeadas pelo start.sh de CLOUDRON_MAIL_*  -> SYSTEM_SMTP_* / SYSTEM_MAIL_*
+ADDON_VARS="ENABLE_REDIS_CACHE REDIS_URL REDIS_PASSWORD SYSTEM_SMTP_HOST SYSTEM_SMTP_PORT SYSTEM_SMTP_USER SYSTEM_SMTP_PASS SYSTEM_SMTP_SECURE SYSTEM_MAIL_FROM SYSTEM_MAIL_DISPLAY_NAME SYSTEM_MAIL_DOMAIN"
 
 # Variaveis que nao fazem sentido em runtime
 SKIP_VARS="PUPPETEER_SKIP_DOWNLOAD PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD"
@@ -245,9 +247,9 @@ echo "============================================================"
 echo ""
 echo -e "   Imagem: ${CYAN}${FULL_IMAGE}${NC}"
 echo ""
-echo "   Automatico (Cloudron addons):"
-echo "     - REDIS_URL, REDIS_PASSWORD"
-echo "     - SMTP_*"
+echo "   Automatico (Cloudron addons -> mapeado pelo start.sh):"
+echo "     - CLOUDRON_REDIS_* -> REDIS_URL, REDIS_PASSWORD, ENABLE_REDIS_CACHE"
+echo "     - CLOUDRON_MAIL_*  -> SYSTEM_SMTP_*, SYSTEM_MAIL_*"
 echo ""
 echo "   Build time (via .env.production):"
 echo "     - NEXT_PUBLIC_SUPABASE_URL"

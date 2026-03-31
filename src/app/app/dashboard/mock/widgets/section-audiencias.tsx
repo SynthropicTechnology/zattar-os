@@ -12,12 +12,10 @@ import { Calendar, Clock, MapPin, Gavel, FileText } from 'lucide-react';
 import {
   GallerySection,
   WidgetContainer,
-  Sparkline,
   MiniDonut,
   MiniBar,
   Stat,
   ProgressRing,
-  ListItem,
   CalendarHeatmap,
   InsightBanner,
   ComparisonStat,
@@ -423,7 +421,7 @@ export function TrendMensal() {
       </div>
 
       {/* Inline SVG area chart with highlighted last month */}
-      <TrendAreaChart data={TREND_MENSAL} months={months} />
+      <TrendAreaChart data={TREND_MENSAL} />
 
       <div className="flex justify-between mt-2">
         <span className="text-[9px] text-muted-foreground/40">{months[0]}</span>
@@ -433,7 +431,7 @@ export function TrendMensal() {
   );
 }
 
-function TrendAreaChart({ data, months }: { data: number[]; months: string[] }) {
+function TrendAreaChart({ data }: { data: number[] }) {
   const width = 220;
   const height = 52;
   const min = Math.min(...data) * 0.85;
