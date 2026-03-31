@@ -9,9 +9,41 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { ResponsiveGrid } from '@/components/ui/responsive-grid';
-// Mock do DashboardFilters pois não está disponível no caminho especificado
-const DashboardFilters = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
-const FilterGroup = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
+// Mock do DashboardFilters com estrutura que espelha o componente real
+const DashboardFilters = ({ children, activeFiltersCount }: {
+    children: React.ReactNode;
+    activeFiltersCount?: number;
+    onApply?: () => void;
+    onClear?: () => void;
+}) => {
+    // When useViewport says mobile, render sheet-trigger style; otherwise inline
+    const viewport = mockUseViewport();
+    if (viewport.isMobile) {
+        return (
+            <div>
+                <button data-slot="sheet-trigger">
+                    Filtros
+                    {activeFiltersCount && activeFiltersCount > 0 ? (
+                        <span className="ml-2">{activeFiltersCount}</span>
+                    ) : null}
+                </button>
+                <div>{children}</div>
+            </div>
+        );
+    }
+    return (
+        <div>
+            <h3 className="text-sm">Filtros</h3>
+            {children}
+        </div>
+    );
+};
+const FilterGroup = ({ children, label }: { children: React.ReactNode; label?: string }) => (
+    <div>
+        {label && <label>{label}</label>}
+        {children}
+    </div>
+);
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { setViewport } from '@/testing/helpers/responsive-test-helpers';
 

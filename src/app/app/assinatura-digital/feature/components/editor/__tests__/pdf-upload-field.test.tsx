@@ -12,8 +12,8 @@ jest.mock('sonner', () => ({
   },
 }));
 
-// Mock do formatFileSize
-jest.mock('../../utils/display', () => ({
+// Mock do formatFileSize — path relative to this test resolves to feature/utils
+jest.mock('../../../utils', () => ({
   formatFileSize: (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
@@ -88,7 +88,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       Object.defineProperty(fileInput, 'files', {
         value: [mockFile],
         writable: false,
@@ -117,7 +117,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       Object.defineProperty(fileInput, 'files', {
         value: [mockFile],
         writable: false,
@@ -139,7 +139,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       Object.defineProperty(fileInput, 'files', {
         value: [mockFile],
         writable: false,
@@ -167,7 +167,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       Object.defineProperty(fileInput, 'files', {
         value: [mockFile],
         writable: false,
@@ -206,7 +206,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       Object.defineProperty(fileInput, 'files', {
         value: [mockFile],
         writable: false,
@@ -248,7 +248,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} value={fileValue} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       fileInput.value = 'test.pdf';
 
       const removeButton = screen.getByTestId('remove-button');
@@ -262,7 +262,7 @@ describe('PdfUploadField', () => {
     it('deve desabilitar input quando disabled é true', () => {
       render(<PdfUploadField {...defaultProps} disabled={true} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input');
+      const fileInput = document.getElementById('pdf-upload-field')!;
       expect(fileInput).toBeDisabled();
     });
 
@@ -292,7 +292,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} error="Erro externo" />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       Object.defineProperty(fileInput, 'files', {
         value: [mockFile],
         writable: false,
@@ -325,7 +325,7 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} />);
 
-      const fileInput = screen.getByTestId('pdf-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
       Object.defineProperty(fileInput, 'files', {
         value: [mockFile],
         writable: false,

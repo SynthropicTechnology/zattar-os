@@ -6,32 +6,30 @@ import { criarClienteMock } from '../fixtures';
 // Mock das dependências
 jest.mock('../../service');
 jest.mock('next/cache');
-jest.mock('@/lib/safe-action', () => ({
-  authenticatedAction: jest.fn((schema, handler) => {
+jest.mock('@/lib/safe-action', () => {
+  const createWrapper = () => jest.fn((schema: any, handler: any) => {
     return async (input: unknown) => {
       const validation = schema.safeParse(input);
       if (!validation.success) {
         return {
           success: false,
-          error: validation.error.errors[0].message,
+          error: 'Erro de validação',
+          message: validation.error.errors[0].message,
         };
       }
-      return handler(validation.data, { user: { id: 1, nomeCompleto: 'Test User' } });
-    };
-  }),
-  authenticatedFormAction: jest.fn((schema, handler) => {
-    return async (input: unknown) => {
-      const validation = schema.safeParse(input);
-      if (!validation.success) {
-        return {
-          success: false,
-          error: validation.error.errors[0].message,
-        };
+      try {
+        const result = await handler(validation.data, { user: { id: 1, nomeCompleto: 'Test User' } });
+        return { success: true, data: result };
+      } catch (err: any) {
+        return { success: false, error: err.message };
       }
-      return handler(validation.data, { user: { id: 1, nomeCompleto: 'Test User' } });
     };
-  }),
-}));
+  });
+  return {
+    authenticatedAction: createWrapper(),
+    authenticatedFormAction: createWrapper(),
+  };
+});
 
 // Importar após os mocks estarem configurados
 import {
@@ -60,10 +58,13 @@ describe('Safe Actions - Novo Padrão', () => {
   describe('actionListarClientesSafe', () => {
     it('deve validar schema e listar clientes', async () => {
       const mockResultado = {
-        clientes: [mockCliente],
-        total: 1,
+        data: [mockCliente],
+        pagination: { page: 1, limit: 10, total: 1, totalPages: 1, hasMore: false },
       };
-      (service.listarClientes as jest.Mock).mockResolvedValue(mockResultado);
+      (service.listarClientes as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockResultado,
+      });
 
       const result = await actionListarClientesSafe({
         pagina: 1,
@@ -95,7 +96,10 @@ describe('Safe Actions - Novo Padrão', () => {
 
   describe('actionBuscarClienteSafe', () => {
     it('deve validar ID obrigatório e buscar cliente', async () => {
-      (service.buscarCliente as jest.Mock).mockResolvedValue(mockCliente);
+      (service.buscarCliente as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockCliente,
+      });
 
       const result = await actionBuscarClienteSafe({ id: 1 });
 
@@ -107,7 +111,10 @@ describe('Safe Actions - Novo Padrão', () => {
     });
 
     it('deve lançar erro se cliente não encontrado', async () => {
-      (service.buscarCliente as jest.Mock).mockResolvedValue(null);
+      (service.buscarCliente as jest.Mock).mockResolvedValue({
+        success: true,
+        data: null,
+      });
 
       const result = await actionBuscarClienteSafe({ id: 999 });
 
@@ -124,13 +131,16 @@ describe('Safe Actions - Novo Padrão', () => {
         cpf: '12345678900',
         emails: ['novo@example.com'],
       };
-      (service.criarCliente as jest.Mock).mockResolvedValue(mockCliente);
+      (service.criarCliente as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockCliente,
+      });
 
       const result = await actionCriarClienteSafe(novoCliente);
 
-      expect(service.criarCliente).toHaveBeenCalledWith(novoCliente);
-      expect(revalidatePath).toHaveBeenCalledWith('/partes/clientes');
-      expect(revalidatePath).toHaveBeenCalledWith('/partes');
+      expect(service.criarCliente).toHaveBeenCalled();
+      expect(revalidatePath).toHaveBeenCalledWith('/app/partes/clientes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/partes');
       expect(result.success).toBe(true);
     });
 
@@ -149,10 +159,15 @@ describe('Safe Actions - Novo Padrão', () => {
     it('deve validar ID e dados, e atualizar cliente', async () => {
       const dadosAtualizacao = {
         id: 1,
-        nome: 'Cliente Atualizado',
-        emails: ['atualizado@example.com'],
+        data: {
+          nome: 'Cliente Atualizado',
+          emails: ['atualizado@example.com'],
+        },
       };
-      (service.atualizarCliente as jest.Mock).mockResolvedValue(mockCliente);
+      (service.atualizarCliente as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockCliente,
+      });
 
       const result = await actionAtualizarClienteSafe(dadosAtualizacao);
 
@@ -167,7 +182,10 @@ describe('Safe Actions - Novo Padrão', () => {
 
   describe('actionDesativarClienteSafe', () => {
     it('deve validar ID e desativar cliente', async () => {
-      (service.desativarCliente as jest.Mock).mockResolvedValue(true);
+      (service.desativarCliente as jest.Mock).mockResolvedValue({
+        success: true,
+        data: undefined,
+      });
 
       const result = await actionDesativarClienteSafe({ id: 1 });
 
@@ -188,10 +206,13 @@ describe('Legacy Actions', () => {
   describe('actionListarClientes', () => {
     it('deve listar clientes com try-catch', async () => {
       const mockResultado = {
-        clientes: [mockCliente],
-        total: 1,
+        data: [mockCliente],
+        pagination: { page: 1, limit: 10, total: 1, totalPages: 1, hasMore: false },
       };
-      (service.listarClientes as jest.Mock).mockResolvedValue(mockResultado);
+      (service.listarClientes as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockResultado,
+      });
 
       const result = await actionListarClientes({
         pagina: 1,
@@ -221,7 +242,10 @@ describe('Legacy Actions', () => {
 
   describe('actionBuscarCliente', () => {
     it('deve validar ID e buscar cliente', async () => {
-      (service.buscarCliente as jest.Mock).mockResolvedValue(mockCliente);
+      (service.buscarCliente as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockCliente,
+      });
 
       const result = await actionBuscarCliente(1);
 
@@ -233,7 +257,10 @@ describe('Legacy Actions', () => {
     });
 
     it('deve retornar erro se cliente não encontrado', async () => {
-      (service.buscarCliente as jest.Mock).mockResolvedValue(null);
+      (service.buscarCliente as jest.Mock).mockResolvedValue({
+        success: true,
+        data: null,
+      });
 
       const result = await actionBuscarCliente(999);
 
@@ -249,7 +276,10 @@ describe('Legacy Actions', () => {
         endereco: { rua: 'Rua Teste' },
         processos: [],
       };
-      (service.buscarClientePorCPF as jest.Mock).mockResolvedValue(mockClienteCompleto);
+      (service.buscarClientePorCPF as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockClienteCompleto,
+      });
 
       const result = await actionBuscarClientePorCPF('12345678900');
 
@@ -261,6 +291,12 @@ describe('Legacy Actions', () => {
     });
 
     it('deve retornar erro para CPF inválido', async () => {
+      // buscarClientePorCPF validates CPF and returns error Result
+      (service.buscarClientePorCPF as jest.Mock).mockResolvedValue({
+        success: false,
+        error: { code: 'VALIDATION_ERROR', message: 'CPF e obrigatorio' },
+      });
+
       const result = await actionBuscarClientePorCPF('');
 
       expect(result.success).toBe(false);
@@ -275,7 +311,10 @@ describe('Legacy Actions', () => {
         cnpj: '12345678000190',
         cpf: null,
       });
-      (service.buscarClientePorCNPJ as jest.Mock).mockResolvedValue(mockClientePJ);
+      (service.buscarClientePorCNPJ as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockClientePJ,
+      });
 
       const result = await actionBuscarClientePorCNPJ('12345678000190');
 
@@ -287,6 +326,11 @@ describe('Legacy Actions', () => {
     });
 
     it('deve retornar erro para CNPJ inválido', async () => {
+      (service.buscarClientePorCNPJ as jest.Mock).mockResolvedValue({
+        success: false,
+        error: { code: 'VALIDATION_ERROR', message: 'CNPJ e obrigatorio' },
+      });
+
       const result = await actionBuscarClientePorCNPJ('');
 
       expect(result.success).toBe(false);

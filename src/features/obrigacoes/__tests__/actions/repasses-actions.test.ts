@@ -110,14 +110,9 @@ describe('Repasses Actions', () => {
       const parcelaId = 1;
       const url = 'https://storage.example.com/declaracao.pdf';
 
-      const parcelaAtualizada = criarRepassePendenteMock({
-        parcelaId,
-        arquivoDeclaracaoPrestacaoContas: url,
-        statusRepasse: 'pendente_transferencia',
-      });
-
+      // Note: the actual service returns void (no data returned from anexar)
       (service.anexarDeclaracaoPrestacaoContas as jest.Mock).mockResolvedValue(
-        parcelaAtualizada
+        undefined
       );
 
       // Act
@@ -129,7 +124,6 @@ describe('Repasses Actions', () => {
         url
       );
       expect(result.success).toBe(true);
-      expect(result.data).toEqual(parcelaAtualizada);
     });
 
     it('deve revalidar cache de repasses', async () => {
@@ -138,14 +132,14 @@ describe('Repasses Actions', () => {
       const url = 'https://storage.example.com/declaracao.pdf';
 
       (service.anexarDeclaracaoPrestacaoContas as jest.Mock).mockResolvedValue(
-        criarRepassePendenteMock({ parcelaId })
+        undefined
       );
 
       // Act
       await actionAnexarDeclaracao(parcelaId, url);
 
       // Assert
-      expect(revalidatePath).toHaveBeenCalledWith('/repasses');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/repasses');
     });
 
     it('deve retornar erro em caso de falha', async () => {
@@ -176,12 +170,7 @@ describe('Repasses Actions', () => {
         dataRepasse: '2024-01-22',
       };
 
-      const parcelaAtualizada = criarRepassePendenteMock({
-        parcelaId,
-        statusRepasse: 'repassado',
-      });
-
-      (service.registrarRepasse as jest.Mock).mockResolvedValue(parcelaAtualizada);
+      (service.registrarRepasse as jest.Mock).mockResolvedValue(undefined);
 
       // Act
       const result = await actionRegistrarRepasse(parcelaId, dadosRepasse);
@@ -194,7 +183,7 @@ describe('Repasses Actions', () => {
       expect(result.success).toBe(true);
     });
 
-    it('deve validar declaração anexada', async () => {
+    it('deve retornar erro quando declaração não está anexada', async () => {
       // Arrange
       const parcelaId = 1;
       const dadosRepasse = {
@@ -228,7 +217,7 @@ describe('Repasses Actions', () => {
       await actionRegistrarRepasse(parcelaId, dadosRepasse);
 
       // Assert
-      expect(revalidatePath).toHaveBeenCalledWith('/repasses');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/repasses');
     });
 
     it('deve retornar erro em caso de falha', async () => {

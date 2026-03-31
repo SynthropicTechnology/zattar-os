@@ -104,7 +104,7 @@ describe('Chat Actions - Unit Tests', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockSala);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/chat');
     });
 
     it('deve criar sala com documentoId', async () => {
@@ -172,7 +172,7 @@ describe('Chat Actions - Unit Tests', () => {
 
       expect(result.success).toBe(true);
       expect(mockChatService.criarGrupo).toHaveBeenCalledWith('Grupo Teste', [2, 3], mockUserId);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/chat');
     });
   });
 
@@ -226,7 +226,7 @@ describe('Chat Actions - Unit Tests', () => {
       const result = await actionAtualizarStatusMensagem(1, 'pending' as any);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Status não permitido');
+      expect(result.error).toContain('não pode ser persistido');
     });
 
     it('deve atualizar status permitido', async () => {
@@ -249,7 +249,7 @@ describe('Chat Actions - Unit Tests', () => {
       const result = await actionArquivarSala(1);
 
       expect(result.success).toBe(true);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/chat');
     });
   });
 
@@ -260,7 +260,7 @@ describe('Chat Actions - Unit Tests', () => {
       const result = await actionDeletarSala(1);
 
       expect(result.success).toBe(true);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/chat');
     });
   });
 
@@ -326,7 +326,7 @@ describe('Chat Actions - Unit Tests', () => {
 
       expect(result.success).toBe(true);
       expect(mockChatService.desarquivarSala).toHaveBeenCalledWith(1, mockUserId);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/chat');
     });
 
     it('deve retornar erro quando service falha', async () => {
@@ -359,7 +359,7 @@ describe('Chat Actions - Unit Tests', () => {
 
       expect(result.success).toBe(true);
       expect(mockChatService.removerConversa).toHaveBeenCalledWith(1, mockUserId);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/chat');
     });
 
     it('deve retornar erro quando service falha', async () => {
@@ -457,7 +457,7 @@ describe('Chat Actions - Unit Tests', () => {
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockSalaAtualizada);
       expect(mockChatService.atualizarNomeSala).toHaveBeenCalledWith(1, 'Novo Nome', mockUserId);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/chat');
     });
 
     it('deve retornar erro quando service falha', async () => {

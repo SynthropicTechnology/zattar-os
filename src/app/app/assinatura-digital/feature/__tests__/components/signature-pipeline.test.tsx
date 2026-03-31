@@ -84,7 +84,8 @@ describe('SignatureStatsStrip', () => {
     const stats = criarStatsMock({ taxaConclusao: 82 });
     render(<SignatureStatsStrip stats={stats} />);
 
-    expect(screen.getByText('82%')).toBeInTheDocument();
+    // "82%" appears in both ProgressRing and the text span
+    expect(screen.getAllByText('82%').length).toBeGreaterThanOrEqual(1);
   });
 
   it('deve renderizar tempo médio', () => {

@@ -126,7 +126,8 @@ describe('TemplateCreateDialog', () => {
 
       render(<TemplateCreateDialog {...defaultProps} initialTipoTemplate="markdown" />);
 
-      const nomeInput = screen.getByTestId('nome-input');
+      // Wait for segments to load and form to appear
+      const nomeInput = await screen.findByTestId('nome-input');
       fireEvent.change(nomeInput, { target: { value: 'Template Markdown' } });
 
       // Simular submit do formulário
@@ -146,7 +147,7 @@ describe('TemplateCreateDialog', () => {
     it('deve validar conteúdo markdown obrigatório', async () => {
       render(<TemplateCreateDialog {...defaultProps} initialTipoTemplate="markdown" />);
 
-      const nomeInput = screen.getByTestId('nome-input');
+      const nomeInput = await screen.findByTestId('nome-input');
       fireEvent.change(nomeInput, { target: { value: 'Template sem conteúdo' } });
 
       const form = screen.getByTestId('template-form-fields').closest('form');
@@ -181,7 +182,7 @@ describe('TemplateCreateDialog', () => {
 
       render(<TemplateCreateDialog {...defaultProps} initialTipoTemplate="pdf" />);
 
-      const nomeInput = screen.getByTestId('nome-input');
+      const nomeInput = await screen.findByTestId('nome-input');
       fireEvent.change(nomeInput, { target: { value: 'Template PDF' } });
 
       // Simular submit do formulário
@@ -199,7 +200,7 @@ describe('TemplateCreateDialog', () => {
     it('deve validar PDF obrigatório para templates PDF', async () => {
       render(<TemplateCreateDialog {...defaultProps} initialTipoTemplate="pdf" />);
 
-      const nomeInput = screen.getByTestId('nome-input');
+      const nomeInput = await screen.findByTestId('nome-input');
       fireEvent.change(nomeInput, { target: { value: 'Template sem PDF' } });
 
       const form = screen.getByTestId('template-form-fields').closest('form');
@@ -223,7 +224,7 @@ describe('TemplateCreateDialog', () => {
 
       render(<TemplateCreateDialog {...defaultProps} />);
 
-      const nomeInput = screen.getByTestId('nome-input');
+      const nomeInput = await screen.findByTestId('nome-input');
       fireEvent.change(nomeInput, { target: { value: 'Template com erro' } });
 
       const form = screen.getByTestId('template-form-fields').closest('form');
@@ -252,10 +253,10 @@ describe('TemplateCreateDialog', () => {
   });
 
   describe('Reset do Formulário', () => {
-    it('deve resetar o formulário quando o diálogo fecha', () => {
+    it('deve resetar o formulário quando o diálogo fecha', async () => {
       const { rerender } = render(<TemplateCreateDialog {...defaultProps} open={true} />);
 
-      const nomeInput = screen.getByTestId('nome-input');
+      const nomeInput = await screen.findByTestId('nome-input');
       fireEvent.change(nomeInput, { target: { value: 'Template Teste' } });
 
       rerender(<TemplateCreateDialog {...defaultProps} open={false} />);

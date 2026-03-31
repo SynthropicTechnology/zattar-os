@@ -1,6 +1,37 @@
 import { afterAll, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { NextRequest } from 'next/server';
 
+// Mock ESM-only modules that Jest cannot transform
+jest.mock('platejs', () => ({
+  createSlateEditor: jest.fn(),
+  nanoid: jest.fn(() => 'mock-nanoid'),
+}));
+
+jest.mock('@platejs/ai', () => ({
+  getMarkdown: jest.fn(() => ''),
+}));
+
+jest.mock('ai', () => ({
+  streamText: jest.fn(),
+  createOpenAI: jest.fn(() => ({})),
+}));
+
+jest.mock('dedent', () => ({
+  __esModule: true,
+  default: jest.fn((str: string) => str),
+}));
+
+jest.mock('@/components/editor/plate/editor-base-kit', () => ({
+  BaseEditorKit: {},
+}));
+
+// Mock the prompts module to avoid deep ESM imports
+jest.mock('../prompts', () => ({
+  getToolName: jest.fn(() => 'generate'),
+  buildSystemPrompt: jest.fn(() => 'system prompt'),
+  buildUserMessages: jest.fn(() => []),
+}));
+
 import { POST } from '../route';
 
 jest.mock('../../../../../lib/auth/api-auth', () => ({

@@ -108,8 +108,8 @@ describe('Assistentes Domain', () => {
       expect(result.success).toBe(true);
     });
 
-    it('deve validar iframe_code obrigatório', () => {
-      // Arrange
+    it('deve permitir iframe_code opcional', () => {
+      // Arrange — iframe_code is optional/nullable in the base schema
       const assistente = {
         nome: 'Teste',
         descricao: 'Descrição',
@@ -118,11 +118,8 @@ describe('Assistentes Domain', () => {
       // Act
       const result = assistenteSchema.safeParse(assistente);
 
-      // Assert
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.issues[0].message).toContain('Código do iframe é obrigatório');
-      }
+      // Assert — valid because iframe_code is optional in assistenteSchema
+      expect(result.success).toBe(true);
     });
 
     it('deve validar ativo como booleano com padrão true', () => {

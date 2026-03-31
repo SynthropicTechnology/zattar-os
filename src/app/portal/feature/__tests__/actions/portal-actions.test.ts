@@ -122,7 +122,7 @@ describe('Portal Actions', () => {
 
       // Assert
       expect(result.success).toBe(false);
-      expect(result.error).toBe('CPF inválido');
+      expect(result.error).toBe('CPF inválido. Verifique os números digitados.');
       expect(mockCookies.set).not.toHaveBeenCalled();
       expect(mockBuscarClientePorDocumento).not.toHaveBeenCalled();
     });
@@ -146,7 +146,7 @@ describe('Portal Actions', () => {
 
       // Assert
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Cliente não encontrado');
+      expect(result.error).toBe('CPF não cadastrado no sistema. Entre em contato com o escritório.');
       expect(mockCookies.set).not.toHaveBeenCalled();
     });
   });
@@ -203,7 +203,7 @@ describe('Portal Actions', () => {
       expect(result).toBeDefined();
       if (result) {
         expect(result.success).toBe(false);
-        expect(result.error).toBe('CPF inválido');
+        expect(result.error).toBe('CPF inválido. Verifique os números digitados.');
       }
       expect(mockRedirect).not.toHaveBeenCalled();
       expect(mockCookies.set).not.toHaveBeenCalled();

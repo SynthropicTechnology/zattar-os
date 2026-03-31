@@ -122,7 +122,8 @@ describe('TemplateFormFields', () => {
 
       expect(screen.getByLabelText(/nome do template/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/descrição/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/segmento/i)).toBeInTheDocument();
+      // Segmento uses Radix Select (no native input), check label text instead
+      expect(screen.getByText(/segmento/i)).toBeInTheDocument();
     });
 
     it('deve renderizar seletor de tipo de template', () => {
@@ -193,8 +194,9 @@ describe('TemplateFormFields', () => {
     it('deve renderizar lista de segmentos', () => {
       render(<TemplateFormFieldsWrapper {...defaultProps} />);
 
-      const segmentoSelect = screen.getByLabelText(/segmento/i);
-      fireEvent.click(segmentoSelect);
+      // Radix Select uses a button as trigger, find it via role
+      const segmentoTrigger = screen.getByRole('combobox');
+      fireEvent.click(segmentoTrigger);
 
       expect(screen.getByText('Segmento 1')).toBeInTheDocument();
       expect(screen.getByText('Segmento 2')).toBeInTheDocument();
@@ -203,15 +205,15 @@ describe('TemplateFormFields', () => {
     it('deve permitir limpar seleção de segmento', () => {
       render(<TemplateFormFieldsWrapper {...defaultProps} />);
 
-      const segmentoSelect = screen.getByLabelText(/segmento/i);
-      fireEvent.click(segmentoSelect);
+      const segmentoTrigger = screen.getByRole('combobox');
+      fireEvent.click(segmentoTrigger);
       fireEvent.click(screen.getByText('Segmento 1'));
 
       const clearButton = screen.getByText(/limpar seleção/i);
       fireEvent.click(clearButton);
 
-      // O segmento deve ter sido limpo
-      expect(segmentoSelect).toHaveValue('');
+      // The trigger should show the placeholder again
+      expect(segmentoTrigger).toHaveTextContent('Selecione um segmento');
     });
   });
 

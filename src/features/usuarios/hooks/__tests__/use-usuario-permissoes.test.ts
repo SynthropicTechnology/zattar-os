@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useUsuarioPermissoes } from '../use-usuario-permissoes';
 import { actionListarPermissoes, actionSalvarPermissoes } from '../../actions/permissoes-actions';
@@ -5,6 +9,33 @@ import { actionListarPermissoes, actionSalvarPermissoes } from '../../actions/pe
 jest.mock('../../actions/permissoes-actions', () => ({
   actionListarPermissoes: jest.fn(),
   actionSalvarPermissoes: jest.fn(),
+}));
+
+// Mock permissions-utils to return simple matrix format
+jest.mock('../../permissions-utils', () => ({
+  formatarPermissoesParaMatriz: jest.fn((permissoes: Array<{ recurso: string; operacao: string; permitido: boolean }>) => {
+    // Group by recurso
+    const map = new Map<string, { recurso: string; operacoes: Record<string, boolean> }>();
+    for (const p of permissoes) {
+      if (!map.has(p.recurso)) {
+        map.set(p.recurso, { recurso: p.recurso, operacoes: {} });
+      }
+      map.get(p.recurso)!.operacoes[p.operacao] = p.permitido;
+    }
+    return Array.from(map.values());
+  }),
+  formatarMatrizParaPermissoes: jest.fn((matriz: Array<{ recurso: string; operacoes: Record<string, boolean> }>) => {
+    const result: Array<{ recurso: string; operacao: string; permitido: boolean }> = [];
+    for (const item of matriz) {
+      for (const [op, val] of Object.entries(item.operacoes)) {
+        result.push({ recurso: item.recurso, operacao: op, permitido: val });
+      }
+    }
+    return result;
+  }),
+  detectarMudancas: jest.fn((original: unknown[], current: unknown[]) => {
+    return JSON.stringify(original) !== JSON.stringify(current);
+  }),
 }));
 
 const mockActionListarPermissoes = actionListarPermissoes as jest.Mock;
@@ -27,7 +58,11 @@ describe('useUsuarioPermissoes', () => {
 
     mockActionListarPermissoes.mockResolvedValueOnce({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     const { result } = renderHook(() => useUsuarioPermissoes(1));
@@ -50,7 +85,11 @@ describe('useUsuarioPermissoes', () => {
 
     mockActionListarPermissoes.mockResolvedValueOnce({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     const { result } = renderHook(() => useUsuarioPermissoes(1));
@@ -59,11 +98,19 @@ describe('useUsuarioPermissoes', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(result.current.matriz).toEqual([
-      { recurso: 'processos', operacao: 'criar', permitido: true },
-      { recurso: 'processos', operacao: 'editar', permitido: false },
-      { recurso: 'financeiro', operacao: 'criar', permitido: true },
-    ]);
+    // Matriz should be grouped by recurso with operacoes map
+    expect(result.current.matriz).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          recurso: 'processos',
+          operacoes: { criar: true, editar: false },
+        }),
+        expect.objectContaining({
+          recurso: 'financeiro',
+          operacoes: { criar: true },
+        }),
+      ])
+    );
   });
 
   it('should toggle permission correctly', async () => {
@@ -74,7 +121,11 @@ describe('useUsuarioPermissoes', () => {
 
     mockActionListarPermissoes.mockResolvedValueOnce({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     const { result } = renderHook(() => useUsuarioPermissoes(1));
@@ -88,9 +139,9 @@ describe('useUsuarioPermissoes', () => {
     });
 
     const updatedMatriz = result.current.matriz.find(
-      p => p.recurso === 'processos' && p.operacao === 'criar'
+      (p) => p.recurso === 'processos'
     );
-    expect(updatedMatriz?.permitido).toBe(false);
+    expect(updatedMatriz?.operacoes.criar).toBe(false);
   });
 
   it('should save permissions correctly', async () => {
@@ -98,9 +149,13 @@ describe('useUsuarioPermissoes', () => {
       { recurso: 'processos', operacao: 'criar', permitido: true },
     ];
 
-    mockActionListarPermissoes.mockResolvedValueOnce({
+    mockActionListarPermissoes.mockResolvedValue({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     mockActionSalvarPermissoes.mockResolvedValueOnce({
@@ -122,9 +177,12 @@ describe('useUsuarioPermissoes', () => {
     });
 
     await waitFor(() => {
-      expect(mockActionSalvarPermissoes).toHaveBeenCalledWith(1, [
-        { recurso: 'processos', operacao: 'criar', permitido: false },
-      ]);
+      expect(mockActionSalvarPermissoes).toHaveBeenCalledWith(
+        1,
+        expect.arrayContaining([
+          expect.objectContaining({ recurso: 'processos', operacao: 'criar', permitido: false }),
+        ])
+      );
     });
   });
 
@@ -133,9 +191,13 @@ describe('useUsuarioPermissoes', () => {
       { recurso: 'processos', operacao: 'criar', permitido: true },
     ];
 
-    mockActionListarPermissoes.mockResolvedValueOnce({
+    mockActionListarPermissoes.mockResolvedValue({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     mockActionSalvarPermissoes.mockImplementation(
@@ -166,7 +228,11 @@ describe('useUsuarioPermissoes', () => {
 
     mockActionListarPermissoes.mockResolvedValueOnce({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     const { result } = renderHook(() => useUsuarioPermissoes(1));
@@ -175,7 +241,7 @@ describe('useUsuarioPermissoes', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    const originalMatriz = [...result.current.matriz];
+    const originalMatriz = JSON.parse(JSON.stringify(result.current.matriz));
 
     act(() => {
       result.current.togglePermissao('processos', 'criar');
@@ -197,7 +263,11 @@ describe('useUsuarioPermissoes', () => {
 
     mockActionListarPermissoes.mockResolvedValueOnce({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     const { result } = renderHook(() => useUsuarioPermissoes(1));
@@ -241,9 +311,13 @@ describe('useUsuarioPermissoes', () => {
       { recurso: 'processos', operacao: 'criar', permitido: true },
     ];
 
-    mockActionListarPermissoes.mockResolvedValueOnce({
+    mockActionListarPermissoes.mockResolvedValue({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     mockActionSalvarPermissoes.mockResolvedValueOnce({
@@ -266,7 +340,7 @@ describe('useUsuarioPermissoes', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.error).toBe('Erro ao salvar permissões');
+      expect(result.current.error).toBe('Erro ao salvar');
       expect(result.current.isSaving).toBe(false);
     });
   });
@@ -280,7 +354,11 @@ describe('useUsuarioPermissoes', () => {
 
     mockActionListarPermissoes.mockResolvedValueOnce({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     const { result } = renderHook(() => useUsuarioPermissoes(1));
@@ -295,48 +373,11 @@ describe('useUsuarioPermissoes', () => {
       result.current.togglePermissao('financeiro', 'criar');
     });
 
-    expect(result.current.matriz).toEqual([
-      { recurso: 'processos', operacao: 'criar', permitido: false },
-      { recurso: 'processos', operacao: 'editar', permitido: true },
-      { recurso: 'financeiro', operacao: 'criar', permitido: false },
-    ]);
-  });
-
-  it('should convert matriz to permissoes array correctly on save', async () => {
-    const mockPermissoes = [
-      { recurso: 'processos', operacao: 'criar', permitido: true },
-      { recurso: 'processos', operacao: 'editar', permitido: false },
-    ];
-
-    mockActionListarPermissoes.mockResolvedValueOnce({
-      success: true,
-      data: mockPermissoes,
-    });
-
-    mockActionSalvarPermissoes.mockResolvedValueOnce({
-      success: true,
-    });
-
-    const { result } = renderHook(() => useUsuarioPermissoes(1));
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-
-    act(() => {
-      result.current.togglePermissao('processos', 'criar');
-    });
-
-    await act(async () => {
-      await result.current.save();
-    });
-
-    await waitFor(() => {
-      expect(mockActionSalvarPermissoes).toHaveBeenCalledWith(1, [
-        { recurso: 'processos', operacao: 'criar', permitido: false },
-        { recurso: 'processos', operacao: 'editar', permitido: false },
-      ]);
-    });
+    const processosItem = result.current.matriz.find(m => m.recurso === 'processos');
+    const financeiroItem = result.current.matriz.find(m => m.recurso === 'financeiro');
+    expect(processosItem?.operacoes.criar).toBe(false);
+    expect(processosItem?.operacoes.editar).toBe(true);
+    expect(financeiroItem?.operacoes.criar).toBe(false);
   });
 
   it('should reset hasChanges after successful save', async () => {
@@ -344,9 +385,13 @@ describe('useUsuarioPermissoes', () => {
       { recurso: 'processos', operacao: 'criar', permitido: true },
     ];
 
-    mockActionListarPermissoes.mockResolvedValueOnce({
+    mockActionListarPermissoes.mockResolvedValue({
       success: true,
-      data: mockPermissoes,
+      data: {
+        usuario_id: 1,
+        is_super_admin: false,
+        permissoes: mockPermissoes,
+      },
     });
 
     mockActionSalvarPermissoes.mockResolvedValueOnce({

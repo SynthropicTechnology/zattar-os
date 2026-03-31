@@ -319,10 +319,10 @@ describe('Obrigações Repository', () => {
       expect(result.acordos).toHaveLength(1);
     });
 
-    it('deve aplicar filtros de busca textual', async () => {
+    it('deve aplicar filtros de tipo e status', async () => {
       // Arrange
       const mockSelect = jest.fn().mockReturnThis();
-      const mockOr = jest.fn().mockReturnThis();
+      const mockEq = jest.fn().mockReturnThis();
       const mockOrder = jest.fn().mockReturnThis();
       const mockRange = jest.fn().mockResolvedValue({
         data: [],
@@ -335,10 +335,12 @@ describe('Obrigações Repository', () => {
       });
 
       mockSelect.mockReturnValue({
-        or: mockOr,
+        eq: mockEq,
       });
 
-      mockOr.mockReturnValue({
+      // Chain eq calls
+      mockEq.mockReturnValue({
+        eq: mockEq,
         order: mockOrder,
       });
 
@@ -348,15 +350,15 @@ describe('Obrigações Repository', () => {
 
       // Act
       await repository.listarAcordos({
-        busca: '0001234',
+        tipo: 'acordo',
+        status: 'pendente',
         pagina: 1,
         limite: 10,
       });
 
-      // Assert - uses .or() for text search
-      expect(mockOr).toHaveBeenCalledWith(
-        expect.stringContaining('0001234')
-      );
+      // Assert - uses .eq() for filters (busca textual was removed)
+      expect(mockEq).toHaveBeenCalledWith('tipo', 'acordo');
+      expect(mockEq).toHaveBeenCalledWith('status', 'pendente');
     });
 
     it('deve calcular totalParcelas e parcelasPagas', async () => {

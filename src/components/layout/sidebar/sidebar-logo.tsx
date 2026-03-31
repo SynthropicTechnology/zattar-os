@@ -14,11 +14,11 @@ export function SidebarLogo() {
         <div className="flex items-center justify-center px-4 py-1.5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2">
           {/* Logo completo - visível quando expandido */}
           <Image
-            src="/logos/logomarca-dark-500x200.svg"
+            src="/logos/logomarca-dark.svg"
             alt="Zattar Advogados"
             width={375}
             height={225}
-            className="h-auto w-full max-w-[140px] object-contain transition-all group-data-[collapsible=icon]:hidden"
+            className="h-auto w-full max-w-35ct-contain transition-all group-data-[collapsible=icon]:hidden"
             priority
           />
           {/* Logo pequeno (Z) - visível quando colapsado */}

@@ -1,4 +1,8 @@
 /**
+ * @jest-environment jsdom
+ */
+
+/**
  * Testes Unitários - useNotificacoesRealtime Hook
  *
  * Testes para o hook de Realtime de notificações, incluindo:
@@ -16,6 +20,15 @@ import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
 jest.mock("../../actions/notificacoes-actions", () => ({
   actionContarNotificacoesNaoLidas: jest.fn(),
   actionListarNotificacoes: jest.fn(),
+  actionMarcarNotificacaoComoLida: jest.fn(),
+  actionMarcarTodasComoLidas: jest.fn(),
+}));
+
+// Mock do version module
+jest.mock("@/lib/version", () => ({
+  checkVersionMismatch: jest.fn(),
+  isServerActionVersionError: jest.fn().mockReturnValue(false),
+  handleVersionMismatchError: jest.fn(),
 }));
 
 // Mock do cliente Supabase
@@ -42,8 +55,8 @@ const mockAuthGetUser = jest.fn();
 const mockAuthGetSession = jest.fn();
 const mockFrom = jest.fn();
 
-jest.mock("@/lib/supabase/client", () => ({
-  createClient: () => ({
+jest.mock("@/lib/supabase/browser-client", () => ({
+  getSupabaseBrowserClient: () => ({
     auth: {
       getUser: mockAuthGetUser,
       getSession: mockAuthGetSession,

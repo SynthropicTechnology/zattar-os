@@ -1,4 +1,9 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+
+// Mock playwright before any imports that transitively pull it in
+jest.mock('playwright', () => ({}));
+jest.mock('playwright-core', () => ({}));
+
 import * as service from '../../service';
 import { criarProcessoMock, criarContratoMock, criarAudienciaMock, criarPagamentoMock } from '../fixtures';
 import { ok, err, appError } from '@/types';

@@ -17,19 +17,24 @@ import {
   actionBuscarPrecedentesPangea,
 } from '../../actions/pangea-actions';
 
-// Mock service layer
+// Mock service layer — use getter to avoid hoisting issue
+jest.mock('../../service', () => ({
+  get listarOrgaosDisponiveis() { return mockService.listarOrgaosDisponiveis; },
+  get buscarPrecedentes() { return mockService.buscarPrecedentes; },
+}));
+
 const mockService = {
   listarOrgaosDisponiveis: jest.fn(),
   buscarPrecedentes: jest.fn(),
 };
 
-jest.mock('../../service', () => mockService);
-
-// Mock auth utility
-const mockRequireAuth = jest.fn();
+// Mock auth utility — use getter to avoid hoisting issue
 jest.mock('@/features/usuarios/actions/utils', () => ({
-  requireAuth: mockRequireAuth,
+  get requireAuth() {
+    return mockRequireAuth;
+  },
 }));
+const mockRequireAuth = jest.fn();
 
 describe('Pangea Actions', () => {
   beforeEach(() => {

@@ -20,7 +20,15 @@ import {
 // Mock dependencies
 jest.mock('next/cache');
 
-// Mock service layer
+// Mock service layer — use getter to avoid hoisting issue
+jest.mock('../../service', () => ({
+  get listarAssistentes() { return mockService.listarAssistentes; },
+  get buscarAssistentePorId() { return mockService.buscarAssistentePorId; },
+  get criarAssistente() { return mockService.criarAssistente; },
+  get atualizarAssistente() { return mockService.atualizarAssistente; },
+  get deletarAssistente() { return mockService.deletarAssistente; },
+}));
+
 const mockService = {
   listarAssistentes: jest.fn(),
   buscarAssistentePorId: jest.fn(),
@@ -29,13 +37,13 @@ const mockService = {
   deletarAssistente: jest.fn(),
 };
 
-jest.mock('../../service', () => mockService);
-
-// Mock auth utility
-const mockRequireAuth = jest.fn();
+// Mock auth utility — use getter to avoid hoisting issue
 jest.mock('../../actions/utils', () => ({
-  requireAuth: mockRequireAuth,
+  get requireAuth() {
+    return mockRequireAuth;
+  },
 }));
+const mockRequireAuth = jest.fn();
 
 describe('Assistentes Actions', () => {
   beforeEach(() => {
@@ -190,7 +198,7 @@ describe('Assistentes Actions', () => {
       }
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/assistentes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/assistentes');
     });
 
     it('deve retornar erro quando não autenticado', async () => {
@@ -303,7 +311,7 @@ describe('Assistentes Actions', () => {
       }
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/assistentes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/assistentes');
     });
 
     it('deve permitir atualização parcial', async () => {
@@ -363,7 +371,7 @@ describe('Assistentes Actions', () => {
       }
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/assistentes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/assistentes');
     });
 
     it('deve retornar erro quando não autenticado', async () => {

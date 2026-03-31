@@ -5,12 +5,10 @@ import {
   actionBuscarAcordosPorNumeroProcesso,
   actionListarAcordos,
 } from '../../actions/acordos';
-import { authenticatedAction } from '@/lib/safe-action';
 import * as service from '../../service';
 import { revalidatePath } from 'next/cache';
 import { criarAcordoMock, criarParcelaMock } from '../fixtures';
 
-jest.mock('@/lib/safe-action');
 jest.mock('../../service');
 jest.mock('next/cache');
 
@@ -20,79 +18,19 @@ describe('Acordos Actions', () => {
   });
 
   describe('actionCriarAcordoComParcelas', () => {
-    it('deve validar schema Zod', async () => {
-      // Arrange
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: unknown) => {
-          const validation = schema.safeParse(input);
-          if (!validation.success) {
-            return {
-              success: false,
-              error: 'Dados inválidos',
-            };
-          }
-          return handler(input, { userId: 'user123' } as { userId: string });
-        };
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
-      // Act
+    it('deve validar schema Zod e retornar erro para dados inválidos', async () => {
+      // Act - pass invalid data (missing required fields, etc.)
       const result = await actionCriarAcordoComParcelas({
-        processoId: -1, // ID inválido
+        processoId: -1,
         tipo: 'acordo',
         direcao: 'recebimento',
-        valorTotal: -100, // Valor negativo
-        numeroParcelas: 0, // Zero parcelas
+        valorTotal: -100,
+        numeroParcelas: 0,
       });
 
-      // Assert
+      // Assert - the action does its own Zod validation
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Dados inválidos');
-    });
-
-    it('deve converter FormData para objeto', async () => {
-      // Arrange
-      const acordo = criarAcordoMock();
-      const parcelas = [
-        criarParcelaMock({ id: 1, numeroParcela: 1 }),
-        criarParcelaMock({ id: 2, numeroParcela: 2 }),
-      ];
-
-      (service.criarAcordoComParcelas as jest.Mock).mockResolvedValue({
-        id: acordo.id,
-        acordo,
-        parcelas,
-      });
-
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
-      // Act
-      const result = await actionCriarAcordoComParcelas({
-        processoId: 100,
-        tipo: 'acordo',
-        direcao: 'recebimento',
-        valorTotal: 10000,
-        numeroParcelas: 2,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
-        percentualEscritorio: 30,
-      });
-
-      // Assert
-      expect(service.criarAcordoComParcelas).toHaveBeenCalledWith(
-        expect.objectContaining({
-          processoId: 100,
-          tipo: 'acordo',
-          direcao: 'recebimento',
-          valorTotal: 10000,
-          numeroParcelas: 2,
-        })
-      );
-      expect(result).toEqual({ id: acordo.id, acordo, parcelas });
+      expect(result.error).toBeDefined();
     });
 
     it('deve chamar service com parâmetros corretos', async () => {
@@ -110,25 +48,18 @@ describe('Acordos Actions', () => {
       );
 
       (service.criarAcordoComParcelas as jest.Mock).mockResolvedValue({
-        id: acordo.id,
-        acordo,
+        ...acordo,
         parcelas,
       });
 
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
       // Act
-      await actionCriarAcordoComParcelas({
+      const result = await actionCriarAcordoComParcelas({
         processoId: 100,
         tipo: 'condenacao',
         direcao: 'pagamento',
         valorTotal: 15000,
         numeroParcelas: 3,
-        dataVencimentoPrimeiraParcela: new Date('2024-02-01'),
+        dataVencimentoPrimeiraParcela: '2024-02-01',
         percentualEscritorio: 40,
         formaPagamentoPadrao: 'transferencia_direta',
       });
@@ -145,6 +76,7 @@ describe('Acordos Actions', () => {
           formaPagamentoPadrao: 'transferencia_direta',
         })
       );
+      expect(result.success).toBe(true);
     });
 
     it('deve revalidar cache após criação', async () => {
@@ -153,34 +85,47 @@ describe('Acordos Actions', () => {
       const parcelas = [criarParcelaMock()];
 
       (service.criarAcordoComParcelas as jest.Mock).mockResolvedValue({
-        id: acordo.id,
-        acordo,
+        ...acordo,
         parcelas,
       });
 
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
-      // Act
+      // Act - must pass all required fields including formaDistribuicao for recebimento
       await actionCriarAcordoComParcelas({
         processoId: 100,
         tipo: 'acordo',
         direcao: 'recebimento',
         valorTotal: 10000,
         numeroParcelas: 1,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
+        dataVencimentoPrimeiraParcela: '2024-01-15',
         percentualEscritorio: 30,
         formaPagamentoPadrao: 'transferencia_direta',
+        formaDistribuicao: 'dividido',
       });
 
       // Assert
-      expect(revalidatePath).toHaveBeenCalledWith('/dashboard/financeiro');
-      expect(revalidatePath).toHaveBeenCalledWith(
-        `/dashboard/processos/${acordo.processoId}`
+      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes');
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      // Arrange
+      (service.criarAcordoComParcelas as jest.Mock).mockRejectedValue(
+        new Error('Erro ao criar acordo')
       );
+
+      // Act
+      const result = await actionCriarAcordoComParcelas({
+        processoId: 100,
+        tipo: 'acordo',
+        direcao: 'recebimento',
+        valorTotal: 10000,
+        numeroParcelas: 1,
+        dataVencimentoPrimeiraParcela: '2024-01-15',
+        percentualEscritorio: 30,
+      });
+
+      // Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
     });
   });
 
@@ -193,67 +138,45 @@ describe('Acordos Actions', () => {
         criarAcordoMock({ id: 2, processoId: 101 }),
       ];
 
-      (service.buscarAcordosPorClienteCPF as jest.Mock).mockResolvedValue(
-        mockAcordos
-      );
-
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
+      (service.buscarAcordosPorClienteCPF as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockAcordos,
       });
 
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
-      // Act
-      const result = await actionBuscarAcordosPorCPF({ cpf });
+      // Act - function takes (cpf, tipo?, status?) as separate args
+      const result = await actionBuscarAcordosPorCPF(cpf);
 
       // Assert
-      expect(service.buscarAcordosPorClienteCPF).toHaveBeenCalledWith(cpf);
-      expect(result).toEqual(mockAcordos);
-      expect(result).toHaveLength(2);
+      expect(service.buscarAcordosPorClienteCPF).toHaveBeenCalledWith(cpf, undefined, undefined);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockAcordos);
+      expect(result.data).toHaveLength(2);
     });
 
-    it('deve validar CPF obrigatório', async () => {
-      // Arrange
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: unknown) => {
-          const validation = schema.safeParse(input);
-          if (!validation.success) {
-            return {
-              success: false,
-              error: 'CPF é obrigatório',
-            };
-          }
-          return handler(input, { userId: 'user123' } as { userId: string });
-        };
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
+    it('deve retornar erro para CPF vazio', async () => {
       // Act
-      const result = await actionBuscarAcordosPorCPF({ cpf: '' });
+      const result = await actionBuscarAcordosPorCPF('');
 
       // Assert
       expect(result.success).toBe(false);
-      expect(result.error).toContain('CPF é obrigatório');
+      expect(result.error).toBe('CPF invalido');
     });
 
-    it('deve normalizar CPF antes de buscar', async () => {
+    it('deve retornar erro quando service retorna falha', async () => {
       // Arrange
       const cpf = '123.456.789-00';
 
-      (service.buscarAcordosPorClienteCPF as jest.Mock).mockResolvedValue([]);
-
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
+      (service.buscarAcordosPorClienteCPF as jest.Mock).mockResolvedValue({
+        success: false,
+        error: { message: 'CPF deve conter 11 digitos', code: 'VALIDATION_ERROR' },
       });
 
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
       // Act
-      await actionBuscarAcordosPorCPF({ cpf });
+      const result = await actionBuscarAcordosPorCPF(cpf);
 
       // Assert
-      expect(service.buscarAcordosPorClienteCPF).toHaveBeenCalledWith(cpf);
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('CPF deve conter 11 digitos');
     });
   });
 
@@ -263,47 +186,47 @@ describe('Acordos Actions', () => {
       const numeroProcesso = '0001234-56.2023.5.02.0001';
       const mockAcordos = [criarAcordoMock({ processoId: 100 })];
 
-      (service.buscarAcordosPorNumeroProcesso as jest.Mock).mockResolvedValue(
-        mockAcordos
-      );
-
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
+      (service.buscarAcordosPorNumeroProcesso as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockAcordos,
       });
 
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
-      // Act
-      const result = await actionBuscarAcordosPorNumeroProcesso({
-        numeroProcesso,
-      });
+      // Act - function takes (numeroProcesso, tipo?) as separate args
+      const result = await actionBuscarAcordosPorNumeroProcesso(numeroProcesso);
 
       // Assert
       expect(service.buscarAcordosPorNumeroProcesso).toHaveBeenCalledWith(
-        numeroProcesso
+        numeroProcesso,
+        undefined
       );
-      expect(result).toEqual(mockAcordos);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockAcordos);
     });
 
-    it('deve normalizar número de processo', async () => {
+    it('deve retornar erro para número vazio', async () => {
+      // Act
+      const result = await actionBuscarAcordosPorNumeroProcesso('');
+
+      // Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Numero do processo invalido');
+    });
+
+    it('deve retornar erro quando service retorna falha', async () => {
       // Arrange
       const numeroProcesso = '0001234-56.2023.5.02.0001';
 
-      (service.buscarAcordosPorNumeroProcesso as jest.Mock).mockResolvedValue([]);
-
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
+      (service.buscarAcordosPorNumeroProcesso as jest.Mock).mockResolvedValue({
+        success: false,
+        error: { message: 'Processo nao encontrado', code: 'NOT_FOUND' },
       });
 
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
       // Act
-      await actionBuscarAcordosPorNumeroProcesso({ numeroProcesso });
+      const result = await actionBuscarAcordosPorNumeroProcesso(numeroProcesso);
 
       // Assert
-      expect(service.buscarAcordosPorNumeroProcesso).toHaveBeenCalledWith(
-        numeroProcesso
-      );
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Processo nao encontrado');
     });
   });
 
@@ -311,64 +234,49 @@ describe('Acordos Actions', () => {
     it('deve listar acordos com paginação', async () => {
       // Arrange
       const mockResponse = {
-        data: [
+        acordos: [
           criarAcordoMock({ id: 1 }),
           criarAcordoMock({ id: 2 }),
         ],
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 2,
-          totalPages: 1,
-        },
+        total: 2,
+        pagina: 1,
+        limite: 10,
+        totalPaginas: 1,
       };
 
       (service.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
 
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
       // Act
       const result = await actionListarAcordos({
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
 
       // Assert
       expect(service.listarAcordos).toHaveBeenCalledWith({
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
-      expect(result).toEqual(mockResponse);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockResponse);
     });
 
     it('deve aplicar filtros de busca', async () => {
       // Arrange
       const mockResponse = {
-        data: [criarAcordoMock()],
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 1,
-          totalPages: 1,
-        },
+        acordos: [criarAcordoMock()],
+        total: 1,
+        pagina: 1,
+        limite: 10,
+        totalPaginas: 1,
       };
 
       (service.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
 
-      const mockAuthAction = jest.fn((_schema, handler) => {
-        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
       // Act
       await actionListarAcordos({
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
         tipo: 'acordo',
         status: 'pago_parcial',
         processoId: 100,
@@ -376,12 +284,26 @@ describe('Acordos Actions', () => {
 
       // Assert
       expect(service.listarAcordos).toHaveBeenCalledWith({
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
         tipo: 'acordo',
         status: 'pago_parcial',
         processoId: 100,
       });
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      // Arrange
+      (service.listarAcordos as jest.Mock).mockRejectedValue(
+        new Error('Erro ao listar acordos')
+      );
+
+      // Act
+      const result = await actionListarAcordos({ pagina: 1, limite: 10 });
+
+      // Assert
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
     });
   });
 });

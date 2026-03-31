@@ -1,6 +1,6 @@
 /**
  * Unit Tests for Chatwoot Service Layer
- * 
+ *
  * Testes para sincronização de conversas, atribuição inteligente e handlers de webhook
  */
 
@@ -29,6 +29,35 @@ jest.mock('../repository', () => ({
   listarAgentesDisponíveis: jest.fn(),
 }));
 
+// Mock do chatwoot client (isChatwootConfigured is called by webhook handlers)
+jest.mock('@/lib/chatwoot', () => ({
+  isChatwootConfigured: jest.fn().mockResolvedValue(true),
+  getChatwootClient: jest.fn().mockResolvedValue({}),
+  createContact: jest.fn(),
+  updateContact: jest.fn(),
+  getContact: jest.fn(),
+  deleteContact: jest.fn(),
+  findContactByIdentifier: jest.fn(),
+  findContactByEmail: jest.fn(),
+  findContactByPhone: jest.fn(),
+  listAllContacts: jest.fn(),
+  applyParteLabels: jest.fn(),
+  getContactConversations: jest.fn(),
+  getConversationCounts: jest.fn(),
+  getConversationHistory: jest.fn(),
+  formatConversationForAI: jest.fn(),
+}));
+
+// Mock do supabase
+jest.mock('@/lib/supabase', () => ({
+  createDbClient: jest.fn().mockReturnValue({
+    from: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
+    eq: jest.fn().mockReturnThis(),
+    single: jest.fn().mockResolvedValue({ data: null, error: null }),
+  }),
+}));
+
 describe('Chatwoot Service Layer', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -37,7 +66,7 @@ describe('Chatwoot Service Layer', () => {
   describe('sincronizarConversaChatwoot', () => {
     it('deve criar nova conversa quando não existe', async () => {
       const mockCreateResult = ok({ id: 1n, criada: true });
-      
+
       (repository.findConversaPorChatwootId as jest.Mock).mockResolvedValue(
         ok(null)
       );
@@ -51,24 +80,26 @@ describe('Chatwoot Service Layer', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.data?.criada).toBe(true);
+      if (result.success) {
+        expect(result.data.criada).toBe(true);
+      }
       expect(repository.criarConversa).toHaveBeenCalled();
     });
 
     it('deve atualizar conversa existente', async () => {
       const existingConversa = {
         id: 1n,
-        chatwoot_conversation_id: 123,
-        chatwoot_account_id: 1,
+        chatwoot_conversation_id: 123n,
+        chatwoot_account_id: 1n,
         status: 'open',
       };
-
-      const mockUpdateResult = ok({ id: 1n, criada: false });
 
       (repository.findConversaPorChatwootId as jest.Mock).mockResolvedValue(
         ok(existingConversa)
       );
-      (repository.atualizarConversa as jest.Mock).mockResolvedValue(mockUpdateResult);
+      (repository.atualizarConversa as jest.Mock).mockResolvedValue(
+        ok({ id: 1n })
+      );
 
       const result = await sincronizarConversaChatwoot({
         chatwoot_conversation_id: 123,
@@ -78,7 +109,9 @@ describe('Chatwoot Service Layer', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.data?.criada).toBe(false);
+      if (result.success) {
+        expect(result.data.criada).toBe(false);
+      }
       expect(repository.atualizarConversa).toHaveBeenCalledWith(
         1n,
         expect.objectContaining({ status: 'resolved' })
@@ -87,7 +120,7 @@ describe('Chatwoot Service Layer', () => {
 
     it('deve retornar erro se falhar ao buscar conversa existente', async () => {
       const mockError = appError('DATABASE_ERROR', 'Erro ao buscar conversa');
-      
+
       (repository.findConversaPorChatwootId as jest.Mock).mockResolvedValue(
         err(mockError)
       );
@@ -99,7 +132,9 @@ describe('Chatwoot Service Layer', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error.code).toBe('DATABASE_ERROR');
+      if (!result.success) {
+        expect(result.error.code).toBe('DATABASE_ERROR');
+      }
     });
   });
 
@@ -109,7 +144,7 @@ describe('Chatwoot Service Layer', () => {
         {
           id: 1n,
           usuario_id: 'user-1',
-          chatwoot_agent_id: 101,
+          chatwoot_agent_id: 101n,
           nome_chatwoot: 'Agent 1',
           contador_conversas_ativas: 2,
           disponivel: true,
@@ -117,19 +152,19 @@ describe('Chatwoot Service Layer', () => {
         {
           id: 2n,
           usuario_id: 'user-2',
-          chatwoot_agent_id: 102,
+          chatwoot_agent_id: 102n,
           nome_chatwoot: 'Agent 2',
           contador_conversas_ativas: 5,
           disponivel: true,
         },
       ];
 
-      const mockUpdateResult = ok({ id: 1n, criada: false });
-
       (repository.listarAgentesDisponíveis as jest.Mock).mockResolvedValue(
         ok(mockAgentes)
       );
-      (repository.atualizarConversa as jest.Mock).mockResolvedValue(mockUpdateResult);
+      (repository.atualizarConversa as jest.Mock).mockResolvedValue(
+        ok({ id: 1n })
+      );
 
       const result = await atribuirConversaInteligente({
         conversacao_id: 1n,
@@ -138,8 +173,10 @@ describe('Chatwoot Service Layer', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.data?.agente_id).toBe(101); // Agent com menor carga
-      expect(result.data?.nome).toBe('Agent 1');
+      if (result.success) {
+        expect(result.data.agente_id).toBe(101n);
+        expect(result.data.nome).toBe('Agent 1');
+      }
     });
 
     it('deve filtrar agentes por habilidades', async () => {
@@ -147,7 +184,7 @@ describe('Chatwoot Service Layer', () => {
         {
           id: 1n,
           usuario_id: 'user-1',
-          chatwoot_agent_id: 101,
+          chatwoot_agent_id: 101n,
           nome_chatwoot: 'Agent 1',
           contador_conversas_ativas: 1,
           disponivel: true,
@@ -167,8 +204,8 @@ describe('Chatwoot Service Layer', () => {
 
       expect(result.success).toBe(true);
       expect(repository.listarAgentesDisponíveis).toHaveBeenCalledWith(
-        1,
-        ['legal']
+        1n,
+        expect.objectContaining({ skills: ['legal'] })
       );
     });
 
@@ -183,18 +220,20 @@ describe('Chatwoot Service Layer', () => {
       });
 
       expect(result.success).toBe(false);
-      expect(result.error.message).toContain('Nenhum agente disponível');
+      if (!result.success) {
+        expect(result.error.message).toContain('Nenhum agente disponível');
+      }
     });
   });
 
   describe('sincronizarAgenteChatwoot', () => {
     it('deve criar novo agente quando não existe', async () => {
-      const mockCreateResult = ok({ id: 1n, criado: true });
-
       (repository.findUsuarioPorChatwootId as jest.Mock).mockResolvedValue(
         ok(null)
       );
-      (repository.criarUsuario as jest.Mock).mockResolvedValue(mockCreateResult);
+      (repository.criarUsuario as jest.Mock).mockResolvedValue(
+        ok({ id: 1n, criado: true })
+      );
 
       const result = await sincronizarAgenteChatwoot({
         chatwoot_agent_id: 101,
@@ -205,7 +244,9 @@ describe('Chatwoot Service Layer', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.data?.criado).toBe(true);
+      if (result.success) {
+        expect(result.data.criado).toBe(true);
+      }
       expect(repository.criarUsuario).toHaveBeenCalled();
     });
 
@@ -213,16 +254,16 @@ describe('Chatwoot Service Layer', () => {
       const existingAgent = {
         id: 1n,
         usuario_id: 'user-1',
-        chatwoot_agent_id: 101,
+        chatwoot_agent_id: 101n,
         email: 'old@example.com',
       };
-
-      const mockUpdateResult = ok({ id: 1n, criado: false });
 
       (repository.findUsuarioPorChatwootId as jest.Mock).mockResolvedValue(
         ok(existingAgent)
       );
-      (repository.atualizarUsuario as jest.Mock).mockResolvedValue(mockUpdateResult);
+      (repository.atualizarUsuario as jest.Mock).mockResolvedValue(
+        ok({ id: 1n, criado: false })
+      );
 
       const result = await sincronizarAgenteChatwoot({
         chatwoot_agent_id: 101,
@@ -233,17 +274,17 @@ describe('Chatwoot Service Layer', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.data?.criado).toBe(false);
+      if (result.success) {
+        expect(result.data.criado).toBe(false);
+      }
       expect(repository.atualizarUsuario).toHaveBeenCalled();
     });
   });
 
   describe('atualizarDisponibilidadeAgente', () => {
     it('deve atualizar disponibilidade do agente', async () => {
-      const mockUpdateResult = ok(undefined);
-
       (repository.atualizarUsuarioPorUUID as jest.Mock).mockResolvedValue(
-        mockUpdateResult
+        ok(undefined)
       );
 
       const result = await atualizarDisponibilidadeAgente(
@@ -259,10 +300,8 @@ describe('Chatwoot Service Layer', () => {
     });
 
     it('deve definir disponivel_em quando agent fica offline', async () => {
-      const mockUpdateResult = ok(undefined);
-
       (repository.atualizarUsuarioPorUUID as jest.Mock).mockResolvedValue(
-        mockUpdateResult
+        ok(undefined)
       );
 
       const result = await atualizarDisponibilidadeAgente(
@@ -280,23 +319,26 @@ describe('Chatwoot Service Layer', () => {
 
   describe('processarWebhookConversa', () => {
     it('deve sincronizar conversa criada', async () => {
-      const mockSyncResult = ok({ id: 1n, criada: true });
-
       (repository.findConversaPorChatwootId as jest.Mock).mockResolvedValue(
         ok(null)
       );
-      (repository.criarConversa as jest.Mock).mockResolvedValue(mockSyncResult);
+      (repository.criarConversa as jest.Mock).mockResolvedValue(
+        ok({ id: 1n, criada: true })
+      );
       (repository.listarAgentesDisponíveis as jest.Mock).mockResolvedValue(
         ok([
           {
             id: 1n,
             usuario_id: 'user-1',
-            chatwoot_agent_id: 101,
+            chatwoot_agent_id: 101n,
             nome_chatwoot: 'Agent',
             contador_conversas_ativas: 0,
             disponivel: true,
           },
         ])
+      );
+      (repository.atualizarConversa as jest.Mock).mockResolvedValue(
+        ok({ id: 1n })
       );
 
       const result = await processarWebhookConversa('conversation.created', {
@@ -314,13 +356,13 @@ describe('Chatwoot Service Layer', () => {
     });
 
     it('deve atualizar status quando conversa resolvida', async () => {
-      const mockUpdateResult = ok(undefined);
-
+      // isChatwootConfigured mock is already set to true
+      // atualizarStatusConversa also calls isChatwootConfigured
       (repository.findConversaPorChatwootId as jest.Mock).mockResolvedValue(
-        ok({ id: 1n, chatwoot_conversation_id: 123, status: 'open' })
+        ok({ id: 1n, chatwoot_conversation_id: 123n, status: 'open' })
       );
       (repository.atualizarConversa as jest.Mock).mockResolvedValue(
-        mockUpdateResult
+        ok(undefined)
       );
 
       const result = await processarWebhookConversa('conversation.status_changed', {
@@ -341,16 +383,14 @@ describe('Chatwoot Service Layer', () => {
       const mockAgent = {
         id: 1n,
         usuario_id: 'user-1',
-        chatwoot_agent_id: 101,
+        chatwoot_agent_id: 101n,
       };
-
-      const mockUpdateResult = ok(undefined);
 
       (repository.findUsuarioPorChatwootId as jest.Mock).mockResolvedValue(
         ok(mockAgent)
       );
       (repository.atualizarUsuarioPorUUID as jest.Mock).mockResolvedValue(
-        mockUpdateResult
+        ok(undefined)
       );
 
       const result = await processarWebhookAgente('agent.status_changed', {
@@ -371,16 +411,14 @@ describe('Chatwoot Service Layer', () => {
       const mockAgent = {
         id: 1n,
         usuario_id: 'user-1',
-        chatwoot_agent_id: 101,
+        chatwoot_agent_id: 101n,
       };
-
-      const mockUpdateResult = ok(undefined);
 
       (repository.findUsuarioPorChatwootId as jest.Mock).mockResolvedValue(
         ok(mockAgent)
       );
       (repository.atualizarUsuarioPorUUID as jest.Mock).mockResolvedValue(
-        mockUpdateResult
+        ok(undefined)
       );
 
       const result = await processarWebhookAgente('agent.status_changed', {
@@ -403,16 +441,20 @@ describe('Chatwoot Service Layer', () => {
 
   describe('processarWebhook', () => {
     it('deve rotear evento conversation.* para processarWebhookConversa', async () => {
-      const mockSyncResult = ok(undefined);
-
       (repository.findConversaPorChatwootId as jest.Mock).mockResolvedValue(
         ok(null)
       );
-      (repository.criarConversa as jest.Mock).mockResolvedValue(mockSyncResult);
+      (repository.criarConversa as jest.Mock).mockResolvedValue(
+        ok({ id: 1n, criada: true })
+      );
+      // Need to mock listarAgentesDisponíveis for auto-assignment
+      (repository.listarAgentesDisponíveis as jest.Mock).mockResolvedValue(
+        ok([])
+      );
 
       const result = await processarWebhook('conversation.created', {
         event: 'conversation.created',
-        data: { id: 123 },
+        data: { id: 123, inbox_id: 1 },
         account_id: 1,
       });
 
@@ -423,16 +465,14 @@ describe('Chatwoot Service Layer', () => {
       const mockAgent = {
         id: 1n,
         usuario_id: 'user-1',
-        chatwoot_agent_id: 101,
+        chatwoot_agent_id: 101n,
       };
-
-      const mockSyncResult = ok(undefined);
 
       (repository.findUsuarioPorChatwootId as jest.Mock).mockResolvedValue(
         ok(mockAgent)
       );
       (repository.atualizarUsuarioPorUUID as jest.Mock).mockResolvedValue(
-        mockSyncResult
+        ok(undefined)
       );
 
       const result = await processarWebhook('agent.status_changed', {

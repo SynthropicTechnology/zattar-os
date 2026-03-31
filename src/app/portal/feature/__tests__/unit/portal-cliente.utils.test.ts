@@ -1,21 +1,22 @@
 import { describe, it, expect } from '@jest/globals';
-import { validarCpf, cpfSchema } from '../../utils';
+import { validarCpf } from '../../utils';
 
 describe('Portal Cliente Utils', () => {
   describe('validarCpf', () => {
     it('deve validar CPF correto sem formatação', () => {
-      const result = validarCpf('12345678900');
+      // 529.982.247-25 is a valid CPF (check digits match)
+      const result = validarCpf('52998224725');
 
       expect(result.valido).toBe(true);
-      expect(result.cpfLimpo).toBe('12345678900');
+      expect(result.cpfLimpo).toBe('52998224725');
       expect(result.erro).toBeUndefined();
     });
 
     it('deve validar CPF correto com formatação', () => {
-      const result = validarCpf('123.456.789-00');
+      const result = validarCpf('529.982.247-25');
 
       expect(result.valido).toBe(true);
-      expect(result.cpfLimpo).toBe('12345678900');
+      expect(result.cpfLimpo).toBe('52998224725');
     });
 
     it('deve rejeitar CPF com menos de 11 dígitos', () => {
@@ -43,15 +44,15 @@ describe('Portal Cliente Utils', () => {
     });
 
     it('deve limpar caracteres não numéricos', () => {
-      const result = validarCpf('123.456.789-00');
+      const result = validarCpf('529.982.247-25');
 
-      expect(result.cpfLimpo).toBe('12345678900');
+      expect(result.cpfLimpo).toBe('52998224725');
     });
 
     it('deve limpar múltiplos tipos de caracteres', () => {
-      const result = validarCpf('123-456.789/00');
+      const result = validarCpf('529-982.247/25');
 
-      expect(result.cpfLimpo).toBe('12345678900');
+      expect(result.cpfLimpo).toBe('52998224725');
     });
 
     it('deve rejeitar CPF vazio', () => {
@@ -77,50 +78,5 @@ describe('Portal Cliente Utils', () => {
     });
   });
 
-  describe('cpfSchema', () => {
-    it('deve validar CPF com 11 dígitos', () => {
-      const result = cpfSchema.safeParse('12345678900');
-
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toBe('12345678900');
-      }
-    });
-
-    it('deve rejeitar CPF com menos de 11 dígitos', () => {
-      const result = cpfSchema.safeParse('123456789');
-
-      expect(result.success).toBe(false);
-    });
-
-    it('deve rejeitar CPF com mais de 11 dígitos', () => {
-      const result = cpfSchema.safeParse('123456789012');
-
-      expect(result.success).toBe(false);
-    });
-
-    it('deve rejeitar CPF com formatação', () => {
-      const result = cpfSchema.safeParse('123.456.789-00');
-
-      expect(result.success).toBe(false);
-    });
-
-    it('deve rejeitar CPF com letras', () => {
-      const result = cpfSchema.safeParse('12345678abc');
-
-      expect(result.success).toBe(false);
-    });
-
-    it('deve rejeitar CPF vazio', () => {
-      const result = cpfSchema.safeParse('');
-
-      expect(result.success).toBe(false);
-    });
-
-    it('deve aceitar apenas números', () => {
-      const result = cpfSchema.safeParse('00000000000');
-
-      expect(result.success).toBe(true);
-    });
-  });
+  // cpfSchema was removed from utils — validation is now handled by validarCpf directly
 });

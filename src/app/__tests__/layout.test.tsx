@@ -2,13 +2,15 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 jest.mock("next/font/google", () => ({
-  Inter: () => ({ variable: "--font-inter" }),
-  Montserrat: () => ({ variable: "--font-montserrat" }),
-  Geist_Mono: () => ({ variable: "--font-geist-mono" }),
+  Inter: () => ({ variable: "--font-inter", className: "inter" }),
+  Montserrat: () => ({ variable: "--font-montserrat", className: "montserrat" }),
+  Manrope: () => ({ variable: "--font-manrope", className: "manrope" }),
+  Geist_Mono: () => ({ variable: "--font-geist-mono", className: "geist-mono" }),
 }));
 
+const mockHeaders = jest.fn();
 jest.mock("next/headers", () => ({
-  headers: jest.fn(),
+  headers: (...args: unknown[]) => mockHeaders(...args),
 }));
 
 jest.mock("../layout-client", () => ({
@@ -16,14 +18,14 @@ jest.mock("../layout-client", () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { default: RootLayout } = require("../layout");
+
 describe("RootLayout", () => {
   it("renders CSP nonce meta when x-nonce is present", async () => {
-    const { headers } = await import("next/headers");
-    (headers as unknown as jest.Mock).mockResolvedValue(
+    mockHeaders.mockResolvedValue(
       new Headers({ "x-nonce": "test-nonce-123" })
     );
-
-    const RootLayout = (await import("../layout")).default;
 
     const element = await RootLayout({ children: <div>content</div> });
     const html = renderToStaticMarkup(element);

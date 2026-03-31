@@ -14,9 +14,45 @@ import { appError as _appError } from "../../../../types";
 // Mock do repository
 jest.mock("../../repository");
 
+// Mock do supabase server client (used by contarNotificacoesNaoLidas for auth)
+const mockSupabaseAuth = {
+  getUser: jest.fn(),
+};
+const mockSupabaseFrom = jest.fn();
+jest.mock("@/lib/supabase/server", () => ({
+  createClient: jest.fn().mockResolvedValue({
+    auth: {
+      getUser: (...args: unknown[]) => mockSupabaseAuth.getUser(...args),
+    },
+    from: (...args: unknown[]) => mockSupabaseFrom(...args),
+  }),
+}));
+
+// Mock do redis cache utils
+jest.mock("@/lib/redis/cache-utils", () => ({
+  withCache: jest.fn((_key: string, fn: () => Promise<unknown>) => fn()),
+  generateCacheKey: jest.fn().mockReturnValue("test-cache-key"),
+  CACHE_PREFIXES: { notificacoes: "notificacoes" },
+}));
+
 describe("Notificações Service", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Setup default auth for contarNotificacoesNaoLidas
+    mockSupabaseAuth.getUser.mockResolvedValue({
+      data: { user: { id: "auth-user-123" } },
+    });
+    mockSupabaseFrom.mockReturnValue({
+      select: jest.fn().mockReturnValue({
+        eq: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: { id: 1 },
+            error: null,
+          }),
+        }),
+      }),
+    });
   });
 
   describe("listarNotificacoes", () => {

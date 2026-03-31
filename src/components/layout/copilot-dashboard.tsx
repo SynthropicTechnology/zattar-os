@@ -6,34 +6,19 @@ import { AuthenticatorPopover } from "@/components/layout/header/authenticator-p
 import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
 import { CommandHub } from "@/components/layout/header/command-hub"
 import { Separator } from "@/components/ui/separator"
-import { ExpandingSearchDock } from "@/components/ui/expanding-search-dock-shadcnui"
 import "@copilotkit/react-core/v2/styles.css"
 import { CopilotKitProvider } from "@copilotkit/react-core/v2"
 import { CopilotGlobalActions } from "@/lib/copilotkit/components/copilot-global-actions"
 import { PedrinhoAgent, type PedrinhoMode } from "@/components/layout/pedrinho-agent"
-import { PageSearchProvider, usePageSearch } from "@/contexts/page-search-context"
+import { PageSearchProvider } from "@/contexts/page-search-context"
 import { useUser } from "@/providers/user-provider"
 import { cn } from "@/lib/utils"
-
-function HeaderSearchBar() {
-  const { value, setValue, placeholder } = usePageSearch()
-
-  return (
-    <ExpandingSearchDock
-      value={value}
-      onChange={setValue}
-      placeholder={placeholder}
-    />
-  )
-}
 
 function DashboardHeader() {
   return (
     <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
-      {/* Esquerda: Search Bar */}
-      <div className="flex-1 flex justify-start">
-        <HeaderSearchBar />
-      </div>
+      {/* Esquerda: espaçador */}
+      <div className="flex-1" />
 
       {/* Centro: Logo Z + Command Hub */}
       <CommandHub />

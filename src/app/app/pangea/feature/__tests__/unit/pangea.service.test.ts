@@ -88,16 +88,23 @@ describe('Pangea Service', () => {
     });
 
     it('deve lançar erro quando falha no banco', async () => {
-      // Arrange
+      // Arrange — advance time so any previous cache entry is expired
+      const realDateNow = Date.now;
+      Date.now = () => realDateNow() + 10 * 60 * 1000; // +10 min
+
       mockSupabase.order.mockResolvedValue({
         data: null,
         error: { message: 'Database error' },
       });
 
       // Act & Assert
-      await expect(service.listarOrgaosDisponiveis()).rejects.toThrow(
-        'Erro ao listar tribunais'
-      );
+      try {
+        await expect(service.listarOrgaosDisponiveis()).rejects.toThrow(
+          'Erro ao listar tribunais'
+        );
+      } finally {
+        Date.now = realDateNow;
+      }
     });
   });
 

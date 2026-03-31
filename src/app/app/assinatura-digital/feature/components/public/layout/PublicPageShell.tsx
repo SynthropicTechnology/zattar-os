@@ -32,7 +32,7 @@ export function PublicPageShell({
         <div className="max-w-2xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-center relative">
           {/* Logo - centralizado */}
           <Image
-            src="/logos/logomarca-light-500x200.svg"
+            src="/logos/logomarca-light.svg"
             alt="Zattar Advogados"
             width={500}
             height={200}
@@ -41,7 +41,7 @@ export function PublicPageShell({
             unoptimized
           />
           <Image
-            src="/logos/logomarca-dark-500x200.svg"
+            src="/logos/logomarca-dark.svg"
             alt="Zattar Advogados"
             width={500}
             height={200}

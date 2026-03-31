@@ -270,7 +270,8 @@ describe('DocumentDetail', () => {
     render(<DocumentDetail doc={doc} onClose={jest.fn()} />);
 
     expect(screen.getByText('Maria Fernanda Silva')).toBeInTheDocument();
-    expect(screen.getByText('Dr. Marcos Vieira')).toBeInTheDocument();
+    // Dr. Marcos Vieira may appear in both signers list and metadata
+    expect(screen.getAllByText('Dr. Marcos Vieira').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('João Carlos Pereira')).toBeInTheDocument();
   });
 
@@ -286,7 +287,8 @@ describe('DocumentDetail', () => {
     const doc = criarDocumentoCardDataMock();
     render(<DocumentDetail doc={doc} onClose={jest.fn()} />);
 
-    expect(screen.getByText('Dr. Marcos Vieira')).toBeInTheDocument();
+    // Dr. Marcos Vieira appears in both signers and metadata sections
+    expect(screen.getAllByText('Dr. Marcos Vieira').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('Íntegro')).toBeInTheDocument();
   });
 

@@ -17,6 +17,7 @@ import {
   FolderOpen,
   Handshake,
   LayoutDashboard,
+  LayoutGrid,
   Mail,
   MessageSquare,
   Microscope,
@@ -437,38 +438,56 @@ export function CommandHub() {
 
   return (
     <>
-      {/* Logo Trigger */}
+      {/* Logo Trigger — transição animada entre logo Z e ícone de menu */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
           relative flex items-center justify-center
-          size-10 rounded-xl cursor-pointer
+          size-12 rounded-xl cursor-pointer overflow-hidden
           transition-all duration-300 ease-out
           ${isOpen
-            ? "bg-primary/10 ring-2 ring-primary/30 scale-95"
-            : "hover:bg-muted/50 hover:scale-105 active:scale-95"
+            ? "bg-primary/10 ring-2 ring-primary/30"
+            : "hover:bg-muted/50 active:scale-95"
           }
         `}
         title="Menu de navegação (⌘/)"
       >
-        <Image
-          src="/logos/logo-small-light.svg"
-          alt="Zattar"
-          width={28}
-          height={28}
-          className="h-7 w-7 object-contain dark:hidden transition-transform duration-300"
-          style={{ transform: isOpen ? "rotate(-10deg)" : "rotate(0deg)" }}
-          priority
-        />
-        <Image
-          src="/logos/logo-small-dark.svg"
-          alt="Zattar"
-          width={28}
-          height={28}
-          className="h-7 w-7 object-contain hidden dark:block transition-transform duration-300"
-          style={{ transform: isOpen ? "rotate(-10deg)" : "rotate(0deg)" }}
-          priority
-        />
+        {/* Logo Z — visível quando fechado */}
+        <div
+          className="absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out"
+          style={{
+            opacity: isOpen ? 0 : 1,
+            transform: isOpen ? "scale(0.5) rotate(90deg)" : "scale(1) rotate(0deg)",
+          }}
+        >
+          <Image
+            src="/logos/logo-small-light.svg"
+            alt="Zattar"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain dark:hidden"
+            priority
+          />
+          <Image
+            src="/logos/logo-small-dark.svg"
+            alt="Zattar"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain hidden dark:block"
+            priority
+          />
+        </div>
+
+        {/* Ícone Grid — visível quando aberto */}
+        <div
+          className="absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out"
+          style={{
+            opacity: isOpen ? 1 : 0,
+            transform: isOpen ? "scale(1) rotate(0deg)" : "scale(0.5) rotate(-90deg)",
+          }}
+        >
+          <LayoutGrid className="size-6 text-primary" />
+        </div>
       </button>
 
       {/* Hub Panel */}

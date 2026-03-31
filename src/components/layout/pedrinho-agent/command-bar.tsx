@@ -295,8 +295,12 @@ function getLatestExchange(messages: any[]): any[] {
     }
   }
 
-  if (lastUserIdx === -1) return messages.slice(-3)
+  const slice = lastUserIdx === -1 ? messages.slice(-3) : messages.slice(lastUserIdx)
 
-  // Return from last user message onwards
-  return messages.slice(lastUserIdx)
+  // Deduplicate by id — keep the last occurrence (most complete during streaming)
+  const deduped = new Map<string, (typeof slice)[number]>()
+  for (const msg of slice) {
+    deduped.set(msg.id, msg)
+  }
+  return [...deduped.values()]
 }

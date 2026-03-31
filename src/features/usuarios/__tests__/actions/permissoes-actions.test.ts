@@ -38,7 +38,8 @@ describe('Permissoes Actions - Unit Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockRequireAuth.mockResolvedValue(mockUser);
-    mockCreateServiceClient.mockResolvedValue(mockSupabase as unknown as Awaited<ReturnType<typeof createServiceClient>>);
+    // createServiceClient is now sync (returns client directly)
+    mockCreateServiceClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createServiceClient>);
   });
 
   describe('actionListarPermissoes', () => {
@@ -63,7 +64,7 @@ describe('Permissoes Actions - Unit Tests', () => {
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnValue({
             single: jest.fn().mockResolvedValue({
-              data: mockSuperAdmin,
+              data: { id: mockSuperAdmin.id, is_super_admin: true },
               error: null,
             }),
           }),
@@ -73,7 +74,10 @@ describe('Permissoes Actions - Unit Tests', () => {
       const result = await actionListarPermissoes(mockSuperAdmin.id);
 
       expect(result.success).toBe(true);
-      expect(result.data).toEqual(todasPermissoes);
+      expect(result.data).toEqual(expect.objectContaining({
+        usuario_id: mockSuperAdmin.id,
+        is_super_admin: true,
+      }));
       expect(mockRepository.listarPermissoesUsuario).not.toHaveBeenCalled();
     });
 
@@ -88,7 +92,7 @@ describe('Permissoes Actions - Unit Tests', () => {
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnValue({
             single: jest.fn().mockResolvedValue({
-              data: criarUsuarioMock(),
+              data: { id: 1, is_super_admin: false },
               error: null,
             }),
           }),
@@ -98,8 +102,11 @@ describe('Permissoes Actions - Unit Tests', () => {
       const result = await actionListarPermissoes(1);
 
       expect(result.success).toBe(true);
-      expect(result.data).toEqual(permissoesUsuario);
-      expect(mockRepository.listarPermissoesUsuario).toHaveBeenCalledWith(mockSupabase, 1);
+      expect(result.data).toEqual(expect.objectContaining({
+        usuario_id: 1,
+        is_super_admin: false,
+      }));
+      expect(mockRepository.listarPermissoesUsuario).toHaveBeenCalledWith(1);
     });
 
     it('deve retornar erro quando usuário não encontrado', async () => {
@@ -127,7 +134,7 @@ describe('Permissoes Actions - Unit Tests', () => {
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnValue({
             single: jest.fn().mockResolvedValue({
-              data: criarUsuarioMock(),
+              data: { id: 1, is_super_admin: false },
               error: null,
             }),
           }),
@@ -161,8 +168,8 @@ describe('Permissoes Actions - Unit Tests', () => {
       const result = await actionSalvarPermissoes(1, permissoes);
 
       expect(result.success).toBe(true);
-      expect(mockRepository.substituirPermissoes).toHaveBeenCalledWith(mockSupabase, 1, permissoes);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/usuarios/1');
+      expect(mockRepository.substituirPermissoes).toHaveBeenCalledWith(1, permissoes, mockUser.userId);
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/usuarios/1');
     });
 
     it('deve validar array de permissões', async () => {
@@ -176,12 +183,12 @@ describe('Permissoes Actions - Unit Tests', () => {
 
       expect(result.success).toBe(true);
       expect(mockRepository.substituirPermissoes).toHaveBeenCalledWith(
-        mockSupabase,
         1,
         expect.arrayContaining([
           expect.objectContaining({ recurso: 'processos', operacao: 'visualizar', permitido: true }),
           expect.objectContaining({ recurso: 'processos', operacao: 'criar', permitido: false }),
-        ])
+        ]),
+        mockUser.userId
       );
     });
 
@@ -214,9 +221,9 @@ describe('Permissoes Actions - Unit Tests', () => {
       await actionSalvarPermissoes(1, permissoes);
 
       expect(mockRepository.substituirPermissoes).toHaveBeenCalledWith(
-        mockSupabase,
         1,
-        permissoes
+        permissoes,
+        mockUser.userId
       );
     });
   });

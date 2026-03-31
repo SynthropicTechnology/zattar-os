@@ -10,13 +10,18 @@ jest.mock('sonner', () => ({
   },
 }));
 
+// Helper: create a default initial signer for tests that need one
+const defaultInitialSigners = [
+  { id: 'signer-default', nome: 'Teste User', email: 'teste@example.com', cor: SIGNER_COLORS[0], ordem: 0 },
+];
+
 describe('useSigners', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   describe('initialization', () => {
-    it('should initialize with default signer when no initial signers provided', () => {
+    it('should initialize with empty list when no initial signers provided', () => {
       const { result } = renderHook(() =>
         useSigners({
           currentUserName: 'Teste User',
@@ -24,11 +29,9 @@ describe('useSigners', () => {
         })
       );
 
-      expect(result.current.signers).toHaveLength(1);
-      expect(result.current.signers[0].nome).toBe('Teste User');
-      expect(result.current.signers[0].email).toBe('teste@example.com');
-      expect(result.current.signers[0].cor).toBe(SIGNER_COLORS[0]);
-      expect(result.current.activeSigner).toEqual(result.current.signers[0]);
+      // Hook no longer auto-creates a default signer
+      expect(result.current.signers).toHaveLength(0);
+      expect(result.current.activeSigner).toBeNull();
     });
 
     it('should initialize with provided initial signers', () => {
@@ -47,7 +50,7 @@ describe('useSigners', () => {
 
   describe('addSigner', () => {
     it('should add a new signer with correct color', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       act(() => {
         result.current.addSigner('New Signer', 'new@example.com');
@@ -62,18 +65,18 @@ describe('useSigners', () => {
     });
 
     it('should reject signer with name less than 3 characters', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       act(() => {
         const signer = result.current.addSigner('AB', 'ab@example.com');
         expect(signer).toBeNull();
       });
 
-      expect(result.current.signers).toHaveLength(1); // Still only default signer
+      expect(result.current.signers).toHaveLength(1); // Still only initial signer
     });
 
     it('should reject signer with invalid email', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       act(() => {
         const signer = result.current.addSigner('Valid Name', 'invalid-email');
@@ -86,13 +89,12 @@ describe('useSigners', () => {
     it('should reject duplicate email', () => {
       const { result } = renderHook(() =>
         useSigners({
-          currentUserName: 'Existing User',
-          currentUserEmail: 'existing@example.com',
+          initialSigners: defaultInitialSigners,
         })
       );
 
       act(() => {
-        const signer = result.current.addSigner('Another User', 'existing@example.com');
+        const signer = result.current.addSigner('Another User', 'teste@example.com');
         expect(signer).toBeNull();
       });
 
@@ -102,7 +104,7 @@ describe('useSigners', () => {
 
   describe('updateSigner', () => {
     it('should update signer name', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
 
@@ -115,7 +117,7 @@ describe('useSigners', () => {
     });
 
     it('should update signer email', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
 
@@ -128,7 +130,7 @@ describe('useSigners', () => {
     });
 
     it('should update active signer if it was updated', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
 
@@ -140,7 +142,7 @@ describe('useSigners', () => {
     });
 
     it('should reject invalid name update', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
       const originalName = result.current.signers[0].nome;
@@ -154,7 +156,7 @@ describe('useSigners', () => {
     });
 
     it('should reject invalid email update', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
       const originalEmail = result.current.signers[0].email;
@@ -170,7 +172,7 @@ describe('useSigners', () => {
 
   describe('deleteSigner', () => {
     it('should delete a signer', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       // Add a second signer first
       act(() => {
@@ -189,21 +191,21 @@ describe('useSigners', () => {
       expect(result.current.signers).toHaveLength(1);
     });
 
-    it('should not delete the last signer', () => {
-      const { result } = renderHook(() => useSigners());
+    it('should allow deleting the last signer', () => {
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
 
       act(() => {
         const success = result.current.deleteSigner(signerId);
-        expect(success).toBe(false);
+        expect(success).toBe(true);
       });
 
-      expect(result.current.signers).toHaveLength(1);
+      expect(result.current.signers).toHaveLength(0);
     });
 
     it('should update active signer when deleted signer was active', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       // Add a second signer and make it active
       let secondSigner: { id: string } | null = null;
@@ -226,7 +228,7 @@ describe('useSigners', () => {
     });
 
     it('should re-order remaining signers after deletion', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       // Add more signers
       act(() => {
@@ -249,7 +251,7 @@ describe('useSigners', () => {
 
   describe('getSignerById', () => {
     it('should return signer by id', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
       const signer = result.current.getSignerById(signerId);
@@ -259,7 +261,7 @@ describe('useSigners', () => {
     });
 
     it('should return undefined for non-existent id', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signer = result.current.getSignerById('non-existent');
 
@@ -269,7 +271,7 @@ describe('useSigners', () => {
 
   describe('getSignerColor', () => {
     it('should return signer color by id', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const signerId = result.current.signers[0].id;
       const color = result.current.getSignerColor(signerId);
@@ -278,7 +280,7 @@ describe('useSigners', () => {
     });
 
     it('should return default gray for undefined id', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const color = result.current.getSignerColor(undefined);
 
@@ -286,7 +288,7 @@ describe('useSigners', () => {
     });
 
     it('should return default gray for non-existent id', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       const color = result.current.getSignerColor('non-existent');
 
@@ -296,7 +298,7 @@ describe('useSigners', () => {
 
   describe('setActiveSigner', () => {
     it('should set active signer', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       // Add a second signer
       let secondSigner: any;
@@ -312,7 +314,7 @@ describe('useSigners', () => {
     });
 
     it('should allow setting active signer to null', () => {
-      const { result } = renderHook(() => useSigners());
+      const { result } = renderHook(() => useSigners({ initialSigners: defaultInitialSigners }));
 
       act(() => {
         result.current.setActiveSigner(null);
