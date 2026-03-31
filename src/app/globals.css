@@ -1208,112 +1208,162 @@
 }
 
 /* =============================================================================
- * COPILOTKIT POPUP - Floating Card Style
+ * PEDRINHO AMBIENT AGENT - Glass Briefing Style
  * =============================================================================
- * Card flutuante expansível no canto inferior direito.
- * Usa CopilotPopup (v2 standalone) em vez de CopilotSidebar.
- *
- * Estrutura DOM do CopilotPopup:
- *   div.copilotKitPopup
- *     button (toggle button)
- *     div.copilotKitWindow  ← janela de chat
- *       div.copilotKitHeader
- *       div.copilotKitChat
+ * Interface do agente em 3 modos: Orb, Command Bar, Briefing Panel.
+ * O CopilotChat é embutido no Briefing Panel com overrides visuais.
  */
 
-/* --- Toggle Button: pill icon com dois dots --- */
-.copilot-toggle-btn {
-  width: 3.5rem !important;
-  height: 3.5rem !important;
-  border-radius: 1rem !important;
-  background: hsl(var(--background) / 0.85) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid hsl(var(--border) / 0.5) !important;
-  box-shadow:
-    0 1px 2px hsl(var(--foreground) / 0.04),
-    0 4px 16px hsl(var(--foreground) / 0.06) !important;
-  transition: all 0.2s ease !important;
-  cursor: pointer !important;
+/* --- Orb: pulse animation para estado proativo --- */
+.pedrinho-orb-pulse {
+  animation: pedrinho-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.copilot-toggle-btn:hover {
-  box-shadow:
-    0 2px 4px hsl(var(--foreground) / 0.06),
-    0 8px 24px hsl(var(--foreground) / 0.1) !important;
-  transform: scale(1.05) !important;
-}
-
-/* --- Window: card flutuante compacto --- */
-:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitWindow {
-  border-radius: 1.25rem !important;
-  border: 1px solid hsl(var(--border) / 0.5) !important;
-  overflow: hidden !important;
-  box-shadow:
-    0 0 0 1px hsl(var(--border) / 0.15),
-    0 1px 2px hsl(var(--foreground) / 0.04),
-    0 4px 16px hsl(var(--foreground) / 0.06),
-    0 12px 48px hsl(var(--foreground) / 0.1) !important;
-}
-
-@media (min-width: 640px) {
-  :is(.copilotKitPopup, .copilotKitSidebar) .copilotKitWindow {
-    width: 26rem !important;
-    max-height: min(38rem, calc(100vh - 6rem)) !important;
+@keyframes pedrinho-pulse {
+  0%, 100% {
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.2),
+      0 0 0 0 hsl(var(--primary) / 0.15);
+  }
+  50% {
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.2),
+      0 0 20px 4px hsl(var(--primary) / 0.1);
   }
 }
 
-/* --- Header: polished com border-radius e estilo refinado --- */
-:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitHeader {
-  border-top-left-radius: 1.25rem !important;
-  border-top-right-radius: 1.25rem !important;
-  background-color: hsl(var(--background)) !important;
-  border-bottom: 1px solid hsl(var(--border) / 0.5) !important;
-  color: hsl(var(--foreground)) !important;
+/* --- Briefing Panel: CopilotChat overrides dentro do wrapper --- */
+.pedrinho-chat-wrapper .copilotKitChat {
+  background-color: transparent !important;
+  font-family: var(--font-inter), system-ui, sans-serif !important;
 }
 
-/* --- Chat area: canvas dots background --- */
-:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitChat {
-  --dot-color: oklch(0 0 0 / 0.07);
-  --dot-size: 1px;
-  --dot-gap: 18px;
-  background-color: hsl(var(--background)) !important;
-  background-image:
-    radial-gradient(circle, var(--dot-color) var(--dot-size), transparent var(--dot-size)) !important;
-  background-size: var(--dot-gap) var(--dot-gap) !important;
-  background-position: center center !important;
+/* Hide the built-in header (we render our own) */
+.pedrinho-chat-wrapper .copilotKitHeader {
+  display: none !important;
 }
 
-:is(.dark) :is(.copilotKitPopup, .copilotKitSidebar) .copilotKitChat {
-  --dot-color: oklch(1 0 0 / 0.04);
-}
-
-/* --- Messages area: sem double scroll --- */
-:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitMessages {
+/* Messages area */
+.pedrinho-chat-wrapper .copilotKitMessages {
   background: transparent !important;
   scrollbar-width: thin !important;
-  scrollbar-color: hsl(var(--border)) transparent !important;
+  scrollbar-color: hsl(var(--border) / 0.15) transparent !important;
+  padding: 1rem !important;
 }
 
-/* --- Input: bottom rounded e estilo limpo --- */
-:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitInput {
-  background-color: hsl(var(--background)) !important;
-  border-top: 1px solid hsl(var(--border) / 0.5) !important;
-  border-bottom-left-radius: 1.25rem !important;
-  border-bottom-right-radius: 1.25rem !important;
+/* Assistant message: glass card style */
+.pedrinho-chat-wrapper .copilotKitAssistantMessage {
+  background-color: hsl(var(--primary) / 0.04) !important;
+  color: hsl(var(--foreground) / 0.8) !important;
+  border-radius: 1rem !important;
+  border: 1px solid hsl(var(--primary) / 0.08) !important;
+  font-size: 0.75rem !important;
+  line-height: 1.6 !important;
+  padding: 0.75rem 1rem !important;
 }
 
-/* --- Message bubbles: integração com design tokens --- */
-:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitAssistantMessage {
-  background-color: hsl(var(--muted)) !important;
-  color: hsl(var(--foreground)) !important;
-  border-radius: 0.875rem !important;
+/* User message: primary accent bubble */
+.pedrinho-chat-wrapper .copilotKitUserMessage {
+  background-color: hsl(var(--primary) / 0.08) !important;
+  color: hsl(var(--foreground) / 0.85) !important;
+  border-radius: 1rem !important;
+  border-bottom-right-radius: 0.5rem !important;
+  border: 1px solid hsl(var(--primary) / 0.1) !important;
+  font-size: 0.75rem !important;
+  line-height: 1.6 !important;
+  padding: 0.625rem 0.875rem !important;
 }
 
-:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitUserMessage {
-  background-color: hsl(var(--primary)) !important;
-  color: hsl(var(--primary-foreground)) !important;
-  border-radius: 0.875rem !important;
+/* Input: glass input at bottom */
+.pedrinho-chat-wrapper .copilotKitInput {
+  background-color: transparent !important;
+  border-top: 1px solid hsl(var(--border) / 0.06) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.pedrinho-chat-wrapper .copilotKitInput textarea,
+.pedrinho-chat-wrapper .copilotKitInput input {
+  background-color: hsl(var(--foreground) / 0.03) !important;
+  border: 1px solid hsl(var(--border) / 0.08) !important;
+  border-radius: 0.75rem !important;
+  color: hsl(var(--foreground) / 0.8) !important;
+  font-size: 0.75rem !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+.pedrinho-chat-wrapper .copilotKitInput textarea::placeholder,
+.pedrinho-chat-wrapper .copilotKitInput input::placeholder {
+  color: hsl(var(--foreground) / 0.2) !important;
+}
+
+/* Suggestion pills: match our chip style */
+.pedrinho-chat-wrapper [class*="suggestion"],
+.pedrinho-chat-wrapper [class*="Suggestion"] {
+  font-size: 0.625rem !important;
+  padding: 0.25rem 0.625rem !important;
+  border-radius: 0.5rem !important;
+  background-color: hsl(var(--primary) / 0.06) !important;
+  border: 1px solid hsl(var(--primary) / 0.1) !important;
+  color: hsl(var(--primary) / 0.5) !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+}
+
+.pedrinho-chat-wrapper [class*="suggestion"]:hover,
+.pedrinho-chat-wrapper [class*="Suggestion"]:hover {
+  background-color: hsl(var(--primary) / 0.12) !important;
+  color: hsl(var(--primary) / 0.7) !important;
+  border-color: hsl(var(--primary) / 0.2) !important;
+}
+
+/* Activity dots: use primary color */
+.pedrinho-chat-wrapper .copilotKitActivityDot1,
+.pedrinho-chat-wrapper .copilotKitActivityDot2,
+.pedrinho-chat-wrapper .copilotKitActivityDot3 {
+  background-color: hsl(var(--primary) / 0.4) !important;
+}
+
+/* Markdown content inside messages */
+.pedrinho-chat-wrapper .copilotKitMarkdown {
+  font-size: 0.75rem !important;
+  line-height: 1.6 !important;
+  color: hsl(var(--foreground) / 0.7) !important;
+}
+
+.pedrinho-chat-wrapper .copilotKitMarkdown code {
+  font-size: 0.6875rem !important;
+  background-color: hsl(var(--foreground) / 0.05) !important;
+  border-radius: 0.25rem !important;
+  padding: 0.125rem 0.375rem !important;
+}
+
+/* Code blocks */
+.pedrinho-chat-wrapper .copilotKitCodeBlock {
+  border-radius: 0.75rem !important;
+  border: 1px solid hsl(var(--border) / 0.08) !important;
+  overflow: hidden !important;
+}
+
+.pedrinho-chat-wrapper .copilotKitCodeBlockToolbar {
+  background-color: hsl(var(--foreground) / 0.03) !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.06) !important;
+  font-size: 0.625rem !important;
+}
+
+/* Command bar markdown */
+.pedrinho-markdown {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Send/stop buttons inside the panel */
+.pedrinho-chat-wrapper .copilotKitInputControls button {
+  color: hsl(var(--primary) / 0.6) !important;
+  transition: color 0.15s ease !important;
+}
+
+.pedrinho-chat-wrapper .copilotKitInputControls button:hover {
+  color: hsl(var(--primary)) !important;
 }
 
 /* =============================================================================

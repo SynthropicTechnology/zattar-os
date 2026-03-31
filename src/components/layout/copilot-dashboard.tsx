@@ -9,9 +9,9 @@ import { Separator } from "@/components/ui/separator"
 import { ExpandingSearchDock } from "@/components/ui/expanding-search-dock-shadcnui"
 import { AppDock } from "@/components/layout/dock/app-dock"
 import "@copilotkit/react-core/v2/styles.css"
-import { CopilotKitProvider, CopilotPopup } from "@copilotkit/react-core/v2"
-import { X } from "lucide-react"
+import { CopilotKitProvider } from "@copilotkit/react-core/v2"
 import { CopilotGlobalActions } from "@/lib/copilotkit/components/copilot-global-actions"
+import { PedrinhoAgent } from "@/components/layout/pedrinho-agent"
 import { PageSearchProvider, usePageSearch } from "@/contexts/page-search-context"
 import { useUser } from "@/providers/user-provider"
 
@@ -94,28 +94,8 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
         </div>
       </PageSearchProvider>
 
-      {/* Chat popup — card flutuante expansível, sem sidebar lateral */}
-      <CopilotPopup
-        defaultOpen={false}
-        threadId={`user-${userId}`}
-        labels={{
-          modalHeaderTitle: "Pedrinho",
-          welcomeMessageText: "Olá! Como posso ajudar você hoje?",
-          chatDisclaimerText: "",
-        }}
-        toggleButton={{
-          className: "copilot-toggle-btn",
-          openIcon: () => (
-            <span className="flex items-center justify-center px-3.5 py-2 bg-foreground rounded-full transition-transform duration-200 group-hover:scale-105">
-              <span className="flex gap-2">
-                <span className="size-2 rounded-full bg-background" />
-                <span className="size-2 rounded-full bg-background" />
-              </span>
-            </span>
-          ),
-          closeIcon: () => <X className="size-5 text-foreground" />,
-        }}
-      />
+      {/* Pedrinho Ambient Agent — 3 modos: Orb, Command Bar, Briefing Panel */}
+      <PedrinhoAgent userId={String(userId ?? '')} />
     </CopilotKitProvider>
   )
 }
