@@ -44,9 +44,9 @@ function getDateLabel(dateStr: string): { label: string; sublabel: string; urgen
 }
 
 const urgencyStyles = {
-  today: { badge: 'bg-red-600 text-white', border: 'border-l-red-500', bg: 'bg-red-50/50 dark:bg-red-950/20' },
-  tomorrow: { badge: 'bg-amber-500 text-white', border: 'border-l-amber-500', bg: 'bg-amber-50/50 dark:bg-amber-950/20' },
-  upcoming: { badge: 'bg-blue-600 text-white', border: 'border-l-blue-500', bg: '' },
+  today: { badge: 'bg-destructive text-white', border: 'border-l-destructive', bg: 'bg-destructive/10' },
+  tomorrow: { badge: 'bg-warning text-white', border: 'border-l-warning', bg: 'bg-warning/10' },
+  upcoming: { badge: 'bg-info text-white', border: 'border-l-info', bg: '' },
 };
 
 export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienciasProximasProps) {
@@ -121,7 +121,7 @@ export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienc
                           href={aud.url_audiencia_virtual}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline"
+                          className="inline-flex items-center gap-1 text-info hover:underline"
                         >
                           <Video className="h-3 w-3" />
                           Virtual

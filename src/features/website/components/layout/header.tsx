@@ -9,7 +9,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from "@/components/website/ui/sheet";
+} from "@/components/ui/sheet";
 
 const navLinks = [
   { href: "#solucoes", label: "Soluções" },
@@ -52,7 +52,7 @@ export function Header() {
           <div className="mt-auto p-4">
             <Link
               href="/portal"
-              className="block w-full text-center bg-primary text-on-primary-fixed px-6 py-3 rounded-full font-bold hover:bg-primary-container transition-colors"
+              className="block w-full text-center bg-primary text-on-primary-fixed px-6 py-3 rounded-full font-bold hover:brightness-110 transition-all"
             >
               Acessar Portal
             </Link>
@@ -98,7 +98,7 @@ export function Header() {
       {/* CTA button — hidden on very small screens, visible from sm+ */}
       <Link
         href="/portal"
-        className="hidden sm:inline-flex bg-primary text-on-primary-fixed px-4 md:px-6 py-2 rounded-full font-bold text-sm md:text-base scale-95 active:scale-90 hover:bg-primary-container transition-transform"
+        className="hidden sm:inline-flex bg-primary text-on-primary-fixed px-4 md:px-6 py-2 rounded-full font-bold text-sm md:text-base scale-95 active:scale-90 hover:brightness-110 transition-all"
       >
         Acessar Portal
       </Link>

@@ -690,7 +690,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                       <div className="flex items-center gap-1.5">
                         <span className="text-sm font-medium truncate">{estagio.nome}</span>
                         {estagio.isDefault && (
-                          <Star className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400" />
+                          <Star className="h-3.5 w-3.5 shrink-0 fill-warning text-warning" />
                         )}
                       </div>
                       <span className="text-xs font-mono text-muted-foreground">{estagio.slug}</span>

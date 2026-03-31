@@ -225,6 +225,23 @@ export const actionListDocumentos = authenticatedAction(
 );
 
 // =============================================================================
+// ACTIONS - STATS (Pipeline, KPIs, Tendências)
+// =============================================================================
+
+/**
+ * Retorna stats agregados de documentos de assinatura digital.
+ *
+ * Contagem por status, taxa de conclusão, tempo médio e trend mensal.
+ */
+export const actionDocumentosStats = authenticatedAction(
+  z.object({}),
+  async () => {
+    const stats = await documentosService.getDocumentosStats();
+    return stats;
+  }
+);
+
+// =============================================================================
 // ACTIONS - URL PRESIGNED PARA PREVIEW
 // =============================================================================
 

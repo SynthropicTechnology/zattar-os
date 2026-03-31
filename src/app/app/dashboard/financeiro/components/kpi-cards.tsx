@@ -91,7 +91,7 @@ export default function KPICards() {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="font-display text-3xl">$125,430</div>
-            <div className="flex flex-col text-sm text-green-600">
+            <div className="flex flex-col text-sm text-success">
               <span className="flex items-center gap-2">
                 <TrendingUpIcon className="size-4" />
                 12.5%
@@ -121,7 +121,7 @@ export default function KPICards() {
         </CardHeader>
         <CardContent className="flex h-full flex-col justify-between">
           <div className="font-display mb-2 text-3xl">$38,700</div>
-          <div className="flex items-center text-sm text-green-600">
+          <div className="flex items-center text-sm text-success">
             <TrendingUpIcon className="mr-1 h-4 w-4" />
             8.5%
             <span className="text-muted-foreground ml-1">compared to last month</span>
@@ -138,7 +138,7 @@ export default function KPICards() {
         </CardHeader>
         <CardContent className="flex h-full flex-col justify-between">
           <div className="font-display mb-2 text-3xl">$26,450</div>
-          <div className="flex items-center text-sm text-red-600">
+          <div className="flex items-center text-sm text-destructive">
             <TrendingDownIcon className="mr-1 h-4 w-4" />
             5.5%
             <span className="text-muted-foreground ml-1">compared to last month</span>

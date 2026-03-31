@@ -62,10 +62,10 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
-        {/* Ticket Medio */}
+        {/* Ticket Médio */}
         <div className="shrink-0">
           <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
-            Ticket Medio
+            Ticket Médio
           </p>
           {stats.ticketMedio !== undefined ? (
             <p className="font-display text-base font-bold tabular-nums">
@@ -80,10 +80,10 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
-        {/* Taxa de Conversao */}
+        {/* Taxa de Conversão */}
         <div className="shrink-0">
           <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
-            Conversao
+            Conversão
           </p>
           <div className="flex items-center gap-2">
             <ProgressRing
@@ -97,14 +97,14 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
-        {/* Tendencia 6m */}
+        {/* Tendência 6m */}
         <div className="flex items-center gap-3 shrink-0">
           <div>
             <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
-              Tendencia 6m
+              Tendência 6m
             </p>
             <p className="text-xs font-semibold text-success/60">
-              {stats.novosMes > 0 ? `+${stats.novosMes}` : stats.novosMes} este mes
+              {stats.novosMes > 0 ? `+${stats.novosMes}` : stats.novosMes} este mês
             </p>
           </div>
           {stats.trendMensal.length > 0 && (

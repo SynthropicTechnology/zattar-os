@@ -49,7 +49,7 @@ export default function MonthlyExpenses() {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[220px] w-full lg:h-[320px]">
+        <ChartContainer config={chartConfig} className="h-55 w-full lg:h-80">
           <BarChart accessibilityLayer data={chartData}>
             <XAxis
               dataKey="month"
@@ -65,7 +65,7 @@ export default function MonthlyExpenses() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUpIcon className="size-4 text-green-600" />
+          Trending up by 5.2% this month <TrendingUpIcon className="size-4 text-success" />
         </div>
         <div className="text-muted-foreground leading-none">
           Showing data from the last 6 months

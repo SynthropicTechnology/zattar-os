@@ -65,9 +65,9 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
                 >
                   <span
                     className={cn('mt-1.5 size-2 shrink-0 rounded-full', {
-                      'bg-gray-400': lembrete.prioridade === 'low',
-                      'bg-orange-400': lembrete.prioridade === 'medium',
-                      'bg-red-600': lembrete.prioridade === 'high',
+                      'bg-muted-foreground': lembrete.prioridade === 'low',
+                      'bg-warning': lembrete.prioridade === 'medium',
+                      'bg-destructive': lembrete.prioridade === 'high',
                     })}
                   />
                   <div className="min-w-0 flex-1 space-y-1">
@@ -85,11 +85,11 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
                     <button
                       onClick={() => marcarConcluido(lembrete.id, !lembrete.concluido)}
                       disabled={isPending}
-                      className="transition-colors hover:opacity-80"
+                      className="cursor-pointer transition-colors hover:opacity-80"
                       title={lembrete.concluido ? 'Marcar como pendente' : 'Marcar como concluído'}
                     >
                       <CircleCheck
-                        className={cn('size-4', lembrete.concluido ? 'text-green-600' : 'text-gray-400')}
+                        className={cn('size-4', lembrete.concluido ? 'text-success' : 'text-muted-foreground')}
                       />
                     </button>
                     <button
@@ -99,7 +99,7 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
                         }
                       }}
                       disabled={isPending}
-                      className="transition-colors hover:text-destructive"
+                      className="cursor-pointer transition-colors hover:text-destructive"
                       title="Deletar lembrete"
                     >
                       <Trash2 className="size-4" />

@@ -22,10 +22,10 @@ interface WidgetExpedientesUrgentesProps {
 }
 
 function getUrgency(dias: number) {
-  if (dias < 0) return { label: `Vencido ${Math.abs(dias)}d`, color: 'bg-red-600 text-white', border: 'border-l-red-500', bg: 'bg-red-50/50 dark:bg-red-950/20' };
-  if (dias === 0) return { label: 'Vence hoje', color: 'bg-red-600 text-white', border: 'border-l-red-500', bg: 'bg-red-50/50 dark:bg-red-950/20' };
-  if (dias <= 3) return { label: `${dias}d restantes`, color: 'bg-amber-500 text-white', border: 'border-l-amber-500', bg: 'bg-amber-50/50 dark:bg-amber-950/20' };
-  return { label: `${dias}d restantes`, color: 'bg-blue-600 text-white', border: 'border-l-blue-500', bg: '' };
+  if (dias < 0) return { label: `Vencido ${Math.abs(dias)}d`, color: 'bg-destructive text-white', border: 'border-l-destructive', bg: 'bg-destructive/10' };
+  if (dias === 0) return { label: 'Vence hoje', color: 'bg-destructive text-white', border: 'border-l-destructive', bg: 'bg-destructive/10' };
+  if (dias <= 3) return { label: `${dias}d restantes`, color: 'bg-warning text-white', border: 'border-l-warning', bg: 'bg-warning/10' };
+  return { label: `${dias}d restantes`, color: 'bg-info text-white', border: 'border-l-info', bg: '' };
 }
 
 export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedientesUrgentesProps) {

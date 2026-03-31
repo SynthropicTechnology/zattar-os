@@ -1,182 +1,237 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Linkedin, Facebook, MapPin, Mail, Phone } from "lucide-react";
+import {
+  Instagram,
+  Linkedin,
+  Facebook,
+  MapPin,
+  Mail,
+  Phone,
+  ArrowRight,
+} from "lucide-react";
+
+const siteLinks = [
+  { href: "#solucoes", label: "Soluções" },
+  { href: "/expertise", label: "Especialidades" },
+  { href: "/servicos", label: "Serviços" },
+  { href: "/insights", label: "Insights" },
+  { href: "/faq", label: "Perguntas Frequentes" },
+];
+
+const portalLinks = [
+  { href: "/portal", label: "Acesso ao Portal" },
+  { href: "/app", label: "Zattar OS" },
+  { href: "/contato", label: "Fale Conosco" },
+];
+
+const socialLinks = [
+  {
+    href: "https://www.instagram.com/zattar.advogados/",
+    label: "Instagram Zattar Advogados",
+    icon: Instagram,
+  },
+  {
+    href: "https://www.linkedin.com/company/zattaradvogados",
+    label: "LinkedIn Zattar Advogados",
+    icon: Linkedin,
+  },
+  {
+    href: "https://www.facebook.com/share/14Qyx3EPgxy/",
+    label: "Facebook Zattar Advogados",
+    icon: Facebook,
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="bg-surface-container-lowest border-t border-white/5 relative overflow-hidden">
-      {/* Decorative gradient blur */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent"></div>
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-24 bg-primary/5 blur-[100px] rounded-full pointer-events-none"></div>
+    <footer className="relative overflow-hidden">
+      {/* ─── Zona 1: Closing Statement ─── */}
+      <div className="relative bg-surface-container-low border-t border-white/5">
+        <div className="absolute inset-0 bg-primary/3 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-32 bg-primary/8 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 lg:gap-8">
-
-          {/* Brand & Social Column */}
-          <div className="lg:col-span-4 pr-0 lg:pr-8">
-            <Link href="/" className="relative block w-48 sm:w-56 md:w-64 h-10 sm:h-12 md:h-14 mb-6 md:mb-8 border-none outline-none">
-              <Image
-                src="/logos/logomarca-light.svg"
-                alt="Logo Zattar Advogados"
-                fill
-                className="object-contain object-left dark:hidden"
-              />
-              <Image
-                src="/logos/logomarca-dark.svg"
-                alt="Logo Zattar Advogados"
-                fill
-                className="object-contain object-left hidden dark:block"
-              />
-            </Link>
-            <p className="text-on-surface-variant font-sans text-sm antialiased leading-relaxed mb-6 md:mb-8 max-w-sm">
-              Redefinindo os padrões da advocacia no Brasil através de inovação tecnológica, inteligência estratégica e precisão jurídica.
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-headline font-extrabold tracking-tighter leading-[1.05] mb-4 md:mb-6">
+              Pronto para defender{" "}
+              <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
+                seus direitos?
+              </span>
+            </h2>
+            <p className="text-on-surface-variant text-base sm:text-lg leading-relaxed mb-8 md:mb-10 max-w-xl mx-auto">
+              Cada dia sem ação é um direito que pode prescrever. Fale com quem
+              une tecnologia e experiência para acelerar sua causa.
             </p>
-            <div className="flex gap-3 sm:gap-4">
-              <a
-                href="https://www.instagram.com/zattar.advogados/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-on-surface-variant hover:bg-primary/20 hover:border-primary/50 hover:text-primary transition-all duration-300"
-                aria-label="Instagram Zattar Advogados"
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+              <Link
+                href="/contato"
+                className="bg-primary text-on-primary-fixed px-8 py-4 rounded-xl font-bold text-base sm:text-lg hover:brightness-110 transition-all flex items-center gap-2 group"
               >
-                <Instagram className="w-4 h-4" />
-              </a>
+                Fale com um Especialista
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
               <a
-                href="https://www.linkedin.com/company/zattaradvogados"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-on-surface-variant hover:bg-primary/20 hover:border-primary/50 hover:text-primary transition-all duration-300"
-                aria-label="LinkedIn Zattar Advogados"
+                href="tel:+5531984382217"
+                className="text-on-surface-variant hover:text-on-surface transition-colors font-bold text-base sm:text-lg flex items-center gap-2"
               >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.facebook.com/share/14Qyx3EPgxy/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-on-surface-variant hover:bg-primary/20 hover:border-primary/50 hover:text-primary transition-all duration-300"
-                aria-label="Facebook Zattar Advogados"
-              >
-                <Facebook className="w-4 h-4" />
+                <Phone className="w-5 h-5 text-primary" />
+                (31) 98438-2217
               </a>
             </div>
-          </div>
-
-          {/* Links Grid */}
-          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
-
-            {/* Site Institucional */}
-            <div>
-              <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-6 tracking-wide text-sm md:text-base">Site Institucional</h5>
-              <ul className="space-y-3 md:space-y-4">
-                <li>
-                  <Link href="/solucoes" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Soluções
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/expertise" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Expertise
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/servicos" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Serviços
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/insights" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Insights
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/faq" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Perguntas Frequentes
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Portal do Cliente */}
-            <div>
-              <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-6 tracking-wide text-sm md:text-base">Portal do Cliente</h5>
-              <ul className="space-y-3 md:space-y-4">
-                <li>
-                  <Link href="/portal" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Acesso ao Portal
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/portal/processos" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Acompanhar Processos
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/portal/financeiro" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Gestão Financeira
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/portal/contratos" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Meus Contratos
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/portal/calculadoras" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
-                    Calculadoras
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contato Físico */}
-            <div className="col-span-2 sm:col-span-2 lg:col-span-1">
-              <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-6 tracking-wide text-sm md:text-base">Sede</h5>
-              <ul className="space-y-4 md:space-y-5 text-on-surface-variant font-sans text-sm">
-                <li className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                  <span className="leading-relaxed">
-                    Rua dos Inconfidentes, 911 - 7º andar<br/>
-                    Bairro Savassi, Belo Horizonte/MG<br/>
-                    CEP: 30140-120
-                  </span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-primary shrink-0" />
-                  <a href="mailto:contato@zattaradvogados.com" className="hover:text-primary transition-colors break-all">
-                    contato@zattaradvogados.com
-                  </a>
-                </li>
-                <li className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-primary shrink-0" />
-                  <a href="tel:+553121152975" className="hover:text-primary transition-colors">
-                    (31) 2115-2975
-                  </a>
-                </li>
-              </ul>
-            </div>
-
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar: Copyright & Legals */}
-      <div className="border-t border-white/5 bg-black/20">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-4 md:py-6 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
-          <p className="text-outline font-sans text-xs md:text-sm text-center md:text-left">
-            © {new Date().getFullYear()} Zattar Advogados. Feito com dedicação pela Sinesys.
+      {/* ─── Zona 2: Footer Principal ─── */}
+      <div className="bg-surface-container-lowest border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 lg:gap-8">
+            {/* Brand */}
+            <div className="lg:col-span-4 pr-0 lg:pr-8">
+              <Link
+                href="/"
+                className="relative block w-48 sm:w-56 md:w-64 h-10 sm:h-12 md:h-14 mb-5 md:mb-6 border-none outline-none"
+              >
+                <Image
+                  src="/logos/logomarca-light.svg"
+                  alt="Logo Zattar Advogados"
+                  fill
+                  className="object-contain object-left dark:hidden"
+                />
+                <Image
+                  src="/logos/logomarca-dark.svg"
+                  alt="Logo Zattar Advogados"
+                  fill
+                  className="object-contain object-left hidden dark:block"
+                />
+              </Link>
+              <p className="text-on-surface-variant font-sans text-sm antialiased leading-relaxed mb-6 max-w-xs">
+                Tecnologia e estratégia jurídica a favor de quem trabalha.
+                Advocacia trabalhista com precisão digital.
+              </p>
+              <div className="flex gap-3">
+                {socialLinks.map(({ href, label, icon: Icon }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-on-surface-variant hover:bg-primary/20 hover:border-primary/30 hover:text-primary transition-all duration-200"
+                    aria-label={label}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Links + Contato */}
+            <div className="lg:col-span-8 grid grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8">
+              {/* Navegação */}
+              <div className="lg:col-span-4">
+                <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-5 tracking-wide text-sm">
+                  Navegação
+                </h5>
+                <ul className="space-y-3">
+                  {siteLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Portal */}
+              <div className="lg:col-span-3">
+                <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-5 tracking-wide text-sm">
+                  Portal
+                </h5>
+                <ul className="space-y-3">
+                  {portalLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Contato — visualmente destacado */}
+              <div className="col-span-2 lg:col-span-5">
+                <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-5 tracking-wide text-sm">
+                  Contato
+                </h5>
+                <div className="space-y-4 text-on-surface-variant font-sans text-sm">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                      <MapPin className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="leading-relaxed">
+                      <span className="text-on-surface font-medium block mb-0.5">
+                        Belo Horizonte
+                      </span>
+                      Rua dos Inconfidentes, 911 — 7º andar
+                      <br />
+                      Savassi · CEP 30140-120
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Mail className="w-4 h-4 text-primary" />
+                    </div>
+                    <a
+                      href="mailto:contato@zattaradvogados.com"
+                      className="hover:text-primary transition-colors"
+                    >
+                      contato@zattaradvogados.com
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Phone className="w-4 h-4 text-primary" />
+                    </div>
+                    <a
+                      href="tel:+5531984382217"
+                      className="hover:text-primary transition-colors font-medium text-on-surface"
+                    >
+                      (31) 98438-2217
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Zona 3: Bottom Bar ─── */}
+      <div className="border-t border-white/5 bg-surface-container-lowest">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-4 md:py-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
+          <p className="text-on-surface-variant/50 font-sans text-xs text-center md:text-left">
+            © {new Date().getFullYear()} Zattar Advogados · OAB/MG 128.404 ·
+            Feito com dedicação pela Sinesys
           </p>
           <div className="flex items-center gap-4 md:gap-6">
             <Link
               href="/politica-de-privacidade"
-              className="text-outline hover:text-on-surface-variant transition-colors duration-200 font-sans text-xs md:text-sm"
+              className="text-on-surface-variant/50 hover:text-on-surface-variant transition-colors duration-200 font-sans text-xs"
             >
               Política de Privacidade
             </Link>
-            <div className="w-1 h-1 rounded-full bg-outline-variant"></div>
+            <span className="w-1 h-1 rounded-full bg-on-surface-variant/20" />
             <Link
               href="/termos-de-uso"
-              className="text-outline hover:text-on-surface-variant transition-colors duration-200 font-sans text-xs md:text-sm"
+              className="text-on-surface-variant/50 hover:text-on-surface-variant transition-colors duration-200 font-sans text-xs"
             >
               Termos de Uso
             </Link>

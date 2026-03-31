@@ -23,15 +23,15 @@ interface OverlayCardProps {
 function OverlayCard({ icon, title, description, position }: OverlayCardProps) {
   const positionClasses =
     position === "bottom-right"
-      ? "-bottom-6 -right-6"
-      : "-bottom-6 -left-6";
+      ? "md:-bottom-6 md:-right-6"
+      : "md:-bottom-6 md:-left-6";
 
   return (
     <div
-      className={`absolute ${positionClasses} p-6 lg:p-10 bg-surface-container rounded-2xl border border-white/10 hidden md:block max-w-xs lg:max-w-sm`}
+      className={`relative md:absolute ${positionClasses} p-5 md:p-6 lg:p-10 bg-surface-container rounded-2xl border border-white/10 max-w-xs lg:max-w-sm -mt-8 mx-4 md:mt-0 md:mx-0`}
     >
-      <span className="text-primary mb-3 lg:mb-4 block">{icon}</span>
-      <h3 className="text-xl lg:text-2xl font-bold mb-2">{title}</h3>
+      <span className="text-primary mb-2 md:mb-3 lg:mb-4 block">{icon}</span>
+      <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-1.5 md:mb-2">{title}</h3>
       <p className="text-on-surface-variant text-sm">{description}</p>
     </div>
   );
@@ -43,10 +43,12 @@ interface ServiceBlockProps {
   imageSrc: string;
   imageAlt: string;
   overlayCard: React.ReactNode;
+  label?: string;
   title: string;
   description: string;
   href: string;
   ctaLabel: string;
+  featured?: boolean;
 }
 
 function ServiceBlock({
@@ -54,10 +56,12 @@ function ServiceBlock({
   imageSrc,
   imageAlt,
   overlayCard,
+  label,
   title,
   description,
   href,
   ctaLabel,
+  featured,
 }: ServiceBlockProps) {
   const isImageLeft = layout === "image-left";
 
@@ -71,7 +75,7 @@ function ServiceBlock({
           <img
             src={imageSrc}
             alt={imageAlt}
-            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 grayscale"
+            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent" />
         </div>
@@ -82,7 +86,12 @@ function ServiceBlock({
       <div
         className={`md:col-span-5 ${isImageLeft ? "md:order-2 md:pl-8 lg:pl-12" : "md:order-1 md:pr-8 lg:pr-12"}`}
       >
-        <h4 className="text-2xl sm:text-3xl md:text-4xl font-headline font-extrabold mb-4 md:mb-6 tracking-tight">
+        {label && (
+          <span className="text-primary-dim font-label text-xs font-bold uppercase tracking-widest mb-3 block">
+            {label}
+          </span>
+        )}
+        <h4 className={`font-headline font-extrabold tracking-tight mb-4 md:mb-6 ${featured ? "text-3xl sm:text-4xl md:text-5xl" : "text-2xl sm:text-3xl md:text-4xl"}`}>
           {title}
         </h4>
         <p className="text-on-surface-variant text-base md:text-lg leading-relaxed mb-6 md:mb-8">
@@ -90,7 +99,7 @@ function ServiceBlock({
         </p>
         <Link
           href={href}
-          className="inline-flex items-center gap-2 text-primary font-bold text-base md:text-lg hover:gap-4 transition-all"
+          className="inline-flex items-center gap-2 text-primary-dim font-bold text-base md:text-lg hover:gap-4 transition-all underline underline-offset-4 decoration-primary-dim/40 hover:decoration-primary-dim/80"
         >
           {ctaLabel}
           <ArrowRight className="w-5 h-5" />
@@ -109,7 +118,7 @@ export function Services() {
           <span className="text-primary font-label text-sm font-bold uppercase tracking-widest">
             Especialidades
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-headline font-bold mt-3 md:mt-4 tracking-tighter leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-headline font-bold mt-3 md:mt-4 tracking-tighter leading-[1.05]">
             Soluções jurídicas de{" "}
             <br className="hidden sm:block" />
             <span className="text-on-surface-variant">
@@ -123,6 +132,8 @@ export function Services() {
           {/* Block 1 — Image Left (Demissão sem justa causa) */}
           <ServiceBlock
             layout="image-left"
+            featured
+            label="Principal"
             imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBMczbgwNePWlBWRgiSkyzGfaZrHyEXJ8Awz6YtA-kWrk8BRe36xM7pS6Z5kpK9Vdky2Z3dq33pyyU9e_jYUfyzFofEKCSIwrpi_-XyTZBn8wrBhIvVwCHJCcTNNtCZRdh8Y3iEPT3AtSNtYnvw72X_FJo0Sa-a8eYyFNEnPB3jFnOuCP0J9OK_QmK6qNm_Digzo9I6AcLWyAU6ISTvr7Z5B-qUoEdGJI08pai8hAjxZuyNrPDT9_tyWNv9JY5YZVqpp8iPGQoiwkwh"
             imageAlt="Interface de dados de alta tecnologia com símbolos jurídicos e linhas brilhantes roxas"
             overlayCard={

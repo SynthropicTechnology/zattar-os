@@ -44,10 +44,10 @@ import {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PIPELINE_STAGES: { id: StatusContrato; label: string; color: string }[] = [
-  { id: 'em_contratacao', label: 'Em Contratacao', color: 'hsl(var(--warning))' },
+  { id: 'em_contratacao', label: 'Em Contratação', color: 'hsl(var(--warning))' },
   { id: 'contratado', label: 'Contratado', color: 'hsl(var(--primary))' },
-  { id: 'distribuido', label: 'Distribuido', color: 'hsl(var(--success))' },
-  { id: 'desistencia', label: 'Desistencia', color: 'hsl(var(--destructive))' },
+  { id: 'distribuido', label: 'Distribuído', color: 'hsl(var(--success))' },
+  { id: 'desistencia', label: 'Desistência', color: 'hsl(var(--destructive))' },
 ];
 
 type ViewMode = 'pipeline' | 'kanban' | 'lista';
@@ -72,7 +72,7 @@ interface NomeLookup {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function calcDiasNoEstagio(contrato: Contrato): number {
-  // Estima dias no estagio atual com base em statusHistorico
+  // Estima dias no estágio atual com base em statusHistorico
   const historico = contrato.statusHistorico ?? [];
   // Ordena do mais recente para o mais antigo
   const ordenado = [...historico].sort(
@@ -125,7 +125,7 @@ function mapContratoToCardData(
     : undefined;
 
   const responsavelNome = contrato.responsavelId
-    ? usuariosMap.get(contrato.responsavelId) || `Responsavel #${contrato.responsavelId}`
+    ? usuariosMap.get(contrato.responsavelId) || `Responsável #${contrato.responsavelId}`
     : '—';
 
   const segmentoNome = contrato.segmentoId
@@ -291,7 +291,7 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
       const taxaConversao =
         totalFechados > 0 ? Math.round(((contratados + distribuidos) / totalFechados) * 100) : 0;
 
-      // Novos este mes: contratos com cadastradoEm no mes atual
+      // Novos este mês: contratos com cadastradoEm no mês atual
       const hoje = new Date();
       const novosMes = rawContratos.filter((c) => {
         if (!c.cadastradoEm) return false;
@@ -360,7 +360,7 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
     return true;
   });
 
-  // Contratos parados em negociacao ha +30 dias
+  // Contratos parados em negociação há +30 dias
   const stuckContratos = contratos.filter(
     (c) => c.diasNoEstagio > 30 && c.status === 'em_contratacao',
   );
@@ -389,7 +389,7 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
             {isLoading
               ? 'Carregando...'
               : `${stats.total} contrato${stats.total !== 1 ? 's' : ''}${
-                  stats.novosMes > 0 ? ` · ${stats.novosMes} novo${stats.novosMes !== 1 ? 's' : ''} este mes` : ''
+                  stats.novosMes > 0 ? ` · ${stats.novosMes} novo${stats.novosMes !== 1 ? 's' : ''} este mês` : ''
                 }`}
           </p>
         </div>
@@ -415,7 +415,7 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
       {/* ── Insight Banner ────────────────────────────────────── */}
       {!isLoading && stuckContratos.length > 0 && (
         <InsightBanner type="warning">
-          {stuckContratos.length} contrato{stuckContratos.length > 1 ? 's' : ''} em negociacao ha
+          {stuckContratos.length} contrato{stuckContratos.length > 1 ? 's' : ''} em negociação há
           30+ dias — considere follow-up com {stuckContratos.length > 1 ? 'esses clientes' : 'esse cliente'}
         </InsightBanner>
       )}

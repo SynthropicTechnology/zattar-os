@@ -1104,6 +1104,119 @@ export async function removeSignerFromDocument(
 }
 
 // =============================================================================
+// STATS — Contagem por status, taxa conclusão, tempo médio, trend mensal
+// =============================================================================
+
+export interface DocumentosStats {
+  total: number;
+  rascunhos: number;
+  aguardando: number;
+  concluidos: number;
+  cancelados: number;
+  taxaConclusao: number;
+  tempoMedio: number;
+  trendMensal: number[];
+}
+
+/**
+ * Retorna stats agregados de todos os documentos de assinatura digital.
+ *
+ * - Contagem por status (rascunho, pronto, concluido, cancelado)
+ * - Taxa de conclusão (concluidos / total excluindo cancelados)
+ * - Tempo médio entre created_at e concluido_em dos assinantes
+ * - Trend mensal (últimos 6 meses)
+ */
+export async function getDocumentosStats(): Promise<DocumentosStats> {
+  const supabase = createServiceClient();
+
+  // 1. Contagem por status
+  const { data: docs, error: docsError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .select("id, status, created_at");
+
+  if (docsError) throw new Error(`Erro ao buscar stats: ${docsError.message}`);
+
+  const all = docs ?? [];
+  const rascunhos = all.filter((d) => d.status === "rascunho").length;
+  const aguardando = all.filter((d) => d.status === "pronto").length;
+  const concluidos = all.filter((d) => d.status === "concluido").length;
+  const cancelados = all.filter((d) => d.status === "cancelado").length;
+  const total = all.length;
+
+  const baseParaTaxa = total - cancelados;
+  const taxaConclusao =
+    baseParaTaxa > 0 ? Math.round((concluidos / baseParaTaxa) * 100) : 0;
+
+  // 2. Tempo médio de conclusão (dias entre created_at do doc e concluido_em do último assinante)
+  let tempoMedio = 0;
+  const docsConcluidos = all.filter((d) => d.status === "concluido");
+
+  if (docsConcluidos.length > 0) {
+    const docIds = docsConcluidos.map((d) => d.id);
+    const { data: assinantes } = await supabase
+      .from(TABLE_DOCUMENTO_ASSINANTES)
+      .select("documento_id, concluido_em")
+      .in("documento_id", docIds)
+      .eq("status", "concluido")
+      .not("concluido_em", "is", null);
+
+    if (assinantes && assinantes.length > 0) {
+      const docCreatedMap = new Map(
+        docsConcluidos.map((d) => [d.id, new Date(d.created_at).getTime()])
+      );
+
+      let totalDays = 0;
+      let count = 0;
+
+      // Para cada doc concluído, pegar o último assinante que concluiu
+      const lastByDoc = new Map<number, number>();
+      for (const a of assinantes) {
+        const t = new Date(a.concluido_em!).getTime();
+        const current = lastByDoc.get(a.documento_id);
+        if (!current || t > current) {
+          lastByDoc.set(a.documento_id, t);
+        }
+      }
+
+      for (const [docId, lastTime] of lastByDoc) {
+        const createdAt = docCreatedMap.get(docId);
+        if (createdAt) {
+          totalDays += (lastTime - createdAt) / 86400000;
+          count++;
+        }
+      }
+
+      tempoMedio = count > 0 ? Math.round((totalDays / count) * 10) / 10 : 0;
+    }
+  }
+
+  // 3. Trend mensal (últimos 6 meses — contagem de docs criados por mês)
+  const now = new Date();
+  const trendMensal: number[] = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59);
+    const count = all.filter((d) => {
+      const created = new Date(d.created_at);
+      return created >= monthStart && created <= monthEnd;
+    }).length;
+    trendMensal.push(count);
+  }
+
+  return {
+    total,
+    rascunhos,
+    aguardando,
+    concluidos,
+    cancelados,
+    taxaConclusao,
+    tempoMedio,
+    trendMensal,
+  };
+}
+
+// =============================================================================
 // BUSCA DE ASSINATURA DE FORMULÁRIO (para página de verificação)
 // =============================================================================
 

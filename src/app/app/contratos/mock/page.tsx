@@ -4,35 +4,23 @@ import { useState } from 'react';
 import {
   FileText,
   Plus,
-  TrendingUp,
-  TrendingDown,
   ChevronRight,
-  AlertCircle,
   Clock,
-  Users,
-  Scale,
-  Wallet,
   Building2,
-  User,
   ArrowRight,
-  BarChart3,
   Kanban,
   List,
   GitBranch,
-  Zap,
   DollarSign,
 } from 'lucide-react';
 import {
   GlassPanel,
-  WidgetContainer,
   fmtMoeda,
-  fmtNum,
   InsightBanner,
   Sparkline,
   ProgressRing,
   AnimatedNumber,
 } from '@/app/app/dashboard/mock/widgets/primitives';
-import { PulseStrip, type PulseItem } from '@/components/dashboard/pulse-strip';
 import { TabPills } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 
@@ -184,7 +172,7 @@ function KanbanColumn({ stage, contratos }: { stage: typeof PIPELINE_STAGES[0]; 
   const total = contratos.reduce((sum, c) => sum + c.valor, 0);
 
   return (
-    <div className="flex-1 min-w-[260px] flex flex-col gap-2">
+    <div className="flex-1 min-w-65 flex flex-col gap-2">
       {/* Column header */}
       <div className="flex items-center justify-between px-1 pb-2 border-b-2" style={{ borderColor: stage.color }}>
         <div className="flex items-center gap-2">
@@ -213,7 +201,7 @@ function KanbanColumn({ stage, contratos }: { stage: typeof PIPELINE_STAGES[0]; 
   );
 }
 
-function KanbanCard({ contrato: c, stageColor }: { contrato: ContratoCard; stageColor: string }) {
+function KanbanCard({ contrato: c, stageColor: _stageColor }: { contrato: ContratoCard; stageColor: string }) {
   const isStuck = c.diasNoEstagio > 30;
 
   return (
@@ -237,10 +225,10 @@ function KanbanCard({ contrato: c, stageColor }: { contrato: ContratoCard; stage
 
           {/* Tags */}
           <div className="flex items-center gap-1 mt-1.5 flex-wrap">
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/[0.06] text-primary/50">{c.tipo}</span>
+            <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50">{c.tipo}</span>
             <span className="text-[8px] px-1.5 py-0.5 rounded bg-border/10 text-muted-foreground/40">{c.cobranca}</span>
             {c.processosVinculados > 0 && (
-              <span className="text-[8px] px-1.5 py-0.5 rounded bg-info/[0.06] text-info/50">
+              <span className="text-[8px] px-1.5 py-0.5 rounded bg-info/6 text-info/50">
                 {c.processosVinculados} proc.
               </span>
             )}
@@ -287,7 +275,7 @@ function ContratoListRow({ contrato: c }: { contrato: ContratoCard }) {
       </div>
 
       {/* Type */}
-      <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/[0.06] text-primary/50 shrink-0 hidden sm:block">{c.tipo}</span>
+      <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50 shrink-0 hidden sm:block">{c.tipo}</span>
 
       {/* Stage */}
       <span className="text-[9px] font-medium shrink-0 hidden md:block w-24 text-right" style={{ color: stage.color }}>{stage.label}</span>
@@ -373,7 +361,7 @@ export default function ContratosMockPage() {
   const stuckContratos = CONTRATOS.filter(c => c.diasNoEstagio > 30 && c.status === 'em_contratacao');
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-5">
+    <div className="max-w-350 mx-auto space-y-5">
       {/* ── Header ──────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
@@ -418,7 +406,7 @@ export default function ContratosMockPage() {
         <div className="flex items-center gap-2 flex-1 justify-end">
           <SearchInput value={search} onChange={setSearch} placeholder="Buscar cliente, parte, tipo..." />
           {/* View toggle */}
-          <div className="flex p-0.5 rounded-lg bg-border/[0.06]">
+          <div className="flex p-0.5 rounded-lg bg-border/6">
             {([
               { mode: 'pipeline' as ViewMode, icon: GitBranch, label: 'Pipeline' },
               { mode: 'kanban' as ViewMode, icon: Kanban, label: 'Kanban' },

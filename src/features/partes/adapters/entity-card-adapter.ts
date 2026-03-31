@@ -27,26 +27,26 @@ export const ENTITY_CONFIGS: Record<string, EntityCardConfig> = {
   cliente: {
     label: 'Cliente',
     icon: Users,
-    color: 'text-blue-500/70',
-    bg: 'bg-blue-500/8',
+    color: 'text-primary/70',
+    bg: 'bg-primary/8',
   },
   parteContraria: {
     label: 'Parte Contrária',
     icon: Scale,
-    color: 'text-rose-500/70',
-    bg: 'bg-rose-500/8',
+    color: 'text-warning/70',
+    bg: 'bg-warning/8',
   },
   terceiro: {
     label: 'Terceiro',
     icon: User,
-    color: 'text-amber-500/70',
-    bg: 'bg-amber-500/8',
+    color: 'text-info/70',
+    bg: 'bg-info/8',
   },
   representante: {
     label: 'Representante',
     icon: Briefcase,
-    color: 'text-emerald-500/70',
-    bg: 'bg-emerald-500/8',
+    color: 'text-success/70',
+    bg: 'bg-success/8',
   },
 };
 

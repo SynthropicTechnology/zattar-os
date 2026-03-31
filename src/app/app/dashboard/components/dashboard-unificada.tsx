@@ -101,7 +101,7 @@ function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
           <h4 className="font-display text-2xl lg:text-3xl">{value}</h4>
           {trend && (
             <div className="text-muted-foreground text-sm">
-              <span className={trend.value >= 0 ? 'text-green-600' : 'text-red-600'}>
+              <span className={trend.value >= 0 ? 'text-success' : 'text-destructive'}>
                 {trend.value >= 0 ? '+' : ''}{trend.value.toFixed(1)}%
               </span>{' '}
               {trend.label || 'em relação ao mês anterior'}

@@ -24,7 +24,7 @@ const transactions = [
     type: "Income",
     amount: 1640.26,
     icon: "S",
-    color: "bg-pink-500"
+    color: "bg-destructive"
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const transactions = [
     type: "Expenses",
     amount: -72.64,
     icon: <StoreIcon className="h-4 w-4" />,
-    color: "bg-green-500"
+    color: "bg-success"
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ const transactions = [
     type: "Expenses",
     amount: -8.65,
     icon: <CoffeeIcon className="h-4 w-4" />,
-    color: "bg-orange-500"
+    color: "bg-warning"
   },
   {
     id: 4,
@@ -51,7 +51,7 @@ const transactions = [
     type: "Income",
     amount: 842.5,
     icon: "K",
-    color: "bg-purple-500"
+    color: "bg-primary"
   },
   {
     id: 5,
@@ -60,7 +60,7 @@ const transactions = [
     type: "Expenses",
     amount: -18.52,
     icon: <Car className="h-4 w-4" />,
-    color: "bg-red-500"
+    color: "bg-destructive"
   },
   {
     id: 6,
@@ -69,7 +69,7 @@ const transactions = [
     type: "Expenses",
     amount: -120.0,
     icon: <BookOpenIcon className="h-4 w-4" />,
-    color: "bg-blue-500"
+    color: "bg-info"
   },
   {
     id: 7,
@@ -78,7 +78,7 @@ const transactions = [
     type: "Income",
     amount: 980.75,
     icon: "F",
-    color: "bg-green-600"
+    color: "bg-success"
   }
 ];
 
@@ -97,7 +97,7 @@ export default function Transactions() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Transaction</TableHead>
+              <TableHead className="w-25">Transaction</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Type</TableHead>
               <TableHead className="text-end">Amount</TableHead>
@@ -121,7 +121,7 @@ export default function Transactions() {
                   <Badge variant="outline">{transaction.type}</Badge>
                 </TableCell>
                 <TableCell
-                  className={`text-end ${transaction.amount > 0 ? "text-green-600" : "text-red-600"}`}>
+                  className={`text-end ${transaction.amount > 0 ? "text-success" : "text-destructive"}`}>
                   {transaction.amount > 0 ? "" : "-"}${Math.abs(transaction.amount).toFixed(2)}
                 </TableCell>
               </TableRow>

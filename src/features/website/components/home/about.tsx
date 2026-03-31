@@ -8,7 +8,7 @@ export function About() {
           <div className="relative order-2 md:order-1">
             <div className="aspect-square rounded-2xl md:rounded-3xl overflow-hidden relative z-10 shadow-2xl">
               <img
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                className="w-full h-full object-cover opacity-85 hover:opacity-100 transition-all duration-700"
                 alt="Dynamic tech team working in a futuristic dark office"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4s68vvVIR2eH9z9YzLyHzYC86wmTsW9lCpLmnX19msfjKHu0ANV84BR2b6h1xJ6utqY5EOVMu_5_2m88XisLo8NhngBqnL3YOWe6u3UZPQSdxNkjnD9YLgQMRwpVjIKDi0pKonYT6ojwaEHb9by3w6eisSb9t5PtNIZ4Le86nwgKvSD4Jti802SOMNH5x48whGMzERpGgHAUGoPx-cv6EoIfGbN_N9q_PTAGyds9iFysoL089Sj_9ZIPBFIp2gkFDuPnC7kCxq5cH"
               />
@@ -20,7 +20,7 @@ export function About() {
             <span className="text-primary font-label text-sm font-bold uppercase tracking-widest">
               A Revolução Jurídica
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-headline font-extrabold mt-4 md:mt-6 mb-6 md:mb-8 tracking-tighter leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-headline font-extrabold mt-4 md:mt-6 mb-6 md:mb-8 tracking-tighter leading-[1.05]">
               O Direito do Trabalho <br />
               <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
                 reimaginado.
@@ -50,11 +50,11 @@ export function About() {
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
               <a
                 href="/contato"
-                className="bg-primary text-on-primary-fixed px-6 py-3 sm:px-8 sm:py-4 rounded-md font-bold text-sm sm:text-base hover:bg-primary-container transition-all text-center"
+                className="bg-primary text-on-primary-fixed px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:brightness-110 transition-all text-center"
               >
                 Fale com um Especialista
               </a>
-              <button className="bg-on-surface text-surface-container-lowest px-6 py-3 sm:px-8 sm:py-4 rounded-md font-bold text-sm sm:text-base hover:bg-primary hover:text-on-primary transition-all text-center">
+              <button className="bg-on-surface text-surface-container-lowest px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:bg-primary hover:text-on-primary transition-all text-center">
                 Conheça nossa Metodologia
               </button>
             </div>

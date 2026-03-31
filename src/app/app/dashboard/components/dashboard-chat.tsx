@@ -179,7 +179,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="size-5" />
           {salaAtiva?.nome || 'Chat'}
-          {isConnected && <span className="ml-1 size-2 rounded-full bg-green-500" title="Conectado" />}
+          {isConnected && <span className="ml-1 size-2 rounded-full bg-success" title="Conectado" />}
         </CardTitle>
         <CardAction>
           <Link href="/app/chat">

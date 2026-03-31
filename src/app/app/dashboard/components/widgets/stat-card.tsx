@@ -34,40 +34,40 @@ const variantStyles = {
   default: {
     icon: 'text-primary bg-primary/10',
     trend: {
-      up: 'text-green-600 dark:text-green-400',
-      down: 'text-red-600 dark:text-red-400',
+      up: 'text-success',
+      down: 'text-destructive',
       neutral: 'text-muted-foreground',
     },
   },
   success: {
-    icon: 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30',
+    icon: 'text-success bg-success/10',
     trend: {
-      up: 'text-green-600 dark:text-green-400',
-      down: 'text-red-600 dark:text-red-400',
+      up: 'text-success',
+      down: 'text-destructive',
       neutral: 'text-muted-foreground',
     },
   },
   warning: {
-    icon: 'text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30',
+    icon: 'text-warning bg-warning/10',
     trend: {
-      up: 'text-orange-600 dark:text-orange-400',
-      down: 'text-green-600 dark:text-green-400',
+      up: 'text-warning',
+      down: 'text-success',
       neutral: 'text-muted-foreground',
     },
   },
   danger: {
-    icon: 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30',
+    icon: 'text-destructive bg-destructive/10',
     trend: {
-      up: 'text-red-600 dark:text-red-400',
-      down: 'text-green-600 dark:text-green-400',
+      up: 'text-destructive',
+      down: 'text-success',
       neutral: 'text-muted-foreground',
     },
   },
   info: {
-    icon: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30',
+    icon: 'text-info bg-info/10',
     trend: {
-      up: 'text-blue-600 dark:text-blue-400',
-      down: 'text-red-600 dark:text-red-400',
+      up: 'text-info',
+      down: 'text-destructive',
       neutral: 'text-muted-foreground',
     },
   },

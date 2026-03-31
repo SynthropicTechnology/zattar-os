@@ -100,16 +100,16 @@ function OabSituacaoBadge({
 
   // Classes para cada tone
   const toneClasses = {
-    success: 'bg-green-500/15 text-green-700 dark:text-green-400',
-    warning: 'bg-orange-500/15 text-orange-700 dark:text-orange-400',
-    danger: 'bg-red-500/15 text-red-700 dark:text-red-400',
+    success: 'bg-success/15 text-success',
+    warning: 'bg-warning/15 text-warning',
+    danger: 'bg-destructive/15 text-destructive',
     neutral: 'bg-muted text-muted-foreground',
   };
 
   return (
     <div className="inline-flex items-center text-xs font-medium rounded-full overflow-hidden shrink-0">
       {/* Lado esquerdo: OAB (azul/info) */}
-      <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5">
+      <span className="bg-info/15 text-info px-2 py-0.5">
         {numeroFormatado} OAB-{uf}
       </span>
       {/* Separador e lado direito: Situação */}

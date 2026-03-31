@@ -27,7 +27,7 @@ export default function Revenue() {
         <div>
           <div className="text-muted-foreground mb-1 text-sm">Total Income</div>
           <div className="font-display mb-2 text-3xl">$92,000</div>
-          <div className="mb-4 flex items-center text-sm text-green-600">
+          <div className="mb-4 flex items-center text-sm text-success">
             <TrendingUpIcon className="mr-1 size-4" />
             15.5%
             <span className="text-muted-foreground ml-1">compared to last month</span>

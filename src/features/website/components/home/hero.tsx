@@ -39,14 +39,14 @@ export function Hero() {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
           <Link
             href="/contato"
-            className="bg-primary text-on-primary-fixed px-8 py-4 sm:px-10 sm:py-5 rounded-md font-bold text-base sm:text-lg hover:bg-primary-container transition-all flex items-center justify-center gap-2 group"
+            className="bg-primary text-on-primary-fixed px-8 py-4 sm:px-10 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 group"
           >
             Fale com um Especialista
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
             href="#solucoes"
-            className="border border-white/30 text-white px-8 py-4 sm:px-10 sm:py-5 rounded-md font-bold text-base sm:text-lg hover:bg-white/10 transition-all flex items-center justify-center"
+            className="border border-white/50 bg-white/5 backdrop-blur-sm text-white px-8 py-4 sm:px-10 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:bg-white/15 hover:border-white/70 transition-all flex items-center justify-center"
           >
             Nossas Soluções
           </Link>

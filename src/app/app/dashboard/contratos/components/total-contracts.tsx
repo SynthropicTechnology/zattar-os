@@ -19,7 +19,7 @@ export async function TotalContractsCard({ dateFilter }: { dateFilter: CrmDateFi
           <h4 className="font-display text-2xl lg:text-3xl">{total.toLocaleString("pt-BR")}</h4>
           {variacao !== null && (
             <div className="text-muted-foreground text-sm">
-              <span className={variacao >= 0 ? "text-green-600" : "text-red-600"}>
+              <span className={variacao >= 0 ? "text-success" : "text-destructive"}>
                 {variacao >= 0 ? "+" : ""}
                 {variacao.toFixed(1)}%
               </span>{" "}

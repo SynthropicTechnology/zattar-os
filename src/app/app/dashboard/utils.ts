@@ -144,10 +144,10 @@ export function getNivelUrgencia(diasRestantes: number): 'critico' | 'alto' | 'm
 export function getCorUrgencia(diasRestantes: number): string {
   const nivel = getNivelUrgencia(diasRestantes);
   switch (nivel) {
-    case 'critico': return 'text-red-600 bg-red-50';
-    case 'alto': return 'text-orange-600 bg-orange-50';
-    case 'medio': return 'text-orange-600 bg-orange-50';
-    default: return 'text-green-600 bg-green-50';
+    case 'critico': return 'text-destructive bg-destructive/10';
+    case 'alto': return 'text-warning bg-warning/10';
+    case 'medio': return 'text-warning bg-warning/10';
+    default: return 'text-success bg-success/10';
   }
 }
 
