@@ -211,7 +211,7 @@ function HubPanel({
         ref={panelRef}
         onKeyDown={handleKeyDown}
         className="
-          fixed top-3 left-3 z-[100] w-[440px] max-h-[calc(100vh-80px)]
+          fixed top-3 left-1/2 -translate-x-1/2 z-[100] w-[440px] max-h-[calc(100vh-80px)]
           overflow-hidden rounded-2xl
           bg-popover/95 backdrop-blur-2xl
           border border-border/50

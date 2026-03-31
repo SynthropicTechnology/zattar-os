@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import CommandMenu from "@/components/layout/header/search"
 import Notifications from "@/components/layout/header/notifications"
 import { AuthenticatorPopover } from "@/components/layout/header/authenticator-popover"
 import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
@@ -31,24 +30,21 @@ function HeaderSearchBar() {
 function DashboardHeader() {
   return (
     <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
-      {/* Esquerda: Logo + Command Hub */}
-      <CommandHub />
-
-      {/* Centro: Search Bar (ocupa espaço flexível, conteúdo centralizado) */}
-      <div className="flex-1 flex justify-center">
+      {/* Esquerda: Search Bar */}
+      <div className="flex-1 flex justify-start">
         <HeaderSearchBar />
       </div>
 
+      {/* Centro: Logo Z + Command Hub */}
+      <CommandHub />
+
       {/* Direita: Ações */}
-      <div className="flex items-center gap-2">
+      <div className="flex-1 flex items-center justify-end gap-2">
         <AuthenticatorPopover />
         <Notifications />
         <Separator orientation="vertical" className="h-4 bg-border" />
         <HeaderUserMenu />
       </div>
-
-      {/* Command Palette (invisível, apenas Cmd+K) */}
-      <CommandMenu />
     </div>
   )
 }

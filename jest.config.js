@@ -54,8 +54,10 @@ const config = {
       testEnvironment: 'jest-environment-jsdom',
       testMatch: [
         '<rootDir>/src/app/**/__tests__/**/*.test.ts',
+        '<rootDir>/src/app/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/components/**/__tests__/**/*.test.ts',
         '<rootDir>/src/components/**/__tests__/**/*.test.tsx',
+        '<rootDir>/src/features/**/__tests__/**/*.test.tsx',
       ],
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
