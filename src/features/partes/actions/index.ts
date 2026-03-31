@@ -56,6 +56,15 @@ export {
 } from './terceiros-actions';
 
 // =============================================================================
+// PARTES STATS (agregado)
+// =============================================================================
+export {
+  actionContarPartesPorTipo,
+  type ContarPartesPorTipoData,
+  type PartesTipoCounts,
+} from './partes-stats-actions';
+
+// =============================================================================
 // PROCESSO PARTES
 // =============================================================================
 export { actionBuscarPartesPorProcessoEPolo } from './processo-partes-actions';

@@ -41,3 +41,20 @@ export {
   fmtNum,
   fmtData,
 } from '@/app/app/dashboard/mock/widgets/primitives';
+
+// ─── Entity / CRM Components ─────────────────────────────────────────────────
+
+export { EntityCard, getInitials, timeAgo } from './entity-card';
+export type { EntityCardData, EntityCardConfig } from './entity-card';
+
+export { EntityListRow } from './entity-list-row';
+
+export { PulseStrip } from './pulse-strip';
+export type { PulseItem } from './pulse-strip';
+
+export { TabPills } from './tab-pills';
+export type { TabPillOption } from './tab-pills';
+
+export { SearchInput } from './search-input';
+
+export { ViewToggle } from './view-toggle';

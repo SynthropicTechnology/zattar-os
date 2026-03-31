@@ -1,13 +1,20 @@
-import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import { PartesClient } from './partes-client';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const metadata: Metadata = {
+  title: 'Partes',
+  description: 'Gestão de clientes, partes contrárias, terceiros e representantes.',
+};
 
 /**
  * Página de Partes
  *
- * Redireciona para a tab principal (Clientes)
+ * Server Component — delega toda a interatividade ao PartesClient.
+ *
+ * TODO: Buscar estatísticas no servidor quando actionContarPartesPorTipo
+ * estiver disponível, passando initialStats ao PartesClient para evitar
+ * o loading state inicial do PulseStrip.
  */
-export default function PartesPage() {
-  redirect('/app/partes/clientes');
+export default async function PartesPage() {
+  return <PartesClient />;
 }

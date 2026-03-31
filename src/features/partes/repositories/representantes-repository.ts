@@ -448,4 +448,32 @@ export async function buscarRepresentantesPorOAB(
   return (data as unknown as Representante[]) || [];
 }
 
+/**
+ * Conta o total de representantes no banco
+ */
+export async function countRepresentantes(): Promise<number> {
+  const supabase = createServiceClient();
+  const { count, error } = await supabase
+    .from('representantes')
+    .select('*', { count: 'exact', head: true });
+
+  if (error) throw new Error(`Erro ao contar representantes: ${error.message}`);
+  return count ?? 0;
+}
+
+/**
+ * Conta representantes criados entre duas datas (inclusive)
+ */
+export async function countRepresentantesEntreDatas(dataInicio: Date, dataFim: Date): Promise<number> {
+  const supabase = createServiceClient();
+  const { count, error } = await supabase
+    .from('representantes')
+    .select('*', { count: 'exact', head: true })
+    .gte('created_at', dataInicio.toISOString())
+    .lte('created_at', dataFim.toISOString());
+
+  if (error) throw new Error(`Erro ao contar representantes entre datas: ${error.message}`);
+  return count ?? 0;
+}
+
 

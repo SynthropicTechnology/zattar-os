@@ -574,6 +574,62 @@ export async function softDeleteTerceiro(id: number): Promise<Result<void>> {
 }
 
 /**
+ * Conta o total de terceiros no banco
+ */
+export async function countTerceiros(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_TERCEIROS)
+      .select('*', { count: 'exact', head: true });
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar terceiros',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta terceiros criados entre duas datas (inclusive)
+ */
+export async function countTerceirosEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_TERCEIROS)
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', dataInicio.toISOString())
+      .lte('created_at', dataFim.toISOString());
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar terceiros entre datas',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
  * Soft delete de múltiplos terceiros (marca como inativos)
  */
 export async function softDeleteTerceirosEmMassa(ids: number[]): Promise<Result<number>> {

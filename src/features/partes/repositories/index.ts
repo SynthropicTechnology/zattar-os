@@ -72,6 +72,8 @@ export {
   upsertTerceiroByCNPJ,
   softDeleteTerceiro,
   softDeleteTerceirosEmMassa,
+  countTerceiros,
+  countTerceirosEntreDatas,
 } from './terceiros-repository';
 
 // Representantes - exported with Repo suffix to avoid conflicts with service layer

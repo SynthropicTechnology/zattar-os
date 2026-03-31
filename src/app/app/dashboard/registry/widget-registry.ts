@@ -9,7 +9,47 @@
 
 import React from 'react';
 
-// ─── Imports — Processos ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+// IMPORTS CONECTADOS (dados reais via hooks)
+// Os 18 widgets do DEFAULT_LAYOUT usam wrappers que buscam dados reais.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── Processos (conectados) ─────────────────────────────────────────────────
+import { WidgetSaudeProcessual } from '../widgets/processos/saude-processual';
+import { WidgetHeatmapAtividade } from '../widgets/processos/heatmap-atividade';
+
+// ─── Audiências (conectados) ────────────────────────────────────────────────
+import { ProximasAudiencias } from '../widgets/audiencias/proximas-audiencias';
+import { WidgetPreparacao } from '../widgets/audiencias/preparacao';
+
+// ─── Expedientes (conectados) ───────────────────────────────────────────────
+import { UrgencyList } from '../widgets/expedientes/urgency-list';
+import { AgingFunnel } from '../widgets/expedientes/aging-funnel';
+
+// ─── Financeiro (conectados) ────────────────────────────────────────────────
+import { WidgetSaúdeFinanceira } from '../widgets/financeiro/saude-financeira';
+import { WidgetFluxoComTabs } from '../widgets/financeiro/fluxo-tabs';
+import { WidgetDespesasTreemap } from '../widgets/financeiro/despesas-treemap';
+import { WidgetInadimplencia } from '../widgets/financeiro/inadimplencia';
+
+// ─── Contratos (conectados — placeholders) ──────────────────────────────────
+import { WidgetSaudeContratual } from '../widgets/contratos/saude-contratual';
+import { WidgetObrigacoesTreemap } from '../widgets/contratos/obrigacoes-treemap';
+
+// ─── Pessoal (conectados) ───────────────────────────────────────────────────
+import { WidgetScorePessoal } from '../widgets/pessoal/score-pessoal';
+import { WidgetMeuDia } from '../widgets/pessoal/meu-dia';
+import { WidgetFocoHoje } from '../widgets/pessoal/foco-hoje';
+import { WidgetTarefasStatus } from '../widgets/pessoal/tarefas-status';
+import { WidgetProdutividadeSemanal } from '../widgets/pessoal/produtividade-semanal';
+import { WidgetLembretesAtivos } from '../widgets/pessoal/lembretes-ativos';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// IMPORTS MOCK (widgets secundários ainda com dados fictícios)
+// Serão migrados para dados reais na Fase 2.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── Processos (mock) ───────────────────────────────────────────────────────
 import {
   WidgetStatusDistribuicao,
   WidgetCasosTribunal,
@@ -17,14 +57,11 @@ import {
   WidgetAging,
   WidgetSegmento,
   WidgetKpiPulse,
-  WidgetSaudeProcessual,
-  WidgetHeatmapAtividade,
   WidgetProcessosComTabs,
 } from '../mock/widgets/section-processos';
 
-// ─── Imports — Audiências ────────────────────────────────────────────────────
+// ─── Audiências (mock) ──────────────────────────────────────────────────────
 import {
-  ProximasAudiencias,
   ModalidadeDistribution,
   StatusMensal,
   KpiStrip,
@@ -32,13 +69,10 @@ import {
   TrendMensal,
   WidgetComparativoMensal,
   WidgetHeatmapSemanal,
-  WidgetPreparacao,
 } from '../mock/widgets/section-audiencias';
 
-// ─── Imports — Expedientes ───────────────────────────────────────────────────
+// ─── Expedientes (mock) ─────────────────────────────────────────────────────
 import {
-  UrgencyList,
-  AgingFunnel,
   OrigemDistribution,
   ResultadoDecisao,
   VolumeSemanal,
@@ -48,21 +82,17 @@ import {
   TendenciaResponsividade,
 } from '../mock/widgets/section-expedientes';
 
-// ─── Imports — Financeiro ────────────────────────────────────────────────────
+// ─── Financeiro (mock) ──────────────────────────────────────────────────────
 import {
-  WidgetSaúdeFinanceira,
   WidgetFluxoCaixa,
   WidgetSaldoTrend,
   WidgetContasReceber,
   WidgetContasPagar,
   WidgetDespesasCategoria,
   WidgetDREComparativo,
-  WidgetInadimplencia,
-  WidgetDespesasTreemap,
-  WidgetFluxoComTabs,
 } from '../mock/widgets/section-financeiro';
 
-// ─── Imports — Contratos ─────────────────────────────────────────────────────
+// ─── Contratos (mock) ──────────────────────────────────────────────────────
 import {
   WidgetStatusContratos,
   WidgetTiposContrato,
@@ -70,19 +100,11 @@ import {
   WidgetParcelasStatus,
   WidgetRepassesPendentes,
   WidgetModeloCobranca,
-  WidgetSaudeContratual,
-  WidgetObrigacoesTreemap,
 } from '../mock/widgets/section-contratos';
 
-// ─── Imports — Pessoal ───────────────────────────────────────────────────────
+// ─── Pessoal (mock) ────────────────────────────────────────────────────────
 import {
-  WidgetScorePessoal,
   WidgetHeatmapProdutividade,
-  WidgetFocoHoje,
-  WidgetMeuDia,
-  WidgetTarefasStatus,
-  WidgetProdutividadeSemanal,
-  WidgetLembretesAtivos,
   WidgetCapturaStatus,
   WidgetChatAtivo,
   WidgetDocumentosRecentes,

@@ -109,17 +109,18 @@ export function WidgetDashboard({ currentUserId, currentUserName }: WidgetDashbo
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-  });
+    year: 'numeric',
+  }).replace(/^\w/, (c) => c.toUpperCase());
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 pb-8">
       {/* ── Cabecalho ───────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-heading font-semibold tracking-tight">
             {saudacao}, {primeiroNome}.
           </h1>
-          <p className="text-sm text-muted-foreground/60 mt-0.5 capitalize">
+          <p className="text-sm text-muted-foreground/60 mt-0.5">
             {hoje} &mdash;{' '}
             {visibleWidgets.length === 0
               ? 'nenhum widget ativo'
@@ -151,13 +152,13 @@ export function WidgetDashboard({ currentUserId, currentUserName }: WidgetDashbo
 
       {/* ── Grid de widgets ─────────────────────────────────────── */}
       {visibleWidgets.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 auto-rows-auto">
           {visibleWidgets.map((widget) => {
             const WidgetComponent = widget.component;
             return (
               <div
                 key={widget.id}
-                className={getColSpanClass(widget.size)}
+                className={`${getColSpanClass(widget.size)} *:h-full`}
               >
                 <WidgetComponent />
               </div>

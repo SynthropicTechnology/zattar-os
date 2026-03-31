@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
-import { DashboardV2Client } from './client';
+import { DashboardClient } from './client';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -32,7 +32,7 @@ export default async function DashboardV2Page() {
   }
 
   return (
-    <DashboardV2Client
+    <DashboardClient
       currentUserId={currentUserId}
       currentUserName={currentUserName}
     />

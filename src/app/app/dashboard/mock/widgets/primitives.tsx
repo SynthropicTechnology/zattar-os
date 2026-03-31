@@ -31,7 +31,7 @@ export function GlassPanel({
   };
 
   return (
-    <div className={`rounded-2xl border transition-all duration-300 ${depthStyles[depth]} ${className}`}>
+    <div className={`rounded-2xl border transition-all duration-300 flex flex-col ${depthStyles[depth]} ${className}`}>
       {children}
     </div>
   );

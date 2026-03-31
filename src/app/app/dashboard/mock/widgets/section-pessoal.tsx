@@ -204,61 +204,39 @@ export function WidgetScorePessoal() {
       className="md:col-span-3"
       depth={2}
     >
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+      <div className="flex flex-col sm:flex-row items-center gap-5">
 
-        {/* Esquerda: Gauge */}
-        <div className="flex flex-col items-center gap-1 shrink-0">
-          <GaugeMeter
-            value={68}
-            max={100}
-            label="Seu dia"
-            status="warning"
-            size={90}
-          />
-          <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider text-center">
-            score geral
-          </span>
+        {/* Gauge compacto */}
+        <GaugeMeter value={68} max={100} label="Seu dia" status="warning" size={72} />
+
+        {/* Separador */}
+        <div className="hidden sm:block w-px self-stretch bg-border/10" />
+
+        {/* Stats em linha */}
+        <div className="flex items-center gap-5 flex-1 min-w-0 flex-wrap">
+          {([
+            { label: 'Tarefas', val: 18, suffix: '/25', sub: 'concluídas hoje' },
+            { label: 'Lembretes', val: 3, suffix: '', sub: 'pendentes' },
+            { label: 'Audiências', val: 2, suffix: '', sub: 'hoje' },
+            { label: 'Documentos', val: 4, suffix: '', sub: 'editados' },
+          ] as const).map((s) => (
+            <div key={s.label} className="flex flex-col gap-0.5">
+              <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">{s.label}</span>
+              <span className="font-display text-lg font-bold tabular-nums">
+                <AnimatedNumber value={s.val} suffix={s.suffix} />
+              </span>
+              <span className="text-[9px] text-muted-foreground/35">{s.sub}</span>
+            </div>
+          ))}
         </div>
 
-        {/* Centro: Stats animados */}
-        <div className="flex flex-wrap gap-x-6 gap-y-3 flex-1 min-w-0">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Tarefas</span>
-            <span className="font-display text-xl font-bold tabular-nums">
-              <AnimatedNumber value={18} suffix="/25" />
-            </span>
-            <span className="text-[9px] text-muted-foreground/35">concluídas hoje</span>
-          </div>
+        {/* Separador */}
+        <div className="hidden sm:block w-px self-stretch bg-border/10" />
 
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Lembretes</span>
-            <span className="font-display text-xl font-bold tabular-nums">
-              <AnimatedNumber value={3} />
-            </span>
-            <span className="text-[9px] text-muted-foreground/35">pendentes</span>
-          </div>
-
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Audiências</span>
-            <span className="font-display text-xl font-bold tabular-nums">
-              <AnimatedNumber value={2} />
-            </span>
-            <span className="text-[9px] text-muted-foreground/35">hoje</span>
-          </div>
-
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Documentos</span>
-            <span className="font-display text-xl font-bold tabular-nums">
-              <AnimatedNumber value={4} />
-            </span>
-            <span className="text-[9px] text-muted-foreground/35">editados</span>
-          </div>
-        </div>
-
-        {/* Direita: InsightBanner */}
-        <div className="w-full md:w-64 shrink-0">
+        {/* Insight compacto */}
+        <div className="w-full sm:max-w-56 shrink-0">
           <InsightBanner type="warning">
-            Audiência às 14h sem documentos preparados — priorize o preparo antes do horário.
+            Audiência às 14h sem documentos preparados — priorize o preparo.
           </InsightBanner>
         </div>
 
@@ -389,7 +367,7 @@ export function WidgetMeuDia() {
       <div className="relative">
         {/* Linha vertical conectora */}
         <div
-          className="absolute left-[7px] top-2 bottom-2 w-px bg-border/20"
+          className="absolute left-1.75 top-2 bottom-2 w-px bg-border/20"
           aria-hidden="true"
         />
 
@@ -673,7 +651,7 @@ export function WidgetCapturaStatus() {
       depth={1}
     >
       {/* Strip de status geral */}
-      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.03] border border-border/10 mb-3">
+      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/3 border border-border/10 mb-3">
         <RefreshCw className="size-3 text-muted-foreground/30" />
         <span className="text-[10px] text-muted-foreground/50 flex-1">
           Última sincronização
@@ -742,7 +720,7 @@ export function WidgetChatAtivo() {
       {/* Contador de não lidas */}
       <div className="flex items-center gap-3 mb-4">
         <div className="relative">
-          <div className="size-10 rounded-2xl bg-primary/[0.08] border border-primary/15 flex items-center justify-center">
+          <div className="size-10 rounded-2xl bg-primary/8er border-primary/15 flex items-center justify-center">
             <MessageCircle className="size-4 text-primary/50" />
           </div>
           {CHAT_NAO_LIDAS > 0 && (
@@ -763,7 +741,7 @@ export function WidgetChatAtivo() {
       </div>
 
       {/* Preview da última mensagem */}
-      <div className="px-3 py-2.5 rounded-xl bg-white/[0.03] border border-border/10">
+      <div className="px-3 py-2.5 rounded-xl bg-white/3 border border-border/10">
         <div className="flex items-center gap-1.5 mb-1">
           <div className="size-1.5 rounded-full bg-emerald-500/60" />
           <span className="text-[10px] font-semibold text-foreground/70">
@@ -806,8 +784,8 @@ export function WidgetDocumentosRecentes() {
               <div
                 className={`size-7 rounded-lg flex items-center justify-center shrink-0 ${
                   doc.tipo === 'pdf'
-                    ? 'bg-destructive/[0.08] border border-destructive/15'
-                    : 'bg-primary/[0.08] border border-primary/15'
+                    ? 'bg-destructive/8 border border-destructive/15'
+                    : 'bg-primary/8 border border-primary/15'
                 }`}
               >
                 <Icon
@@ -827,8 +805,8 @@ export function WidgetDocumentosRecentes() {
               <span
                 className={`text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-md font-medium shrink-0 ${
                   doc.tipo === 'pdf'
-                    ? 'text-destructive/50 bg-destructive/[0.06]'
-                    : 'text-primary/50 bg-primary/[0.06]'
+                    ? 'text-destructive/50 bg-destructive/6'
+                    : 'text-primary/50 bg-primary/6'
                 }`}
               >
                 {doc.tipo}

@@ -2,12 +2,12 @@
 
 import { WidgetDashboard } from '../components/widget-dashboard';
 
-interface DashboardV2ClientProps {
+interface DashboardClientProps {
   currentUserId: number;
   currentUserName: string;
 }
 
-export function DashboardV2Client({ currentUserId, currentUserName }: DashboardV2ClientProps) {
+export function DashboardClient({ currentUserId, currentUserName }: DashboardClientProps) {
   return (
     <WidgetDashboard
       currentUserId={currentUserId}

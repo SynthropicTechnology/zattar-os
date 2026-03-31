@@ -71,6 +71,8 @@ import {
   findAllTerceirosComEnderecoEProcessos,
   saveTerceiro,
   updateTerceiro as updateTerceiroRepo,
+  countTerceiros,
+  countTerceirosEntreDatas,
 } from './repositories';
 import {
   listarRepresentantes as listarRepresentantesRepo,
@@ -86,6 +88,8 @@ import {
   deletarRepresentante as deletarRepresentanteRepo,
   deletarRepresentantesEmMassa as deletarRepresentantesEmMassaRepo,
   upsertRepresentantePorCPF as upsertRepresentantePorCPFRepo,
+  countRepresentantes as countRepresentantesRepo,
+  countRepresentantesEntreDatas as countRepresentantesEntreDatasRepo,
 } from './repositories/representantes-repository';
 import type {
   ClienteComEndereco,
@@ -706,6 +710,20 @@ export async function desativarTerceirosEmMassa(ids: number[]): Promise<Result<n
   return softDeleteTerceirosEmMassa(uniqueIds);
 }
 
+/**
+ * Conta o total de terceiros no banco
+ */
+export async function contarTerceiros(): Promise<Result<number>> {
+  return countTerceiros();
+}
+
+/**
+ * Conta terceiros criados entre duas datas (inclusive)
+ */
+export async function contarTerceirosEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  return countTerceirosEntreDatas(dataInicio, dataFim);
+}
+
 // =============================================================================
 // SERVICOS - REPRESENTANTE
 // =============================================================================
@@ -901,6 +919,30 @@ export async function upsertRepresentantePorCPF(
     if (!result.sucesso) return err(appError('DATABASE_ERROR', result.erro || 'Erro desconhecido'));
     if (!result.representante) return err(appError('DATABASE_ERROR', 'Representante não retornado'));
     return ok({ representante: result.representante, created: result.criado ?? false });
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+/**
+ * Conta o total de representantes no banco
+ */
+export async function contarRepresentantes(): Promise<Result<number>> {
+  try {
+    const total = await countRepresentantesRepo();
+    return ok(total);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+/**
+ * Conta representantes criados entre duas datas (inclusive)
+ */
+export async function contarRepresentantesEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  try {
+    const total = await countRepresentantesEntreDatasRepo(dataInicio, dataFim);
+    return ok(total);
   } catch (e) {
     return err(appError('DATABASE_ERROR', String(e)));
   }

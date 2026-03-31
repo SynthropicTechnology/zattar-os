@@ -512,6 +512,37 @@
   --insight-success-bg: var(--success);
   --insight-info-bg: var(--primary);
   --insight-warning-bg: var(--warning);
+
+  /* ── Entity Type Colors ── */
+  /* Cores semânticas por tipo de entidade no sistema jurídico */
+  --entity-cliente: var(--primary);
+  --entity-parte-contraria: var(--warning);
+  --entity-terceiro: var(--info);
+  --entity-representante: var(--success);
+
+  /* ── Pulse Strip ── */
+  --pulse-gap: 1.5rem;
+  --pulse-padding-x: 1.25rem;
+  --pulse-padding-y: 0.75rem;
+
+  /* ── Card Entity ── */
+  --card-entity-radius: 1rem;
+  --card-entity-padding: 1rem;
+  --card-entity-avatar-size: 2.5rem;
+  --card-entity-avatar-radius: 0.75rem;
+
+  /* ── Tab Pills ── */
+  --tab-pill-radius: 0.75rem;
+  --tab-pill-padding-x: 0.75rem;
+  --tab-pill-padding-y: 0.375rem;
+  --tab-pill-active-bg: var(--primary);
+
+  /* ── Detail Panel ── */
+  --detail-panel-width: 380px;
+
+  /* ── Search ── */
+  --search-radius: 0.5rem;
+  --search-bg: rgba(255, 255, 255, 0.04);
 }
 
 /* =============================================================================
