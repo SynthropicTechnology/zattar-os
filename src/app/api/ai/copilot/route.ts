@@ -20,7 +20,7 @@
  *                 description: API key do gateway AI (opcional se configurada no servidor)
  *               model:
  *                 type: string
- *                 default: gpt-4o-mini
+ *                 default: google/gemini-3.1-flash-lite-preview
  *                 description: Modelo de linguagem a ser usado
  *               prompt:
  *                 type: string
@@ -52,7 +52,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   const {
     apiKey: key,
-    model = 'gpt-4o-mini',
+    model = 'google/gemini-3.1-flash-lite-preview',
     prompt,
     system,
   } = await req.json();

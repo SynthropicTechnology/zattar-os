@@ -20,3 +20,46 @@ export {
 } from "./domain";
 
 export { actionListarEventosCalendar } from "./actions/calendar-actions";
+export { actionListarBriefingData } from "./actions/briefing-actions";
+
+// Briefing domain
+export type {
+	PrepStatus,
+	CalendarView,
+	BriefingEventMeta,
+	DaySummary,
+	WeekPulseDay,
+	EventColor,
+	ColorConfig,
+	SourceConfig,
+} from "./briefing-domain";
+
+export {
+	COLOR_MAP,
+	SOURCE_CONFIG,
+} from "./briefing-domain";
+
+// Briefing helpers
+export {
+	extractMeta,
+	getEventsForDay,
+	getTimedEvents,
+	getAllDayEvents,
+	generateWeekPulse,
+	getDaySummary,
+	buildBriefingText,
+	isSameDay,
+	isToday,
+	addDays,
+	startOfWeek,
+	fmtTime,
+	fmtDate,
+	fmtDateFull,
+	weekdayShort,
+	weekdayFull,
+	monthName,
+} from "./briefing-helpers";
+
+// Travel helpers
+export type { TravelEstimate } from "./travel-helpers";
+export { estimateTravelTime } from "./travel-helpers";

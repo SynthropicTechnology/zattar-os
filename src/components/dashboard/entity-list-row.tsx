@@ -38,7 +38,7 @@ export function EntityListRow({ data, onClick, selected = false }: EntityListRow
       className={`
         flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-150
         ${selected
-          ? 'bg-primary/[0.06] border border-primary/15'
+          ? 'bg-primary/6 border border-primary/15'
           : 'hover:bg-white/4 border border-transparent'
         }
       `}

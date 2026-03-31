@@ -1,5 +1,5 @@
 import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { google } from '@ai-sdk/google';
 import { TipoChamada } from '@/features/chat/domain';
 
 export async function gerarResumoTranscricao(
@@ -28,8 +28,7 @@ Se a transcrição for muito curta ou sem conteúdo relevante, indique que não 
 
   try {
     const { text } = await generateText({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      model: openai('gpt-4o-mini') as any, // Using mini for cost efficiency and speed
+      model: google('gemini-3.1-flash-lite-preview'),
       system: systemPrompt,
       prompt: `Aqui está a transcrição da chamada:\n\n${transcricao}`,
     });

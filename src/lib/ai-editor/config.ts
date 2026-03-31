@@ -42,9 +42,9 @@ export async function getEditorIAConfig(): Promise<EditorIAConfig> {
     const fallbackConfig: EditorIAConfig = {
       provider: "gateway",
       api_key: envApiKey,
-      default_model: process.env.AI_DEFAULT_MODEL || "openai/gpt-4o-mini",
-      tool_choice_model: process.env.AI_TOOL_CHOICE_MODEL || "google/gemini-2.5-flash",
-      comment_model: process.env.AI_COMMENT_MODEL || "google/gemini-2.5-flash",
+      default_model: process.env.AI_DEFAULT_MODEL || "google/gemini-3.1-flash-lite-preview",
+      tool_choice_model: process.env.AI_TOOL_CHOICE_MODEL || "google/gemini-3.1-flash-lite-preview",
+      comment_model: process.env.AI_COMMENT_MODEL || "google/gemini-3.1-flash-lite-preview",
     };
     cachedConfig = fallbackConfig;
     cacheTimestamp = now;

@@ -66,6 +66,14 @@ function normalizeDateRange(input: ListarEventosCalendarInput): { start: Date; e
   };
 }
 
+function deriveAudienciaPrepStatus(audiencia: Audiencia): "preparado" | "parcial" | "pendente" {
+  const hasAta = audiencia.ataAudienciaId != null;
+  const hasObs = !!audiencia.observacoes?.trim();
+  if (hasAta && hasObs) return "preparado";
+  if (hasAta || hasObs) return "parcial";
+  return "pendente";
+}
+
 function audienciaToUnifiedEvent(audiencia: Audiencia): UnifiedCalendarEvent {
   const color =
     audiencia.status === StatusAudiencia.Marcada
@@ -93,6 +101,10 @@ function audienciaToUnifiedEvent(audiencia: Audiencia): UnifiedCalendarEvent {
       trt: audiencia.trt,
       grau: audiencia.grau,
       status: audiencia.status,
+      modalidade: audiencia.modalidade,
+      enderecoPresencial: audiencia.enderecoPresencial,
+      urlAudienciaVirtual: audiencia.urlAudienciaVirtual,
+      prepStatus: deriveAudienciaPrepStatus(audiencia),
     },
   };
 }
