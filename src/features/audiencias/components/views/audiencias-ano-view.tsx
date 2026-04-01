@@ -31,7 +31,8 @@ export function AudienciasAnoView({
   audiencias,
   currentDate,
   onDateChange,
-  onViewDetail: _onViewDetail,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onViewDetail,
   refetch,
 }: AudienciasAnoViewProps) {
   const year = currentDate.getFullYear();

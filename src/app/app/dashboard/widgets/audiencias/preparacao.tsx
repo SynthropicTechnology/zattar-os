@@ -92,7 +92,7 @@ export function WidgetPreparacao() {
       ) : (
         <div className="space-y-3">
           {audiencias.map((audiencia) => {
-            const cor = corPorTipo(audiencia.tipo_audiencia);
+            const _cor = corPorTipo(audiencia.tipo_audiencia);
             const prepScore = calcPrepScoreFromProxima(audiencia);
             const ringColor = scoreColor(prepScore);
             return (

@@ -37,7 +37,8 @@ export function AudienciasMesView({
   audiencias,
   currentDate,
   onDateChange,
-  onViewDetail: _onViewDetail,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onViewDetail,
   refetch,
 }: AudienciasMesViewProps) {
   const monthLabel = format(currentDate, "MMMM 'de' yyyy", { locale: ptBR });
