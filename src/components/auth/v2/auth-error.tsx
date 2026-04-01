@@ -46,7 +46,7 @@ export function AuthErrorV2({ error }: { error?: string }) {
           <h1 className="font-headline text-2xl font-extrabold tracking-tight text-foreground">
             Algo deu errado.
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-[260px] mx-auto">
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-65 mx-auto">
             {error ||
               'Ocorreu um erro não especificado durante a autenticação.'}
           </p>
