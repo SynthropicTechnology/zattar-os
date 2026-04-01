@@ -43,15 +43,10 @@ import {
 import {
   SOURCE_CONFIG,
   COLOR_MAP,
-  type EventColor,
 } from "@/features/calendar/briefing-domain";
 import {
   buildBriefingText,
   fmtTime,
-  extractMeta,
-  getEventsForDay,
-  getTimedEvents,
-  getAllDayEvents,
 } from "@/features/calendar/briefing-helpers";
 import { estimateTravelTime } from "@/features/calendar/travel-helpers";
 
@@ -201,7 +196,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
             <div className="space-y-2">
               {needsPrep.length > 0 ? needsPrep.map((ev) => {
                 const SrcIcon = SOURCE_ICONS[ev.source] ?? Calendar;
-                const docs = ev.meta.prepStatus ? 1 : 0;
+                const _docs = ev.meta.prepStatus ? 1 : 0;
                 return (
                   <ProgressItem
                     key={ev.id}

@@ -64,7 +64,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render
-                    const { container } = render(
+                    render(
                         <ResponsiveDialog open={true}>
                             <ResponsiveDialogContent>
                                 <ResponsiveDialogHeader>
@@ -108,7 +108,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render dialog with form
-                    const { container } = render(
+                    render(
                         <ResponsiveDialog open={true}>
                             <ResponsiveDialogContent>
                                 <ResponsiveDialogHeader>
@@ -167,7 +167,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render
-                    const { container } = render(
+                    render(
                         <ResponsiveDialog open={true}>
                             <ResponsiveDialogContent>
                                 <ResponsiveDialogHeader>
@@ -220,7 +220,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render dialog with long content
-                    const { container } = render(
+                    render(
                         <ResponsiveDialog open={true}>
                             <ResponsiveDialogContent>
                                 <ResponsiveDialogHeader>
@@ -328,7 +328,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     mockUseBreakpointBelow.mockReturnValue(false); // Desktop
 
                     // Render
-                    const { container } = render(
+                    render(
                         <ResponsiveDialog open={true}>
                             <ResponsiveDialogContent>
                                 <ResponsiveDialogHeader>

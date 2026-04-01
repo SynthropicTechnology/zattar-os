@@ -8,12 +8,10 @@
 import {
   atribuirResponsavel,
   atualizarExpediente,
-  atualizarTipoDescricao,
 } from '../../service';
 import {
   findExpedienteById,
   updateExpediente,
-  updateResponsavel,
 } from '../../repository';
 import { ok, err, appError } from '@/types';
 import { createDbClient } from '@/lib/supabase';

@@ -11,7 +11,6 @@
 import { useMemo } from "react";
 import { AlertTriangle, Clock, ArrowRight } from "lucide-react";
 import { format, parseISO, differenceInMinutes, areIntervalsOverlapping } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/app/app/dashboard/mock/widgets/primitives";
 import type { Audiencia } from "../domain";
@@ -113,7 +112,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
   return (
     <GlassPanel depth={1} className={cn("overflow-hidden", className)}>
       {/* Red accent bar */}
-      <div className="h-px bg-gradient-to-r from-transparent via-destructive/25 to-transparent" />
+      <div className="h-px bg-linear-to-r from-transparent via-destructive/25 to-transparent" />
 
       <div className="p-4">
         <div className="flex items-center gap-2 mb-3">

@@ -19,7 +19,6 @@ import {
   CheckCircle2,
   Circle,
   ChevronRight,
-  ChevronLeft,
   AlertTriangle,
   FileText,
   ExternalLink,
@@ -27,8 +26,6 @@ import {
   Handshake,
   XCircle,
   RefreshCw,
-  Bell,
-  Upload,
   Sun,
   Sunset,
   Moon,
@@ -39,8 +36,6 @@ import {
   ArrowRight,
   Zap,
   Target,
-  TrendingUp,
-  Shield,
 } from 'lucide-react';
 import {
   GlassPanel,
@@ -49,7 +44,6 @@ import {
   ProgressRing,
   CalendarHeatmap,
   InsightBanner,
-  UrgencyDot,
 } from '@/app/app/dashboard/mock/widgets/primitives';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
@@ -597,7 +591,7 @@ function MissionKpiStrip({
 // ═══════════════════════════════════════════════════════════════════════════
 
 function MissionHeroCard({ audiencia }: { audiencia: MockAudiencia }) {
-  const [tick, setTick] = useState(0);
+  const [_tick, setTick] = useState(0);
   useEffect(() => {
     const i = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(i);
@@ -605,7 +599,7 @@ function MissionHeroCard({ audiencia }: { audiencia: MockAudiencia }) {
 
   const timeUntil = getTimeUntil(audiencia.dataInicio);
   const urgency = getUrgencyLevel(timeUntil.totalMs);
-  const prepStatus = getPrepStatus(audiencia.prepScore);
+  const _prepStatus = getPrepStatus(audiencia.prepScore);
   const ModalIcon = MODALIDADE_ICON[audiencia.modalidade];
   const isOngoing = audiencia.dataInicio <= NOW && audiencia.dataFim >= NOW;
 
@@ -783,7 +777,7 @@ function PostHearingCard({ audiencia }: { audiencia: MockAudiencia }) {
 
   return (
     <GlassPanel depth={1} className="relative overflow-hidden">
-      <div className="h-px bg-gradient-to-r from-transparent via-warning/20 to-transparent" />
+      <div className="h-px bg-linear-to-r from-transparent via-warning/20 to-transparent" />
       <div className="p-4 sm:p-5">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
@@ -1112,7 +1106,7 @@ function TimelineCard({ audiencia, showDate }: { audiencia: MockAudiencia; showD
 function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
   const isPast = audiencia.dataFim < NOW;
   const isFinalizada = audiencia.status === 'finalizada';
-  const prepStatus = getPrepStatus(audiencia.prepScore);
+  const _prepStatus = getPrepStatus(audiencia.prepScore);
   const ModalIcon = MODALIDADE_ICON[audiencia.modalidade];
   const timeUntil = getTimeUntil(audiencia.dataInicio);
 
@@ -1157,7 +1151,7 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
       </div>
 
       {/* Modalidade */}
-      <div className="flex items-center gap-1 shrink-0 hidden md:flex w-20">
+      <div className="flex items-center gap-1 shrink-0 md:flex w-20">
         <ModalIcon className="size-2.5 text-muted-foreground/40" />
         <span className="text-[9px] text-muted-foreground/50">{MODALIDADE_LABEL[audiencia.modalidade]}</span>
       </div>

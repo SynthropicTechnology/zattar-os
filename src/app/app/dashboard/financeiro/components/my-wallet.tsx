@@ -97,7 +97,7 @@ export default function MyWallet() {
               <CarouselItem key={card.id} className="md:basis-1/2 lg:basis-2/3">
                 <div
                   className={cn(
-                    "relative h-48 overflow-hidden rounded-lg bg-gradient-to-br p-6 text-white",
+                    "relative h-48 overflow-hidden rounded-lg bg-linear-to-br p-6 text-white",
                     card.gradient
                   )}>
                   <div className="absolute inset-0 opacity-20">

@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useMemo } from 'react';
+
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
@@ -31,7 +31,7 @@ export function AudienciasAnoView({
   audiencias,
   currentDate,
   onDateChange,
-  onViewDetail,
+  onViewDetail: _onViewDetail,
   refetch,
 }: AudienciasAnoViewProps) {
   const year = currentDate.getFullYear();

@@ -11,8 +11,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { CalendarDays, Clock, TrendingUp } from 'lucide-react';
-import { parseISO, isSameWeek, isSameMonth, differenceInMinutes } from 'date-fns';
+import { CalendarDays, Clock } from 'lucide-react';
+import { parseISO, isSameWeek, isSameMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
   GlassPanel,
@@ -51,7 +51,7 @@ function getTimeUntilLabel(target: Date): string {
 // ─── Component ────────────────────────────────────────────────────────────
 
 export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps) {
-  const now = new Date();
+  const now = useMemo(() => new Date(), []);
 
   const stats = useMemo(() => {
     const thisWeek = audiencias.filter((a) => {

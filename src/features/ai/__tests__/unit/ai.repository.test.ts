@@ -15,7 +15,9 @@ jest.mock('../../repository', () => {
     ...actual,
     // Override searchEmbeddings to avoid the dynamic import issue
     searchEmbeddings: async (params: { query: string; match_threshold?: number; match_count?: number; filter_entity_type?: string; filter_parent_id?: number; filter_metadata?: Record<string, unknown> }) => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { createClient } = require('@/lib/supabase/server');
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { generateEmbedding } = require('../../services/embedding.service');
 
       const supabase = await createClient();

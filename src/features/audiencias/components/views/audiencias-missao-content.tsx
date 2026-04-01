@@ -80,7 +80,7 @@ export function AudienciasMissaoContent({
   onViewDetail,
   responsavelNomes,
 }: AudienciasMissaoContentProps) {
-  const now = new Date();
+  const now = useMemo(() => new Date(), []);
 
   // Day audiencias
   const dayAudiencias = useMemo(

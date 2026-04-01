@@ -52,12 +52,23 @@ export {
   buildAudienciasFilterOptions,
   buildAudienciasFilterGroups,
   parseAudienciasFilters,
+  // Mission view components
+  MissionKpiStrip,
+  calcPrepItems,
+  calcPrepScore,
+  // Glass Briefing views
+  AudienciasSemanaView,
+  AudienciasMesView,
+  AudienciasAnoView,
+  AudienciasListaView,
+  AudienciasMissaoContent,
 } from "./components";
 
 // ============================================================================
 // Hooks
 // ============================================================================
-export { useAudiencias, useTiposAudiencias } from "./hooks";
+export { useAudiencias, useTiposAudiencias, useAudienciasUnified } from "./hooks";
+export type { AudienciasViewMode } from "./hooks";
 
 // ============================================================================
 // Actions

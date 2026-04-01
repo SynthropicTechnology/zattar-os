@@ -74,10 +74,12 @@ describe('Chamadas Actions - Unit Tests', () => {
     mockCreateChatService.mockResolvedValue(mockChatService as any);
 
     // Setup dynamic import mock for calls-repository
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { createCallsRepository } = require('../../repositories/calls-repository');
     (createCallsRepository as jest.Mock).mockResolvedValue(mockCallsRepo);
 
     // Setup dynamic import mock for dyte config
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { isDyteRecordingEnabled } = require('@/lib/dyte/config');
     (isDyteRecordingEnabled as jest.Mock).mockResolvedValue(true);
   });
@@ -165,6 +167,7 @@ describe('Chamadas Actions - Unit Tests', () => {
 
   describe('actionIniciarGravacao', () => {
     it('deve retornar erro quando recording está desabilitado', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { isDyteRecordingEnabled } = require('@/lib/dyte/config');
       (isDyteRecordingEnabled as jest.Mock).mockResolvedValue(false);
 

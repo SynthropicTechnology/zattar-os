@@ -3,15 +3,15 @@
 /**
  * Widget: Status de Tarefas (Pessoal)
  * ============================================================================
- * Conectado ao hook useDashboard().
- * Deriva dados de tarefas a partir de produtividade.baixasSemana — aproximação
- * razoável até que um módulo de tarefas dedicado esteja disponível.
+ * Conectado ao módulo de tarefas real via actionListarTarefas().
+ * Exibe distribuição por status (pendentes, em andamento, concluídas).
  *
  * Uso:
  *   import { WidgetTarefasStatus } from '@/app/app/dashboard/widgets/pessoal/tarefas-status'
  * ============================================================================
  */
 
+import { useEffect, useState } from 'react';
 import { CheckSquare } from 'lucide-react';
 import {
   MiniDonut,
@@ -19,56 +19,74 @@ import {
   fmtNum,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { useDashboard } from '../../hooks/use-dashboard';
+import { actionListarTarefas } from '@/app/app/tarefas/actions/tarefas-actions';
+
+interface TarefasCounts {
+  pendentes: number;
+  emAndamento: number;
+  concluidas: number;
+  total: number;
+}
+
+function useTarefasCounts(): { counts: TarefasCounts | null; isLoading: boolean; error: string | null } {
+  const [counts, setCounts] = useState<TarefasCounts | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchCounts() {
+      try {
+        const result = await actionListarTarefas({ limit: 500 });
+        if (!result.success) {
+          setError(result.error);
+          return;
+        }
+
+        const tasks = (result.data as { tasks?: Array<{ status: string }> })?.tasks ?? [];
+        const pendentes = tasks.filter(
+          (t) => t.status === 'backlog' || t.status === 'todo'
+        ).length;
+        const emAndamento = tasks.filter(
+          (t) => t.status === 'in progress'
+        ).length;
+        const concluidas = tasks.filter(
+          (t) => t.status === 'done'
+        ).length;
+
+        setCounts({
+          pendentes,
+          emAndamento,
+          concluidas,
+          total: pendentes + emAndamento + concluidas,
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erro ao carregar tarefas');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchCounts();
+  }, []);
+
+  return { counts, isLoading, error };
+}
 
 export function WidgetTarefasStatus() {
-  const { data, isLoading, error } = useDashboard();
+  const { counts, isLoading, error } = useTarefasCounts();
 
   if (isLoading) return <WidgetSkeleton size="sm" />;
 
-  if (error || !data) {
-    return (
-      <WidgetSkeleton size="sm" />
-    );
+  if (error || !counts) {
+    return <WidgetSkeleton size="sm" />;
   }
 
-  // Derivar tarefas a partir dos dados de produtividade disponíveis.
-  // Aproximação: baixasSemana = concluídas na semana.
-  // Total estimado = baixasMes / 4 semanas * 1.5 (inclui pendentes em aberto).
-  // Em andamento: sem dados reais — mantido em 0 até integração futura.
-  const produtividade =
-    data.role === 'user'
-      ? data.produtividade
-      : (() => {
-          // Admin: agregar de performanceAdvogados como estimativa
-          const total = data.performanceAdvogados.reduce(
-            (acc, adv) => ({ baixasSemana: acc.baixasSemana + adv.baixasSemana, baixasMes: acc.baixasMes + adv.baixasMes }),
-            { baixasSemana: 0, baixasMes: 0 }
-          );
-          return {
-            baixasHoje: 0,
-            baixasSemana: total.baixasSemana,
-            baixasMes: total.baixasMes,
-            mediaDiaria: 0,
-            comparativoSemanaAnterior: 0,
-            porDia: [],
-          };
-        })();
+  const { pendentes, emAndamento, concluidas, total } = counts;
 
-  const concluidas = produtividade.baixasSemana;
-  const estimativaTotal = Math.max(
-    concluidas + Math.round(produtividade.baixasMes / 4),
-    concluidas + 1
-  );
-  const pendentes = Math.max(estimativaTotal - concluidas, 0);
-  const emAndamento = 0; // sem dados reais — integração futura
-  const total = concluidas + pendentes + emAndamento;
-
-  const taxaSemana =
+  const taxaConclusao =
     total > 0 ? Math.round((concluidas / total) * 100) : 0;
 
   const segments = [
-    { value: pendentes || 1,   color: 'hsl(var(--warning))',      label: 'Pendentes' },
+    { value: pendentes || 0,   color: 'hsl(var(--warning))',      label: 'Pendentes' },
     { value: emAndamento || 0, color: 'hsl(220 70% 60%)',         label: 'Em Andamento' },
     { value: concluidas || 0,  color: 'hsl(142 60% 45%)',         label: 'Concluídas' },
   ].filter((s) => s.value > 0);
@@ -77,12 +95,12 @@ export function WidgetTarefasStatus() {
     <WidgetContainer
       title="Status das Tarefas"
       icon={CheckSquare}
-      subtitle="Baseado em baixas da semana"
+      subtitle="Distribuição real das tarefas"
       depth={1}
     >
       <div className="flex items-center gap-5">
         <MiniDonut
-          segments={segments}
+          segments={segments.length > 0 ? segments : [{ value: 1, color: 'hsl(var(--muted))', label: 'Vazio' }]}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(total)}
@@ -109,25 +127,22 @@ export function WidgetTarefasStatus() {
         </div>
       </div>
 
-      {/* Barra de progresso semanal */}
+      {/* Barra de progresso */}
       <div className="mt-4 pt-3 border-t border-border/10 space-y-1.5">
         <div className="flex items-center justify-between">
           <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-            Taxa de conclusão semanal
+            Taxa de conclusão
           </span>
           <span className="text-[10px] font-semibold tabular-nums">
-            {taxaSemana}%
+            {taxaConclusao}%
           </span>
         </div>
         <div className="h-1.5 w-full rounded-full bg-border/15 overflow-hidden">
           <div
             className="h-full rounded-full bg-primary/60 transition-all duration-700"
-            style={{ width: `${taxaSemana}%` }}
+            style={{ width: `${taxaConclusao}%` }}
           />
         </div>
-        <p className="text-[9px] text-muted-foreground/55">
-          Estimativa — dados completos de tarefas em desenvolvimento
-        </p>
       </div>
     </WidgetContainer>
   );

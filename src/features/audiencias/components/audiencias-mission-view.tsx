@@ -33,7 +33,6 @@ import {
   Moon,
   Video,
   Building2,
-  Sparkles,
   CheckCircle2,
   AlertTriangle,
   ChevronLeft,
@@ -53,16 +52,15 @@ import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
 
 import type { Audiencia } from '../domain';
-import { StatusAudiencia, MODALIDADE_AUDIENCIA_LABELS } from '../domain';
+import { StatusAudiencia } from '../domain';
 import { MissionCard } from './mission-card';
 import { PostHearingFlow } from './post-hearing-flow';
 import { MissionKpiStrip } from './mission-kpi-strip';
 import { AudienciaListRow } from './audiencia-list-row';
 import { RhythmStrip } from './rhythm-strip';
 import { LoadHeatmap } from './load-heatmap';
-import { PrepScoreBadge, calcPrepItems, calcPrepScore } from './prep-score';
+import { calcPrepItems, calcPrepScore } from './prep-score';
 import { HearingCountdown } from './hearing-countdown';
-import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -118,11 +116,11 @@ export function AudienciasMissionView({
   currentDate,
   onDateChange,
   onViewDetail,
-  onEdit,
+  onEdit: _onEdit,
   onNewAudiencia,
   responsavelNomes,
 }: AudienciasMissionViewProps) {
-  const now = new Date();
+  const now = useMemo(() => new Date(), []);
   const [contentView, setContentView] = useState<ContentView>('missao');
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('todas');

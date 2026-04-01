@@ -24,7 +24,6 @@ import {
   FolderKanban,
   Radar,
   Wallet,
-  X,
   ArrowRight,
   Clock,
   Sparkles,
@@ -171,14 +170,14 @@ function CommandHub({
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-[99] bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-150" />
+      <div className="fixed inset-0 z-99 bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-150" />
 
       {/* Panel */}
       <div
         ref={panelRef}
         onKeyDown={handleKeyDown}
         className="
-          fixed top-3 left-3 z-[100] w-[440px] max-h-[calc(100vh-80px)]
+          fixed top-3 left-3 z-100 w-110calc(100vh-80px)]
           overflow-hidden rounded-2xl
           bg-popover/95 backdrop-blur-2xl
           border border-border/50
@@ -559,7 +558,7 @@ function SampleContent({ activeItem, onNavigate }: { activeItem: string; onNavig
 function InstructionRow({ shortcut, description }: { shortcut: string; description: string }) {
   return (
     <div className="flex items-center gap-3">
-      <kbd className="shrink-0 min-w-[120px] text-right px-2 py-1 rounded-md bg-muted/40 text-[11px] font-mono text-muted-foreground/60">
+      <kbd className="shrink-0 min-w-30 text-right px-2 py-1 rounded-md bg-muted/40 text-[11px] font-mono text-muted-foreground/60">
         {shortcut}
       </kbd>
       <ArrowRight className="size-3 text-muted-foreground/30 shrink-0" />

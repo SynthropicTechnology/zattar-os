@@ -62,7 +62,7 @@ function adaptAgendaToCalendarEvent(event: AgendaEvent): CalendarEvent {
 export default function AgendaApp({ initialEvents }: AgendaAppProps) {
   // ── Server state ──────────────────────────────────────────────────
   const [serverEvents, setServerEvents] = useState<UnifiedCalendarEvent[]>(initialEvents);
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
 
   // ── UI state ──────────────────────────────────────────────────────
   const [currentDate, setCurrentDate] = useState(new Date());

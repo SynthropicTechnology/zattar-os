@@ -4,8 +4,8 @@
  * Widget: Preparação para Audiências
  * ============================================================================
  * Conectado ao hook useDashboard() → proximasAudiencias (AudienciaProxima[]).
- * Status de preparação documental não está disponível ainda — exibe as
- * próximas 3 audiências com ProgressRing em 0% e um InsightBanner informativo.
+ * Calcula score de preparação baseado nos campos disponíveis: responsável,
+ * tipo de audiência, URL virtual e local presencial.
  *
  * Uso:
  *   import { WidgetPreparacao } from '@/app/app/dashboard/widgets/audiencias/preparacao'
@@ -20,6 +20,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks/use-dashboard';
+import type { AudienciaProxima } from '../../domain';
 
 // Formatar data de audiência para exibição amigável
 function formatarDataAudiencia(isoDate: string): string {
@@ -37,6 +38,28 @@ function corPorTipo(tipo: string | null): string {
   return 'hsl(var(--primary) / 0.5)';
 }
 
+/**
+ * Calcula score de preparação baseado nos campos disponíveis em AudienciaProxima.
+ * Pesos: responsável (30%), tipo definido (20%), URL virtual (25%), local (25%).
+ */
+function calcPrepScoreFromProxima(a: AudienciaProxima): number {
+  const items = [
+    { done: !!a.responsavel_id, weight: 30 },
+    { done: !!a.tipo_audiencia, weight: 20 },
+    { done: !!a.url_audiencia_virtual, weight: 25 },
+    { done: !!a.local || !!a.sala, weight: 25 },
+  ];
+  const totalWeight = items.reduce((acc, i) => acc + i.weight, 0);
+  const doneWeight = items.filter((i) => i.done).reduce((acc, i) => acc + i.weight, 0);
+  return totalWeight > 0 ? Math.round((doneWeight / totalWeight) * 100) : 0;
+}
+
+function scoreColor(score: number): string {
+  if (score >= 80) return 'hsl(var(--success))';
+  if (score >= 50) return 'hsl(var(--warning))';
+  return 'hsl(var(--destructive))';
+}
+
 export function WidgetPreparacao() {
   const { data, isLoading, error } = useDashboard();
 
@@ -47,6 +70,11 @@ export function WidgetPreparacao() {
   }
 
   const audiencias = data.proximasAudiencias.slice(0, 3);
+
+  // Calcular média de preparação
+  const mediaPrep = audiencias.length > 0
+    ? Math.round(audiencias.reduce((acc, a) => acc + calcPrepScoreFromProxima(a), 0) / audiencias.length)
+    : 0;
 
   return (
     <WidgetContainer
@@ -65,16 +93,17 @@ export function WidgetPreparacao() {
         <div className="space-y-3">
           {audiencias.map((audiencia) => {
             const cor = corPorTipo(audiencia.tipo_audiencia);
+            const prepScore = calcPrepScoreFromProxima(audiencia);
+            const ringColor = scoreColor(prepScore);
             return (
               <div
                 key={audiencia.id}
                 className="flex items-center gap-3 px-2 py-2 -mx-2 rounded-xl hover:bg-white/4 transition-colors duration-150"
               >
-                {/* Anel de preparação — 0% até integração de documentos */}
                 <ProgressRing
-                  percent={0}
+                  percent={prepScore}
                   size={40}
-                  color={cor}
+                  color={ringColor}
                 />
 
                 {/* Informações da audiência */}
@@ -111,11 +140,21 @@ export function WidgetPreparacao() {
         </div>
       )}
 
-      <div className="mt-4">
-        <InsightBanner type="info">
-          Integração com documentos em desenvolvimento — status de preparação indisponível no momento.
-        </InsightBanner>
-      </div>
+      {audiencias.length > 0 && mediaPrep < 80 && (
+        <div className="mt-4">
+          <InsightBanner type="alert">
+            Preparação média de {mediaPrep}% — revise responsáveis, links e locais das próximas audiências.
+          </InsightBanner>
+        </div>
+      )}
+
+      {audiencias.length > 0 && mediaPrep >= 80 && (
+        <div className="mt-4">
+          <InsightBanner type="success">
+            Preparação média de {mediaPrep}% — audiências bem encaminhadas.
+          </InsightBanner>
+        </div>
+      )}
     </WidgetContainer>
   );
 }

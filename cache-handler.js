@@ -8,7 +8,9 @@
  * Referencia: https://nextjs.org/docs/app/api-reference/next-config-js/cacheHandler
  */
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require("fs");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require("path");
 
 const CACHE_DIR =

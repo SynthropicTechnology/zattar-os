@@ -39,7 +39,7 @@ function PasswordStrength({ password }: { password: string }) {
     { label: 'Número', met: /[0-9]/.test(password) },
   ]
   const passed = criteria.filter((c) => c.met).length
-  const pct = (passed / 4) * 100
+  const _pct = (passed / 4) * 100
 
   if (!password) return null
 

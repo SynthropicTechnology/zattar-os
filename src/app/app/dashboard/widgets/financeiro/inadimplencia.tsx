@@ -1,5 +1,13 @@
 'use client';
 
+/**
+ * Widget: Inadimplência
+ * ============================================================================
+ * Conectado ao dashboard financeiro real. Calcula a taxa de inadimplência
+ * a partir de valorVencido / (receitasPendentes + valorVencido).
+ * ============================================================================
+ */
+
 import { AlertTriangle, TrendingDown } from 'lucide-react';
 import {
   WidgetContainer,
@@ -8,23 +16,16 @@ import {
   fmtMoeda,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { useContasPagarReceber } from '../../hooks';
-
-// ─── Constante de inadimplência ───────────────────────────────────────────────
-// Usamos 12% como taxa mock até ter dados de aging precisos
-
-const INADIMPLENCIA_RATE = 0.12;
-
-// ─── WidgetInadimplencia ──────────────────────────────────────────────────────
+import { useDashboardFinanceiro } from '../../hooks';
 
 export function WidgetInadimplencia() {
-  const { contasReceber, isLoading, error } = useContasPagarReceber();
+  const { data, isLoading, error } = useDashboardFinanceiro();
 
   if (isLoading) {
     return <WidgetSkeleton size="sm" />;
   }
 
-  if (error) {
+  if (error || !data) {
     return (
       <WidgetContainer
         title="Inadimplência"
@@ -38,9 +39,13 @@ export function WidgetInadimplencia() {
     );
   }
 
-  const totalAReceber = contasReceber?.valor ?? 0;
-  const inadimplenciaPercent = Math.round(INADIMPLENCIA_RATE * 100);
-  const valorEmAtraso = totalAReceber * INADIMPLENCIA_RATE;
+  const valorVencido = data.valorVencido ?? 0;
+  const receitasPendentes = data.receitasPendentes ?? 0;
+  // Carteira a receber = pendentes + vencidas (vencidas são um subconjunto de pendentes na query original)
+  const totalAReceber = receitasPendentes;
+  const inadimplenciaPercent = totalAReceber > 0
+    ? Math.round((valorVencido / totalAReceber) * 100)
+    : 0;
   const isAlert = inadimplenciaPercent > 10;
   const ringColor = isAlert ? 'hsl(var(--destructive))' : 'hsl(var(--success))';
 
@@ -52,7 +57,7 @@ export function WidgetInadimplencia() {
     >
       <div className="flex items-center gap-5 mt-1">
         <ProgressRing
-          percent={inadimplenciaPercent}
+          percent={Math.min(inadimplenciaPercent, 100)}
           size={72}
           color={ringColor}
         />
@@ -65,7 +70,7 @@ export function WidgetInadimplencia() {
               className="text-lg font-bold font-display tabular-nums"
               style={{ color: ringColor }}
             >
-              {totalAReceber > 0 ? fmtMoeda(valorEmAtraso) : '—'}
+              {valorVencido > 0 ? fmtMoeda(valorVencido) : '—'}
             </p>
           </div>
           <div>
@@ -82,17 +87,25 @@ export function WidgetInadimplencia() {
       {isAlert && (
         <div className="mt-4">
           <InsightBanner type="alert">
-            Inadimplência acima do limite recomendado de 10% — atenção à carteira.
+            Inadimplência em {inadimplenciaPercent}% — {data.contasVencidas} conta(s) vencida(s).
           </InsightBanner>
         </div>
       )}
 
-      {!isAlert && (
+      {!isAlert && totalAReceber > 0 && (
         <div className="mt-4 pt-3 border-t border-border/10">
           <div className="flex items-center gap-1.5 text-success/60">
             <TrendingDown className="size-3.5" />
             <span className="text-[10px]">Dentro da meta de 10%</span>
           </div>
+        </div>
+      )}
+
+      {totalAReceber === 0 && (
+        <div className="mt-4 pt-3 border-t border-border/10">
+          <p className="text-[9px] text-muted-foreground/55 text-center">
+            Sem receitas pendentes no período.
+          </p>
         </div>
       )}
     </WidgetContainer>

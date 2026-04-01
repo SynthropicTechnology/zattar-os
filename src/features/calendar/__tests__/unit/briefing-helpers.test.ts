@@ -8,11 +8,9 @@
 import type { UnifiedCalendarEvent } from "../../domain";
 import {
   isSameDay,
-  isToday,
   addDays,
   startOfWeek,
   fmtTime,
-  fmtDate,
   weekdayShort,
   monthName,
   getEventsForDay,

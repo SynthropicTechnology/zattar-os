@@ -32,8 +32,8 @@ import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
 
 import type { Audiencia } from '../domain';
-import { StatusAudiencia, MODALIDADE_AUDIENCIA_LABELS } from '../domain';
-import { calcPrepItems, calcPrepScore, type PrepItem } from './prep-score';
+import { MODALIDADE_AUDIENCIA_LABELS } from '../domain';
+import { calcPrepItems, calcPrepScore } from './prep-score';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 

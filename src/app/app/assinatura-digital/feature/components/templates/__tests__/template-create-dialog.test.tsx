@@ -51,6 +51,7 @@ interface MockTemplateFormFieldsProps {
 jest.mock('../template-form-fields', () => ({
   TemplateFormFields: ({ form, isSubmitting }: MockTemplateFormFieldsProps) => {
     // Ensure required fields have values so handleSubmit validation passes
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { useEffect } = require('react');
     useEffect(() => {
       if (form.setValue) {

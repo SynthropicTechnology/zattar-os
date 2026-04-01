@@ -14,7 +14,6 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import {
-  Plus,
   CalendarDays,
   CalendarRange,
   Calendar,
@@ -29,23 +28,21 @@ import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-t
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import type { Audiencia, TipoAudiencia } from '@/features/audiencias/domain';
-import { StatusAudiencia } from '@/features/audiencias/domain';
-import { calcPrepItems, calcPrepScore } from '@/features/audiencias/components/prep-score';
-import { MissionKpiStrip } from '@/features/audiencias/components/mission-kpi-strip';
-import { AudienciaDetailSheet } from '@/features/audiencias/components/audiencia-detail-sheet';
-import { TiposAudienciasList } from '@/features/audiencias/components/tipos-audiencias-list';
 import {
+  StatusAudiencia,
+  calcPrepItems,
+  calcPrepScore,
+  MissionKpiStrip,
+  AudienciaDetailSheet,
+  TiposAudienciasList,
   AudienciasSemanaView,
   AudienciasMesView,
   AudienciasAnoView,
   AudienciasListaView,
   AudienciasMissaoContent,
-} from '@/features/audiencias/components/views';
-import {
   useAudienciasUnified,
-  type AudienciasViewMode,
-} from '@/features/audiencias/hooks/use-audiencias-unified';
+} from '@/features/audiencias';
+import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/features/audiencias';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -93,7 +90,7 @@ export interface AudienciasClientProps {
 export function AudienciasClient({
   initialView = 'quadro',
   initialUsuarios = [],
-  initialTiposAudiencia = [],
+  initialTiposAudiencia: _initialTiposAudiencia = [],
 }: AudienciasClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -133,7 +130,7 @@ export function AudienciasClient({
     activeTab === 'finalizada' ? StatusAudiencia.Finalizada :
     activeTab === 'cancelada' ? StatusAudiencia.Cancelada : undefined;
 
-  const { audiencias, isLoading, error, total, refetch } = useAudienciasUnified({
+  const { audiencias, isLoading, error, total: _total, refetch } = useAudienciasUnified({
     viewMode,
     currentDate,
     search: search || undefined,
@@ -158,7 +155,7 @@ export function AudienciasClient({
     () => audiencias.filter((a) => a.status === StatusAudiencia.Finalizada).length,
     [audiencias],
   );
-  const totalCanceladas = useMemo(
+  const _totalCanceladas = useMemo(
     () => audiencias.filter((a) => a.status === StatusAudiencia.Cancelada).length,
     [audiencias],
   );

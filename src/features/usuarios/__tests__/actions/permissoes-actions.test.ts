@@ -7,7 +7,7 @@ import {
   actionListarPermissoes,
   actionSalvarPermissoes,
 } from '../../actions/permissoes-actions';
-import { criarPermissaoMock, criarSuperAdminMock, criarUsuarioMock } from '../fixtures';
+import { criarPermissaoMock, criarSuperAdminMock } from '../fixtures';
 
 // Mocks
 jest.mock('../../actions/utils');

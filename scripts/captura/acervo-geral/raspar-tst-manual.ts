@@ -19,15 +19,8 @@ import { resolve, join, dirname } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
-// Mock server-only para permitir execução fora do Next.js
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-require.cache[require.resolve('server-only')] = {
-  id: 'server-only',
-  filename: 'server-only',
-  loaded: true,
-  exports: {},
-} as NodeModule;
+// NOTA: Executar com --conditions react-server para bypassar server-only
+// npx tsx --conditions react-server scripts/captura/acervo-geral/raspar-tst-manual.ts
 
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
@@ -37,8 +30,7 @@ import { obterTotalizadoresAcervoGeral } from '@/features/captura/pje-trt/acervo
 import { obterTimeline } from '@/features/captura/pje-trt/timeline/obter-timeline';
 import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { CredenciaisTRT } from '@/features/captura/types/trt-types';
-import type { Processo } from '@/features/captura/types/types';
+import type { CredenciaisTRT, Processo } from '@/features/captura';
 
 // ============================================================================
 // CONFIGURAÇÃO

@@ -25,7 +25,7 @@ import { SearchInput } from "@/components/dashboard/search-input";
 import { ViewToggle, type ViewToggleOption } from "@/components/dashboard/view-toggle";
 import type { CalendarSource } from "@/features/calendar/domain";
 import { SOURCE_CONFIG, type CalendarView } from "@/features/calendar/briefing-domain";
-import { monthName, fmtDateFull, startOfWeek, addDays, weekdayShort } from "@/features/calendar/briefing-helpers";
+import { monthName, fmtDateFull, startOfWeek, addDays } from "@/features/calendar/briefing-helpers";
 
 // ─── View Options ──────────────────────────────────────────────────────
 

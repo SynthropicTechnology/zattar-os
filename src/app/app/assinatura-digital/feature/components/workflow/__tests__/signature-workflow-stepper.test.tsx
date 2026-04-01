@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { SignatureWorkflowStepper } from '../signature-workflow-stepper';
 import { useFormularioStore } from '../../../store/formulario-store';
 import { useViewport } from '@/hooks/use-viewport';
