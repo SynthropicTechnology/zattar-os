@@ -305,33 +305,32 @@ export async function proxy(request: NextRequest) {
 
     const redirectResponse = NextResponse.redirect(url);
 
-    // Limpar cookies inválidos
-    const cookiesToDelete = [
-      "sb-access-token",
-      "sb-refresh-token",
-      "sb-provider-token",
-      "sb-provider-refresh-token",
-    ];
-
-    if (supabaseUrl) {
+    // Limpar TODOS os cookies de auth do Supabase, incluindo chunks.
+    // O @supabase/ssr divide tokens grandes em cookies chunked:
+    // sb-{ref}-auth-token.0, .1, .2, etc.
+    // Precisamos iterar todos os cookies da request para encontrá-los.
+    const projectRef = (() => {
       try {
-        const projectRef = new URL(supabaseUrl).hostname.split(".")[0];
-        cookiesToDelete.push(`sb-${projectRef}-auth-token`);
-        cookiesToDelete.push(`sb-${projectRef}-auth-token-code-verifier`);
+        return new URL(supabaseUrl).hostname.split(".")[0];
       } catch {
-        // Ignorar erro ao extrair project ref
+        return null;
       }
-    }
+    })();
 
-    cookiesToDelete.forEach((cookieName) => {
-      redirectResponse.cookies.delete(cookieName);
-      redirectResponse.cookies.set(cookieName, "", {
-        expires: new Date(0),
-        path: "/",
-        sameSite: "lax",
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-      });
+    const authCookiePrefix = projectRef ? `sb-${projectRef}-auth-token` : null;
+
+    request.cookies.getAll().forEach(({ name }) => {
+      // Limpar cookie base, chunks (.0, .1, ...) e code-verifier
+      if (authCookiePrefix && name.startsWith(authCookiePrefix)) {
+        redirectResponse.cookies.delete(name);
+        redirectResponse.cookies.set(name, "", {
+          expires: new Date(0),
+          path: "/",
+          sameSite: "lax",
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+        });
+      }
     });
 
     return applyHeaders(redirectResponse);
