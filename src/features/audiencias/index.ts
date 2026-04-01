@@ -98,9 +98,11 @@ export {
 // in client components. These services should only be used by server actions.
 
 // ============================================================================
-// Repository (for testing purposes)
+// Repository
 // ============================================================================
-export * as audienciasRepository from "./repository";
+// NOTE: audienciasRepository is NOT exported here because it imports
+// Redis cache-utils with 'server-only', which breaks client components.
+// Import directly from './repository' in server-side code or tests.
 
 // ============================================================================
 // Types
