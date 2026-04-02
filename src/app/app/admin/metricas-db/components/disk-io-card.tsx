@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import type { MetricasDiskIO, DiskIOStatus } from "@/features/admin";
+import type { MetricasDiskIO, DiskIOStatus } from "@/app/app/admin";
 
 interface DiskIOCardProps {
   diskIO: MetricasDiskIO | null;

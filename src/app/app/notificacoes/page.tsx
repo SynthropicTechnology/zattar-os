@@ -1,4 +1,4 @@
-import { NotificacoesList } from "@/features/notificacoes";
+import { NotificacoesList } from "@/app/app/notificacoes";
 
 export const dynamic = "force-dynamic";
 

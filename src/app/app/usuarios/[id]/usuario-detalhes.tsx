@@ -34,7 +34,7 @@ import {
   type Usuario,
   actionAtualizarUsuario,
 } from '@/app/app/usuarios';
-import { actionObterPerfil } from '@/features/perfil';
+import { actionObterPerfil } from '@/app/app/perfil';
 
 function DataField({ label, value }: { label: string; value: string | null | undefined }) {
   return (

@@ -23,7 +23,7 @@ import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/componen
 import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard, EditorIAIntegrationCard } from '@/lib/integracoes';
 import { PromptsIAContent } from '@/lib/system-prompts';
 import { AparenciaContent } from './aparencia-content';
-import type { MetricasDB } from '@/features/admin';
+import type { MetricasDB } from '@/app/app/admin';
 import type { Integracao } from '@/lib/integracoes';
 import type { SystemPrompt } from '@/lib/system-prompts';
 

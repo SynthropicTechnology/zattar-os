@@ -13,7 +13,7 @@ import {
   actionDocumentarDecisao,
   actionObterMetricasDB,
   type MetricasDB,
-} from "@/features/admin";
+} from "@/app/app/admin";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 

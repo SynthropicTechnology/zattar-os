@@ -15,8 +15,8 @@ import { useIsMobile } from "@/hooks/use-breakpoint";
 import {
   useNotificacoes,
   useNotificacoesRealtime,
-} from "@/features/notificacoes";
-import type { TipoNotificacaoUsuario } from "@/features/notificacoes";
+} from "@/app/app/notificacoes";
+import type { TipoNotificacaoUsuario } from "@/app/app/notificacoes";
 import { useUser, useAuthSession } from "@/providers/user-provider";
 import {
   DropdownMenu,

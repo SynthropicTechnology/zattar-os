@@ -4,7 +4,7 @@
  * Feature minimalista que delega para @/app/app/obrigacoes
  *
  * @example
- * import { RepassesPageContent } from '@/features/repasses';
+ * import { RepassesPageContent } from '@/app/app/repasses';
  */
 
 export { RepassesPageContent } from './components/repasses-page-content';
