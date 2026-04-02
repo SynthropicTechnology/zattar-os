@@ -44,30 +44,48 @@ npm run ai:reindex                   # Reindex all documents for RAG
 
 ## Architecture
 
-### Feature-Sliced Design (FSD) with Domain-Driven Design (DDD)
+### Colocation Architecture with Domain-Driven Design (DDD)
+
+Modules are colocated with their routes — domain logic lives alongside the page files that consume it. There is no separate `src/features/` directory.
 
 ```
 src/
 ├── app/                     # Next.js App Router
-│   ├── app/                 # Main dashboard routes (authenticated)
+│   ├── app/                 # Main dashboard routes + colocated feature modules
+│   │   ├── {modulo}/        # Each route directory IS the feature module
+│   │   │   ├── page.tsx     # Route entry point
+│   │   │   ├── domain.ts    # Zod schemas, types, business rules
+│   │   │   ├── service.ts   # Use cases, business logic
+│   │   │   ├── repository.ts# Supabase data access
+│   │   │   ├── actions/     # Server Actions
+│   │   │   ├── components/  # Feature-specific React components
+│   │   │   ├── hooks/       # Feature-specific hooks
+│   │   │   ├── RULES.md     # Business rules for AI context
+│   │   │   └── index.ts     # Barrel exports (MANDATORY)
 │   ├── api/                 # API Routes (/api/mcp, /api/plate/ai, etc.)
 │   └── portal/              # Client portal (CPF-based auth)
-├── features/                # 30+ feature modules (core business logic)
 ├── components/
 │   ├── ui/                  # shadcn/ui primitives
 │   ├── shared/              # Zattar design patterns (DataShell, PageShell, etc.)
 │   └── layout/              # Sidebar, header, providers
-├── lib/                     # Infrastructure (supabase, redis, ai, mcp, auth, security)
+├── lib/                     # Infrastructure + cross-cutting domain
+│   ├── ai/                  # AI/RAG infrastructure
+│   ├── busca/               # Search infrastructure
+│   ├── domain/              # Cross-cutting domain modules (tags, audit, profiles, tasks)
+│   ├── integracoes/         # External integrations (dify, chatwoot, twofauth)
+│   ├── supabase/            # Supabase clients
+│   ├── redis/               # Cache layer
+│   └── ...                  # (auth, mcp, security, etc.)
 ├── hooks/                   # Global hooks
 └── types/                   # Shared types (database.types.ts is Supabase-generated)
 ```
 
 ### Feature Module Structure
 
-Every feature follows **Domain -> Service -> Repository -> Actions**:
+Every feature follows **Domain -> Service -> Repository -> Actions**, colocated inside its route directory:
 
 ```
-src/features/{modulo}/
+src/app/app/{modulo}/
 ├── domain.ts            # Zod schemas, types, constants, pure business rules
 ├── service.ts           # Use cases, business logic orchestration
 ├── repository.ts        # Supabase data access (CRUD, filters)
@@ -75,8 +93,15 @@ src/features/{modulo}/
 ├── components/          # React components grouped by entity
 ├── hooks/               # Feature-specific hooks
 ├── RULES.md             # Business rules for AI context
-└── index.ts             # Barrel exports (MANDATORY)
+├── index.ts             # Barrel exports (MANDATORY)
+└── page.tsx             # Route entry point
 ```
+
+**Infrastructure modules** (no route, pure logic) live in `src/lib/`:
+- `src/lib/ai/` — AI/RAG (embeddings, indexing, retrieval)
+- `src/lib/busca/` — Search infrastructure
+- `src/lib/dify/`, `src/lib/chatwoot/`, `src/lib/twofauth/` — External integrations
+- `src/lib/domain/tags/`, `src/lib/domain/audit/`, `src/lib/domain/profiles/`, `src/lib/domain/tasks/` — Cross-cutting domain
 
 ### Data Flow
 
@@ -101,20 +126,20 @@ UI (React) -> Server Action (authenticatedAction + Zod validation)
 
 ```typescript
 // CORRECT — use barrel exports
-import { ClientesTable, actionListarClientes } from "@/features/partes";
+import { ClientesTable, actionListarClientes } from "@/app/app/partes";
 
-// WRONG — no deep imports into feature internals
-import { ClientesTable } from "@/features/partes/components/clientes/clientes-table";
+// WRONG — no deep imports into module internals
+import { ClientesTable } from "@/app/app/partes/components/clientes/clientes-table";
 ```
 
-Relative imports within the same feature are allowed. Cross-feature imports must use barrel exports.
+Relative imports within the same module are allowed. Cross-module imports must use the module's barrel export (`index.ts`).
 
 ### Server Actions Pattern
 
 - Always use `authenticatedAction` wrapper from `@/lib/safe-action`
 - Naming: `actionCriar`, `actionAtualizar`, `actionListar`, `actionDeletar`
 - Return type: `{ success: boolean; data?: T; error?: string }`
-- Place in `src/features/{modulo}/actions/{entity}-actions.ts`
+- Place in `src/app/app/{modulo}/actions/{entity}-actions.ts`
 - Validate with Zod schemas defined in `domain.ts`
 
 ### UI Components — Mandatory Patterns
@@ -130,7 +155,7 @@ Relative imports within the same feature are allowed. Cross-feature imports must
 | Detail panel | `DetailSheet` | `@/components/shared/detail-sheet` |
 | Empty states | `EmptyState` | `@/components/shared/empty-state` |
 
-**Gold standard reference**: `src/features/partes/components/clientes/clientes-table-wrapper.tsx`
+**Gold standard reference**: `src/app/app/partes/components/clientes/clientes-table-wrapper.tsx`
 
 **Full component documentation**: `src/components/shared/AI_INSTRUCTIONS.md`
 
@@ -218,4 +243,4 @@ Full list in `.env.example`.
 
 - `docs/architecture/AGENTS.md` — Full agent-friendly reference with data flows, troubleshooting, and development hints
 - `src/components/shared/AI_INSTRUCTIONS.md` — Complete UI component patterns with code examples
-- `src/features/*/RULES.md` — Business rules per feature module (processos, partes, documentos, financeiro, contratos, busca, notificacoes, obrigacoes, audiencias)
+- `src/app/app/*/RULES.md` — Business rules per module (processos, partes, documentos, financeiro, contratos, notificacoes, obrigacoes, audiencias)

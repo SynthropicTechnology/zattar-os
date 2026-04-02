@@ -92,36 +92,36 @@ const eslintConfig = defineConfig([
           caughtErrorsIgnorePattern: "^_",
         },
       ],
-      // Prevenir imports diretos de caminhos internos de features
-      // NOTA: Imports relativos dentro da mesma feature são permitidos (ex: ../hooks/use-x)
-      // Mas imports absolutos de caminhos internos de outras features são bloqueados
+      // Prevenir imports diretos de caminhos internos de módulos
+      // NOTA: Imports relativos dentro do mesmo módulo são permitidos (ex: ../hooks/use-x)
+      // Mas imports absolutos de caminhos internos de outros módulos são bloqueados
       "no-restricted-imports": [
         "error",
         {
           patterns: [
             {
-              // Bloqueia imports absolutos de caminhos internos de features
-              // Exemplo proibido: import { X } from '@/features/partes/components/...'
-              // Exemplo permitido: import { X } from '@/features/partes'
-              // Exemplo permitido (dentro da feature): import { X } from '../hooks/...'
+              // Bloqueia imports absolutos de caminhos internos de módulos colocados
+              // Exemplo proibido: import { X } from '@/app/app/partes/components/...'
+              // Exemplo permitido: import { X } from '@/app/app/partes'
+              // Exemplo permitido (dentro do módulo): import { X } from '../hooks/...'
               group: [
-                "@/features/*/components/**",
-                "@/features/*/hooks/**",
-                "@/features/*/actions/**",
-                "@/features/*/utils/**",
-                "@/features/*/types/**",
-                "@/features/*/domain.ts",
-                "@/features/*/service.ts",
-                "@/features/*/repository.ts",
+                "@/app/app/*/components/**",
+                "@/app/app/*/hooks/**",
+                "@/app/app/*/actions/**",
+                "@/app/app/*/utils/**",
+                "@/app/app/*/types/**",
+                "@/app/app/*/domain.ts",
+                "@/app/app/*/service.ts",
+                "@/app/app/*/repository.ts",
               ],
               message:
-                "Use barrel exports (@/features/{modulo}) instead of direct internal paths. For imports within the same feature, use relative paths (../hooks/...). Example: import { Component } from '@/features/partes'",
+                "Use barrel exports (@/app/app/{modulo}) instead of direct internal paths. For imports within the same module, use relative paths (../hooks/...). Example: import { Component } from '@/app/app/partes'",
             },
             {
-              // Bloqueia imports de pastas legadas em src/ (exceto em backend/ e core/)
-              group: ["**/backend/**", "@/core/**", "@/app/_lib/**"],
+              // Bloqueia imports de pastas legadas em src/
+              group: ["**/backend/**", "@/core/**", "@/app/_lib/**", "@/features/**"],
               message:
-                "Legacy imports are not allowed in src/. Use features from @/features/{modulo} instead. If you need backend functionality, it should be migrated to a feature module.",
+                "Legacy imports are not allowed. Use modules from @/app/app/{modulo}, @/lib/{service}, or @/components/{type} instead.",
             },
           ],
         },
@@ -160,15 +160,15 @@ const eslintConfig = defineConfig([
   },
   // Serviços de recovery/análise (internos) — permitir `any` para lidar com payloads heterogêneos.
   {
-    files: ["src/features/captura/services/recovery/**/*.ts"],
+    files: ["src/app/app/captura/services/recovery/**/*.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
     },
   },
-  // Governança do Design System: impedir uso direto do Badge em features.
+  // Governança do Design System: impedir uso direto do Badge em módulos de feature.
   // Use SemanticBadge / wrappers semânticos para manter consistência.
   {
-    files: ["src/features/**"],
+    files: ["src/app/app/**"],
     rules: {
       "no-restricted-imports": [
         "error",

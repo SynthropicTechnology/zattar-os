@@ -51,25 +51,23 @@ Agentes de IA **DEVEM** seguir estes padrões exatamente.
 ### Estrutura de Arquivos
 
 ```
-src/features/[modulo]/
+src/app/app/[modulo]/
 ├── components/
 │   ├── [entidade]-table-wrapper.tsx  # Client wrapper
 │   └── columns.tsx                    # Definição de colunas
 ├── types/
 │   └── index.ts                       # Tipos TypeScript
-└── ...
-
-src/app/(dashboard)/[modulo]/
+├── index.ts                           # Barrel exports
 └── page.tsx                           # Server component
 ```
 
 ### 1. Server Component (page.tsx)
 
 ```tsx
-// src/app/(dashboard)/[modulo]/page.tsx
+// src/app/app/[modulo]/page.tsx
 import { PageShell } from '@/components/shared/page-shell';
-import { listarEntidades } from '@/features/[modulo]/service';
-import { EntidadeTableWrapper } from '@/features/[modulo]/components/entidade-table-wrapper';
+import { listarEntidades } from './service';
+import { EntidadeTableWrapper } from './components/entidade-table-wrapper';
 
 export default async function EntidadesPage() {
   // Busca dados no servidor

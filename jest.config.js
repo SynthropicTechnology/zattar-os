@@ -35,7 +35,8 @@ const config = {
       preset: 'ts-jest',
       testEnvironment: 'node',
       testMatch: [
-        '<rootDir>/src/features/**/__tests__/**/*.test.ts',
+        '<rootDir>/src/app/app/**/__tests__/**/*.test.ts',
+        '<rootDir>/src/lib/**/__tests__/**/*.test.ts',
       ],
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
@@ -60,7 +61,7 @@ const config = {
         '<rootDir>/src/app/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/components/**/__tests__/**/*.test.ts',
         '<rootDir>/src/components/**/__tests__/**/*.test.tsx',
-        '<rootDir>/src/features/**/__tests__/**/*.test.tsx',
+        '<rootDir>/src/lib/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/hooks/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/providers/**/__tests__/**/*.test.tsx',
       ],

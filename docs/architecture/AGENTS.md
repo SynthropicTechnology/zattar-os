@@ -157,40 +157,44 @@ Sinesys is a legal management system (gestão jurídica) using **Feature-Sliced 
 
 ### Directory Structure
 
+Modules are **colocated with their routes**. There is no separate `src/features/` directory.
+
 ```
 src/
 ├── app/                      # Next.js App Router
-│   ├── (dashboard)/          # Dashboard routes (authenticated)
-│   │   └── layout.tsx        # Layout with AppSidebar (SidebarProvider)
+│   ├── app/                  # Dashboard routes + colocated feature modules
+│   │   ├── layout.tsx        # Layout with AppSidebar (SidebarProvider)
+│   │   ├── processos/        # Route + full feature module (domain, service, repo, actions)
+│   │   ├── partes/           # Route + full feature module
+│   │   ├── financeiro/       # Route + full feature module (special subdomain pattern)
+│   │   ├── documentos/       # Route + full feature module
+│   │   ├── audiencias/       # Route + full feature module
+│   │   ├── contratos/        # Route + full feature module
+│   │   └── [30+ modules]/    # All dashboard modules follow this pattern
 │   ├── (auth)/               # Auth routes (login, register)
-│   └── api/                  # API Routes
-│       ├── mcp/              # MCP endpoint (SSE)
-│       └── plate/ai/         # Plate AI editor endpoint
-│
-├── features/                 # 🔥 FEATURE-SLICED DESIGN (42 modules)
-│   ├── processos/            # ✅ Fully migrated
-│   ├── partes/               # ✅ Fully migrated
-│   ├── contratos/            # ✅ Fully migrated
-│   ├── audiencias/           # ⚠️  Partial (missing service.ts, repository.ts)
-│   ├── financeiro/           # ⚠️  Special subdomain pattern
-│   ├── documentos/           # ⚠️  Partial (missing service.ts, repository.ts)
-│   ├── assinatura-digital/   # ⚠️  Partial
-│   ├── acervo/               # ✅ Fully migrated
-│   ├── usuarios/             # ✅ Fully migrated
-│   ├── enderecos/            # ✅ Fully migrated
-│   └── [25 more features]/   # See migration status below
+│   ├── api/                  # API Routes
+│   │   ├── mcp/              # MCP endpoint (SSE)
+│   │   └── plate/ai/         # Plate AI editor endpoint
+│   └── portal/               # Client portal (CPF-based auth)
 │
 ├── components/               # Shared UI components
 │   ├── ui/                   # shadcn/ui primitives
 │   ├── layout/               # Layout components (sidebar, header)
 │   └── shared/               # Zattar patterns (PageShell, DataTableShell, etc.)
 │
-├── lib/                      # Infrastructure layer
+├── lib/                      # Infrastructure + cross-cutting domain
 │   ├── ai/                   # AI/RAG (embeddings, indexing, retrieval)
+│   ├── busca/                # Search infrastructure
 │   ├── mcp/                  # MCP server & registry
 │   ├── auth/                 # Authentication
 │   ├── supabase/             # Supabase clients (server, client, admin)
 │   ├── redis/                # Redis cache
+│   ├── domain/               # Cross-cutting domain (tags, audit, profiles, tasks)
+│   ├── dify/                 # Dify integration
+│   ├── chatwoot/             # Chatwoot integration
+│   ├── twofauth/             # 2FAuth integration
+│   ├── system-prompts/       # AI system prompts
+│   ├── integracoes/          # Integration utilities
 │   └── safe-action.ts        # Action wrapper (auth + validation)
 │
 ├── hooks/                    # Global hooks
@@ -199,13 +203,13 @@ src/
 
 ### Feature Module Anatomy
 
-Each feature follows the **Domain → Service → Repository → Actions** pattern:
+Each module follows the **Domain → Service → Repository → Actions** pattern, colocated with its route:
 
 ```
-src/features/{modulo}/
-├── components/           # React components specific to this feature
+src/app/app/{modulo}/
+├── components/           # React components specific to this module
 │   ├── {entidade}/       # Grouped by entity
-│   └── shared/           # Shared within feature
+│   └── shared/           # Shared within module
 ├── hooks/                # Custom hooks
 ├── actions/              # Server Actions (Next.js 16)
 │   └── {entidade}-actions.ts
@@ -214,7 +218,9 @@ src/features/{modulo}/
 ├── repository.ts         # 🔥 Data access (Supabase queries)
 ├── types.ts              # TypeScript types
 ├── utils.ts              # Formatters, validators
-├── RULES.md              # 🤖 Business rules for AI context└── index.ts              # Barrel exports
+├── RULES.md              # 🤖 Business rules for AI context
+├── index.ts              # Barrel exports (MANDATORY public API)
+└── page.tsx              # Next.js route entry point
 ```
 
 **Key files**:
@@ -223,13 +229,7 @@ src/features/{modulo}/
 - `repository.ts`: Supabase queries (CRUD, filters)
 - `actions/*.ts`: Server Actions (use `authenticatedAction` wrapper)
 - `RULES.md`: AI context for business rules
-### Feature Migration Status
-
-| Status | Count | Features |
-|--------|-------|----------|
-| ✅ **Complete** | 18/42 | acervo, advogados, ai, captura, config-atribuicao, contratos, dify, enderecos, integracoes, notificacoes, obrigacoes, pecas-juridicas, pericias, processos, rh, system-prompts, tipos-expedientes, usuarios |
-| ⚠️ **Partial** | 13/42 | assistentes-tipos, audiencias, calendar, cargos, chat, chatwoot, documentos, expedientes, financeiro, partes, perfil, profiles, tags |
-| 🧩 **Initial** | 11/42 | admin, agenda-eventos, audit, busca, calculadoras, entrevistas-trabalhistas, portal, repasses, tasks, twofauth, website |
+- `index.ts`: Public API — only import from this barrel outside the module
 
 ### Major Subsystems
 
@@ -257,7 +257,7 @@ src/features/{modulo}/
 5. **Financeiro** (Financial)
    - Dashboard, accounts payable/receivable
    - Bank reconciliation (conciliação bancária - OFX/CSV import)
-   - **Special subdomain pattern**: Uses `@/features/financeiro/{subdomain}/` structure
+   - **Special subdomain pattern**: Uses `@/app/app/financeiro/{subdomain}/` structure
 6. **Documentos** (Documents)
    - Collaborative real-time editor (Plate + Yjs)
    - AI-powered editing via `/api/plate/ai` (Vercel AI SDK)
@@ -329,11 +329,11 @@ UI (Plate) → POST /api/plate/ai { prompt: "..." }
 
 | Task | Entry Point |
 |------|-------------|
-| Add new feature | Create `src/features/{modulo}/` with domain → service → repository → actions |
-| Add new page | `src/app/(dashboard)/{route}/page.tsx` (import from `@/features/{modulo}`) |
+| Add new feature | Create `src/app/app/{modulo}/` with domain → service → repository → actions → index.ts |
+| Add new page | `src/app/app/{modulo}/page.tsx` (import within module using relative paths) |
 | Add new API endpoint | `src/app/api/{route}/route.ts` |
 | Add UI component | `src/components/shared/{component}.tsx` (or `ui/` for primitives) |
-| Add Server Action | `src/features/{modulo}/actions/{entity}-actions.ts` (use `authenticatedAction`) |
+| Add Server Action | `src/app/app/{modulo}/actions/{entity}-actions.ts` (use `authenticatedAction`) |
 | Modify sidebar | `src/components/layout/sidebar/app-sidebar.tsx` |
 | Add database migration | `supabase/migrations/{timestamp}_{name}.sql` |
 | Add AI tool | `src/lib/mcp/registry.ts` (register via `registerMcpTool`) |
@@ -342,25 +342,26 @@ UI (Plate) → POST /api/plate/ai { prompt: "..." }
 
 ### From CLAUDE.md & README.md
 
-1. **Feature-Sliced Design (FSD) is mandatory**
-   - All new code must go into `src/features/{modulo}/`
-   - Backend legacy folder removed; use features or lib only
-   - Imports: `@/features/{modulo}`, `@/lib/{service}`, `@/components/{type}`
+1. **Colocation architecture is mandatory**
+   - All new feature modules go into `src/app/app/{modulo}/` (colocated with routes)
+   - Infrastructure with no route goes into `src/lib/`
+   - Legacy `src/features/` directory has been removed
+   - Imports: `@/app/app/{modulo}` (barrel), `@/lib/{service}`, `@/components/{type}`
 
-2. **No direct imports from feature internals**
+2. **No direct imports from module internals**
    ```typescript
    // ✅ Correct - use barrel exports
-   import { ClientesTable, actionListarClientes } from "@/features/partes";
+   import { ClientesTable, actionListarClientes } from "@/app/app/partes";
 
    // ❌ Wrong - no deep imports
-   import { ClientesTable } from "@/features/partes/components/clientes/clientes-table";
+   import { ClientesTable } from "@/app/app/partes/components/clientes/clientes-table";
    ```
 
 3. **Server Actions pattern**
    - Always use `authenticatedAction` wrapper from `@/lib/safe-action`
    - Return `{ success: boolean; data?: T; error?: string }`
    - Prefix with `action`: `actionCriar`, `actionAtualizar`, `actionListar`
-   - Place in `src/features/{modulo}/actions/{entity}-actions.ts`
+   - Place in `src/app/app/{modulo}/actions/{entity}-actions.ts`
 
 4. **Validation with Zod**
    - Define schemas in `domain.ts`
@@ -513,7 +514,7 @@ Key principles [inferred from file names]:
    ```typescript
    // src/lib/mcp/registry.ts
    import { registerMcpTool } from "./registry";
-   import { actionCriar } from "@/features/{modulo}/actions/{entity}-actions";
+   import { actionCriar } from "@/app/app/{modulo}/actions/{entity}-actions";
 
    registerMcpTool({
      name: "criar_{entity}",
@@ -569,19 +570,20 @@ Key principles [inferred from file names]:
 
 #### Adding a New Feature Module
 
-1. **Create structure**:
+1. **Create structure** (colocated with route):
    ```bash
-   mkdir src/features/nova-feature
-   mkdir src/features/nova-feature/components
-   mkdir src/features/nova-feature/hooks
-   mkdir src/features/nova-feature/actions
-   New-Item src/features/nova-feature/domain.ts
-   New-Item src/features/nova-feature/service.ts
-   New-Item src/features/nova-feature/repository.ts
-   New-Item src/features/nova-feature/types.ts
-   New-Item src/features/nova-feature/utils.ts
-   New-Item src/features/nova-feature/index.ts
-   New-Item src/features/nova-feature/RULES.md
+   mkdir src/app/app/nova-feature
+   mkdir src/app/app/nova-feature/components
+   mkdir src/app/app/nova-feature/hooks
+   mkdir src/app/app/nova-feature/actions
+   New-Item src/app/app/nova-feature/domain.ts
+   New-Item src/app/app/nova-feature/service.ts
+   New-Item src/app/app/nova-feature/repository.ts
+   New-Item src/app/app/nova-feature/types.ts
+   New-Item src/app/app/nova-feature/utils.ts
+   New-Item src/app/app/nova-feature/index.ts
+   New-Item src/app/app/nova-feature/page.tsx
+   New-Item src/app/app/nova-feature/RULES.md
    ```
 
 2. **Define domain** (domain.ts):
@@ -686,11 +688,11 @@ Key principles [inferred from file names]:
    export { actionListar, actionCriar } from "./actions/nova-feature-actions";
    ```
 
-7. **Create page** (src/app/(dashboard)/nova-feature/page.tsx):
+7. **Create page** (src/app/app/nova-feature/page.tsx):
    ```typescript
    import { PageShell } from "@/components/shared/page-shell";
-   import { NovaFeatureTable } from "@/features/nova-feature/components/nova-feature-table";
-   import { actionListar } from "@/features/nova-feature";
+   import { NovaFeatureTable } from "./components/nova-feature-table";
+   import { actionListar } from "@/app/app/nova-feature";
 
    export default async function NovaFeaturePage() {
      const result = await actionListar();
@@ -726,9 +728,9 @@ Key principles [inferred from file names]:
    ```
 
 10. **Write tests**:
-    - Unit tests: `src/features/nova-feature/__tests__/unit/`
-    - Integration tests: `src/features/nova-feature/__tests__/integration/`
-    - Actions tests: `src/features/nova-feature/__tests__/actions/`
+    - Unit tests: `src/app/app/nova-feature/__tests__/unit/`
+    - Integration tests: `src/app/app/nova-feature/__tests__/integration/`
+    - Actions tests: `src/app/app/nova-feature/__tests__/actions/`
 
 #### Adding a Component to the Design System
 
@@ -747,28 +749,29 @@ Key principles [inferred from file names]:
 
 **Steps**:
 1. Identify all files belonging to module (components, hooks, utils)
-2. Create feature structure: `src/features/{modulo}/`
+2. Create module structure: `src/app/app/{modulo}/`
 3. Move domain logic to `domain.ts` (schemas, types, constants)
 4. Extract data access to `repository.ts` (Supabase queries)
 5. Extract business logic to `service.ts` (use cases)
 6. Consolidate Server Actions in `actions/` (use `authenticatedAction`)
 7. Move components to `components/`
 8. Create barrel export in `index.ts`
-9. Update imports in pages and other features
+9. Update imports in pages and other modules
 10. Run tests: `npm run test:{modulo}`
 11. Validate architecture: `npm run check:architecture`
 12. Create `RULES.md` for AI context
 
 #### Working with Playwright Automation (Captura)
 
-- Entry point: `src/features/captura/`
-- Drivers: PJE, TRT, Comunica CNJ- Scripts: `scripts/captura/`
+- Entry point: `src/app/app/captura/`
+- Drivers: PJE, TRT, Comunica CNJ
+- Scripts: `scripts/captura/`
 - Test: `npm run test:api-acervo-geral`, `npm run test:api-audiencias`, etc.
 
 **Adding a new tribunal**:
-1. Create driver in `src/features/captura/drivers/{tribunal}/`
-2. Implement interface from `src/features/captura/domain.ts`
-3. Register in `src/features/captura/service.ts`
+1. Create driver in `src/app/app/captura/drivers/{tribunal}/`
+2. Implement interface from `src/app/app/captura/domain.ts`
+3. Register in `src/app/app/captura/service.ts`
 4. Add scraping logic (Playwright selectors)
 5. Test with script: `tsx scripts/captura/test-captura-{tribunal}.ts`
 
@@ -870,7 +873,7 @@ function MyComponent() {
 - `ignoreBuildErrors: true` mantido em next.config.ts (remoção gradual planejada)
 - Executar `npm run type-check` localmente antes de commits
 - Para builds de emergência, use `npm run type-check:skip-lib` se disponível
-- Erros atuais concentrados em features novas (config-atribuicao) - código estável está limpo
+- Erros atuais concentrados em módulos novos (config-atribuicao) - código estável está limpo
 
 **Tests fail with coverage threshold**:
 - Check jest.config.js for thresholds
@@ -893,8 +896,8 @@ function MyComponent() {
 
 **Architecture validation fails**:
 - Run `npm run check:architecture`
-- Fix imports to follow FSD rules
-- Use barrel exports (`@/features/{modulo}`)
+- Fix imports to follow colocation rules
+- Use barrel exports (`@/app/app/{modulo}`) for cross-module imports
 
 ---
 
