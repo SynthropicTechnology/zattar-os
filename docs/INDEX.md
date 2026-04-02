@@ -6,9 +6,8 @@
 
 - [AGENTS.md](./architecture/AGENTS.md) - Guia para agentes de IA
 - [ARCHITECTURE.md](./architecture/ARCHITECTURE.md) - Arquitetura do sistema
-- [CLAUDE.md](./architecture/CLAUDE.md) - Configurações Claude
 - [STATUS.md](./architecture/STATUS.md) - Status do projeto
-- [DOCKER_BUILD_FIX.md](./architecture/DOCKER_BUILD_FIX.md) - Correções Docker
+- [DOCKER_OPTIMIZATION.md](./architecture/DOCKER_OPTIMIZATION.md) - Referencia rapida de otimizacao Docker
 
 ### 🧩 Módulos de Produto
 
@@ -31,7 +30,6 @@
 - [QUICK_START_INTEGRACOES.md](./integrations/QUICK_START_INTEGRACOES.md) - Início rápido
 - [README_INTEGRACOES.md](./integrations/README_INTEGRACOES.md) - Guia principal
 - [MIGRATION_INTEGRACOES_SUMMARY.md](./integrations/MIGRATION_INTEGRACOES_SUMMARY.md) - Resumo técnico
-- [SUCESSO_MIGRATION_INTEGRACOES.md](./integrations/SUCESSO_MIGRATION_INTEGRACOES.md) - Relatório de sucesso
 
 ### 🗄️ Migrations
 
@@ -41,18 +39,11 @@
 
 ### 🔍 Auditorias
 
-- [AUDITORIA_TIPOS_SCHEMAS.md](./audits/AUDITORIA_TIPOS_SCHEMAS.md) - Auditoria de tipos
-- [RELATORIO_CORRECOES_TIPOS.md](./audits/RELATORIO_CORRECOES_TIPOS.md) - Correções de tipos
-- [RELATORIO_FINAL_AUDITORIA.md](./audits/RELATORIO_FINAL_AUDITORIA.md) - Relatório final
-- [RELATORIO_FINAL_COMPLETO.md](./audits/RELATORIO_FINAL_COMPLETO.md) - Relatório completo
-- [RESUMO_AUDITORIA_FINAL.md](./audits/RESUMO_AUDITORIA_FINAL.md) - Resumo final
+- [RESUMO_AUDITORIA_FINAL.md](./audits/RESUMO_AUDITORIA_FINAL.md) - Resumo final (demais relatórios em `archive/2026-Q1/`)
 
 ### 🤖 Dify AI
 
 - [DIFY_API_REFERENCE.md](./dify/DIFY_API_REFERENCE.md) - Referência da API
-- [PLANO_CORRECAO_DIFY.md](./dify/PLANO_CORRECAO_DIFY.md) - Plano de correção
-- [PROGRESSO_CORRECAO_DIFY.md](./dify/PROGRESSO_CORRECAO_DIFY.md) - Progresso
-- [RELATORIO_FINAL_CORRECAO_DIFY.md](./dify/RELATORIO_FINAL_CORRECAO_DIFY.md) - Relatório final
 
 ### ✨ Features
 
@@ -68,6 +59,8 @@
 
 - [troubleshooting](./troubleshooting/docker-build-optimization-report.md) - Relatório de otimização Docker
 - [troubleshooting](./troubleshooting/erro-401-management-api.md) - Erro 401 na Management API
+- [docker-build-errors.md](./internal/troubleshooting/docker-build-errors.md) - Erros de build Docker (EOF, proxy, BuildKit)
+- [docker-memory-issues.md](./internal/troubleshooting/docker-memory-issues.md) - Problemas de memoria e OOM
 - [internal/troubleshooting](./internal/troubleshooting/README.md) - Base interna de troubleshooting
 
 ### ⚙️ Configuração
@@ -100,5 +93,5 @@
 
 ## 🔄 Última Atualização
 
-**Data:** 2026-02-25  
-**Versão:** 1.1.0
+**Data:** 2026-04-02  
+**Versão:** 1.2.0

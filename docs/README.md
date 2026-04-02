@@ -13,10 +13,12 @@ docs/
 ├── INDEX.md                    # Índice completo da documentação
 ├── README.md                   # Este arquivo
 ├── ORGANIZACAO_PROJETO.md      # Mapa da organização documental
+├── archive/                   # Documentos históricos arquivados
+│   └── 2026-Q1/               # Auditórias, migrações e correções concluídas em Q1 2026
 ├── architecture/               # Arquitetura e design do sistema
 ├── integrations/              # Guias de integrações
 ├── migrations/                # Documentação de migrations
-├── audits/                    # Relatórios de auditoria
+├── audits/                    # Relatórios de auditoria (resumos ativos)
 ├── dify/                      # Documentação Dify AI
 ├── features/                  # Documentação de features
 ├── modules/                   # Documentação por módulo do produto
@@ -61,4 +63,4 @@ Ao adicionar nova documentação:
 
 ---
 
-**Última atualização:** 2026-02-25
+**Última atualização:** 2026-04-02
