@@ -7,7 +7,7 @@ import {
   CompletionPanel,
   DifyInputForm,
   type DifyAppParameters,
-} from '@/features/dify';
+} from '@/lib/dify';
 
 interface AssistenteNativoViewProps {
   appId: string;

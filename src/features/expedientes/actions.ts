@@ -17,7 +17,7 @@ import {
   listarExpedientes,
 } from "./service";
 import { after } from "next/server";
-import { indexDocument } from "@/features/ai/services/indexing.service";
+import { indexDocument } from "@/lib/ai/services/indexing.service";
 import { authenticateRequest } from "@/lib/auth";
 import { listarUploads } from "@/features/documentos/service";
 

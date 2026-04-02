@@ -20,12 +20,12 @@ import Link from 'next/link';
 
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
-import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard, EditorIAIntegrationCard } from '@/features/integracoes';
-import { PromptsIAContent } from '@/features/system-prompts';
+import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard, EditorIAIntegrationCard } from '@/lib/integracoes';
+import { PromptsIAContent } from '@/lib/system-prompts';
 import { AparenciaContent } from './aparencia-content';
 import type { MetricasDB } from '@/features/admin';
-import type { Integracao } from '@/features/integracoes';
-import type { SystemPrompt } from '@/features/system-prompts';
+import type { Integracao } from '@/lib/integracoes';
+import type { SystemPrompt } from '@/lib/system-prompts';
 
 // =============================================================================
 // TIPOS

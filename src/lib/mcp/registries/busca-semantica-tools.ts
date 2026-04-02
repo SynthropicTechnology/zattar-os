@@ -17,7 +17,7 @@ import type { ActionResult } from '@/lib/safe-action';
 export async function registerBuscaSemanticaTools(): Promise<void> {
   const {
     actionBuscarConhecimento,
-  } = await import('@/features/ai/actions/search-actions');
+  } = await import('@/lib/ai/actions/search-actions');
 
   /**
    * Realiza busca semântica com IA em documentos, processos e conhecimento do escritório

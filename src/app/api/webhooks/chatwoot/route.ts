@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { processarWebhookChatwoot } from '@/features/chatwoot/actions';
+import { processarWebhookChatwoot } from '@/lib/chatwoot/actions';
 
 export async function POST(req: NextRequest) {
   try {

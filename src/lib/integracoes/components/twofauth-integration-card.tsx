@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AppBadge } from "@/components/ui/app-badge";
 import { TwoFAuthConfigForm } from "./twofauth-config-form";
-import { TwoFAuthConfigContent } from "@/features/twofauth";
+import { TwoFAuthConfigContent } from "@/lib/twofauth";
 import type { Integracao, TwoFAuthConfig } from "../domain";
 
 interface TwoFAuthIntegrationCardProps {

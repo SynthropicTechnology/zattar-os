@@ -9,7 +9,7 @@ import {
   useChatwootAgents,
   useChatwootRealtime,
   useChatwootConversationChanges,
-} from '@/features/chatwoot/hooks';
+} from '@/lib/chatwoot/hooks';
 
 // =============================================================================
 // Exemplo 1: Listar conversas com sincronização automática

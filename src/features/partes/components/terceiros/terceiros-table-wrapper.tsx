@@ -28,7 +28,7 @@ import { useTerceiros } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { TerceiroFormDialog } from './terceiro-form';
 import { TerceirosBulkActionsBar, DesativarTerceirosMassaDialog } from './terceiros-bulk-actions';
-import { ChatwootSyncButton } from '@/features/chatwoot/components';
+import { ChatwootSyncButton } from '@/lib/chatwoot/components';
 import {
   formatarCpf,
   formatarCnpj,

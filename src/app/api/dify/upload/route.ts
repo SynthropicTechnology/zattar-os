@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createDifyServiceForApp } from '@/features/dify/factory';
+import { createDifyServiceForApp } from '@/lib/dify/factory';
 
 export const runtime = 'nodejs';
 

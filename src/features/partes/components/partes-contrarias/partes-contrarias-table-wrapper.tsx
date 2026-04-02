@@ -27,7 +27,7 @@ import { usePartesContrarias } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { ParteContrariaFormDialog } from './parte-contraria-form';
 import { PartesContrariasBulkActionsBar, DesativarPartesContrariasMassaDialog } from './partes-contrarias-bulk-actions';
-import { ChatwootSyncButton } from '@/features/chatwoot/components';
+import { ChatwootSyncButton } from '@/lib/chatwoot/components';
 import {
   formatarCpf,
   formatarCnpj,

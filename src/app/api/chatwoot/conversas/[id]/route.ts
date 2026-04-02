@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { sincronizarConversaManual, atualizarStatusConversaAPI } from '@/features/chatwoot/actions';
+import { sincronizarConversaManual, atualizarStatusConversaAPI } from '@/lib/chatwoot/actions';
 
 /**
  * Sincroniza uma conversa manualmente

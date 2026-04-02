@@ -6,7 +6,7 @@
  * Fallback para variáveis de ambiente se não houver configuração no DB.
  */
 
-import type { EditorIAConfig } from "@/features/integracoes";
+import type { EditorIAConfig } from "@/lib/integracoes";
 
 let cachedConfig: EditorIAConfig | null = null;
 let cacheTimestamp = 0;
@@ -26,7 +26,7 @@ export async function getEditorIAConfig(): Promise<EditorIAConfig> {
 
   // Import dinâmico para evitar dependência circular
   const { buscarConfigEditorIA } = await import(
-    "@/features/integracoes/service"
+    "@/lib/integracoes/service"
   );
   const config = await buscarConfigEditorIA();
 

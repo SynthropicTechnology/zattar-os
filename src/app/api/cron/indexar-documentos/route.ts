@@ -108,9 +108,9 @@ export async function POST(request: NextRequest) {
             // Se texto está vazio e há storage_key, tentar extrair do storage
             if (!texto && storageKey) {
               try {
-                const { downloadFile } = await import("@/features/ai");
+                const { downloadFile } = await import("@/lib/ai");
                 const { extractText } = await import(
-                  "@/features/ai/services/extraction.service"
+                  "@/lib/ai/services/extraction.service"
                 );
 
                 const storageProvider =

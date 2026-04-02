@@ -5,7 +5,7 @@
  * Utiliza cache em memória com TTL de 1 minuto para evitar queries repetidas.
  */
 
-import type { DyteConfig } from "@/features/integracoes";
+import type { DyteConfig } from "@/lib/integracoes";
 
 let cachedConfig: DyteConfig | null = null;
 let cacheTimestamp = 0;
@@ -24,7 +24,7 @@ export async function getDyteConfig(): Promise<DyteConfig> {
 
   // Import dinâmico para evitar dependência circular
   const { buscarConfigDyte } = await import(
-    "@/features/integracoes/service"
+    "@/lib/integracoes/service"
   );
   const config = await buscarConfigDyte();
 

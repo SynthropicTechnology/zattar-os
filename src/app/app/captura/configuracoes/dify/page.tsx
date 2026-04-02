@@ -1,4 +1,4 @@
-import { DifyAppsList } from '@/features/dify';
+import { DifyAppsList } from '@/lib/dify';
 
 export default function DifyAppsPage() {
   return <DifyAppsList />;

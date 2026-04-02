@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth';
-import { searchKnowledge } from '@/features/ai';
-import { searchSchema } from '@/features/ai';
+import { searchKnowledge } from '@/lib/ai';
+import { searchSchema } from '@/lib/ai';
 
 export async function POST(req: NextRequest) {
   try {

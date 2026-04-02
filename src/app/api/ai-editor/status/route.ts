@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/auth/api-auth";
 import { createAIEditorProvider } from "@/lib/ai-editor/provider";
 import { generateText } from "ai";
-import type { EditorIAConfig } from "@/features/integracoes";
+import type { EditorIAConfig } from "@/lib/integracoes";
 
 export async function POST(request: NextRequest) {
   try {

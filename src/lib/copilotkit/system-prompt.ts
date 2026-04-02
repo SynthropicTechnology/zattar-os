@@ -5,10 +5,10 @@
  *
  * SYSTEM_PROMPT é o valor estático para uso em client components (ex: layout.tsx).
  * Para server components e API routes que precisam do valor dinâmico do DB,
- * importe getPromptContent de '@/features/system-prompts/get-prompt' diretamente.
+ * importe getPromptContent de '@/lib/system-prompts/get-prompt' diretamente.
  */
 
-import { DEFAULT_PROMPTS } from "@/features/system-prompts/defaults";
+import { DEFAULT_PROMPTS } from "@/lib/system-prompts/defaults";
 
 /**
  * Valor estático do prompt para uso em client components.

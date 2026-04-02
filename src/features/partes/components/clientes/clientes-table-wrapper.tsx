@@ -21,7 +21,7 @@ import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '../../actions';
-import { ChatwootSyncButton } from '@/features/chatwoot/components';
+import { ChatwootSyncButton } from '@/lib/chatwoot/components';
 import { FilterPopover, PartesSectionFilter } from '../shared';
 import { ClientesBulkActionsBar, DesativarClientesMassaDialog } from './clientes-bulk-actions';
 

@@ -13,8 +13,8 @@ import {
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { after } from 'next/server';
-import { indexText, indexDocument } from '@/features/ai/services/indexing.service';
-import { extractKeyFromUrl } from '@/features/ai/services/storage-adapter.service';
+import { indexText, indexDocument } from '@/lib/ai/services/indexing.service';
+import { extractKeyFromUrl } from '@/lib/ai/services/storage-adapter.service';
 import {
   findClienteByCPF,
   findParteContrariaByCPF,

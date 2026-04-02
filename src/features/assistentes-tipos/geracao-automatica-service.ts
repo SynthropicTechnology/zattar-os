@@ -1,5 +1,5 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { DifyService } from '../dify/service';
+import { DifyService } from '@/lib/dify/service';
 import * as documentosService from '../documentos/service';
 import * as expedientesRepository from '../expedientes/repository';
 import type { Expediente } from '../expedientes/domain';

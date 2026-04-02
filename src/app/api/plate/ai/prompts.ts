@@ -14,7 +14,7 @@ import {
   isSelectionInTable,
   isSingleCellSelection,
 } from '../../ai/command/utils';
-import { getPromptContent } from '@/features/system-prompts/get-prompt';
+import { getPromptContent } from '@/lib/system-prompts/get-prompt';
 
 /**
  * System prompts especializados em Direito Brasileiro para o editor de documentos.

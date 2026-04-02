@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth';
 import * as service from '../service';
-import { isContentTypeSupported } from '@/features/ai/services/extraction.service';
+import { isContentTypeSupported } from '@/lib/ai/services/extraction.service';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 export async function actionUploadArquivo(formData: FormData) {
@@ -33,7 +33,7 @@ export async function actionUploadArquivo(formData: FormData) {
           let textoExtraido = '';
           if (isContentTypeSupported(upload.tipo_mime)) {
             try {
-              const { extractText } = await import('@/features/ai/services/extraction.service');
+              const { extractText } = await import('@/lib/ai/services/extraction.service');
               textoExtraido = await extractText(upload.b2_key as unknown as Buffer, upload.tipo_mime);
             } catch (extractError) {
               console.warn(`[AI] Falha ao extrair texto para upload ${upload.id}:`, extractError);

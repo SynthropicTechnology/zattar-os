@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { actionObterMetricasDB } from "@/features/admin";
-import { actionListarIntegracoesPorTipo } from "@/features/integracoes";
-import { actionListarSystemPrompts } from "@/features/system-prompts";
+import { actionListarIntegracoesPorTipo } from "@/lib/integracoes";
+import { actionListarSystemPrompts } from "@/lib/system-prompts";
 import { ConfiguracoesTabsContent } from "./components/configuracoes-tabs-content";
 
 // Next.js 16: Force dynamic rendering because this route uses cookies()

@@ -3,12 +3,12 @@ import { actionBuscaSemantica, actionBuscaHibrida } from '../../actions/busca-ac
 import * as retrieval from '@/lib/ai/retrieval';
 import { authenticatedAction } from '@/lib/safe-action';
 import { createClient } from '@/lib/supabase/server';
-import { generateEmbedding } from '@/features/ai/services/embedding.service';
+import { generateEmbedding } from '@/lib/ai/services/embedding.service';
 
 jest.mock('@/lib/safe-action');
 jest.mock('@/lib/ai/retrieval');
 jest.mock('@/lib/supabase/server');
-jest.mock('@/features/ai/services/embedding.service');
+jest.mock('@/lib/ai/services/embedding.service');
 
 describe('Busca Semântica Integration', () => {
   let mockSupabaseClient: {

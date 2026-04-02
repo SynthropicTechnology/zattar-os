@@ -49,7 +49,7 @@ import {
   vincularParteAContato,
   findMapeamentoPorEntidade,
   listarMapeamentos,
-} from '@/features/chatwoot';
+} from '@/lib/chatwoot';
 import { findClienteById, findParteContrariaById, findTerceiroById } from '@/features/partes/server';
 
 /**
