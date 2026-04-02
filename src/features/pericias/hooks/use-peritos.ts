@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { actionListarTerceiros } from '@/features/partes/actions/terceiros-actions';
+import { actionListarTerceiros } from '@/app/app/partes/actions/terceiros-actions';
 import type { PeritoOption } from '../types';
 
 const isClient = typeof window !== 'undefined';

@@ -14,11 +14,11 @@ import type { ProcessoParaCaptura } from "../partes-capture.service";
 import type {
   SituacaoOAB,
   TipoRepresentante,
-} from "@/features/partes/types";
+} from "@/app/app/partes/types";
 import {
   upsertRepresentantePorCPFRepo as upsertRepresentantePorCPF,
   buscarRepresentantePorCPFRepo as buscarRepresentantePorCPF,
-} from "@/features/partes/server";
+} from "@/app/app/partes/server";
 import getLogger from "@/lib/logger";
 import { normalizarDocumento } from "../utils";
 import { extrairCamposRepresentantePJE } from "../utils";

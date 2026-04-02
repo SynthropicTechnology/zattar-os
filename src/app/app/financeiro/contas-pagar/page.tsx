@@ -32,7 +32,7 @@ import {
   useContasPagar,
 } from '@/features/financeiro';
 import { PageShell } from '@/components/shared/page-shell';
-import { FilterPopover } from '@/features/partes';
+import { FilterPopover } from '@/app/app/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

@@ -284,7 +284,7 @@ export async function saveCliente(input: CreateClienteInput): Promise<Result<Cli
   try {
     const db = createDbClient();
 
-    // Compatibilidade com fixtures/tests: aceitar input em camelCase (src/features/partes/types)
+    // Compatibilidade com fixtures/tests: aceitar input em camelCase (src/app/app/partes/types)
     if (
       typeof (input as unknown as Record<string, unknown>)?.tipoPessoa === 'string' ||
       typeof (input as unknown as Record<string, unknown>)?.nomeCompleto === 'string'

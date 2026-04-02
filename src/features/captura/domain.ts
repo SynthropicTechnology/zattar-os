@@ -5,7 +5,7 @@
  */
 
 import type { TipoAcessoTribunal } from "./types/trt-types";
-import type { GrauProcesso } from "@/features/partes";
+import type { GrauProcesso } from "@/app/app/partes";
 import type {
   CodigoTRT,
   GrauTRT,

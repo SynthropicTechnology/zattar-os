@@ -1,6 +1,6 @@
 import { Users2Icon } from "lucide-react";
 import { Card, CardAction, CardDescription, CardHeader } from "@/components/ui/card";
-import { actionContarClientesComEstatisticas } from "@/features/partes/server-actions";
+import { actionContarClientesComEstatisticas } from "@/app/app/partes/server-actions";
 import type { CrmDateFilter } from "../crm-date-filter";
 import { toCrmDateFilterInput } from "../crm-date-filter";
 

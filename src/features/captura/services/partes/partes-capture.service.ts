@@ -20,7 +20,7 @@
 import type { Page } from "playwright";
 import type { PartePJE } from "@/features/captura/pje-trt/partes/types";
 import type { CapturaPartesResult } from "./types";
-import type { GrauProcesso } from "@/features/partes";
+import type { GrauProcesso } from "@/app/app/partes";
 import { validarDocumentoAdvogado, type AdvogadoIdentificacao } from "./identificacao-partes.service";
 import { validarPartesArray } from "./schemas";
 import { CAPTURA_CONFIG } from "./config";

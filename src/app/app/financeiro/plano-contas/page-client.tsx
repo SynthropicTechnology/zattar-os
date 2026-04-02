@@ -31,7 +31,7 @@ import {
   MaisFiltrosPlanoContasPopover,
 } from '@/features/financeiro';
 import { actionAtualizarConta } from '@/features/financeiro/server-actions';
-import { FilterPopover } from '@/features/partes';
+import { FilterPopover } from '@/app/app/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';

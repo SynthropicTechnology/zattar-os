@@ -137,7 +137,7 @@ function FilterButton({
  * // Depois (correto)
  * import { DataTableToolbar } from '@/components/shared/data-shell';
  *
- * // Veja src/features/partes/components/clientes/clientes-table-wrapper.tsx para exemplo.
+ * // Veja src/app/app/partes/components/clientes/clientes-table-wrapper.tsx para exemplo.
  * ```
  */
 interface TableToolbarProps {

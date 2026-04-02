@@ -1,4 +1,4 @@
-import { RepresentantesTableWrapper } from '@/features/partes';
+import { RepresentantesTableWrapper } from '@/app/app/partes';
 
 /**
  * Página de Representantes

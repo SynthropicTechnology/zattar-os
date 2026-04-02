@@ -1,6 +1,6 @@
 import { BriefcaseBusiness } from "lucide-react";
 import { Card, CardAction, CardDescription, CardHeader } from "@/components/ui/card";
-import { actionContarPartesContrariasComEstatisticas } from "@/features/partes/server-actions";
+import { actionContarPartesContrariasComEstatisticas } from "@/app/app/partes/server-actions";
 import type { CrmDateFilter } from "../crm-date-filter";
 import { toCrmDateFilterInput } from "../crm-date-filter";
 

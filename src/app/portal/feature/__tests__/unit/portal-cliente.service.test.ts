@@ -7,14 +7,14 @@ jest.mock('playwright-core', () => ({}));
 import * as service from '../../service';
 import { criarProcessoMock, criarContratoMock, criarAudienciaMock, criarPagamentoMock } from '../fixtures';
 import { ok, err, appError } from '@/types';
-import * as partesService from '@/features/partes/server';
+import * as partesService from '@/app/app/partes/server';
 import * as acervoService from '@/features/acervo/service';
 import * as contratosService from '@/features/contratos/service';
 import * as audienciasService from '@/features/audiencias/service';
 import * as obrigacoesService from '@/features/obrigacoes/service';
 
 // Mock feature services
-jest.mock('@/features/partes/server');
+jest.mock('@/app/app/partes/server');
 jest.mock('@/features/acervo/service');
 jest.mock('@/features/contratos/service');
 jest.mock('@/features/audiencias/service');

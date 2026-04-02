@@ -384,7 +384,7 @@ const columns = useMemo(
 
 **Arquivo gold standard:**
 ```
-src/features/partes/components/clientes/clientes-table-wrapper.tsx
+src/app/app/partes/components/clientes/clientes-table-wrapper.tsx
 ```
 
 Este arquivo demonstra o padrão completo de implementação com:

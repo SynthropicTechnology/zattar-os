@@ -15,7 +15,7 @@ import {
 import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 

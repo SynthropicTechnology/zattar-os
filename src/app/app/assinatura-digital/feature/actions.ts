@@ -21,9 +21,9 @@ import {
   findParteContrariaByCNPJ,
   findAllPartesContrarias,
   searchPartesContrariaComEndereco,
-} from '@/features/partes/server';
-import { normalizarDocumento } from '@/features/partes';
-import type { Cliente, ParteContraria, ParteContrariaComEndereco } from '@/features/partes/types';
+} from '@/app/app/partes/server';
+import { normalizarDocumento } from '@/app/app/partes';
+import type { Cliente, ParteContraria, ParteContrariaComEndereco } from '@/app/app/partes/types';
 
 // Helper para lidar com erros
 const handleError = (error: unknown) => {

@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
 
 import {
   CodigoTribunal,

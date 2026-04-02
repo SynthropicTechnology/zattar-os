@@ -45,7 +45,7 @@ import {
   actionAtualizarAgendaEvento,
   actionDeletarAgendaEvento,
 } from "@/app/app/agenda";
-import { FilterPopoverMulti, type FilterOption } from "@/features/partes";
+import { FilterPopoverMulti, type FilterOption } from "@/app/app/partes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

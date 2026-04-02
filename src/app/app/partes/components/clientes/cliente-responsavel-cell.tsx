@@ -18,9 +18,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { actionAtualizarClienteSafe } from '@/features/partes/actions/clientes-actions';
+import { actionAtualizarClienteSafe } from '@/app/app/partes/actions/clientes-actions';
 
-import type { Cliente } from '@/features/partes/types';
+import type { Cliente } from '@/app/app/partes/types';
 import { toast } from 'sonner';
 
 interface Usuario {

@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FilterPopover } from '@/features/partes';
+import { FilterPopover } from '@/app/app/partes';
 import { PageShell } from '@/components/shared/page-shell';
 import {
   DataShell,

@@ -7,7 +7,7 @@ import { InfoCards } from "./sections/info-cards";
 import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
 import { ActivityTimeline } from "./sections/activity-timeline";
-import { ClienteDocumentosViewer } from "@/features/partes/components/clientes";
+import { ClienteDocumentosViewer } from "@/app/app/partes/components/clientes";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AppBadge } from "@/components/ui/app-badge";

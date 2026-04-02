@@ -3,7 +3,7 @@
  */
 
 import { StatusProcesso } from "@/features/processos";
-import type { PoloProcessoParte, TipoParteProcesso } from "@/features/partes";
+import type { PoloProcessoParte, TipoParteProcesso } from "@/app/app/partes";
 
 /**
  * Processo vinculado a uma entidade (cliente, parte contrária, terceiro).

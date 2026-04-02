@@ -45,7 +45,7 @@ import {
   useContasBancarias,
   useTransacoesImportadas,
 } from '@/features/financeiro';
-import { FilterPopover } from '@/features/partes';
+import { FilterPopover } from '@/app/app/partes';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { TransacaoComConciliacao } from '@/features/financeiro';
 

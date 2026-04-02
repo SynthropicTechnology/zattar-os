@@ -39,7 +39,7 @@ import { InputCPF, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSea
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Cliente, ParteContraria } from '@/features/partes/types';
+import type { Cliente, ParteContraria } from '@/app/app/partes/types';
 import { UseFormReturn } from 'react-hook-form';
 
 interface DynamicFormRendererProps {

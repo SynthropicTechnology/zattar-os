@@ -6,7 +6,7 @@ import InputCPF from './input-cpf';
 import { Button } from '@/components/ui/button';
 import { Loader2, Search, CheckCircle2, XCircle } from 'lucide-react';
 import { searchClienteByCPF } from '../../actions';
-import type { Cliente } from '@/features/partes/types';
+import type { Cliente } from '@/app/app/partes/types';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 

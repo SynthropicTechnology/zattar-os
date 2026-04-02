@@ -1,4 +1,4 @@
-import { PartesContrariasTableWrapper } from '@/features/partes';
+import { PartesContrariasTableWrapper } from '@/app/app/partes';
 
 /**
  * Página de Partes Contrárias

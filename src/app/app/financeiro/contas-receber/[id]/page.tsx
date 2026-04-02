@@ -25,7 +25,7 @@ import {
   useContasBancarias,
   usePlanoContasAnaliticas,
 } from '@/features/financeiro';
-import { useClientes } from '@/features/partes';
+import { useClientes } from '@/app/app/partes';
 import { useContratos } from '@/features/contratos';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

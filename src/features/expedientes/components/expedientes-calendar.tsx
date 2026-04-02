@@ -23,7 +23,7 @@ import { ResponsiveFilterPanel } from '@/components/ui/responsive-filter-panel';
 import { AppBadge } from '@/components/ui/app-badge';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeekDaysCarousel } from '@/components/shared';
 

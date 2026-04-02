@@ -16,10 +16,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatarData } from '@/features/partes/utils';
+import { formatarData } from '@/app/app/partes/utils';
 import { StatusProcesso, STATUS_PROCESSO_LABELS, GRAU_LABELS } from '@/features/processos';
 import type { ProfileData } from '../../configs/types';
-import type { GrauProcesso } from '@/features/partes';
+import type { GrauProcesso } from '@/app/app/partes';
 
 interface RepresentanteProcessoVinculo {
   processo_id: number;

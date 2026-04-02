@@ -1,6 +1,6 @@
-import { Cliente, ParteContraria, Terceiro } from "@/features/partes/domain";
+import { Cliente, ParteContraria, Terceiro } from "@/app/app/partes/domain";
 import { Usuario } from "@/features/usuarios/domain";
-import type { Representante } from "@/features/partes/types/representantes";
+import type { Representante } from "@/app/app/partes/types/representantes";
 import {
   formatarCpf,
   formatarCnpj,
@@ -9,7 +9,7 @@ import {
   calcularIdade,
   formatarCep,
   formatarEnderecoCompleto,
-} from "@/features/partes/utils/format";
+} from "@/app/app/partes/utils/format";
 
 // Interface para endereço
 interface EnderecoData {

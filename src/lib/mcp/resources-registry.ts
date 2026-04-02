@@ -6,7 +6,7 @@
 
 import { registerMcpResource, jsonResourceResult } from "./resources";
 import type { Processo } from "@/features/processos";
-import type { Cliente } from "@/features/partes";
+import type { Cliente } from "@/app/app/partes";
 import type { Contrato } from "@/features/contratos";
 import type { Audiencia } from "@/features/audiencias";
 
@@ -94,7 +94,7 @@ export async function registerAllResources(): Promise<void> {
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarCliente } = await import("@/features/partes/server");
+      const { actionBuscarCliente } = await import("@/app/app/partes/server");
 
       const result = await actionBuscarCliente(id);
 
@@ -271,7 +271,7 @@ export async function registerAllResources(): Promise<void> {
     description: "Lista clientes cadastrados",
     mimeType: "application/json",
     handler: async (uri) => {
-      const { actionListarClientes } = await import("@/features/partes/server");
+      const { actionListarClientes } = await import("@/app/app/partes/server");
 
       const result = await actionListarClientes({ limite: 50 });
 

@@ -9,7 +9,7 @@ import { fromCamelToSnake, fromSnakeToCamel } from "@/lib/utils";
 import type {
   TipoParteProcesso,
   PoloProcessoParte,
-} from "@/features/partes";
+} from "@/app/app/partes";
 
 // =============================================================================
 // API compatível com testes (createDbClient + Result {success,data,error})

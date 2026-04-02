@@ -18,7 +18,7 @@ import type {
   CreateParteContrariaPJInput as CriarParteContrariaPJParams,
   CreateTerceiroPFInput as CriarTerceiroPFParams,
   CreateTerceiroPJInput as CriarTerceiroPJParams,
-} from "@/features/partes";
+} from "@/app/app/partes";
 import {
   upsertClientePorCPF,
   upsertClientePorCNPJ,
@@ -32,13 +32,13 @@ import {
   buscarTerceiroPorCPF,
   buscarTerceiroPorCNPJ,
   criarTerceiroSemDocumento,
-} from "@/features/partes/repository-compat";
+} from "@/app/app/partes/repository-compat";
 import {
   upsertCadastroPJE,
   buscarEntidadePorIdPessoaPJE,
   upsertTerceiroByCPF,
   upsertTerceiroByCNPJ,
-} from "@/features/partes/server";
+} from "@/app/app/partes/server";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { PersistenceError } from "../errors";

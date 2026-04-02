@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-import { CopyButton, MapButton } from "@/features/partes/components/shared";
+import { CopyButton, MapButton } from "@/app/app/partes/components/shared";
 
 interface TerceiroEnderecoSectionProps {
   data: Record<string, unknown>;

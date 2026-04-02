@@ -1,4 +1,4 @@
-import { ClientesTableWrapper } from '@/features/partes';
+import { ClientesTableWrapper } from '@/app/app/partes';
 
 /**
  * Página de Clientes

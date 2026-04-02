@@ -5,7 +5,7 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado (import direto):
- * import { findClienteById } from '@/features/partes/repositories/clientes-repository';
+ * import { findClienteById } from '@/app/app/partes/repositories/clientes-repository';
  *
  * Re-exporta todas as funcoes dos repositories decompostos para
  * manter retrocompatibilidade com codigo existente.

@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { obterDashboardCliente } from "../service";
 import { validarCpf } from "../utils";
 import { redirect } from "next/navigation";
-import { buscarClientePorDocumento } from "@/features/partes/server";
+import { buscarClientePorDocumento } from "@/app/app/partes/server";
 
 export type PortalLoginResult = { success: boolean; error?: string };
 

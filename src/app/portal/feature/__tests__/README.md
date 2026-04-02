@@ -139,7 +139,7 @@ jest.mock('next/navigation', () => ({
 ### Feature Services
 
 ```typescript
-jest.mock('@/features/partes/service');
+jest.mock('@/app/app/partes/service');
 jest.mock('@/features/acervo/service');
 jest.mock('@/features/contratos/service');
 jest.mock('@/features/audiencias/service');
@@ -185,7 +185,7 @@ Implementa validação robusta:
 ## Dependências Entre Features
 
 O Portal Cliente depende de:
-- `@/features/partes`: buscar cliente
+- `@/app/app/partes`: buscar cliente
 - `@/features/acervo`: buscar processos
 - `@/features/contratos`: listar contratos
 - `@/features/audiencias`: listar audiências

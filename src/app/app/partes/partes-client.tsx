@@ -31,7 +31,7 @@ import {
   Clock,
   Building2,
 } from 'lucide-react';
-import { usePartes, type TipoEntidade } from '@/features/partes';
+import { usePartes, type TipoEntidade } from '@/app/app/partes';
 import { EntityCard, getInitials, timeAgo, type EntityCardData } from '@/components/dashboard/entity-card';
 import { EntityListRow } from '@/components/dashboard/entity-list-row';
 import { PulseStrip, type PulseItem } from '@/components/dashboard/pulse-strip';

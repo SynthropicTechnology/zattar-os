@@ -1,4 +1,4 @@
-import { TerceirosTableWrapper } from '@/features/partes';
+import { TerceirosTableWrapper } from '@/app/app/partes';
 
 /**
  * Página de Terceiros

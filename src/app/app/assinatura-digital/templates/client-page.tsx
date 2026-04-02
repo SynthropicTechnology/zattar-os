@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { FilterPopover } from '@/features/partes';
+import { FilterPopover } from '@/app/app/partes';
 import {
   formatFileSize,
   formatTemplateStatus,

@@ -34,7 +34,7 @@ import {
   DataPagination,
 } from "@/components/shared/data-shell";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
-import { FilterPopover, type FilterOption } from "@/features/partes";
+import { FilterPopover, type FilterOption } from "@/app/app/partes";
 import { useDebounce } from "@/hooks/use-debounce";
 
 import {

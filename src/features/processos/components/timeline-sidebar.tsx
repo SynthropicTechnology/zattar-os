@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Search } from 'lucide-react';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/features/partes';
+import type { GrauProcesso } from '@/app/app/partes';
 import { Input } from '@/components/ui/input';
 import { TimelineSidebarItem } from './timeline-sidebar-item';
 

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Scale, Star } from "lucide-react";
 import { StatusSemanticBadge } from "@/components/ui/semantic-badge";
-import { CopyButton } from "@/features/partes/components/shared";
+import { CopyButton } from "@/app/app/partes/components/shared";
 
 interface RepresentanteOABSectionProps {
   data: Record<string, unknown>;

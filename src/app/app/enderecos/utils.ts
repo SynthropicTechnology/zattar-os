@@ -1,5 +1,5 @@
 import type { Endereco, EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from './types';
-import type { GrauProcesso } from '@/features/partes/types';
+import type { GrauProcesso } from '@/app/app/partes/types';
 
 /**
  * Converte dados do banco para entidade Endereco tipada

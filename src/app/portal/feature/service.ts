@@ -2,7 +2,7 @@ import { buscarProcessosClientePorCpf } from "@/features/acervo/service";
 import { listarContratosPorClienteId } from "@/features/contratos";
 import { listarAudienciasPorBuscaCpf } from "@/features/audiencias/service";
 import { listarAcordosPorBuscaCpf } from "@/features/obrigacoes/service";
-import { buscarClientePorDocumento } from "@/features/partes/server";
+import { buscarClientePorDocumento } from "@/app/app/partes/server";
 import { DashboardData, ContratoPortal, AudienciaPortal, PagamentoPortal } from "./types";
 
 /** Serializa erro de forma segura (Supabase errors são objetos, não Error instances) */

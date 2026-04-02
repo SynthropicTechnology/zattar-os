@@ -1250,9 +1250,20 @@
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-/* Hide native suggestions — rendered manually in BriefingInput */
-.pedrinho-chat-wrapper [data-testid="copilot-suggestions"] {
-  display: none;
+/* Hide native input & suggestions — replaced by BriefingInput */
+.pedrinho-chat-wrapper .copilotKitInput {
+  display: none !important;
+}
+
+/* Hide native suggestion pills and their wrapper div */
+.pedrinho-chat-wrapper div:has(> [data-testid="copilot-suggestions"]) {
+  display: none !important;
+}
+
+/* Collapse excess padding-bottom on scroll content wrapper
+   (CopilotKit reserves ~100px for the hidden native input) */
+.pedrinho-chat-wrapper .copilotKitChat [style*="padding-bottom"] {
+  padding-bottom: 8px !important;
 }
 
 .pedrinho-chat-wrapper .copilotKitMessages {

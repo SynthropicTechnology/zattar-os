@@ -11,12 +11,12 @@
 import React from 'react';
 import { Lock, Layers, RefreshCw, ArrowLeft } from 'lucide-react';
 import type { ProcessoUnificado } from '@/features/processos';
-import type { GrauProcesso } from '@/features/partes';
+import type { GrauProcesso } from '@/app/app/partes';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { GrauBadgesSimple } from './grau-badges';
-import { CopyButton } from '@/features/partes';
+import { CopyButton } from '@/app/app/partes';
 import { ProximaAudienciaPopover } from './proxima-audiencia-popover';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { actionListarUsuarios } from '@/features/usuarios';

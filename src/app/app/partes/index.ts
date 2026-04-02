@@ -5,11 +5,11 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado (import direto):
- * import { useClientes } from '@/features/partes/hooks/use-clientes';
- * import { ClientesTableWrapper } from '@/features/partes/components/clientes';
+ * import { useClientes } from '@/app/app/partes/hooks/use-clientes';
+ * import { ClientesTableWrapper } from '@/app/app/partes/components/clientes';
  *
  * ⚠️ Use com moderação (barrel export):
- * import { useClientes, ClientesTableWrapper } from '@/features/partes';
+ * import { useClientes, ClientesTableWrapper } from '@/app/app/partes';
  *
  * Este modulo centraliza toda a funcionalidade relacionada a partes processuais:
  * - Clientes
@@ -19,16 +19,16 @@
  *
  * @example
  * // Importar componentes
- * import { ClientesTableWrapper, ClienteForm } from '@/features/partes';
+ * import { ClientesTableWrapper, ClienteForm } from '@/app/app/partes';
  *
  * // Importar hooks
- * import { usePartesContrarias, useTerceiros } from '@/features/partes';
+ * import { usePartesContrarias, useTerceiros } from '@/app/app/partes';
  *
  * // Importar utils
- * import { formatarCpf, formatarNome } from '@/features/partes';
+ * import { formatarCpf, formatarNome } from '@/app/app/partes';
  *
  * // Importar tipos
- * import type { Cliente, ParteContraria } from '@/features/partes';
+ * import type { Cliente, ParteContraria } from '@/app/app/partes';
  */
 
 // ============================================================================
@@ -194,7 +194,7 @@ export {
 // Server-only exports
 // ============================================================================
 // Actions, Services e Repositories devem ser importados via server entrypoint:
-//   import { findClienteById } from '@/features/partes/server';
+//   import { findClienteById } from '@/app/app/partes/server';
 // NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.
 
 // ============================================================================

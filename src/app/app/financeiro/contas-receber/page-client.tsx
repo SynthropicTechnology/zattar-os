@@ -35,7 +35,7 @@ import {
   useContasReceber,
   usePlanoContasAnaliticas,
 } from '@/features/financeiro';
-import { FilterPopover } from '@/features/partes';
+import { FilterPopover } from '@/app/app/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -66,7 +66,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-import { useClientes } from '@/features/partes';
+import { useClientes } from '@/app/app/partes';
 import { useContratos } from '@/features/contratos';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';

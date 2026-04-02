@@ -782,7 +782,7 @@ export function EntidadeDetailSheet({
 
 **Arquivo gold standard:**
 ```
-src/features/partes/components/clientes/clientes-table-wrapper.tsx
+src/app/app/partes/components/clientes/clientes-table-wrapper.tsx
 ```
 
 Use este arquivo como referência para qualquer implementação de página com tabela.

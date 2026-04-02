@@ -7,7 +7,7 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilterPopover } from '@/features/partes';
+import { FilterPopover } from '@/app/app/partes';
 import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';

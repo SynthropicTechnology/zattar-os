@@ -16,7 +16,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { ProcessoUnificado } from '@/features/processos';
 import type { TimelineJSONB } from '@/features/acervo';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/features/partes';
+import type { GrauProcesso } from '@/app/app/partes';
 import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/features/acervo';
 import { actionCapturarTimeline } from '@/features/captura';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';

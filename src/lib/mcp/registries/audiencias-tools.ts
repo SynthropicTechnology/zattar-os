@@ -129,7 +129,7 @@ export async function registerAudienciasTools(): Promise<void> {
       try {
         const limite = args.limite ?? 20;
 
-        const { actionListarClientes } = await import('@/features/partes/server');
+        const { actionListarClientes } = await import('@/app/app/partes/server');
         const clienteResult = await actionListarClientes({ busca: args.cpf, limite: 1 });
 
         if (!clienteResult.success) {
@@ -194,7 +194,7 @@ export async function registerAudienciasTools(): Promise<void> {
       try {
         const limite = args.limite ?? 20;
 
-        const { actionListarClientes } = await import('@/features/partes/server');
+        const { actionListarClientes } = await import('@/app/app/partes/server');
         const clienteResult = await actionListarClientes({ busca: args.cnpj, limite: 1 });
 
         if (!clienteResult.success) {

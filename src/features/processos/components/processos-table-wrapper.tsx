@@ -17,7 +17,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TablePagination } from '@/components/shared/table-pagination';
-import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/features/partes/components/shared';
+import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/app/app/partes/components/shared';
 import {
   GrauBadgesSimple,
   ProcessosEmptyState,
@@ -47,7 +47,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { CopyButton } from '@/features/partes';
+import { CopyButton } from '@/app/app/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { ProcessosBulkActions } from './processos-bulk-actions';
