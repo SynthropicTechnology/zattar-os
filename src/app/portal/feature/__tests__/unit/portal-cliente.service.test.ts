@@ -8,17 +8,17 @@ import * as service from '../../service';
 import { criarProcessoMock, criarContratoMock, criarAudienciaMock, criarPagamentoMock } from '../fixtures';
 import { ok, err, appError } from '@/types';
 import * as partesService from '@/app/app/partes/server';
-import * as acervoService from '@/features/acervo/service';
+import * as acervoService from '@/app/app/acervo/service';
 import * as contratosService from '@/app/app/contratos/service';
-import * as audienciasService from '@/features/audiencias/service';
-import * as obrigacoesService from '@/features/obrigacoes/service';
+import * as audienciasService from '@/app/app/audiencias/service';
+import * as obrigacoesService from '@/app/app/obrigacoes/service';
 
 // Mock feature services
 jest.mock('@/app/app/partes/server');
-jest.mock('@/features/acervo/service');
+jest.mock('@/app/app/acervo/service');
 jest.mock('@/app/app/contratos/service');
-jest.mock('@/features/audiencias/service');
-jest.mock('@/features/obrigacoes/service');
+jest.mock('@/app/app/audiencias/service');
+jest.mock('@/app/app/obrigacoes/service');
 
 const mockPartesService = partesService as jest.Mocked<typeof partesService>;
 const mockAcervoService = acervoService as jest.Mocked<typeof acervoService>;

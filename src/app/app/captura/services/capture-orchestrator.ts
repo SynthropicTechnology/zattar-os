@@ -15,7 +15,7 @@
 import { Result, ok, err, appError } from '@/types';
 import { getDriver } from '../drivers/factory';
 import { buscarCredencial, buscarConfigTribunal, salvarLogCaptura } from '../repository';
-import { criarProcesso } from '@/features/processos/service';
+import { criarProcesso } from '@/app/app/processos/service';
 import { getAdvogadoByCredentialId } from '../credentials/credential.service';
 import type { JudicialDriver } from '../drivers/judicial-driver.interface';
 import type {
@@ -25,7 +25,7 @@ import type {
     TipoCaptura,
 } from '../domain';
 import { mapearTipoAcessoParaGrau, mapearTipoCapturaParaOrigem } from '../domain';
-import type { CreateProcessoInput } from '@/features/processos/domain';
+import type { CreateProcessoInput } from '@/app/app/processos/domain';
 
 /**
  * Parâmetros para executar uma captura

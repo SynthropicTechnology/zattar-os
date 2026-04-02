@@ -7,7 +7,7 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { ObrigacoesRepository } from '../repository/obrigacoes';
-import type { ParcelaComLancamento } from '@/features/obrigacoes';
+import type { ParcelaComLancamento } from '@/app/app/obrigacoes';
 import { todayDateString } from '@/lib/date-utils';
 
 type ParcelaObrigacao = ParcelaComLancamento;

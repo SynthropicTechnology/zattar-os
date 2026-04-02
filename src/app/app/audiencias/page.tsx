@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { fetchAudienciasPageData } from '@/features/audiencias/queries';
+import { fetchAudienciasPageData } from '@/app/app/audiencias/queries';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AudienciasClient } from './audiencias-client';
 

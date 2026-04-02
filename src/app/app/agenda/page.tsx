@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
 
 import AgendaApp from "./components/agenda-app";
-import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/features/calendar";
+import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/app/app/calendar";
 
 export const dynamic = "force-dynamic";
 

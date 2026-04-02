@@ -19,7 +19,7 @@ import {
   fmtMoeda,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { actionListarAcordos } from '@/features/obrigacoes/server-actions';
+import { actionListarAcordos } from '@/app/app/obrigacoes/server-actions';
 
 interface ObrigacaoPorTipo {
   label: string;

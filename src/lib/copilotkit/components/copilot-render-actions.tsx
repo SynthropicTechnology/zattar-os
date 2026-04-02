@@ -337,7 +337,7 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ busca, trt, limite }) => {
       try {
-        const { actionListarProcessos } = await import('@/features/processos/actions');
+        const { actionListarProcessos } = await import('@/app/app/processos/actions');
         const result = await actionListarProcessos({
           busca: busca || undefined,
           trt: trt || undefined,
@@ -374,7 +374,7 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ status: statusFilter, limite }) => {
       try {
-        const { actionListarAudiencias } = await import('@/features/audiencias/actions');
+        const { actionListarAudiencias } = await import('@/app/app/audiencias/actions');
         const result = await actionListarAudiencias({
           limite: limite || 5,
           pagina: 1,

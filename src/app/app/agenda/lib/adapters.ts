@@ -3,9 +3,9 @@
  * ============================================================================
  */
 
-import type { UnifiedCalendarEvent } from "@/features/calendar";
-import type { BriefingEventMeta, EventColor } from "@/features/calendar/briefing-domain";
-import { extractMeta } from "@/features/calendar/briefing-helpers";
+import type { UnifiedCalendarEvent } from "@/app/app/calendar";
+import type { BriefingEventMeta, EventColor } from "@/app/app/calendar/briefing-domain";
+import { extractMeta } from "@/app/app/calendar/briefing-helpers";
 
 /** Evento adaptado para uso em views da agenda */
 export interface AgendaEvent {

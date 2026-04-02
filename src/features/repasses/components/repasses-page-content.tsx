@@ -5,7 +5,7 @@ import {
   RepassesPendentesList,
   UploadDeclaracaoDialog,
   UploadComprovanteDialog
-} from '@/features/obrigacoes';
+} from '@/app/app/obrigacoes';
 
 interface DialogState {
   open: boolean;

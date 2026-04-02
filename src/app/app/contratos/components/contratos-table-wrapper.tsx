@@ -49,7 +49,7 @@ import {
   AlterarSegmentoMassaDialog,
   ExcluirMassaDialog,
 } from './contratos-bulk-actions';
-import { GerarPecaDialog } from '@/features/pecas-juridicas/components';
+import { GerarPecaDialog } from '@/app/app/pecas-juridicas/components';
 import type {
   Contrato,
   ListarContratosParams,

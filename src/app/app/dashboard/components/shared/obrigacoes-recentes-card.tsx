@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
 import { useObrigacoes } from "@/app/app/financeiro/hooks";
 import { formatDate, formatCurrency } from "@/lib/formatters";
 import { todayDateString, addDays } from "@/lib/date-utils";
-import type { ParcelaComLancamento } from "@/features/obrigacoes";
+import type { ParcelaComLancamento } from "@/app/app/obrigacoes";
 
 type ParcelaObrigacao = ParcelaComLancamento;
 

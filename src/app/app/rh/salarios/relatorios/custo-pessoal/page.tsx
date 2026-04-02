@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { useFolhasPagamento } from '@/features/rh/hooks';
+import { useFolhasPagamento } from '@/app/app/rh/hooks';
 
 const formatCurrency = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor ?? 0);

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { ObrigacoesContent } from '@/features/obrigacoes';
+import { ObrigacoesContent } from '@/app/app/obrigacoes';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const dynamic = 'force-dynamic';

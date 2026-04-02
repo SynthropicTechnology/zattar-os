@@ -14,12 +14,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // Lazy-load dos componentes pesados
 const SalariosList = React.lazy(() =>
-  import('@/features/rh/components/salarios/salarios-list').then((mod) => ({
+  import('@/app/app/rh/components/salarios/salarios-list').then((mod) => ({
     default: mod.SalariosList,
   }))
 );
 const FolhasPagamentoList = React.lazy(() =>
-  import('@/features/rh/components/folhas-pagamento/folhas-list').then((mod) => ({
+  import('@/app/app/rh/components/folhas-pagamento/folhas-list').then((mod) => ({
     default: mod.FolhasPagamentoList,
   }))
 );

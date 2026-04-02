@@ -96,7 +96,7 @@ export {
 // ============================================================================
 // Plano de Contas - Tipos e Validações
 // ============================================================================
-// Obrigações: tipos agora vêm de @/features/obrigacoes
+// Obrigações: tipos agora vêm de @/app/app/obrigacoes
 export type {
   TipoContaContabil,
   NaturezaConta,

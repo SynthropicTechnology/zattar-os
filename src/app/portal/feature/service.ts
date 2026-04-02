@@ -1,7 +1,7 @@
-import { buscarProcessosClientePorCpf } from "@/features/acervo/service";
+import { buscarProcessosClientePorCpf } from "@/app/app/acervo/service";
 import { listarContratosPorClienteId } from "@/app/app/contratos";
-import { listarAudienciasPorBuscaCpf } from "@/features/audiencias/service";
-import { listarAcordosPorBuscaCpf } from "@/features/obrigacoes/service";
+import { listarAudienciasPorBuscaCpf } from "@/app/app/audiencias/service";
+import { listarAcordosPorBuscaCpf } from "@/app/app/obrigacoes/service";
 import { buscarClientePorDocumento } from "@/app/app/partes/server";
 import { DashboardData, ContratoPortal, AudienciaPortal, PagamentoPortal } from "./types";
 

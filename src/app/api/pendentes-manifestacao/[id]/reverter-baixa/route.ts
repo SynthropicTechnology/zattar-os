@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { reverterBaixa } from '@/features/expedientes/service';
+import { reverterBaixa } from '@/app/app/expedientes/service';
 
 /**
  * @swagger

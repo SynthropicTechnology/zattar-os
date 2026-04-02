@@ -39,7 +39,7 @@ import {
   type CalendarEvent,
   type CalendarView
 } from "./";
-import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/features/calendar";
+import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/app/app/calendar";
 import {
   actionCriarAgendaEvento,
   actionAtualizarAgendaEvento,

@@ -13,7 +13,7 @@ import { useCallback, useMemo } from "react";
 import { EventCalendar } from "@/app/app/calendar/components/event-calendar";
 import type { CalendarEvent, CalendarView as LegacyCalendarView } from "@/app/app/calendar/types";
 import type { AgendaEvent } from "../../lib/adapters";
-import type { CalendarView } from "@/features/calendar/briefing-domain";
+import type { CalendarView } from "@/app/app/calendar/briefing-domain";
 
 // ─── Props ─────────────────────────────────────────────────────────────
 

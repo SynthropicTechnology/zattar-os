@@ -10,7 +10,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { COLOR_MAP, type EventColor } from "@/features/calendar/briefing-domain";
+import { COLOR_MAP, type EventColor } from "@/app/app/calendar/briefing-domain";
 
 export interface ProgressItemProps {
   title: string;

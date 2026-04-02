@@ -21,8 +21,8 @@ import {
     type SplitPagamento,
     type AcordoComParcelas,
     type ParcelaComLancamento,
-} from '@/features/obrigacoes';
-import { determinarStatusSincronizacao } from '@/features/obrigacoes';
+} from '@/app/app/obrigacoes';
+import { determinarStatusSincronizacao } from '@/app/app/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
 
 // Aliases locais para compatibilidade

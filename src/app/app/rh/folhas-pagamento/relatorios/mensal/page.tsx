@@ -12,9 +12,9 @@ import {
 } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import { useFolhaDoPeriodo } from '@/features/rh/hooks';
+import { useFolhaDoPeriodo } from '@/app/app/rh/hooks';
 
-import { MESES_LABELS, STATUS_FOLHA_LABELS } from '@/features/rh';
+import { MESES_LABELS, STATUS_FOLHA_LABELS } from '@/app/app/rh';
 
 const formatCurrency = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor ?? 0);

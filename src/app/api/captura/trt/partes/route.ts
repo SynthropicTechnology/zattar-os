@@ -19,7 +19,7 @@ import {
   atualizarCapturaLog,
 } from "@/app/app/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/app/app/captura";
-import type { GrauAcervo } from "@/features/acervo";
+import type { GrauAcervo } from "@/app/app/acervo";
 import type { CapturaLog, ResultadoCapturaPartes, TipoCaptura } from "@/app/app/captura";
 import getLogger, { withCorrelationId } from "@/lib/logger";
 import { withDistributedLock } from "@/lib/utils/locks/distributed-lock";

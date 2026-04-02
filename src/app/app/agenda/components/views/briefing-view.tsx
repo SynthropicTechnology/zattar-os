@@ -43,12 +43,12 @@ import {
 import {
   SOURCE_CONFIG,
   COLOR_MAP,
-} from "@/features/calendar/briefing-domain";
+} from "@/app/app/calendar/briefing-domain";
 import {
   buildBriefingText,
   fmtTime,
-} from "@/features/calendar/briefing-helpers";
-import { estimateTravelTime } from "@/features/calendar/travel-helpers";
+} from "@/app/app/calendar/briefing-helpers";
+import { estimateTravelTime } from "@/app/app/calendar/travel-helpers";
 
 import type { AgendaEvent } from "../../lib/adapters";
 

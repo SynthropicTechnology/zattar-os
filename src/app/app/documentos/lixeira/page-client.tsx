@@ -39,12 +39,12 @@ import { FilterPopover } from '@/app/app/partes';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { DocumentoComUsuario } from '@/features/documentos';
+import type { DocumentoComUsuario } from '@/app/app/documentos';
 import {
   actionListarLixeira,
   actionRestaurarDaLixeira,
   actionDeletarPermanentemente
-} from '@/features/documentos';
+} from '@/app/app/documentos';
 
 // ============================================================================
 // Constantes

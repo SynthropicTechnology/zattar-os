@@ -3,7 +3,7 @@
  * Usado em testes unitários para simular operações de chamadas de vídeo/áudio
  */
 import { jest } from '@jest/globals';
-import type { DyteMeetingDetails } from '@/features/chat';
+import type { DyteMeetingDetails } from '@/app/app/chat';
 
 // Mock default responses
 export const mockMeetingId = 'meeting-123-abc';

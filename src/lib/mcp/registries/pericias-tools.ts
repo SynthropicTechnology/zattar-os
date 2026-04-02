@@ -13,8 +13,8 @@ import { registerMcpTool } from '../server';
 import { actionResultToMcp } from '../utils';
 import { errorResult } from '../types';
 import type { ActionResult } from '@/lib/safe-action';
-import type { CodigoTribunal, GrauTribunal } from '@/features/expedientes';
-import type { SituacaoPericiaCodigo, PericiaSortBy } from '@/features/pericias';
+import type { CodigoTribunal, GrauTribunal } from '@/app/app/expedientes';
+import type { SituacaoPericiaCodigo, PericiaSortBy } from '@/app/app/pericias';
 
 /**
  * Registra ferramentas MCP do módulo Perícias
@@ -24,7 +24,7 @@ export async function registerPericiasTools(): Promise<void> {
     actionListarPericias,
     actionObterPericia,
     actionListarEspecialidadesPericia,
-  } = await import('@/features/pericias/actions/pericias-actions');
+  } = await import('@/app/app/pericias/actions/pericias-actions');
 
   /**
    * Lista perícias com filtros opcionais (TRT, grau, situação, responsável, prazo)

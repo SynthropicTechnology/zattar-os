@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { AcordoForm } from '@/features/obrigacoes';
+import { AcordoForm } from '@/app/app/obrigacoes';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';

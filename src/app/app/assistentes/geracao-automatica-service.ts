@@ -1,8 +1,8 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { DifyService } from '@/lib/dify/service';
-import * as documentosService from '@/features/documentos/service';
-import * as expedientesRepository from '@/features/expedientes/repository';
-import type { Expediente } from '@/features/expedientes/domain';
+import * as documentosService from '@/app/app/documentos/service';
+import * as expedientesRepository from '@/app/app/expedientes/repository';
+import type { Expediente } from '@/app/app/expedientes/domain';
 import * as assistentesTiposRepository from './repository';
 import type { Value } from 'platejs';
 

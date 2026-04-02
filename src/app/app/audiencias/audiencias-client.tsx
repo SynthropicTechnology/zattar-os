@@ -41,8 +41,8 @@ import {
   AudienciasListaView,
   AudienciasMissaoContent,
   useAudienciasUnified,
-} from '@/features/audiencias';
-import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/features/audiencias';
+} from '@/app/app/audiencias';
+import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/app/app/audiencias';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS

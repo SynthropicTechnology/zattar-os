@@ -2,9 +2,9 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChatLayout } from '@/features/chat';
-import type { ChatItem } from '@/features/chat';
-import { createChatService } from '@/features/chat/service';
+import { ChatLayout } from '@/app/app/chat';
+import type { ChatItem } from '@/app/app/chat';
+import { createChatService } from '@/app/app/chat/service';
 
 async function getCurrentUser() {
   const supabase = await createClient();

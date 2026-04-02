@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatarData } from '@/app/app/partes/utils';
-import { StatusProcesso, STATUS_PROCESSO_LABELS, GRAU_LABELS } from '@/features/processos';
+import { StatusProcesso, STATUS_PROCESSO_LABELS, GRAU_LABELS } from '@/app/app/processos';
 import type { ProfileData } from '../../configs/types';
 import type { GrauProcesso } from '@/app/app/partes';
 

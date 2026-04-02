@@ -1,7 +1,7 @@
-import { ProcessoRespostaIA } from "@/features/acervo";
+import { ProcessoRespostaIA } from "@/app/app/acervo";
 import { Contrato } from "@/app/app/contratos";
-import { Audiencia } from "@/features/audiencias";
-import { AcordoComParcelas } from "@/features/obrigacoes/types";
+import { Audiencia } from "@/app/app/audiencias";
+import { AcordoComParcelas } from "@/app/app/obrigacoes/types";
 
 // Alias types for usage in Portal Cliente to abstract source
 export type ProcessoPortal = ProcessoRespostaIA;

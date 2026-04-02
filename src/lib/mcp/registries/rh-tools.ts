@@ -18,11 +18,11 @@ import type { ActionResult } from '@/lib/safe-action';
 export async function registerRHTools(): Promise<void> {
   const {
     actionListarSalarios,
-  } = await import('@/features/rh/actions/salarios-actions');
+  } = await import('@/app/app/rh/actions/salarios-actions');
 
   const {
     actionListarFolhasPagamento,
-  } = await import('@/features/rh/actions/folhas-pagamento-actions');
+  } = await import('@/app/app/rh/actions/folhas-pagamento-actions');
 
   /**
    * Lista salários de funcionários

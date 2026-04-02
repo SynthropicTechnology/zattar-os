@@ -1,4 +1,4 @@
-import { PericiasContent } from '@/features/pericias';
+import { PericiasContent } from '@/app/app/pericias';
 import { PageShell } from '@/components/shared';
 
 export const dynamic = 'force-dynamic';

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { HistoricoSalarios } from '@/features/rh';
+import { HistoricoSalarios } from '@/app/app/rh';
 
 interface PageProps {
   params: Promise<{ usuarioId: string }>;

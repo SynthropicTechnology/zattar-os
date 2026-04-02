@@ -25,14 +25,14 @@ export async function registerChatTools(): Promise<void> {
     actionEnviarMensagem,
     actionBuscarHistorico,
     actionCriarGrupo,
-  } = await import('@/features/chat/actions/chat-actions');
+  } = await import('@/app/app/chat/actions/chat-actions');
 
   const {
     actionIniciarChamada,
     actionBuscarHistoricoChamadas,
-  } = await import('@/features/chat/actions/chamadas-actions');
+  } = await import('@/app/app/chat/actions/chamadas-actions');
 
-  const { TipoSalaChat, TipoChamada } = await import('@/features/chat/domain');
+  const { TipoSalaChat, TipoChamada } = await import('@/app/app/chat/domain');
 
   /**
    * Lista salas de chat disponíveis para o usuário

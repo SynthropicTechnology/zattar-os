@@ -1,7 +1,7 @@
 import { PageShell } from '@/components/shared/page-shell';
-import { ProcessosTableWrapper } from '@/features/processos';
+import { ProcessosTableWrapper } from '@/app/app/processos';
 
-import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from '@/features/processos';
+import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from '@/app/app/processos';
 
 interface ProcessosPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

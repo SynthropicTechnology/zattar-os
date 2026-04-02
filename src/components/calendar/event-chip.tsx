@@ -12,7 +12,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { COLOR_MAP, type EventColor } from "@/features/calendar/briefing-domain";
+import { COLOR_MAP, type EventColor } from "@/app/app/calendar/briefing-domain";
 
 export interface EventChipProps {
   title: string;

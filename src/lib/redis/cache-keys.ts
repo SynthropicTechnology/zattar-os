@@ -1,7 +1,7 @@
 import { generateCacheKey, CACHE_PREFIXES } from './cache-utils';
-import type { ListarExpedientesParams } from '@/features/expedientes';
-import type { ListarAudienciasParams } from '@/features/audiencias';
-import type { ListarAcervoParams } from '@/features/acervo';
+import type { ListarExpedientesParams } from '@/app/app/expedientes';
+import type { ListarAudienciasParams } from '@/app/app/audiencias';
+import type { ListarAcervoParams } from '@/app/app/acervo';
 import type { PlanoContasFilters as ListarPlanoContasParams } from '@/app/app/financeiro/domain/plano-contas';
 
 /**

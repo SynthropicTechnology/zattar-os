@@ -16,7 +16,7 @@ import {
 } from "../utils/profile-adapters";
 import { createDbClient } from "@/lib/supabase";
 import { ProfileData } from "../configs/types";
-import { mapCodigoStatusToEnum, StatusProcesso } from "@/features/processos";
+import { mapCodigoStatusToEnum, StatusProcesso } from "@/app/app/processos";
 import type { ProcessoVinculo } from "../types";
 
 interface ProfileShellProps {

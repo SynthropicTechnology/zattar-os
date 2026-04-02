@@ -7,7 +7,7 @@
 import { jest, expect } from '@jest/globals';
 import type { PaginatedResponse } from '@/types';
 import type { Contrato, StatusContrato, TipoContrato, TipoCobranca, PapelContratual } from '@/app/app/contratos';
-import type { Expediente, CodigoTribunal, GrauTribunal, OrigemExpediente } from '@/features/expedientes';
+import type { Expediente, CodigoTribunal, GrauTribunal, OrigemExpediente } from '@/app/app/expedientes';
 import { todayDateString, toDateString } from '@/lib/date-utils';
 
 // =============================================================================

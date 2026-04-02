@@ -13,10 +13,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { addDays, addMonths, addWeeks, endOfMonth, format, startOfMonth, subMonths, subWeeks } from "date-fns";
 import { toast } from "sonner";
 
-import type { CalendarSource, UnifiedCalendarEvent } from "@/features/calendar";
-import type { CalendarView } from "@/features/calendar/briefing-domain";
-import { actionListarEventosCalendar } from "@/features/calendar";
-import { generateWeekPulse, getDaySummary } from "@/features/calendar/briefing-helpers";
+import type { CalendarSource, UnifiedCalendarEvent } from "@/app/app/calendar";
+import type { CalendarView } from "@/app/app/calendar/briefing-domain";
+import { actionListarEventosCalendar } from "@/app/app/calendar";
+import { generateWeekPulse, getDaySummary } from "@/app/app/calendar/briefing-helpers";
 import {
   actionCriarAgendaEvento,
   actionAtualizarAgendaEvento,

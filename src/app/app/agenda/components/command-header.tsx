@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/app/app/dashboard/mock/widgets/primitives";
-import type { DaySummary, WeekPulseDay } from "@/features/calendar/briefing-domain";
+import type { DaySummary, WeekPulseDay } from "@/app/app/calendar/briefing-domain";
 
 // ─── Props ─────────────────────────────────────────────────────────────
 

@@ -5,10 +5,10 @@
  */
 
 import { registerMcpResource, jsonResourceResult } from "./resources";
-import type { Processo } from "@/features/processos";
+import type { Processo } from "@/app/app/processos";
 import type { Cliente } from "@/app/app/partes";
 import type { Contrato } from "@/app/app/contratos";
-import type { Audiencia } from "@/features/audiencias";
+import type { Audiencia } from "@/app/app/audiencias";
 
 /**
  * Registra todos os resources disponíveis
@@ -36,7 +36,7 @@ export async function registerAllResources(): Promise<void> {
       }
 
       // Import dinâmico para evitar dependências circulares
-      const { buscarDocumento } = await import("@/features/documentos/service");
+      const { buscarDocumento } = await import("@/app/app/documentos/service");
 
       const doc = await buscarDocumento(id, user.id);
 
@@ -63,7 +63,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { actionBuscarProcesso } = await import(
-        "@/features/processos/actions"
+        "@/app/app/processos/actions"
       );
 
       const result = await actionBuscarProcesso(id);
@@ -155,7 +155,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { buscarExpediente } = await import(
-        "@/features/expedientes/service"
+        "@/app/app/expedientes/service"
       );
 
       const result = await buscarExpediente(id);
@@ -185,7 +185,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { actionBuscarAudienciaPorId } = await import(
-        "@/features/audiencias/actions"
+        "@/app/app/audiencias/actions"
       );
 
       const result = await actionBuscarAudienciaPorId(id);
@@ -246,7 +246,7 @@ export async function registerAllResources(): Promise<void> {
     mimeType: "application/json",
     handler: async (uri) => {
       const { actionListarProcessos } = await import(
-        "@/features/processos/actions"
+        "@/app/app/processos/actions"
       );
 
       const result = await actionListarProcessos({ limite: 50 });

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { ExpedientesContent } from '@/features/expedientes';
+import { ExpedientesContent } from '@/app/app/expedientes';
 import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 
