@@ -11,7 +11,7 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { PAPEL_CONTRATUAL_LABELS } from '@/app/(authenticated)/contratos';
 import type { ParteDisplay } from './contrato-partes-card';

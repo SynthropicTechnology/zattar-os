@@ -4,7 +4,7 @@ import * as React from 'react';
 import { History, ArrowRight, Circle, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import type { ContratoStatusHistorico, StatusContrato } from '@/app/(authenticated)/contratos';
 import { STATUS_CONTRATO_LABELS, getStatusVariant } from '@/app/(authenticated)/contratos';
 import { cn } from '@/lib/utils';

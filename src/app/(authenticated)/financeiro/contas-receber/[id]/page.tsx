@@ -28,7 +28,7 @@ import {
 import { useClientes } from '@/app/(authenticated)/partes';
 import { useContratos } from '@/app/(authenticated)/contratos';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import {
   Card,
   CardContent,

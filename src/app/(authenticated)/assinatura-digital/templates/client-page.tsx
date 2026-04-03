@@ -8,7 +8,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { usePermissoes } from '@/providers/user-provider';
 import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { Pencil, Copy, Trash2, Download } from 'lucide-react';
 import {

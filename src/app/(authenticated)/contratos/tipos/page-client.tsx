@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 import { DataShell } from '@/components/shared/data-shell';
 import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

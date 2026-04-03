@@ -19,7 +19,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import type { Note, NoteLabel } from "./domain";
 import { useNotes } from "./notes-context";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";

@@ -11,7 +11,7 @@ import {
   FileTextIcon,
   DollarSignIcon
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Bar, BarChart } from "recharts";
 import {
   ChartConfig,

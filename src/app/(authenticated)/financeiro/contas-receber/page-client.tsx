@@ -36,7 +36,7 @@ import {
   usePlanoContasAnaliticas,
 } from '@/app/(authenticated)/financeiro';
 import { FilterPopover } from '@/app/(authenticated)/partes';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
   MoreHorizontal,

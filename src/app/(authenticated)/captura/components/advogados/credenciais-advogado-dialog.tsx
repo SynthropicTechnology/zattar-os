@@ -32,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { toast } from 'sonner';

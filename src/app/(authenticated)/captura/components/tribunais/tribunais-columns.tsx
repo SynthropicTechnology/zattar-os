@@ -4,7 +4,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Pencil } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import {
   Tooltip,

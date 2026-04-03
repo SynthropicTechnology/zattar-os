@@ -32,7 +32,7 @@ import {
 } from '@/app/(authenticated)/financeiro';
 import { actionAtualizarConta } from '@/app/(authenticated)/financeiro/server-actions';
 import { FilterPopover } from '@/app/(authenticated)/partes';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';
 import {

@@ -33,7 +33,7 @@ import {
 } from '@/app/(authenticated)/financeiro';
 import { PageShell } from '@/components/shared/page-shell';
 import { FilterPopover } from '@/app/(authenticated)/partes';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
   MoreHorizontal,

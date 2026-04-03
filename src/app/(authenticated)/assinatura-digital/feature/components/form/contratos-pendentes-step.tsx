@@ -5,7 +5,7 @@ import type { ContratoPendente } from '../../types/store';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { FileText, Plus, Calendar, Users } from 'lucide-react';
 import FormStepLayout from './form-step-layout';
 

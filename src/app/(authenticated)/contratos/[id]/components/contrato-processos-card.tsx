@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Scale, ExternalLink, Calendar } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import type { ContratoProcessoVinculo } from '@/app/(authenticated)/contratos';
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import {
   Card,
   CardAction,

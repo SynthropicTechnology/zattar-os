@@ -6,7 +6,7 @@ import { Loader2, Pencil, Copy, Trash2, Plus } from "lucide-react";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import type { AssinaturaDigitalSegmento } from "../../feature";
 
 import { SegmentoCreateDialog } from "./segmento-create-dialog";

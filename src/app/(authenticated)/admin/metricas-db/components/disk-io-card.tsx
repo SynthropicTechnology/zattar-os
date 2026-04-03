@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import type { MetricasDiskIO, DiskIOStatus } from "@/app/(authenticated)/admin";

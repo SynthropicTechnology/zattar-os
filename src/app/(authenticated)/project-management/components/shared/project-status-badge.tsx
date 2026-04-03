@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import {
   STATUS_PROJETO_LABELS,
   STATUS_PROJETO_COLORS,

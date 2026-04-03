@@ -6,7 +6,7 @@ import { Eye, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import type { ContratoParte } from '@/app/(authenticated)/contratos';
 import { PAPEL_CONTRATUAL_LABELS } from '@/app/(authenticated)/contratos';
 

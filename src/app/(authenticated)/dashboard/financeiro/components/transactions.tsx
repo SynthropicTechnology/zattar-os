@@ -5,7 +5,7 @@ import { BookOpenIcon, Car, CoffeeIcon, StoreIcon } from "lucide-react";
 
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import {
   Table,
   TableBody,

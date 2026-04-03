@@ -20,7 +20,7 @@ import { Switch } from '@/components/ui/switch';
 import { Combobox } from '@/components/ui/combobox';
 import { toast } from 'sonner';
 import { Loader2, X } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { generateSlug, type AssinaturaDigitalSegmento, type AssinaturaDigitalTemplate } from '../../feature';
 
 const SELECT_CLASS =

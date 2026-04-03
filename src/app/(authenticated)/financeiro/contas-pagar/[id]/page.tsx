@@ -20,7 +20,7 @@ import {
   useContasBancarias,
 } from '@/app/(authenticated)/financeiro';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import {
   Card,
   CardContent,
