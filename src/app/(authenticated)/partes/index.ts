@@ -195,24 +195,37 @@ export {
 // ============================================================================
 // Actions (Server Actions — safe for client bundles via 'use server')
 // ============================================================================
+// Re-exports do wrapper "use server" (actions.ts — subconjunto seguro para Client Components)
 export {
-  // Clientes
   actionListarClientes,
+  actionCriarCliente,
+  actionAtualizarClienteForm,
+  actionDesativarCliente,
+  actionDesativarClientesEmMassa,
+  actionContarClientesComEstatisticas,
+  actionContarClientesPorEstado,
+  actionContarPartesContrariasComEstatisticas,
+  actionBuscarPartesPorProcessoEPolo,
+  actionCriarParteContraria,
+  actionAtualizarParteContraria,
+  actionCriarTerceiro,
+  actionAtualizarTerceiro,
+} from "./actions";
+
+// Re-exports do diretório actions/ (actions completas — MCP, server-only, etc.)
+export {
   actionBuscarCliente,
   actionAtualizarCliente,
-  actionCriarCliente,
-  actionDesativarCliente,
-  // Partes Contrarias
   actionBuscarParteContraria,
-  // Terceiros
   actionBuscarTerceiro,
-  // Representantes
   actionBuscarRepresentantePorId,
-  // Processo Partes
   actionBuscarProcessosPorEntidade,
   actionBuscarRepresentantesPorCliente,
   actionBuscarClientesPorRepresentante,
-} from "./actions";
+  actionListarRepresentantes,
+  actionCriarRepresentante,
+  actionAtualizarRepresentante,
+} from "./actions/index";
 
 // ============================================================================
 // Server-only exports
