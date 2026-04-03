@@ -6,6 +6,8 @@
  * - Expedientes que vencem hoje (concluído = baixado)
  * - Perícias com prazo hoje (concluída = laudo entregue)
  * - Tarefas do usuário (concluída = status done)
+ *
+ * OTIMIZAÇÃO: As 4 queries são executadas em paralelo com Promise.all().
  */
 
 import { createClient } from "@/lib/supabase/server";
@@ -38,13 +40,44 @@ export async function buscarProgressoDiario(
   const hojeStr = hoje.toISOString();
   const amanhaStr = amanha.toISOString();
 
-  // 1. Audiências de hoje do usuário
-  const { data: audienciasHoje } = await supabase
-    .from("audiencias")
-    .select("id, data_inicio, data_fim")
-    .eq("responsavel_id", usuarioId)
-    .gte("data_inicio", hojeStr)
-    .lt("data_inicio", amanhaStr);
+  // Executar as 4 queries independentes em paralelo
+  const [
+    { data: audienciasHoje },
+    { data: expedientesHoje },
+    { data: periciasHoje },
+    { data: tarefasUsuario },
+  ] = await Promise.all([
+    // 1. Audiências de hoje do usuário
+    supabase
+      .from("audiencias")
+      .select("id, data_inicio, data_fim")
+      .eq("responsavel_id", usuarioId)
+      .gte("data_inicio", hojeStr)
+      .lt("data_inicio", amanhaStr),
+
+    // 2. Expedientes que vencem hoje do usuário
+    supabase
+      .from("expedientes")
+      .select("id, baixado_em, data_prazo_legal_parte")
+      .eq("responsavel_id", usuarioId)
+      .gte("data_prazo_legal_parte", hojeStr)
+      .lt("data_prazo_legal_parte", amanhaStr),
+
+    // 3. Perícias com prazo hoje do usuário
+    supabase
+      .from("pericias")
+      .select("id, laudo_juntado, prazo_entrega")
+      .eq("responsavel_id", usuarioId)
+      .gte("prazo_entrega", hojeStr)
+      .lt("prazo_entrega", amanhaStr),
+
+    // 4. Tarefas do usuário
+    supabase
+      .from("tarefas")
+      .select("id, status")
+      .eq("usuario_id", usuarioId)
+      .in("status", ["todo", "in progress", "done"]),
+  ]);
 
   const audienciasTotal = audienciasHoje?.length || 0;
   const audienciasConcluidas =
@@ -54,36 +87,13 @@ export async function buscarProgressoDiario(
       return dataFim < agora;
     }).length || 0;
 
-  // 2. Expedientes que vencem hoje do usuário
-  const { data: expedientesHoje } = await supabase
-    .from("expedientes")
-    .select("id, baixado_em, data_prazo_legal_parte")
-    .eq("responsavel_id", usuarioId)
-    .gte("data_prazo_legal_parte", hojeStr)
-    .lt("data_prazo_legal_parte", amanhaStr);
-
   const expedientesTotal = expedientesHoje?.length || 0;
   const expedientesConcluidos =
     expedientesHoje?.filter((e) => e.baixado_em !== null).length || 0;
 
-  // 3. Perícias com prazo hoje do usuário
-  const { data: periciasHoje } = await supabase
-    .from("pericias")
-    .select("id, laudo_juntado, prazo_entrega")
-    .eq("responsavel_id", usuarioId)
-    .gte("prazo_entrega", hojeStr)
-    .lt("prazo_entrega", amanhaStr);
-
   const periciasTotal = periciasHoje?.length || 0;
   const periciasConcluidas =
     periciasHoje?.filter((p) => p.laudo_juntado === true).length || 0;
-
-  // 4. Tarefas do usuário para hoje (todas as tarefas pendentes)
-  const { data: tarefasUsuario } = await supabase
-    .from("tarefas")
-    .select("id, status")
-    .eq("usuario_id", usuarioId)
-    .in("status", ["todo", "in progress", "done"]);
 
   const tarefasTotal = tarefasUsuario?.length || 0;
   const tarefasConcluidas =

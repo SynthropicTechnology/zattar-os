@@ -5,6 +5,11 @@
  * Responsabilidades:
  * - Resumo de processos do usuário
  * - Total de processos do escritório
+ *
+ * OTIMIZAÇÃO:
+ * - buscarProcessosResumo: usa RPC count_processos_unicos para contagens (evita fetch all + dedup em JS)
+ *   e busca dados brutos apenas para distribuição por grau/TRT
+ * - buscarTotalProcessos: queries paralelizadas com Promise.all()
  */
 
 import { createClient } from '@/lib/supabase/server';
@@ -22,23 +27,54 @@ export async function buscarProcessosResumo(
 ): Promise<ProcessoResumo> {
   const supabase = await createClient();
 
-  let query = supabase
-    .from('acervo')
-    .select('numero_processo, origem, grau, trt')
-    .not('numero_processo', 'is', null)
-    .neq('numero_processo', '');
+  // Contagens via RPC (executadas no banco, sem limite de 1000 registros)
+  // + dados brutos para distribuição — tudo em paralelo
+  const [totalResult, ativosResult, arquivadosResult, { data, error }] =
+    await Promise.all([
+      supabase.rpc('count_processos_unicos', {
+        p_origem: null,
+        p_responsavel_id: responsavelId ?? null,
+        p_data_inicio: null,
+        p_data_fim: null,
+      }),
+      supabase.rpc('count_processos_unicos', {
+        p_origem: 'acervo_geral',
+        p_responsavel_id: responsavelId ?? null,
+        p_data_inicio: null,
+        p_data_fim: null,
+      }),
+      supabase.rpc('count_processos_unicos', {
+        p_origem: 'arquivado',
+        p_responsavel_id: responsavelId ?? null,
+        p_data_inicio: null,
+        p_data_fim: null,
+      }),
+      // Dados brutos apenas para distribuição (grau + TRT)
+      (() => {
+        let query = supabase
+          .from('acervo')
+          .select('numero_processo, grau, trt')
+          .not('numero_processo', 'is', null)
+          .neq('numero_processo', '');
 
-  if (responsavelId) {
-    query = query.eq('responsavel_id', responsavelId);
-  }
+        if (responsavelId) {
+          query = query.eq('responsavel_id', responsavelId);
+        }
 
-  const { data, error } = await query;
+        return query;
+      })(),
+    ]);
 
   if (error) {
     console.error('Erro ao buscar processos:', error);
     throw new Error(`Erro ao buscar processos: ${error.message}`);
   }
 
+  const total = totalResult.error ? 0 : (totalResult.data as number) || 0;
+  const ativos = ativosResult.error ? 0 : (ativosResult.data as number) || 0;
+  const arquivados = arquivadosResult.error ? 0 : (arquivadosResult.data as number) || 0;
+
+  // Distribuição por grau/TRT (processos únicos)
   const processos = (data || []).filter(
     (p): p is typeof p & { numero_processo: string } =>
       p.numero_processo !== null &&
@@ -46,22 +82,6 @@ export async function buscarProcessosResumo(
       p.numero_processo.trim() !== ''
   );
 
-  // Contagem por número CNJ único
-  const processosUnicos = new Set(processos.map((p) => p.numero_processo));
-  const total = processosUnicos.size;
-
-  // Contagem de processos únicos ativos (acervo_geral)
-  const processosAtivos = processos.filter((p) => p.origem === 'acervo_geral');
-  const ativosUnicos = new Set(processosAtivos.map((p) => p.numero_processo));
-  const ativos = ativosUnicos.size;
-
-  // Contagem de processos únicos arquivados
-  const processosArquivados = processos.filter((p) => p.origem === 'arquivado');
-  const arquivadosUnicos = new Set(processosArquivados.map((p) => p.numero_processo));
-  const arquivados = arquivadosUnicos.size;
-
-  // Distribuição por grau (processos únicos por grau)
-  // Nota: um processo pode aparecer em múltiplos graus, então agrupamos pelo grau mais alto
   const processosPorGrau = new Map<string, Set<string>>();
   processos.forEach((p) => {
     const grauLabel = p.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
@@ -75,7 +95,6 @@ export async function buscarProcessosResumo(
     count: processosSet.size,
   }));
 
-  // Distribuição por TRT (processos únicos por TRT)
   const processosPorTRT = new Map<string, Set<string>>();
   processos.forEach((p) => {
     const trt = p.trt?.replace('TRT', '') || 'N/A';
@@ -109,29 +128,24 @@ export async function buscarTotalProcessos(): Promise<{
 }> {
   const supabase = await createClient();
 
-  // Usar função SQL para contar diretamente no banco (sem limite de 1000 registros)
-  const { data: totalData, error: totalError } = await supabase.rpc(
-    'count_processos_unicos',
-    {
+  // Queries em paralelo
+  const [totalResult, ativosResult] = await Promise.all([
+    supabase.rpc('count_processos_unicos', {
       p_origem: null,
       p_responsavel_id: null,
       p_data_inicio: null,
       p_data_fim: null,
-    }
-  );
-
-  const { data: ativosData, error: ativosError } = await supabase.rpc(
-    'count_processos_unicos',
-    {
+    }),
+    supabase.rpc('count_processos_unicos', {
       p_origem: 'acervo_geral',
       p_responsavel_id: null,
       p_data_inicio: null,
       p_data_fim: null,
-    }
-  );
+    }),
+  ]);
 
   return {
-    total: totalError ? 0 : (totalData as number) || 0,
-    ativos: ativosError ? 0 : (ativosData as number) || 0,
+    total: totalResult.error ? 0 : (totalResult.data as number) || 0,
+    ativos: ativosResult.error ? 0 : (ativosResult.data as number) || 0,
   };
 }

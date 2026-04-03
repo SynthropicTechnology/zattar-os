@@ -133,18 +133,18 @@ export async function buscarProximasAudiencias(
     usuarios:responsavel_id (nome_exibicao)
   `;
 
-  // Query única: buscar próximas audiências ordenadas por data
-  // Se responsavelId fornecido: busca audiências do responsável OU sem responsável
+  // Query única ordenada: designadas primeiro (desc = true antes de false),
+  // depois por data. Usa o limite exato em vez de buscar o dobro.
   let query = supabase
     .from('audiencias')
     .select(selectFields)
     .gte('data_inicio', hoje.toISOString())
+    .order('designada', { ascending: false })
     .order('data_inicio', { ascending: true })
     .order('hora_inicio', { ascending: true })
-    .limit(limite * 2); // Busca o dobro para filtrar depois
+    .limit(limite);
 
   if (responsavelId) {
-    // Mostrar audiências do usuário OU audiências sem responsável definido
     query = query.or(`responsavel_id.eq.${responsavelId},responsavel_id.is.null`);
   }
 
@@ -156,23 +156,7 @@ export async function buscarProximasAudiencias(
     return [];
   }
 
-  const audiencias = data || [];
-
-  // Log de debug para diagnóstico
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[Dashboard] Próximas audiências encontradas:', {
-      total: audiencias.length,
-      responsavelId,
-      designadas: audiencias.filter(a => a.designada).length,
-    });
-  }
-
-  // Priorizar designadas, mas incluir não-designadas se necessário
-  const designadas = audiencias.filter(a => a.designada);
-  const naoDesignadas = audiencias.filter(a => !a.designada);
-
-  // Combinar: primeiro as designadas, depois as não-designadas
-  const resultado = [...designadas, ...naoDesignadas].slice(0, limite);
+  const resultado = data || [];
 
   return resultado.map((a) => ({
     id: a.id,

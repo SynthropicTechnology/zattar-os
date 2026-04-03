@@ -214,16 +214,19 @@ export async function buscarTotalExpedientesPendentes(): Promise<{
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
 
-  const { count: pendentesTotal } = await supabase
-    .from('expedientes')
-    .select('id', { count: 'exact', head: true })
-    .is('baixado_em', null);
-
-  const { count: pendentesVencidos } = await supabase
-    .from('expedientes')
-    .select('id', { count: 'exact', head: true })
-    .is('baixado_em', null)
-    .lt('data_prazo_legal_parte', hoje.toISOString());
+  // Queries em paralelo
+  const [{ count: pendentesTotal }, { count: pendentesVencidos }] =
+    await Promise.all([
+      supabase
+        .from('expedientes')
+        .select('id', { count: 'exact', head: true })
+        .is('baixado_em', null),
+      supabase
+        .from('expedientes')
+        .select('id', { count: 'exact', head: true })
+        .is('baixado_em', null)
+        .lt('data_prazo_legal_parte', hoje.toISOString()),
+    ]);
 
   return {
     total: pendentesTotal || 0,

@@ -8,6 +8,11 @@
  * - Status de capturas
  * - Performance de advogados
  * - Dados de usuário
+ *
+ * OTIMIZAÇÃO:
+ * - buscarMetricasEscritorio: queries paralelizadas com Promise.all()
+ * - buscarCargaUsuarios: eliminado N+1 (queries por usuário em paralelo)
+ * - buscarPerformanceAdvogados: eliminado N+1 (queries por usuário em paralelo)
  */
 
 import { createClient } from '@/lib/supabase/server';
@@ -39,136 +44,131 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
 
   const fimMesAnterior = new Date(inicioMes);
 
-  // Total de processos (únicos por número CNJ)
-  // Usar função SQL para contar diretamente no banco (sem limite de 1000 registros)
-  const { data: totalProcessosData, error: totalError } = await supabase.rpc(
-    'count_processos_unicos',
-    {
+  // Executar TODAS as queries em paralelo
+  const [
+    totalProcessosResult,
+    processosAtivosResult,
+    processosArquivadosResult,
+    audienciasTotalResult,
+    audienciasMesResult,
+    pendentesResult,
+    manuaisResult,
+    pendentesVencidosResult,
+    manuaisVencidosResult,
+    totalUsuariosResult,
+    totalBaixadosResult,
+    baixadosNoPrazoResult,
+    processosNovosResult,
+    processosNovosAnteriorResult,
+    audienciasMesAnteriorResult,
+  ] = await Promise.all([
+    // Total de processos (únicos por número CNJ)
+    supabase.rpc('count_processos_unicos', {
       p_origem: null,
       p_responsavel_id: null,
       p_data_inicio: null,
       p_data_fim: null,
-    }
-  );
-
-  const totalProcessos = totalError ? 0 : (totalProcessosData as number) || 0;
-
-  // Processos ativos (únicos por número CNJ)
-  const { data: processosAtivosData, error: ativosError } = await supabase.rpc(
-    'count_processos_unicos',
-    {
+    }),
+    // Processos ativos
+    supabase.rpc('count_processos_unicos', {
       p_origem: 'acervo_geral',
       p_responsavel_id: null,
       p_data_inicio: null,
       p_data_fim: null,
-    }
-  );
-
-  const processosAtivos = ativosError ? 0 : (processosAtivosData as number) || 0;
-
-  // Processos arquivados (únicos por número CNJ)
-  const { data: processosArquivadosData, error: arquivadosError } = await supabase.rpc(
-    'count_processos_unicos',
-    {
+    }),
+    // Processos arquivados
+    supabase.rpc('count_processos_unicos', {
       p_origem: 'arquivado',
       p_responsavel_id: null,
       p_data_inicio: null,
       p_data_fim: null,
-    }
-  );
-
-  const processosArquivados = arquivadosError ? 0 : (processosArquivadosData as number) || 0;
-
-  // processosAtivosUnicos é o mesmo que processosAtivos (para compatibilidade)
-  const processosAtivosUnicos = processosAtivos;
-
-  // Total de audiências
-  const { count: totalAudiencias } = await supabase
-    .from('audiencias')
-    .select('id', { count: 'exact', head: true });
-
-  // Audiências do mês
-  const { count: audienciasMes } = await supabase
-    .from('audiencias')
-    .select('id', { count: 'exact', head: true })
-    .gte('data_inicio', inicioMes.toISOString());
-
-  // Total de expedientes pendentes
-  const { count: pendentesCount } = await supabase
-    .from('expedientes')
-    .select('id', { count: 'exact', head: true })
-    .is('baixado_em', null);
-
-  const { count: manuaisCount } = await supabase
-    .from('expedientes_manuais')
-    .select('id', { count: 'exact', head: true })
-    .neq('status', 'concluido');
-
-  const totalExpedientes = (pendentesCount || 0) + (manuaisCount || 0);
-
-  // Expedientes vencidos
-  const { count: pendentesVencidos } = await supabase
-    .from('expedientes')
-    .select('id', { count: 'exact', head: true })
-    .is('baixado_em', null)
-    .lt('data_prazo_legal_parte', hoje.toISOString());
-
-  const { count: manuaisVencidos } = await supabase
-    .from('expedientes_manuais')
-    .select('id', { count: 'exact', head: true })
-    .neq('status', 'concluido')
-    .lt('prazo_fatal', hoje.toISOString());
-
-  const expedientesVencidos = (pendentesVencidos || 0) + (manuaisVencidos || 0);
-
-  // Total de usuários ativos
-  const { count: totalUsuarios } = await supabase
-    .from('usuarios')
-    .select('id', { count: 'exact', head: true })
-    .eq('ativo', true);
-
-  // Taxa de resolução
-  const { count: totalBaixados } = await supabase
-    .from('expedientes')
-    .select('id', { count: 'exact', head: true })
-    .not('baixado_em', 'is', null);
-
-  const { count: baixadosNoPrazo } = await supabase
-    .from('expedientes')
-    .select('id', { count: 'exact', head: true })
-    .not('baixado_em', 'is', null)
-    .eq('prazo_vencido', false);
-
-  const taxaResolucao = totalBaixados
-    ? Math.round(((baixadosNoPrazo || 0) / totalBaixados) * 100)
-    : 100;
-
-  // Comparativo mês anterior (processos únicos por número CNJ)
-  const { data: processosNovosData, error: novosError } = await supabase.rpc(
-    'count_processos_unicos',
-    {
+    }),
+    // Total de audiências
+    supabase
+      .from('audiencias')
+      .select('id', { count: 'exact', head: true }),
+    // Audiências do mês
+    supabase
+      .from('audiencias')
+      .select('id', { count: 'exact', head: true })
+      .gte('data_inicio', inicioMes.toISOString()),
+    // Expedientes pendentes
+    supabase
+      .from('expedientes')
+      .select('id', { count: 'exact', head: true })
+      .is('baixado_em', null),
+    // Expedientes manuais pendentes
+    supabase
+      .from('expedientes_manuais')
+      .select('id', { count: 'exact', head: true })
+      .neq('status', 'concluido'),
+    // Expedientes vencidos
+    supabase
+      .from('expedientes')
+      .select('id', { count: 'exact', head: true })
+      .is('baixado_em', null)
+      .lt('data_prazo_legal_parte', hoje.toISOString()),
+    // Expedientes manuais vencidos
+    supabase
+      .from('expedientes_manuais')
+      .select('id', { count: 'exact', head: true })
+      .neq('status', 'concluido')
+      .lt('prazo_fatal', hoje.toISOString()),
+    // Total de usuários ativos
+    supabase
+      .from('usuarios')
+      .select('id', { count: 'exact', head: true })
+      .eq('ativo', true),
+    // Total de expedientes baixados
+    supabase
+      .from('expedientes')
+      .select('id', { count: 'exact', head: true })
+      .not('baixado_em', 'is', null),
+    // Baixados no prazo
+    supabase
+      .from('expedientes')
+      .select('id', { count: 'exact', head: true })
+      .not('baixado_em', 'is', null)
+      .eq('prazo_vencido', false),
+    // Processos novos este mês
+    supabase.rpc('count_processos_unicos', {
       p_origem: null,
       p_responsavel_id: null,
       p_data_inicio: inicioMes.toISOString(),
       p_data_fim: null,
-    }
-  );
-
-  const processosNovos = novosError ? 0 : (processosNovosData as number) || 0;
-
-  const { data: processosNovosAnteriorData, error: anterioresError } = await supabase.rpc(
-    'count_processos_unicos',
-    {
+    }),
+    // Processos novos mês anterior
+    supabase.rpc('count_processos_unicos', {
       p_origem: null,
       p_responsavel_id: null,
       p_data_inicio: inicioMesAnterior.toISOString(),
       p_data_fim: fimMesAnterior.toISOString(),
-    }
-  );
+    }),
+    // Audiências mês anterior
+    supabase
+      .from('audiencias')
+      .select('id', { count: 'exact', head: true })
+      .gte('data_inicio', inicioMesAnterior.toISOString())
+      .lt('data_inicio', fimMesAnterior.toISOString()),
+  ]);
 
-  const processosNovosAnterior = anterioresError
+  const totalProcessos = totalProcessosResult.error ? 0 : (totalProcessosResult.data as number) || 0;
+  const processosAtivos = processosAtivosResult.error ? 0 : (processosAtivosResult.data as number) || 0;
+  const processosArquivados = processosArquivadosResult.error ? 0 : (processosArquivadosResult.data as number) || 0;
+
+  const totalExpedientes = (pendentesResult.count || 0) + (manuaisResult.count || 0);
+  const expedientesVencidos = (pendentesVencidosResult.count || 0) + (manuaisVencidosResult.count || 0);
+
+  const totalBaixados = totalBaixadosResult.count || 0;
+  const baixadosNoPrazo = baixadosNoPrazoResult.count || 0;
+  const taxaResolucao = totalBaixados
+    ? Math.round((baixadosNoPrazo / totalBaixados) * 100)
+    : 100;
+
+  const processosNovos = processosNovosResult.error ? 0 : (processosNovosResult.data as number) || 0;
+  const processosNovosAnterior = processosNovosAnteriorResult.error
     ? 0
-    : (processosNovosAnteriorData as number) || 0;
+    : (processosNovosAnteriorResult.data as number) || 0;
 
   const comparativoProcessos = processosNovosAnterior
     ? Math.round(
@@ -176,15 +176,11 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
       )
     : 0;
 
-  const { count: audienciasMesAnterior } = await supabase
-    .from('audiencias')
-    .select('id', { count: 'exact', head: true })
-    .gte('data_inicio', inicioMesAnterior.toISOString())
-    .lt('data_inicio', fimMesAnterior.toISOString());
-
+  const audienciasMes = audienciasMesResult.count || 0;
+  const audienciasMesAnterior = audienciasMesAnteriorResult.count || 0;
   const comparativoAudiencias = audienciasMesAnterior
     ? Math.round(
-        (((audienciasMes || 0) - audienciasMesAnterior) / audienciasMesAnterior) * 100
+        ((audienciasMes - audienciasMesAnterior) / audienciasMesAnterior) * 100
       )
     : 0;
 
@@ -192,13 +188,13 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
     totalProcessos,
     processosAtivos,
     processosArquivados,
-    processosAtivosUnicos,
-    totalAudiencias: totalAudiencias || 0,
-    audienciasMes: audienciasMes || 0,
+    processosAtivosUnicos: processosAtivos,
+    totalAudiencias: audienciasTotalResult.count || 0,
+    audienciasMes,
     totalExpedientes,
     expedientesPendentes: totalExpedientes,
     expedientesVencidos,
-    totalUsuarios: totalUsuarios || 0,
+    totalUsuarios: totalUsuariosResult.count || 0,
     taxaResolucao,
     comparativoMesAnterior: {
       processos: comparativoProcessos,
@@ -212,7 +208,8 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
 /**
  * Obtém carga de trabalho por usuário
  *
- * IMPORTANTE: Contagem de processos baseada em número CNJ único (numero_processo).
+ * OTIMIZAÇÃO: Em vez de 4 queries por usuário (N+1), busca todos os usuários
+ * e depois executa as 4 queries de cada usuário em paralelo com Promise.all().
  */
 export async function buscarCargaUsuarios(): Promise<CargaUsuario[]> {
   const supabase = await createClient();
@@ -230,54 +227,53 @@ export async function buscarCargaUsuarios(): Promise<CargaUsuario[]> {
 
   if (!usuarios?.length) return [];
 
-  const cargas: CargaUsuario[] = [];
+  // Buscar dados de TODOS os usuários em paralelo
+  const cargas = await Promise.all(
+    usuarios.map(async (usuario) => {
+      const [processosResult, pendentesResult, manuaisResult, audienciasResult] =
+        await Promise.all([
+          supabase.rpc('count_processos_unicos', {
+            p_origem: 'acervo_geral',
+            p_responsavel_id: usuario.id,
+            p_data_inicio: null,
+            p_data_fim: null,
+          }),
+          supabase
+            .from('expedientes')
+            .select('id', { count: 'exact', head: true })
+            .eq('responsavel_id', usuario.id)
+            .is('baixado_em', null),
+          supabase
+            .from('expedientes_manuais')
+            .select('id', { count: 'exact', head: true })
+            .eq('responsavel_id', usuario.id)
+            .neq('status', 'concluido'),
+          supabase
+            .from('audiencias')
+            .select('id', { count: 'exact', head: true })
+            .or(`responsavel_id.eq.${usuario.id},responsavel_id.is.null`)
+            .gte('data_inicio', hoje.toISOString())
+            .lt('data_inicio', em7dias.toISOString()),
+        ]);
 
-  for (const usuario of usuarios) {
-    // Processos ativos únicos por número CNJ
-    // Usar função SQL para contar diretamente no banco
-    const { data: processosData, error: processosError } = await supabase.rpc(
-      'count_processos_unicos',
-      {
-        p_origem: 'acervo_geral',
-        p_responsavel_id: usuario.id,
-        p_data_inicio: null,
-        p_data_fim: null,
-      }
-    );
+      const processosAtivos = processosResult.error
+        ? 0
+        : (processosResult.data as number) || 0;
+      const expedientesPendentes =
+        (pendentesResult.count || 0) + (manuaisResult.count || 0);
+      const audienciasProximas = audienciasResult.count || 0;
 
-    const processosAtivos = processosError ? 0 : (processosData as number) || 0;
-
-    const { count: pendentes } = await supabase
-      .from('expedientes')
-      .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
-      .is('baixado_em', null);
-
-    const { count: manuais } = await supabase
-      .from('expedientes_manuais')
-      .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
-      .neq('status', 'concluido');
-
-    // Conta audiências do usuário OU sem responsável (para distribuição de carga)
-    const { count: audienciasProximas } = await supabase
-      .from('audiencias')
-      .select('id', { count: 'exact', head: true })
-      .or(`responsavel_id.eq.${usuario.id},responsavel_id.is.null`)
-      .gte('data_inicio', hoje.toISOString())
-      .lt('data_inicio', em7dias.toISOString());
-
-    const expedientesPendentes = (pendentes || 0) + (manuais || 0);
-
-    cargas.push({
-      usuario_id: usuario.id,
-      usuario_nome: usuario.nome_exibicao,
-      processosAtivos,
-      expedientesPendentes,
-      audienciasProximas: audienciasProximas || 0,
-      cargaTotal: processosAtivos + expedientesPendentes * 2 + (audienciasProximas || 0) * 3,
-    });
-  }
+      return {
+        usuario_id: usuario.id,
+        usuario_nome: usuario.nome_exibicao,
+        processosAtivos,
+        expedientesPendentes,
+        audienciasProximas,
+        cargaTotal:
+          processosAtivos + expedientesPendentes * 2 + audienciasProximas * 3,
+      };
+    })
+  );
 
   return cargas.sort((a, b) => b.cargaTotal - a.cargaTotal);
 }
@@ -323,6 +319,9 @@ export async function buscarStatusCapturas(): Promise<StatusCaptura[]> {
 
 /**
  * Obtém performance dos advogados
+ *
+ * OTIMIZAÇÃO: Em vez de 5 queries por usuário (N+1), executa as queries
+ * de cada usuário em paralelo com Promise.all().
  */
 export async function buscarPerformanceAdvogados(): Promise<PerformanceAdvogado[]> {
   const supabase = await createClient();
@@ -343,54 +342,61 @@ export async function buscarPerformanceAdvogados(): Promise<PerformanceAdvogado[
 
   if (!usuarios?.length) return [];
 
-  const performances: PerformanceAdvogado[] = [];
+  // Buscar performance de TODOS os usuários em paralelo
+  const performances = await Promise.all(
+    usuarios.map(async (usuario) => {
+      const [
+        baixasSemanaResult,
+        baixasMesResult,
+        totalBaixadosResult,
+        baixadosNoPrazoResult,
+        expedientesVencidosResult,
+      ] = await Promise.all([
+        supabase
+          .from('expedientes')
+          .select('id', { count: 'exact', head: true })
+          .eq('responsavel_id', usuario.id)
+          .gte('baixado_em', inicioSemana.toISOString()),
+        supabase
+          .from('expedientes')
+          .select('id', { count: 'exact', head: true })
+          .eq('responsavel_id', usuario.id)
+          .gte('baixado_em', inicioMes.toISOString()),
+        supabase
+          .from('expedientes')
+          .select('id', { count: 'exact', head: true })
+          .eq('responsavel_id', usuario.id)
+          .not('baixado_em', 'is', null),
+        supabase
+          .from('expedientes')
+          .select('id', { count: 'exact', head: true })
+          .eq('responsavel_id', usuario.id)
+          .not('baixado_em', 'is', null)
+          .eq('prazo_vencido', false),
+        supabase
+          .from('expedientes')
+          .select('id', { count: 'exact', head: true })
+          .eq('responsavel_id', usuario.id)
+          .is('baixado_em', null)
+          .lt('data_prazo_legal_parte', hoje.toISOString()),
+      ]);
 
-  for (const usuario of usuarios) {
-    const { count: baixasSemana } = await supabase
-      .from('expedientes')
-      .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
-      .gte('baixado_em', inicioSemana.toISOString());
+      const totalBaixados = totalBaixadosResult.count || 0;
+      const baixadosNoPrazo = baixadosNoPrazoResult.count || 0;
+      const taxaCumprimentoPrazo = totalBaixados
+        ? Math.round((baixadosNoPrazo / totalBaixados) * 100)
+        : 100;
 
-    const { count: baixasMes } = await supabase
-      .from('expedientes')
-      .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
-      .gte('baixado_em', inicioMes.toISOString());
-
-    const { count: totalBaixados } = await supabase
-      .from('expedientes')
-      .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
-      .not('baixado_em', 'is', null);
-
-    const { count: baixadosNoPrazo } = await supabase
-      .from('expedientes')
-      .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
-      .not('baixado_em', 'is', null)
-      .eq('prazo_vencido', false);
-
-    const { count: expedientesVencidos } = await supabase
-      .from('expedientes')
-      .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
-      .is('baixado_em', null)
-      .lt('data_prazo_legal_parte', hoje.toISOString());
-
-    const taxaCumprimentoPrazo = totalBaixados
-      ? Math.round(((baixadosNoPrazo || 0) / totalBaixados) * 100)
-      : 100;
-
-    performances.push({
-      usuario_id: usuario.id,
-      usuario_nome: usuario.nome_exibicao,
-      baixasSemana: baixasSemana || 0,
-      baixasMes: baixasMes || 0,
-      taxaCumprimentoPrazo,
-      expedientesVencidos: expedientesVencidos || 0,
-    });
-  }
+      return {
+        usuario_id: usuario.id,
+        usuario_nome: usuario.nome_exibicao,
+        baixasSemana: baixasSemanaResult.count || 0,
+        baixasMes: baixasMesResult.count || 0,
+        taxaCumprimentoPrazo,
+        expedientesVencidos: expedientesVencidosResult.count || 0,
+      };
+    })
+  );
 
   return performances.sort((a, b) => b.baixasMes - a.baixasMes);
 }

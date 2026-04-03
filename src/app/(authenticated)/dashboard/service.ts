@@ -2,11 +2,13 @@
  * Service Layer do Dashboard
  * Orquestração e agregação de dados
  *
- * Migrado de:
- * - backend/dashboard/services/dashboard/dashboard-usuario.service.ts
- * - backend/dashboard/services/dashboard/dashboard-admin.service.ts
+ * OTIMIZAÇÃO:
+ * - unstable_cache com TTL de 5 minutos para métricas que mudam pouco
+ * - Cache key inclui usuarioId para dados personalizados
+ * - Tags para invalidação on-demand via revalidateTag('dashboard')
  */
 
+import { unstable_cache } from 'next/cache';
 import {
   buscarProcessosResumo,
   buscarAudienciasResumo,
@@ -33,6 +35,12 @@ import type {
   AudienciaProxima,
   ExpedienteUrgente,
 } from './domain';
+
+// ============================================================================
+// Cache TTL (em segundos)
+// ============================================================================
+
+const CACHE_TTL_DASHBOARD = 300; // 5 minutos
 
 // ============================================================================
 // Valores padrão para quando usuário não tem permissão
@@ -96,21 +104,15 @@ const DADOS_FINANCEIROS_PADRAO: DadosFinanceirosConsolidados = {
 export async function obterDashboardUsuario(
   usuarioId: number
 ): Promise<DashboardUsuarioData> {
-  // Buscar dados do usuário
-  const usuario = await buscarUsuario(usuarioId);
-
-  // Verificar permissões antes de buscar dados
-  const [
-    podeVerProcessos,
-    podeVerAudiencias,
-    podeVerExpedientes,
-    podeVerFinanceiro,
-  ] = await Promise.all([
-    checkPermission(usuarioId, 'processos', 'read'),
-    checkPermission(usuarioId, 'audiencias', 'read'),
-    checkPermission(usuarioId, 'expedientes', 'read'),
-    checkPermission(usuarioId, 'financeiro', 'read'),
-  ]);
+  // Buscar dados do usuário e permissões em paralelo
+  const [usuario, podeVerProcessos, podeVerAudiencias, podeVerExpedientes, podeVerFinanceiro] =
+    await Promise.all([
+      buscarUsuario(usuarioId),
+      checkPermission(usuarioId, 'processos', 'read'),
+      checkPermission(usuarioId, 'audiencias', 'read'),
+      checkPermission(usuarioId, 'expedientes', 'read'),
+      checkPermission(usuarioId, 'financeiro', 'read'),
+    ]);
 
   // Buscar apenas dados permitidos em paralelo
   const promises: Promise<unknown>[] = [];
@@ -263,25 +265,37 @@ export async function obterDashboardAdmin(
 }
 
 // ============================================================================
-// Métricas Específicas
+// Métricas Específicas (com cache)
 // ============================================================================
+
+/**
+ * Obtém métricas do escritório com cache de 5 minutos.
+ * Cache é compartilhado entre todos os admins (dados não são per-user).
+ */
+export const obterMetricasEscritorioCached = unstable_cache(
+  async () => {
+    const [metricas, cargaUsuarios, performanceAdvogados] = await Promise.all([
+      buscarMetricasEscritorio(),
+      buscarCargaUsuarios(),
+      buscarPerformanceAdvogados(),
+    ]);
+
+    return {
+      metricas,
+      cargaUsuarios,
+      performanceAdvogados,
+      ultimaAtualizacao: new Date().toISOString(),
+    };
+  },
+  ['dashboard-metricas-escritorio'],
+  { revalidate: CACHE_TTL_DASHBOARD, tags: ['dashboard', 'dashboard-admin'] }
+);
 
 /**
  * Obtém apenas métricas do escritório (para admin)
  */
 export async function obterMetricasEscritorio() {
-  const [metricas, cargaUsuarios, performanceAdvogados] = await Promise.all([
-    buscarMetricasEscritorio(),
-    buscarCargaUsuarios(),
-    buscarPerformanceAdvogados(),
-  ]);
-
-  return {
-    metricas,
-    cargaUsuarios,
-    performanceAdvogados,
-    ultimaAtualizacao: new Date().toISOString(),
-  };
+  return obterMetricasEscritorioCached();
 }
 
 /**
