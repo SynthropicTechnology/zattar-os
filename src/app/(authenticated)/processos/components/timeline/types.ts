@@ -6,7 +6,7 @@
  */
 
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/app/app/partes';
+import type { GrauProcesso } from '@/app/(authenticated)/partes';
 
 /**
  * Item de timeline com informações de origem para processos multi-instância.

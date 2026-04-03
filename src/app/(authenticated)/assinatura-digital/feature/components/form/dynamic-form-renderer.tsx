@@ -34,12 +34,12 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { InputCEP, type InputCepAddress } from '@/app/app/enderecos';
+import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import { InputCPF, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSearchInput } from '../inputs';
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Cliente, ParteContraria } from '@/app/app/partes/types';
+import type { Cliente, ParteContraria } from '@/app/(authenticated)/partes/types';
 import { UseFormReturn } from 'react-hook-form';
 
 interface DynamicFormRendererProps {

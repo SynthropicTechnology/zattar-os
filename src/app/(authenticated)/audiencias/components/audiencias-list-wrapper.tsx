@@ -27,7 +27,7 @@ import {
   GrauTribunal,
 } from '../domain';
 import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
-import { useUsuarios } from '@/app/app/usuarios';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useAudiencias } from '../hooks/use-audiencias';
 
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';

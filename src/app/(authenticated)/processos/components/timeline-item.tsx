@@ -13,7 +13,7 @@ import { ptBR } from 'date-fns/locale';
 import { FileText, Activity, Download, ExternalLink, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/app/app/partes';
+import type { GrauProcesso } from '@/app/(authenticated)/partes';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
@@ -24,7 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { actionGerarUrlDownload } from '@/app/app/documentos';
+import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 

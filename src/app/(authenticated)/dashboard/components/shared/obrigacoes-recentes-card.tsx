@@ -7,10 +7,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useObrigacoes } from "@/app/app/financeiro/hooks";
+import { useObrigacoes } from "@/app/(authenticated)/financeiro/hooks";
 import { formatDate, formatCurrency } from "@/lib/formatters";
 import { todayDateString, addDays } from "@/lib/date-utils";
-import type { ParcelaComLancamento } from "@/app/app/obrigacoes";
+import type { ParcelaComLancamento } from "@/app/(authenticated)/obrigacoes";
 
 type ParcelaObrigacao = ParcelaComLancamento;
 

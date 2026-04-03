@@ -23,9 +23,9 @@ import {
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/dashboard/search-input";
 import { ViewToggle, type ViewToggleOption } from "@/components/dashboard/view-toggle";
-import type { CalendarSource } from "@/app/app/calendar";
-import { SOURCE_CONFIG, type CalendarView } from "@/app/app/calendar/briefing-domain";
-import { monthName, fmtDateFull, startOfWeek, addDays } from "@/app/app/calendar/briefing-helpers";
+import type { CalendarSource } from "@/app/(authenticated)/calendar";
+import { SOURCE_CONFIG, type CalendarView } from "@/app/(authenticated)/calendar/briefing-domain";
+import { monthName, fmtDateFull, startOfWeek, addDays } from "@/app/(authenticated)/calendar/briefing-helpers";
 
 // ─── View Options ──────────────────────────────────────────────────────
 

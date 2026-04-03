@@ -8,7 +8,7 @@
  * - Registro em cadastros_pje para mapeamento PJE <-> Sistema
  */
 
-import type { PartePJE } from "@/app/app/captura/pje-trt/partes/types";
+import type { PartePJE } from "@/app/(authenticated)/captura/pje-trt/partes/types";
 import type { TipoParteClassificacao } from "../types";
 import type { ProcessoParaCaptura } from "../partes-capture.service";
 import type {
@@ -18,7 +18,7 @@ import type {
   CreateParteContrariaPJInput as CriarParteContrariaPJParams,
   CreateTerceiroPFInput as CriarTerceiroPFParams,
   CreateTerceiroPJInput as CriarTerceiroPJParams,
-} from "@/app/app/partes";
+} from "@/app/(authenticated)/partes";
 import {
   upsertClientePorCPF,
   upsertClientePorCNPJ,
@@ -32,13 +32,13 @@ import {
   buscarTerceiroPorCPF,
   buscarTerceiroPorCNPJ,
   criarTerceiroSemDocumento,
-} from "@/app/app/partes/repository-compat";
+} from "@/app/(authenticated)/partes/repository-compat";
 import {
   upsertCadastroPJE,
   buscarEntidadePorIdPessoaPJE,
   upsertTerceiroByCPF,
   upsertTerceiroByCNPJ,
-} from "@/app/app/partes/server";
+} from "@/app/(authenticated)/partes/server";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { PersistenceError } from "../errors";

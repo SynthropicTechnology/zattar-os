@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { actionContarContratosPorStatus, STATUS_CONTRATO_LABELS, type StatusContrato } from "@/app/app/contratos";
+import { actionContarContratosPorStatus, STATUS_CONTRATO_LABELS, type StatusContrato } from "@/app/(authenticated)/contratos";
 import type { CrmDateFilter } from "../crm-date-filter";
 import { toCrmDateFilterInput } from "../crm-date-filter";
 

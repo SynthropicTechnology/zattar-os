@@ -1,8 +1,8 @@
-import { buscarProcessosClientePorCpf } from "@/app/app/acervo/service";
-import { listarContratosPorClienteId } from "@/app/app/contratos";
-import { listarAudienciasPorBuscaCpf } from "@/app/app/audiencias/service";
-import { listarAcordosPorBuscaCpf } from "@/app/app/obrigacoes/service";
-import { buscarClientePorDocumento } from "@/app/app/partes/server";
+import { buscarProcessosClientePorCpf } from "@/app/(authenticated)/acervo/service";
+import { listarContratosPorClienteId } from "@/app/(authenticated)/contratos";
+import { listarAudienciasPorBuscaCpf } from "@/app/(authenticated)/audiencias/service";
+import { listarAcordosPorBuscaCpf } from "@/app/(authenticated)/obrigacoes/service";
+import { buscarClientePorDocumento } from "@/app/(authenticated)/partes/server";
 import { DashboardData, ContratoPortal, AudienciaPortal, PagamentoPortal } from "./types";
 
 /** Serializa erro de forma segura (Supabase errors são objetos, não Error instances) */

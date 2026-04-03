@@ -13,13 +13,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { ProcessoUnificado } from '@/app/app/processos';
-import type { TimelineJSONB } from '@/app/app/acervo';
+import type { ProcessoUnificado } from '@/app/(authenticated)/processos';
+import type { TimelineJSONB } from '@/app/(authenticated)/acervo';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/app/app/partes';
-import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/app/app/acervo';
-import { actionCapturarTimeline } from '@/app/app/captura';
-import type { CodigoTRT, GrauTRT } from '@/app/app/captura';
+import type { GrauProcesso } from '@/app/(authenticated)/partes';
+import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/app/(authenticated)/acervo';
+import { actionCapturarTimeline } from '@/app/(authenticated)/captura';
+import type { CodigoTRT, GrauTRT } from '@/app/(authenticated)/captura';
 
 /**
  * Item da timeline com metadados de origem (para modo unificado)

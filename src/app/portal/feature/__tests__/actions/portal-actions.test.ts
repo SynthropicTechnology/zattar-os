@@ -42,7 +42,7 @@ jest.mock('../../utils', () => ({
 
 // Mock buscarClientePorDocumento from partes service
 const mockBuscarClientePorDocumento = jest.fn<(documento: string) => Promise<Result<Cliente | null>>>();
-jest.mock('@/app/app/partes/server', () => ({
+jest.mock('@/app/(authenticated)/partes/server', () => ({
   buscarClientePorDocumento: mockBuscarClientePorDocumento,
 }));
 

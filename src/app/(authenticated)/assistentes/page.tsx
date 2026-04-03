@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/app/app/assistentes/feature';
+import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/app/(authenticated)/assistentes/feature';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
 import { PageShell } from '@/components/shared/page-shell';
 import { listDifyAppsAction } from '@/lib/dify/actions';

@@ -16,7 +16,7 @@ import { GRAU_TRIBUNAL_LABELS } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
-import { useUsuarios } from '@/app/app/usuarios';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 // =============================================================================
 // TIPOS

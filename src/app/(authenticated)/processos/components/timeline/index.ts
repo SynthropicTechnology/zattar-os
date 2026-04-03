@@ -5,8 +5,8 @@
  * Use imports diretos quando possível para melhor tree-shaking.
  *
  * @example
- * import { TimelineSidebar, TimelineSidebarItem } from '@/app/app/processos/components/timeline';
- * import type { TimelineItemUnificado } from '@/app/app/processos/components/timeline';
+ * import { TimelineSidebar, TimelineSidebarItem } from '@/app/(authenticated)/processos/components/timeline';
+ * import type { TimelineItemUnificado } from '@/app/(authenticated)/processos/components/timeline';
  */
 
 // Componentes principais

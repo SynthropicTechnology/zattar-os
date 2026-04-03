@@ -31,7 +31,7 @@ import { Button } from "@/components/ui/button";
 import { X, List, LayoutGrid } from "lucide-react";
 import { ViewModePopover } from "@/components/shared";
 
-import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
+import { priorities, statuses, labels } from "@/app/(authenticated)/tarefas/data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { DataTablePagination } from "./data-table-pagination";
 import { useTarefaStore } from "../store";

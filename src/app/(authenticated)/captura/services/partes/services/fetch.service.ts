@@ -8,8 +8,8 @@
  */
 
 import type { Page } from "playwright";
-import type { PartePJE } from "@/app/app/captura/pje-trt/partes/types";
-import { obterPartesProcesso } from "@/app/app/captura/pje-trt/partes";
+import type { PartePJE } from "@/app/(authenticated)/captura/pje-trt/partes/types";
+import { obterPartesProcesso } from "@/app/(authenticated)/captura/pje-trt/partes";
 
 /**
  * Resultado da busca de partes no PJE

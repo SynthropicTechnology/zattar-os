@@ -46,7 +46,7 @@ import { cn } from '@/lib/utils';
 import {
   GlassPanel,
   InsightBanner,
-} from '@/app/app/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';

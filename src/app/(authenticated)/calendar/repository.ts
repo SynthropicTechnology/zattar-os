@@ -9,21 +9,21 @@
  * - NUNCA importar React/Next.js aqui
  */
 
-import type { ListarAudienciasParams } from "@/app/app/audiencias";
-import { listarAudiencias } from "@/app/app/audiencias/service";
-import type { Audiencia } from "@/app/app/audiencias";
+import type { ListarAudienciasParams } from "@/app/(authenticated)/audiencias";
+import { listarAudiencias } from "@/app/(authenticated)/audiencias/service";
+import type { Audiencia } from "@/app/(authenticated)/audiencias";
 
-import type { ListarExpedientesParams, Expediente } from "@/app/app/expedientes";
-import { listarExpedientes } from "@/app/app/expedientes/service";
+import type { ListarExpedientesParams, Expediente } from "@/app/(authenticated)/expedientes";
+import { listarExpedientes } from "@/app/(authenticated)/expedientes/service";
 
-import type { AcordoComParcelas } from "@/app/app/obrigacoes";
-import { listarAcordos } from "@/app/app/obrigacoes/service";
+import type { AcordoComParcelas } from "@/app/(authenticated)/obrigacoes";
+import { listarAcordos } from "@/app/(authenticated)/obrigacoes/service";
 
-import type { Pericia, ListarPericiasParams } from "@/app/app/pericias";
-import { listarPericias } from "@/app/app/pericias/service";
+import type { Pericia, ListarPericiasParams } from "@/app/(authenticated)/pericias";
+import { listarPericias } from "@/app/(authenticated)/pericias/service";
 
-import type { AgendaEvento } from "@/app/app/agenda";
-import { agendaEventosRepository as agendaEventosRepo } from "@/app/app/agenda";
+import type { AgendaEvento } from "@/app/(authenticated)/agenda";
+import { agendaEventosRepository as agendaEventosRepo } from "@/app/(authenticated)/agenda";
 
 // =============================================================================
 // BUSCA DE AUDIÊNCIAS

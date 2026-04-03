@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { finalizePublicSigner } from "@/app/app/assinatura-digital/feature/services/documentos.service";
-import { applyRateLimit } from "@/app/app/assinatura-digital/feature/utils/rate-limit";
-import { checkTokenExpiration } from "@/app/app/assinatura-digital/feature/utils/token-expiration";
-import { validateMultipleImages } from "@/app/app/assinatura-digital/feature/utils/file-validation";
+import { finalizePublicSigner } from "@/app/(authenticated)/assinatura-digital/feature/services/documentos.service";
+import { applyRateLimit } from "@/app/(authenticated)/assinatura-digital/feature/utils/rate-limit";
+import { checkTokenExpiration } from "@/app/(authenticated)/assinatura-digital/feature/utils/token-expiration";
+import { validateMultipleImages } from "@/app/(authenticated)/assinatura-digital/feature/utils/file-validation";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
-} from "@/app/app/assinatura-digital/feature/services/constants";
+} from "@/app/(authenticated)/assinatura-digital/feature/services/constants";
 
 /** Tamanho máximo para imagens: 5MB */
 const IMAGE_MAX_SIZE = 5 * 1024 * 1024;

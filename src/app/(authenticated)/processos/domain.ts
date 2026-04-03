@@ -12,7 +12,7 @@
  */
 
 import { z } from "zod";
-import type { GrauProcesso } from "@/app/app/partes";
+import type { GrauProcesso } from "@/app/(authenticated)/partes";
 
 // Re-export GrauProcesso para uso interno neste módulo
 export type { GrauProcesso };

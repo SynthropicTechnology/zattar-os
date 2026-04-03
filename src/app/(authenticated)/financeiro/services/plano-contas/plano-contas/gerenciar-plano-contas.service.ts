@@ -15,7 +15,7 @@ import type {
   CriarPlanoContaDTO,
   AtualizarPlanoContaDTO,
   PlanoConta,
-} from '@/app/app/financeiro/domain/plano-contas';
+} from '@/app/(authenticated)/financeiro/domain/plano-contas';
 
 /**
  * Criar nova conta no plano de contas

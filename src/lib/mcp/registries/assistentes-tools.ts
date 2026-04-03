@@ -16,7 +16,7 @@ import type { ActionResult } from "@/lib/safe-action";
  */
 export async function registerAssistentesTools(): Promise<void> {
   const { actionListarAssistentes } = await import(
-    "@/app/app/assistentes/feature/actions/assistentes-actions"
+    "@/app/(authenticated)/assistentes/feature/actions/assistentes-actions"
   );
 
   /**

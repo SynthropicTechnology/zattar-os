@@ -5,7 +5,7 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado:
- * import { LancamentosService } from '@/app/app/financeiro/services/lancamentos';
+ * import { LancamentosService } from '@/app/(authenticated)/financeiro/services/lancamentos';
  */
 
 // ============================================================================

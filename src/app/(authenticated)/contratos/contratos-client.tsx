@@ -16,7 +16,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, AlertCircle, FileText, GitBranch, Kanban, List } from 'lucide-react';
 import {
   InsightBanner,
-} from '@/app/app/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
@@ -25,13 +25,13 @@ import {
   actionContarContratosPorStatus,
   actionResolverNomesEntidadesContrato,
   actionListarSegmentos,
-} from '@/app/app/contratos/actions';
-import type { Contrato, StatusContrato } from '@/app/app/contratos';
+} from '@/app/(authenticated)/contratos/actions';
+import type { Contrato, StatusContrato } from '@/app/(authenticated)/contratos';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
-} from '@/app/app/contratos';
+} from '@/app/(authenticated)/contratos';
 import {
   FinancialStrip,
   PipelineFunnel,
@@ -39,7 +39,7 @@ import {
   ContratoListRow,
   type ContratosStatsData,
   type ContratoCardData,
-} from '@/app/app/contratos';
+} from '@/app/(authenticated)/contratos';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

@@ -15,7 +15,7 @@ import { actionEnviarMensagem, actionBuscarHistorico } from "../actions/chat-act
 import { actionIniciarChamada } from "../actions/chamadas-actions";
 import type { MensagemComUsuario, MensagemChat, ChatMessageData, PaginatedResponse, UsuarioChat, SelectedDevices } from "../domain";
 import { TipoChamada } from "../domain";
-import { useUsuarios } from "@/app/app/usuarios/hooks/use-usuarios";
+import { useUsuarios } from "@/app/(authenticated)/usuarios/hooks/use-usuarios";
 import { toast } from "sonner";
 
 interface ChatWindowProps {

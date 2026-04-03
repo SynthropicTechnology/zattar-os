@@ -11,7 +11,7 @@ import {
   findAllPipelines,
   savePipeline,
   createPipelineSchema,
-} from '@/app/app/contratos/pipelines';
+} from '@/app/(authenticated)/contratos/pipelines';
 
 /**
  * GET /api/contratos/pipelines

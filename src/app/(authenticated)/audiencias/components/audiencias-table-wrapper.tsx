@@ -22,7 +22,7 @@ import {
 import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 
@@ -38,7 +38,7 @@ import {
 } from '../domain';
 import { actionListarAudiencias } from '../actions';
 import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
-import { useUsuarios } from '@/app/app/usuarios';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';

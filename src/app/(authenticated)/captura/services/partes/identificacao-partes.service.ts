@@ -22,7 +22,7 @@
  * - backend/captura/services/partes/partes-capture.service.ts
  */
 
-import type { PartePJE } from '@/app/app/captura/pje-trt/partes/types';
+import type { PartePJE } from '@/app/(authenticated)/captura/pje-trt/partes/types';
 import type { TipoParteClassificacao } from './types';
 
 /**

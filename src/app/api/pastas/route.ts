@@ -11,8 +11,8 @@ import {
   listarPastasComContadores,
   criarPasta,
   buscarHierarquiaPastas,
-} from '@/app/app/documentos/service';
-import type { CriarPastaParams } from '@/app/app/documentos';
+} from '@/app/(authenticated)/documentos/service';
+import type { CriarPastaParams } from '@/app/(authenticated)/documentos';
 
 /**
  * GET /api/pastas

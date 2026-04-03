@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth';
-import { listar, criar } from '@/app/app/tipos-expedientes';
-import { ListarTiposExpedientesParams } from '@/app/app/tipos-expedientes';
+import { listar, criar } from '@/app/(authenticated)/tipos-expedientes';
+import { ListarTiposExpedientesParams } from '@/app/(authenticated)/tipos-expedientes';
 
 export async function GET(request: NextRequest) {
   try {

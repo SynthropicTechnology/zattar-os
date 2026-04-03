@@ -20,7 +20,7 @@ import { MESES_LABELS, STATUS_FOLHA_LABELS } from '../../domain';
 import { STATUS_FOLHA_CORES } from '../../utils';
 import type { FolhaPagamentoComDetalhes } from '../../types';
 
-import { FilterPopover } from '@/app/app/partes';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 
 const statusOptions = [
   { value: 'rascunho', label: STATUS_FOLHA_LABELS.rascunho },

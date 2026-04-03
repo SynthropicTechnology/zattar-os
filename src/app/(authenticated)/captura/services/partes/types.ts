@@ -15,7 +15,7 @@
  * - app/api/captura/trt/partes/route.ts
  */
 
-import type { PartePJE } from '@/app/app/captura/pje-trt/partes/types';
+import type { PartePJE } from '@/app/(authenticated)/captura/pje-trt/partes/types';
 
 /**
  * Tipo: TipoParteClassificacao

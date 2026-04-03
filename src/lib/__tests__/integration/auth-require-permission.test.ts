@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission, requireAuthentication } from '@/lib/auth/require-permission';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { checkPermission } from '@/lib/auth/authorization';
-import type { Recurso, Operacao } from '@/app/app/usuarios';
+import type { Recurso, Operacao } from '@/app/(authenticated)/usuarios';
 
 // Mocks
 jest.mock('@/lib/auth/api-auth');

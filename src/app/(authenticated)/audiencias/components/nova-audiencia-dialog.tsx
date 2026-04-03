@@ -26,14 +26,14 @@ import {
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2 } from 'lucide-react';
 import { Typography } from '@/components/ui/typography';
-import { actionListarAcervoPaginado } from '@/app/app/acervo';
-import { actionListarUsuarios } from '@/app/app/usuarios';
+import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
+import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
   actionCriarAudienciaPayload,
   actionListarTiposAudiencia,
   actionListarSalasAudiencia,
-} from '@/app/app/audiencias/actions';
-import { localToISO } from '@/app/app/audiencias/lib/date-utils';
+} from '@/app/(authenticated)/audiencias/actions';
+import { localToISO } from '@/app/(authenticated)/audiencias/lib/date-utils';
 
 interface NovaAudienciaDialogProps {
   open: boolean;

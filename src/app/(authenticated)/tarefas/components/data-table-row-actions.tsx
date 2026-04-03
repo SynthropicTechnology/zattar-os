@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { TarefaDisplayItem, TaskLabel } from "../domain";
-import { labels } from "@/app/app/tarefas/data/data";
+import { labels } from "@/app/(authenticated)/tarefas/data/data";
 import { useTarefaStore } from "../store";
 import * as actions from "../actions/tarefas-actions";
 import { toast } from "sonner";

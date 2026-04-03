@@ -5,8 +5,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { buscarLogPorRawLogId } from '@/app/app/captura/services/recovery/captura-recovery.service';
-import { analisarCaptura } from '@/app/app/captura/services/recovery/recovery-analysis.service';
+import { buscarLogPorRawLogId } from '@/app/(authenticated)/captura/services/recovery/captura-recovery.service';
+import { analisarCaptura } from '@/app/(authenticated)/captura/services/recovery/recovery-analysis.service';
 
 type RouteParams = {
   params: Promise<{

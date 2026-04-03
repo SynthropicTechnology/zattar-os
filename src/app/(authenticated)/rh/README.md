@@ -5,9 +5,9 @@ Este módulo segue a arquitetura **Feature-Sliced Design (FSD)** e utiliza **Ser
 
 ## Onde aparece no app
 
-- Página principal: `src/app/app/rh/page.tsx`
-- Salários: `src/app/app/rh/salarios/page.tsx` e detalhes por usuário em `src/app/app/rh/salarios/usuario/[usuarioId]/page.tsx`
-- Folhas de pagamento: `src/app/app/rh/folhas-pagamento/page.tsx` e detalhes em `src/app/app/rh/folhas-pagamento/[id]/page.tsx`
+- Página principal: `src/app/(authenticated)/rh/page.tsx`
+- Salários: `src/app/(authenticated)/rh/salarios/page.tsx` e detalhes por usuário em `src/app/(authenticated)/rh/salarios/usuario/[usuarioId]/page.tsx`
+- Folhas de pagamento: `src/app/(authenticated)/rh/folhas-pagamento/page.tsx` e detalhes em `src/app/(authenticated)/rh/folhas-pagamento/[id]/page.tsx`
 
 ## Entrypoints
 

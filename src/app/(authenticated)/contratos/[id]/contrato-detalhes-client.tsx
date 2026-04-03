@@ -21,14 +21,14 @@ import type {
   ResponsavelDetalhado,
   SegmentoDetalhado,
   ContratoStatusHistorico,
-} from '@/app/app/contratos';
+} from '@/app/(authenticated)/contratos';
 import {
   STATUS_CONTRATO_LABELS,
   getStatusVariant,
-} from '@/app/app/contratos';
-import type { Lancamento } from '@/app/app/financeiro/domain/lancamentos';
-import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/app/app/entrevistas-trabalhistas';
-import { EntrevistaTab } from '@/app/app/entrevistas-trabalhistas';
+} from '@/app/(authenticated)/contratos';
+import type { Lancamento } from '@/app/(authenticated)/financeiro/domain/lancamentos';
+import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/app/(authenticated)/entrevistas-trabalhistas';
+import { EntrevistaTab } from '@/app/(authenticated)/entrevistas-trabalhistas';
 import {
   ContratoDetalhesHeader,
   ContratoDetalhesCard,

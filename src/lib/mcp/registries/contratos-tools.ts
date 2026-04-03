@@ -26,7 +26,7 @@ export async function registerContratosTools(): Promise<void> {
     tipoCobrancaSchema,
     statusContratoSchema,
     papelContratualSchema,
-  } = await import('@/app/app/contratos');
+  } = await import('@/app/(authenticated)/contratos');
 
   /**
    * Lista contratos do sistema com filtros por tipo, status, cliente

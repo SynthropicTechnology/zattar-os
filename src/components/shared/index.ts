@@ -6,7 +6,7 @@
  * Este arquivo exporta todos os componentes compartilhados do sistema.
  * Para instruções detalhadas de uso, consulte o arquivo CLAUDE.md nesta pasta.
  *
- * Referência de implementação: src/app/app/partes/components/clientes/
+ * Referência de implementação: src/app/(authenticated)/partes/components/clientes/
  * =============================================================================
  */
 

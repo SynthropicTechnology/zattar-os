@@ -5,7 +5,7 @@
 
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { FileManager } from '@/app/app/documentos';
+import { FileManager } from '@/app/(authenticated)/documentos';
 import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 

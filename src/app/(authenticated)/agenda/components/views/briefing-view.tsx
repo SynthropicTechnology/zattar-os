@@ -29,7 +29,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/app/app/dashboard/mock/widgets/primitives";
+import { GlassPanel } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 
 import {
   EventChip,
@@ -43,12 +43,12 @@ import {
 import {
   SOURCE_CONFIG,
   COLOR_MAP,
-} from "@/app/app/calendar/briefing-domain";
+} from "@/app/(authenticated)/calendar/briefing-domain";
 import {
   buildBriefingText,
   fmtTime,
-} from "@/app/app/calendar/briefing-helpers";
-import { estimateTravelTime } from "@/app/app/calendar/travel-helpers";
+} from "@/app/(authenticated)/calendar/briefing-helpers";
+import { estimateTravelTime } from "@/app/(authenticated)/calendar/travel-helpers";
 
 import type { AgendaEvent } from "../../lib/adapters";
 

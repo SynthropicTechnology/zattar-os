@@ -12,9 +12,9 @@
 import type { Page } from 'playwright';
 import type { CodigoTRT, GrauTRT } from './types';
 import type { TimelineResponse, TimelineItem } from '@/types/contracts/pje-trt';
-import type { PartePJE } from '@/app/app/captura/pje-trt/partes/types';
-import { obterTimeline } from '@/app/app/captura/pje-trt/timeline/obter-timeline';
-import { obterPartesProcesso } from '@/app/app/captura/pje-trt/partes';
+import type { PartePJE } from '@/app/(authenticated)/captura/pje-trt/partes/types';
+import { obterTimeline } from '@/app/(authenticated)/captura/pje-trt/timeline/obter-timeline';
+import { obterPartesProcesso } from '@/app/(authenticated)/captura/pje-trt/partes';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 /**

@@ -1163,7 +1163,7 @@ export async function actionContarContratosComEstatisticas(
 // ContratosStatsData definido em domain.ts (single source of truth, sem diretiva client/server)
 // NOTA: NÃO re-exportar tipos de arquivos "use server" — o server actions loader
 // tenta criar referências runtime para exports, causando ReferenceError.
-// Importe ContratosStatsData diretamente de '../domain' ou do barrel '@/app/app/contratos'.
+// Importe ContratosStatsData diretamente de '../domain' ou do barrel '@/app/(authenticated)/contratos'.
 import type { ContratosStatsData } from '../domain';
 
 /**

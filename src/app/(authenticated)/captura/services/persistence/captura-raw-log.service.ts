@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { CapturaRawLog, CapturaRawLogCreate, StatusCapturaRaw } from '@/app/app/captura/types/captura-raw-log';
+import type { CapturaRawLog, CapturaRawLogCreate, StatusCapturaRaw } from '@/app/(authenticated)/captura/types/captura-raw-log';
 
 export interface RegistrarCapturaRawLogParams
   extends Omit<

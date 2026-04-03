@@ -12,11 +12,11 @@ import {
   criarTemplate,
   listarTemplatesMaisUsados,
   listarCategoriasTemplates,
-} from '@/app/app/documentos/service';
+} from '@/app/(authenticated)/documentos/service';
 import type {
   CriarTemplateParams,
   ListarTemplatesParams,
-} from '@/app/app/documentos';
+} from '@/app/(authenticated)/documentos';
 
 /**
  * GET /api/templates

@@ -44,10 +44,10 @@ import {
   type StatusConciliacaoFilter,
   useContasBancarias,
   useTransacoesImportadas,
-} from '@/app/app/financeiro';
-import { FilterPopover } from '@/app/app/partes';
+} from '@/app/(authenticated)/financeiro';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 import { useDebounce } from '@/hooks/use-debounce';
-import type { TransacaoComConciliacao } from '@/app/app/financeiro';
+import type { TransacaoComConciliacao } from '@/app/(authenticated)/financeiro';
 
 // =============================================================================
 // HELPERS

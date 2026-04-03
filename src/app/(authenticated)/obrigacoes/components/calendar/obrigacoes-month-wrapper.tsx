@@ -17,7 +17,7 @@ import * as React from 'react';
 import { startOfMonth, endOfMonth, format } from 'date-fns';
 import { DataShell, DataTableToolbar } from '@/components/shared/data-shell';
 import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
-import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 import type { AcordoComParcelas, StatusAcordo, TipoObrigacao, DirecaoPagamento } from '../../domain';
 import { STATUS_LABELS, TIPO_LABELS, DIRECAO_LABELS } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';

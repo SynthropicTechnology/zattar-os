@@ -16,7 +16,7 @@ import * as React from 'react';
 import { startOfYear, endOfYear, format, parseISO } from 'date-fns';
 import { DataShell, DataTableToolbar } from '@/components/shared/data-shell';
 import { YearFilterPopover, TemporalViewLoading, TemporalViewError, YearCalendarGrid } from '@/components/shared';
-import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge } from '@/components/ui/app-badge';

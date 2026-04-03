@@ -8,7 +8,7 @@ import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';
 // Note: importing from core/expedientes/service might need to be migrated later if expedientes becomes a feature
-import { criarExpediente } from '@/app/app/expedientes/service';
+import { criarExpediente } from '@/app/(authenticated)/expedientes/service';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 import type {
@@ -29,7 +29,7 @@ import type {
   ComunicacaoCNJ,
 } from './domain';
 
-import { OrigemExpediente, CodigoTribunal } from '@/app/app/expedientes';
+import { OrigemExpediente, CodigoTribunal } from '@/app/(authenticated)/expedientes';
 
 import {
   consultarComunicacoesSchema,
@@ -545,7 +545,7 @@ async function criarExpedienteFromComunicacao(
     advogadoId: undefined,
     processoId: dadosAcervo?.processoId ?? undefined,
     trt: comunicacao.siglaTribunal as CodigoTribunal,
-    grau: grau as unknown as import('@/app/app/expedientes/domain').GrauTribunal,
+    grau: grau as unknown as import('@/app/(authenticated)/expedientes/domain').GrauTribunal,
     numeroProcesso,
     descricaoOrgaoJulgador: comunicacao.nomeOrgao || 'Não especificado',
     classeJudicial: comunicacao.nomeClasse || 'Não especificado',
@@ -618,7 +618,7 @@ export async function vincularComunicacaoAExpediente(
 
   // Using dynamic import or direct import depending on how we handle expedientes
   // Since we are inside feature, we should ideally use feature-to-feature communication or core.
-  const { findExpedienteById } = await import('@/app/app/expedientes/repository'); 
+  const { findExpedienteById } = await import('@/app/(authenticated)/expedientes/repository'); 
   const expedienteResult = await findExpedienteById(expedienteId);
   if (!expedienteResult.success) {
     return err(expedienteResult.error);

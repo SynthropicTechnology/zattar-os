@@ -8,15 +8,15 @@
  * - Vincular endereços às entidades
  */
 
-import type { PartePJE, RepresentantePJE } from "@/app/app/captura/pje-trt/partes/types";
+import type { PartePJE, RepresentantePJE } from "@/app/(authenticated)/captura/pje-trt/partes/types";
 import type { TipoParteClassificacao } from "../types";
 import type { ProcessoParaCaptura } from "../partes-capture.service";
 import type {
   ClassificacaoEndereco,
   EntidadeTipoEndereco,
   SituacaoEndereco,
-} from "@/app/app/enderecos/types";
-import { upsertEnderecoPorIdPje } from "@/app/app/enderecos";
+} from "@/app/(authenticated)/enderecos/types";
+import { upsertEnderecoPorIdPje } from "@/app/(authenticated)/enderecos";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { PersistenceError } from "../errors";

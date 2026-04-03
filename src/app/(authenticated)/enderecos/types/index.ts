@@ -4,7 +4,7 @@
 
 /**
  * Grau de jurisdição de um processo.
- * Definido localmente para evitar dependência circular com @/app/app/partes.
+ * Definido localmente para evitar dependência circular com @/app/(authenticated)/partes.
  */
 export type GrauProcesso = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
 

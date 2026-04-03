@@ -17,7 +17,7 @@ import type { ActionResult } from '@/lib/safe-action';
 export async function registerAcervoTools(): Promise<void> {
   const {
     actionListarAcervoUnificado,
-  } = await import('@/app/app/acervo/actions/acervo-actions');
+  } = await import('@/app/(authenticated)/acervo/actions/acervo-actions');
 
   /**
    * Lista processos do acervo com filtros

@@ -31,8 +31,8 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useContratoTiposCobranca } from '@/app/app/contratos/tipos-config/hooks';
-import type { ContratoTipoCobranca } from '@/app/app/contratos/tipos-config';
+import { useContratoTiposCobranca } from '@/app/(authenticated)/contratos/tipos-config/hooks';
+import type { ContratoTipoCobranca } from '@/app/(authenticated)/contratos/tipos-config';
 
 // =============================================================================
 // SCHEMA

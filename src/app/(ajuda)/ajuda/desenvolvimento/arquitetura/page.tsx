@@ -212,8 +212,8 @@ export default function ArquiteturaPage() {
             <h4 className="font-semibold mb-2">Importar Tipos de Domínio</h4>
             <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
 {`// Domínio vive dentro da feature (source of truth)
-import type { Cliente } from '@/app/app/partes';
-import type { GrauProcesso } from '@/app/app/partes';`}
+import type { Cliente } from '@/app/(authenticated)/partes';
+import type { GrauProcesso } from '@/app/(authenticated)/partes';`}
             </pre>
           </div>
           <div>

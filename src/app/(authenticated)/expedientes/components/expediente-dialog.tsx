@@ -36,8 +36,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { actionCriarExpediente, type ActionResult } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../domain';
-import type { TipoExpediente } from '@/app/app/tipos-expedientes';
-import { actionListarAcervoPaginado } from '@/app/app/acervo';
+import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
+import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
 
 interface DadosIniciais {
   processoId: number;

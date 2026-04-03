@@ -8,7 +8,7 @@ import {
     criarAssistenteDify,
     deletarAssistentePorDifyApp,
     sincronizarAssistenteDify,
-} from '@/app/app/assistentes/feature/service';
+} from '@/app/(authenticated)/assistentes/feature/service';
 
 export async function listDifyAppsAction() {
     const result = await difyRepository.listDifyApps();

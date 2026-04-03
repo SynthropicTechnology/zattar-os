@@ -58,7 +58,7 @@ export async function registerFinanceiroTools(): Promise<void> {
     actionCriarConta,
     actionAtualizarConta,
     actionExcluirConta,
-  } = await import('@/app/app/financeiro/actions/plano-contas');
+  } = await import('@/app/(authenticated)/financeiro/actions/plano-contas');
 
   // Lançamentos
   const {
@@ -69,7 +69,7 @@ export async function registerFinanceiroTools(): Promise<void> {
     actionConfirmarLancamento,
     actionCancelarLancamento,
     actionEstornarLancamento,
-  } = await import('@/app/app/financeiro/actions/lancamentos');
+  } = await import('@/app/(authenticated)/financeiro/actions/lancamentos');
 
   // DRE
   const {
@@ -77,7 +77,7 @@ export async function registerFinanceiroTools(): Promise<void> {
     actionObterEvolucaoDRE,
     actionExportarDRECSV,
     actionExportarDREPDF,
-  } = await import('@/app/app/financeiro/actions/dre');
+  } = await import('@/app/(authenticated)/financeiro/actions/dre');
 
   // Fluxo de Caixa
   const {
@@ -90,7 +90,7 @@ export async function registerFinanceiroTools(): Promise<void> {
     actionObterSaldoInicial,
     actionListarContasBancarias,
     actionListarCentrosCusto,
-  } = await import('@/app/app/financeiro/actions/fluxo-caixa');
+  } = await import('@/app/(authenticated)/financeiro/actions/fluxo-caixa');
 
   // Conciliação
   const {
@@ -99,7 +99,7 @@ export async function registerFinanceiroTools(): Promise<void> {
     actionObterSugestoes,
     actionDesconciliar,
     actionBuscarLancamentosManuais,
-  } = await import('@/app/app/financeiro/actions/conciliacao');
+  } = await import('@/app/(authenticated)/financeiro/actions/conciliacao');
 
   // ===== PLANO DE CONTAS =====
 

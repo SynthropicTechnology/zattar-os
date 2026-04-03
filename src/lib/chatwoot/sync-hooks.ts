@@ -10,11 +10,11 @@
  */
 
 import { Result, ok } from '@/types';
-import type { Cliente, CreateClienteInput, UpdateClienteInput } from '@/app/app/partes';
+import type { Cliente, CreateClienteInput, UpdateClienteInput } from '@/app/(authenticated)/partes';
 import {
   saveCliente,
   updateCliente,
-} from '@/app/app/partes/server';
+} from '@/app/(authenticated)/partes/server';
 import { sincronizarParteComChatwoot } from './service';
 import { isChatwootConfigured } from '@/lib/chatwoot';
 
@@ -171,7 +171,7 @@ export async function updateClienteComSync(
 export async function sincronizarClienteManual(
   clienteId: number
 ): Promise<Result<{ chatwoot_contact_id: number | null; criado: boolean }>> {
-  const { findClienteById } = await import('@/app/app/partes/server');
+  const { findClienteById } = await import('@/app/(authenticated)/partes/server');
 
   const clienteResult = await findClienteById(clienteId);
 

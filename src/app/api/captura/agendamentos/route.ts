@@ -3,9 +3,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { listarAgendamentos } from '@/app/app/captura/services/agendamentos/listar-agendamentos.service';
-import { criarAgendamento } from '@/app/app/captura/services/agendamentos/criar-agendamento.service';
-import type { CriarAgendamentoParams, ListarAgendamentosParams } from '@/app/app/captura';
+import { listarAgendamentos } from '@/app/(authenticated)/captura/services/agendamentos/listar-agendamentos.service';
+import { criarAgendamento } from '@/app/(authenticated)/captura/services/agendamentos/criar-agendamento.service';
+import type { CriarAgendamentoParams, ListarAgendamentosParams } from '@/app/(authenticated)/captura';
 
 /**
  * @swagger

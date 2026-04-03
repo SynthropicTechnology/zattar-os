@@ -7,7 +7,7 @@
  * Calcula score de saúde baseado em taxa de conversão e distribuição.
  *
  * Uso:
- *   import { WidgetSaudeContratual } from '@/app/app/dashboard/widgets/contratos/saude-contratual'
+ *   import { WidgetSaudeContratual } from '@/app/(authenticated)/dashboard/widgets/contratos/saude-contratual'
  * ============================================================================
  */
 
@@ -20,7 +20,7 @@ import {
   fmtNum,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { actionContratosStats, type ContratosStatsData } from '@/app/app/contratos';
+import { actionContratosStats, type ContratosStatsData } from '@/app/(authenticated)/contratos';
 
 type GaugeStatus = 'good' | 'warning' | 'danger' | 'neutral';
 

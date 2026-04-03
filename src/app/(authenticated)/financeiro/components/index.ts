@@ -5,7 +5,7 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado (import direto):
- * import { ContaPagarFormDialog } from '@/app/app/financeiro/components/contas-pagar/conta-pagar-form-dialog';
+ * import { ContaPagarFormDialog } from '@/app/(authenticated)/financeiro/components/contas-pagar/conta-pagar-form-dialog';
  */
 
 // ============================================================================

@@ -337,7 +337,7 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ busca, trt, limite }) => {
       try {
-        const { actionListarProcessos } = await import('@/app/app/processos/actions');
+        const { actionListarProcessos } = await import('@/app/(authenticated)/processos/actions');
         const result = await actionListarProcessos({
           busca: busca || undefined,
           trt: trt || undefined,
@@ -374,7 +374,7 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ status: statusFilter, limite }) => {
       try {
-        const { actionListarAudiencias } = await import('@/app/app/audiencias/actions');
+        const { actionListarAudiencias } = await import('@/app/(authenticated)/audiencias/actions');
         const result = await actionListarAudiencias({
           limite: limite || 5,
           pagina: 1,
@@ -411,8 +411,8 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ periodo }) => {
       try {
-        const { gerarPeriodoAtual } = await import('@/app/app/financeiro');
-        const { actionGerarDRE } = await import('@/app/app/financeiro/actions/dre');
+        const { gerarPeriodoAtual } = await import('@/app/(authenticated)/financeiro');
+        const { actionGerarDRE } = await import('@/app/(authenticated)/financeiro/actions/dre');
         const tipo = (periodo || 'mensal') as 'mensal' | 'trimestral' | 'semestral' | 'anual';
         const { dataInicio, dataFim } = gerarPeriodoAtual(tipo);
         const result = await actionGerarDRE({ dataInicio, dataFim, tipo });
@@ -449,7 +449,7 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ status: statusFilter, limite }) => {
       try {
-        const { actionListarTarefas } = await import('@/app/app/tarefas/actions/tarefas-actions');
+        const { actionListarTarefas } = await import('@/app/(authenticated)/tarefas/actions/tarefas-actions');
         const result = await actionListarTarefas({
           limit: limite || 8,
           status: statusFilter as 'backlog' | 'todo' | 'in progress' | 'done' | 'canceled' | undefined,

@@ -32,7 +32,7 @@ import * as compartilhamentoRepo from "./repository";
 import * as versoesRepo from "./repository";
 import * as uploadsRepo from "./repository";
 import * as arquivosRepo from "./repository";
-import { usuarioRepository } from "@/app/app/usuarios/repository";
+import { usuarioRepository } from "@/app/(authenticated)/usuarios/repository";
 import * as domain from "./domain";
 import {
   uploadFileToB2,

@@ -2,7 +2,7 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as repository from '../../repository';
 import { criarPericiaMock, criarEspecialidadeMock } from '../fixtures';
 import { SituacaoPericiaCodigo } from '../../domain';
-import { GrauTribunal } from '@/app/app/expedientes/domain';
+import { GrauTribunal } from '@/app/(authenticated)/expedientes/domain';
 
 // Mock Supabase
 type MockSupabaseClient = {

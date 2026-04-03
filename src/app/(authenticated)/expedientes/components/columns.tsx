@@ -40,7 +40,7 @@ import { toast } from 'sonner';
 // TYPES
 // =============================================================================
 
-import type { Usuario } from '@/app/app/usuarios';
+import type { Usuario } from '@/app/(authenticated)/usuarios';
 
 interface TipoExpediente {
   id: number;
@@ -501,7 +501,7 @@ export function ExpedienteActions({
           createdBy: 0,
           createdAt: '',
           updatedAt: ''
-        })) as import('@/app/app/tipos-expedientes').TipoExpediente[]}
+        })) as import('@/app/(authenticated)/tipos-expedientes').TipoExpediente[]}
       />
 
       <ExpedientesBaixarDialog

@@ -5,13 +5,13 @@
  */
 
 import type { TipoAcessoTribunal } from "./types/trt-types";
-import type { GrauProcesso } from "@/app/app/partes";
+import type { GrauProcesso } from "@/app/(authenticated)/partes";
 import type {
   CodigoTRT,
   GrauTRT,
   FiltroPrazoPendentes,
 } from "./types/trt-types";
-import type { GrauCredencial } from "@/app/app/advogados";
+import type { GrauCredencial } from "@/app/(authenticated)/advogados";
 
 export type { CodigoTRT, GrauTRT, FiltroPrazoPendentes };
 

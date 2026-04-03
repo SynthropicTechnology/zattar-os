@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { FolhasPagamentoList } from '@/app/app/rh';
+import { FolhasPagamentoList } from '@/app/(authenticated)/rh';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageShell } from '@/components/shared/page-shell';
 

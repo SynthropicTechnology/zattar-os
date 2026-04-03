@@ -8,7 +8,7 @@ import type {
     ContaReceberComDetalhes,
     ContasReceberFilters,
     ResumoInadimplencia,
-} from '@/app/app/financeiro/domain/lancamentos';
+} from '@/app/(authenticated)/financeiro/domain/lancamentos';
 import {
     formatarData,
     formatarValor,

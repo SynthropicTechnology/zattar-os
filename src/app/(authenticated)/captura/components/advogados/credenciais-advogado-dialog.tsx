@@ -49,7 +49,7 @@ import {
   TRIBUNAIS_ATIVOS,
   TRIBUNAIS_LABELS,
   GRAUS_LABELS,
-} from '@/app/app/advogados';
+} from '@/app/(authenticated)/advogados';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';

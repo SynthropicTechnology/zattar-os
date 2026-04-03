@@ -22,11 +22,11 @@ export async function registerAdvogadosTools(): Promise<void> {
   const {
     actionListarAdvogados,
     actionBuscarAdvogado,
-  } = await import('@/app/app/advogados/actions/advogados-actions');
+  } = await import('@/app/(authenticated)/advogados/actions/advogados-actions');
 
   const {
     actionListarCredenciais,
-  } = await import('@/app/app/advogados/actions/credenciais-actions');
+  } = await import('@/app/(authenticated)/advogados/actions/credenciais-actions');
 
   /**
    * Lista advogados cadastrados no sistema com filtros opcionais

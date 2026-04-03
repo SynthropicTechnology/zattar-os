@@ -31,7 +31,7 @@ import {
 import type { TipoAudiencia } from '../domain';
 import { useAudiencias } from '../hooks/use-audiencias';
 import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
-import { useUsuarios } from '@/app/app/usuarios';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 import { AudienciasListFilters } from './audiencias-list-filters';
 import { AudienciasCalendarCompact } from './audiencias-calendar-compact';

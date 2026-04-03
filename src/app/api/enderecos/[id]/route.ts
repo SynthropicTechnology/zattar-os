@@ -7,8 +7,8 @@ import {
   buscarEnderecoPorId,
   atualizarEndereco,
   deletarEndereco,
-} from '@/app/app/enderecos';
-import type { AtualizarEnderecoParams } from '@/app/app/enderecos/types';
+} from '@/app/(authenticated)/enderecos';
+import type { AtualizarEnderecoParams } from '@/app/(authenticated)/enderecos/types';
 
 /**
  * @swagger

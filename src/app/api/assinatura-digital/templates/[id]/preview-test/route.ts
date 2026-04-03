@@ -5,12 +5,12 @@ import {
   generatePdfFromTemplate,
   storePdf,
   generateMockDataForPreview,
-} from "@/app/app/assinatura-digital/feature";
+} from "@/app/(authenticated)/assinatura-digital/feature";
 import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import type {
   TemplateCampo,
   StatusTemplate,
-} from "@/app/app/assinatura-digital/feature";
+} from "@/app/(authenticated)/assinatura-digital/feature";
 
 export async function POST(
   request: NextRequest,

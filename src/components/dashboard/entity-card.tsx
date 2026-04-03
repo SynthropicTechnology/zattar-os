@@ -13,7 +13,7 @@
 
 import { Building2, Mail, Phone, MapPin, Scale, Clock } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
-import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

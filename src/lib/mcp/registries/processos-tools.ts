@@ -26,7 +26,7 @@ export async function registerProcessosTools(): Promise<void> {
     buscarTimeline,
     buscarProcessosPorClienteCPF,
     buscarProcessosPorClienteCNPJ,
-  } = await import('@/app/app/processos/service');
+  } = await import('@/app/(authenticated)/processos/service');
 
   /**
    * Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, período, busca textual)
@@ -170,7 +170,7 @@ export async function registerProcessosTools(): Promise<void> {
         const { numeroProcesso } = args as { numeroProcesso: string };
 
         // Normalizar número de processo (remover formatação CNJ)
-        const { normalizarNumeroProcesso } = await import('@/app/app/processos/utils');
+        const { normalizarNumeroProcesso } = await import('@/app/(authenticated)/processos/utils');
         const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
 
         // Buscar processo via service

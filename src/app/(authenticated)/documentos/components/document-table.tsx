@@ -25,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import type { DocumentoComUsuario } from '@/app/app/documentos/types';
+import type { DocumentoComUsuario } from '@/app/(authenticated)/documentos/types';
 
 interface DocumentTableProps {
   documentos: DocumentoComUsuario[];

@@ -33,9 +33,9 @@ import {
   type PeriodoOrcamento,
   type StatusOrcamento,
   useOrcamentos,
-} from '@/app/app/financeiro';
+} from '@/app/(authenticated)/financeiro';
 import { PageShell } from '@/components/shared/page-shell';
-import { FilterPopover } from '@/app/app/partes';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

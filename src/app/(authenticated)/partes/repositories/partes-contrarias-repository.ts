@@ -459,7 +459,7 @@ export async function saveParteContraria(input: CreateParteContrariaInput): Prom
   try {
     const db = createDbClient();
 
-    // Compatibilidade com fixtures/tests: aceitar input em camelCase (src/app/app/partes/types)
+    // Compatibilidade com fixtures/tests: aceitar input em camelCase (src/app/(authenticated)/partes/types)
     if (
       typeof (input as unknown as Record<string, unknown>)?.tipoPessoa === 'string' ||
       typeof (input as unknown as Record<string, unknown>)?.nomeCompleto === 'string'

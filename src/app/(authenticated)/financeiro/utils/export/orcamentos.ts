@@ -11,13 +11,13 @@ import type {
     ResumoOrcamentario,
     EvolucaoMensal,
     OrcamentoComItens,
-} from '@/app/app/financeiro/domain/orcamentos';
+} from '@/app/(authenticated)/financeiro/domain/orcamentos';
 import {
     RelatorioCompleto,
     RelatorioComparativo,
     // RelatorioExecutivo,
     AnaliseParaUI,
-} from '@/app/app/financeiro/domain/relatorios';
+} from '@/app/(authenticated)/financeiro/domain/relatorios';
 
 // ============================================================================
 // Tipos para API Response

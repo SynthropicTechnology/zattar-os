@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { actionUploadArquivoGenerico } from "@/app/app/documentos";
+import { actionUploadArquivoGenerico } from "@/app/(authenticated)/documentos";
 import {
   ALLOWED_TYPES,
   MAX_FILE_SIZE,

@@ -5,7 +5,7 @@
  * Este é o ponto de entrada principal para importar funcionalidades de contratos.
  *
  * Uso:
- * import { ContratosTableWrapper, listarContratos, Contrato } from '@/app/app/contratos';
+ * import { ContratosTableWrapper, listarContratos, Contrato } from '@/app/(authenticated)/contratos';
  */
 
 // =============================================================================

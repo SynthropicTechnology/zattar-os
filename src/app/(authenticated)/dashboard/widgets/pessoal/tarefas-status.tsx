@@ -7,7 +7,7 @@
  * Exibe distribuição por status (pendentes, em andamento, concluídas).
  *
  * Uso:
- *   import { WidgetTarefasStatus } from '@/app/app/dashboard/widgets/pessoal/tarefas-status'
+ *   import { WidgetTarefasStatus } from '@/app/(authenticated)/dashboard/widgets/pessoal/tarefas-status'
  * ============================================================================
  */
 
@@ -19,7 +19,7 @@ import {
   fmtNum,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { actionListarTarefas } from '@/app/app/tarefas/actions/tarefas-actions';
+import { actionListarTarefas } from '@/app/(authenticated)/tarefas/actions/tarefas-actions';
 
 interface TarefasCounts {
   pendentes: number;

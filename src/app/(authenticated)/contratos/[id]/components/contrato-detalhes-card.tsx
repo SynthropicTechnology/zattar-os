@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type {
   TipoCobranca,
   PapelContratual,
-} from '@/app/app/contratos';
+} from '@/app/(authenticated)/contratos';
 import {
   TIPO_COBRANCA_LABELS,
   PAPEL_CONTRATUAL_LABELS,
-} from '@/app/app/contratos';
-import type { SegmentoDetalhado, ClienteDetalhado } from '@/app/app/contratos';
+} from '@/app/(authenticated)/contratos';
+import type { SegmentoDetalhado, ClienteDetalhado } from '@/app/(authenticated)/contratos';
 
 interface ContratoDetalhesCardProps {
   tipoCobranca: TipoCobranca;

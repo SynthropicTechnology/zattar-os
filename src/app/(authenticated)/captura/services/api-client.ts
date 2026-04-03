@@ -18,7 +18,7 @@ import {
   StartCaptureData,
   TimelineParams,
   TimelineResult,
-} from '@/app/app/captura/types';
+} from '@/app/(authenticated)/captura/types';
 
 /**
  * Helper para extrair mensagem de erro da resposta da API

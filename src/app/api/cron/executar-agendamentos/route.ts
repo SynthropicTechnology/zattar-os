@@ -23,7 +23,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { executarScheduler } from "@/app/app/captura/services/scheduler/agendamento-scheduler.service";
+import { executarScheduler } from "@/app/(authenticated)/captura/services/scheduler/agendamento-scheduler.service";
 import { requireCronAuth } from "@/lib/cron/cron-auth";
 
 export const dynamic = "force-dynamic";

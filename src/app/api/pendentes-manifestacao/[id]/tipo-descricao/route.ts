@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { atualizarTipoDescricao } from '@/app/app/expedientes/service';
+import { atualizarTipoDescricao } from '@/app/(authenticated)/expedientes/service';
 
 /**
  * @swagger

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { actionObterMetricasDB } from "@/app/app/admin";
+import { actionObterMetricasDB } from "@/app/(authenticated)/admin";
 import { actionListarIntegracoesPorTipo } from "@/lib/integracoes";
 import { actionListarSystemPrompts } from "@/lib/system-prompts";
 import { ConfiguracoesTabsContent } from "./components/configuracoes-tabs-content";

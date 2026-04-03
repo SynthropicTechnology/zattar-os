@@ -274,7 +274,7 @@ export async function actionObterTimelinePorId(
     }
 
     // Get processo unificado data (fonte da verdade com graus ativos)
-    const { buscarProcessoUnificado } = await import("@/app/app/processos");
+    const { buscarProcessoUnificado } = await import("@/app/(authenticated)/processos");
     const processoResult = await buscarProcessoUnificado(id);
 
     if (!processoResult.success || !processoResult.data) {
@@ -312,7 +312,7 @@ export async function actionObterTimelinePorId(
     } else {
       // Individual mode: get only timeline for this instance
       const { buscarAcervoPorId } = await import(
-        "@/app/app/acervo/repository"
+        "@/app/(authenticated)/acervo/repository"
       );
       const acervo = await buscarAcervoPorId(id);
 

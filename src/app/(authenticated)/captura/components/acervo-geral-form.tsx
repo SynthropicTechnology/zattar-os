@@ -3,8 +3,8 @@
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
-import { capturarAcervoGeral } from '@/app/app/captura/services/api-client';
-import type { CapturaFormHandle } from '@/app/app/captura/types';
+import { capturarAcervoGeral } from '@/app/(authenticated)/captura/services/api-client';
+import type { CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 
 interface AcervoGeralFormProps {
   onSuccess?: () => void;

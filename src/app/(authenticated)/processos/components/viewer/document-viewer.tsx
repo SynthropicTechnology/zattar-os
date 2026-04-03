@@ -21,7 +21,7 @@ import { ptBR } from 'date-fns/locale';
 import { FileText, Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import { actionGerarUrlDownload } from '@/app/app/documentos';
+import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 import { cn } from '@/lib/utils';
 import { ViewerToolbar } from './viewer-toolbar';
 import { ViewerPaginationPill } from './viewer-pagination-pill';

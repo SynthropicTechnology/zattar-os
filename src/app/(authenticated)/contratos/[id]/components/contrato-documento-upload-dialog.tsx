@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { FileUploadDialogUnified } from '@/app/app/documentos';
-import { type Arquivo } from '@/app/app/documentos';
-import { actionVincularArquivoAoContrato } from '@/app/app/pecas-juridicas/actions';
+import { FileUploadDialogUnified } from '@/app/(authenticated)/documentos';
+import { type Arquivo } from '@/app/(authenticated)/documentos';
+import { actionVincularArquivoAoContrato } from '@/app/(authenticated)/pecas-juridicas/actions';
 
 interface ContratoDocumentoUploadDialogProps {
     open: boolean;

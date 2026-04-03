@@ -223,7 +223,7 @@ export async function buscarAudienciasPorClienteCPF(
   cpf: string,
   status?: string
 ): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
-  const { normalizarDocumento } = await import('@/app/app/partes');
+  const { normalizarDocumento } = await import('@/app/(authenticated)/partes');
   const { err, appError } = await import('@/types');
 
   if (!cpf || !cpf.trim()) {
@@ -255,7 +255,7 @@ export async function buscarAudienciasPorClienteCNPJ(
   cnpj: string,
   status?: string
 ): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
-  const { normalizarDocumento } = await import('@/app/app/partes');
+  const { normalizarDocumento } = await import('@/app/(authenticated)/partes');
   const { err, appError } = await import('@/types');
 
   if (!cnpj || !cnpj.trim()) {
@@ -291,7 +291,7 @@ export async function buscarAudienciasPorNumeroProcesso(
 ): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
   const { err, appError } = await import('@/types');
   // Usar service diretamente (não Server Action)
-  const { buscarProcessoPorNumero } = await import('@/app/app/processos/service');
+  const { buscarProcessoPorNumero } = await import('@/app/(authenticated)/processos/service');
 
   if (!numeroProcesso || !numeroProcesso.trim()) {
     return err(appError('VALIDATION_ERROR', 'Numero do processo e obrigatorio'));

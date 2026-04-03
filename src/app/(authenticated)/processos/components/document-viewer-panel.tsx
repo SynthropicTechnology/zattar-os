@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/app/app/partes';
+import type { GrauProcesso } from '@/app/(authenticated)/partes';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { actionGerarUrlDownload } from '@/app/app/documentos';
+import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 
 type TimelineItemWithGrau = TimelineItemEnriquecido & {
   grauOrigem?: GrauProcesso;

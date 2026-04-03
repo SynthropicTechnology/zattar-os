@@ -14,7 +14,7 @@ import { getTribunalConfig } from '../trt/config';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
 import type { ConfigTRT } from '../../types/trt-types';
 import { getCredentialByTribunalAndGrau } from '../../credentials/credential.service';
-import { obterTimeline, obterDocumento, baixarDocumento } from '@/app/app/captura/pje-trt/timeline';
+import { obterTimeline, obterDocumento, baixarDocumento } from '@/app/(authenticated)/captura/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../storage/upload-documento-timeline.service';
 import { salvarTimeline } from './timeline-persistence.service';
 import { carregarBackblazeExistente } from './timeline-merge.service';

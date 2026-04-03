@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { actionListarClientes } from '@/app/app/partes/server-actions';
-import type { Cliente } from '@/app/app/partes';
+import { actionListarClientes } from '@/app/(authenticated)/partes/server-actions';
+import type { Cliente } from '@/app/(authenticated)/partes';
 
 interface FiltroClienteProps {
   value: string;

@@ -16,8 +16,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle } from 'lucide-react';
 import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
-import type { Usuario } from '@/app/app/usuarios';
-import type { TipoExpediente } from '@/app/app/tipos-expedientes';
+import type { Usuario } from '@/app/(authenticated)/usuarios';
+import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 

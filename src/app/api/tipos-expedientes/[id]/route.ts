@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth';
-import { buscar, atualizar, deletar } from '@/app/app/tipos-expedientes';
+import { buscar, atualizar, deletar } from '@/app/(authenticated)/tipos-expedientes';
 
 export async function GET(
   request: NextRequest,

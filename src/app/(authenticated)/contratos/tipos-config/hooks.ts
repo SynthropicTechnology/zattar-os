@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { ContratoTipo, ContratoTipoCobranca } from './types';
-import type { ContratoPipeline } from '@/app/app/contratos/pipelines/types';
+import type { ContratoPipeline } from '@/app/(authenticated)/contratos/pipelines/types';
 
 // =============================================================================
 // HOOK: useContratoTipos

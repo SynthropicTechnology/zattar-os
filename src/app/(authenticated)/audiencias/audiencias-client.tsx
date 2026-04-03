@@ -21,7 +21,7 @@ import {
   Sparkles,
   Settings,
 } from 'lucide-react';
-import { InsightBanner } from '@/app/app/dashboard/mock/widgets/primitives';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
@@ -41,8 +41,8 @@ import {
   AudienciasListaView,
   AudienciasMissaoContent,
   useAudienciasUnified,
-} from '@/app/app/audiencias';
-import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/app/app/audiencias';
+} from '@/app/(authenticated)/audiencias';
+import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/app/(authenticated)/audiencias';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS

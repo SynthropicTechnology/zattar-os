@@ -8,7 +8,7 @@
  * tipo de audiência, URL virtual e local presencial.
  *
  * Uso:
- *   import { WidgetPreparacao } from '@/app/app/dashboard/widgets/audiencias/preparacao'
+ *   import { WidgetPreparacao } from '@/app/(authenticated)/dashboard/widgets/audiencias/preparacao'
  * ============================================================================
  */
 

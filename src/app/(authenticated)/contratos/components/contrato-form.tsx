@@ -36,8 +36,8 @@ import {
   PAPEL_CONTRATUAL_LABELS,
 } from '../domain';
 import { actionListarSegmentos, type Segmento } from '../actions';
-import { actionBuscarPartesContrariasParaCombobox } from '@/app/app/partes/actions/partes-contrarias-actions';
-import { actionBuscarClientesParaCombobox } from '@/app/app/partes/actions/clientes-actions';
+import { actionBuscarPartesContrariasParaCombobox } from '@/app/(authenticated)/partes/actions/partes-contrarias-actions';
+import { actionBuscarClientesParaCombobox } from '@/app/(authenticated)/partes/actions/clientes-actions';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 // =============================================================================

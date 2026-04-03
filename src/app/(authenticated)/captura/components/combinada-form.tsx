@@ -3,10 +3,10 @@
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
-import { capturarCombinada } from '@/app/app/captura/services/api-client';
+import { capturarCombinada } from '@/app/(authenticated)/captura/services/api-client';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
-import type { CapturaFormHandle } from '@/app/app/captura/types';
+import type { CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 
 interface CombinadaFormProps {
   onSuccess?: () => void;

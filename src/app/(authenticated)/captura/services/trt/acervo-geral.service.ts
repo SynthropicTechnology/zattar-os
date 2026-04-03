@@ -49,7 +49,7 @@ import type { CapturaTRTParams } from './trt-capture.service';
 import {
   obterTodosProcessosAcervoGeral,
   obterTotalizadoresAcervoGeral,
-} from '@/app/app/captura/pje-trt';
+} from '@/app/(authenticated)/captura/pje-trt';
 import type { Processo } from '../../types/types';
 import { salvarAcervoBatch, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';

@@ -16,7 +16,7 @@ import {
   type TimelineUnificadaMetadata,
 } from '../hooks/use-processo-timeline';
 import { useProcessoWorkspaceAnnotations } from '../hooks/use-processo-workspace-annotations';
-import { actionListarUsuarios } from '@/app/app/usuarios';
+import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { ProcessoHeader } from './processo-header';
 import { ProcessoDetailsTabs } from './processo-details-tabs';
 import { TimelineLoading } from './timeline-loading';

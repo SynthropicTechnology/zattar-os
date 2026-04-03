@@ -6,7 +6,7 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 
 
-import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared/filter-popover';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared/filter-popover';
 import {
   Tooltip,
   TooltipContent,

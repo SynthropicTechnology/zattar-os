@@ -45,7 +45,7 @@ import {
   useAnaliseOrcamentaria,
   useOrcamento,
   useProjecaoOrcamentaria,
-} from '@/app/app/financeiro';
+} from '@/app/(authenticated)/financeiro';
 import { toast } from 'sonner';
 
 // ============================================================================

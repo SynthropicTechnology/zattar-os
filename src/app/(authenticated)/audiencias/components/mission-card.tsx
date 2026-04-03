@@ -29,7 +29,7 @@ import {
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 import type { Audiencia } from '../domain';
 import { MODALIDADE_AUDIENCIA_LABELS } from '../domain';

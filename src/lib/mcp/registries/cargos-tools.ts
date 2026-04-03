@@ -17,7 +17,7 @@ import type { ActionResult } from '@/lib/safe-action';
 export async function registerCargosTools(): Promise<void> {
   const {
     actionListarCargos,
-  } = await import('@/app/app/cargos/actions/cargos-actions');
+  } = await import('@/app/(authenticated)/cargos/actions/cargos-actions');
 
   /**
    * Lista cargos disponíveis no sistema

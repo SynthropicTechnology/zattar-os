@@ -11,7 +11,7 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Loader2 } from 'lucide-react';
 import { actionBaixarExpediente, type ActionResult } from '../actions';
 import { Expediente, ResultadoDecisao, RESULTADO_DECISAO_LABELS } from '../domain';
-import { useTiposExpedientes } from '@/app/app/tipos-expedientes/hooks/use-tipos-expedientes';
+import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes/hooks/use-tipos-expedientes';
 
 interface ExpedientesBaixarDialogProps {
   open: boolean;

@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { FilterPopover } from '@/app/app/partes';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import {
   getFormularioDisplayName,

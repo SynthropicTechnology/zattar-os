@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { actionListarClientesSugestoes } from "@/app/app/partes/server-actions";
+import { actionListarClientesSugestoes } from "@/app/(authenticated)/partes/server-actions";
 
 interface Option {
   id: number | string;

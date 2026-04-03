@@ -55,11 +55,11 @@
 import { todayDateString, addDays } from "@/lib/date-utils";
 import { autenticarComRetry, type AuthResult } from "./trt-auth.service";
 import type { CapturaCombinAdaParams } from "./trt-capture.service";
-import { obterTodasAudiencias } from "@/app/app/captura/pje-trt";
-import { obterTodosProcessosPendentesManifestacao } from "@/app/app/captura/pje-trt";
-import { obterPericias } from "@/app/app/captura/pje-trt";
+import { obterTodasAudiencias } from "@/app/(authenticated)/captura/pje-trt";
+import { obterTodosProcessosPendentesManifestacao } from "@/app/(authenticated)/captura/pje-trt";
+import { obterPericias } from "@/app/(authenticated)/captura/pje-trt";
 import { buscarProcessosPorIdsNoPainel } from "./buscar-processos-painel.service";
-import type { Pericia } from "@/app/app/captura/types/pericias-types";
+import type { Pericia } from "@/app/(authenticated)/captura/types/pericias-types";
 import {
   salvarAudiencias,
   type SalvarAudienciasResult,

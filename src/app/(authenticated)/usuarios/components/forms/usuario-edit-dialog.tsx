@@ -18,7 +18,7 @@ import {
 import { Loader2, Save, Search, AlertCircle, Camera } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
-import { useCargos } from '@/app/app/cargos';
+import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
 import type { Usuario, Endereco, GeneroUsuario } from '../../domain';
 import { getAvatarUrl } from '../../utils';

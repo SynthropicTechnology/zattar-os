@@ -6,11 +6,11 @@ import type { Table as TanstackTable } from '@tanstack/react-table';
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useTribunais } from '@/app/app/captura';
+import { useTribunais } from '@/app/(authenticated)/captura';
 import { criarColunasTribunais } from '../components/tribunais/tribunais-columns';
 import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
-import type { TribunalConfigDb as TribunalConfig } from '@/app/app/captura';
+import type { TribunalConfigDb as TribunalConfig } from '@/app/(authenticated)/captura';
 
 const TIPO_ACESSO_LABELS: Record<string, string> = {
   primeiro_grau: '1º Grau',

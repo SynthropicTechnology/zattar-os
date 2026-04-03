@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 
 import type { GrauTribunal, Pericia } from '../domain';
 import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '@/app/app/expedientes';
+import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 import type { UsuarioOption } from '../types';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
 import { PericiaAtribuirResponsavelDialog } from './pericia-atribuir-responsavel-dialog';

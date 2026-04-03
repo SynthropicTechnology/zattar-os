@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { usarTemplate } from '@/app/app/documentos/service';
+import { usarTemplate } from '@/app/(authenticated)/documentos/service';
 
 /**
  * POST /api/templates/[id]/usar

@@ -33,15 +33,15 @@ import {
   actionAtualizarStatusCredenciaisEmLote,
   useAdvogados,
   type Advogado,
-} from '@/app/app/advogados';
-import { AdvogadoCombobox } from '@/app/app/captura';
+} from '@/app/(authenticated)/advogados';
+import { AdvogadoCombobox } from '@/app/(authenticated)/captura';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';
 import { CredenciaisAdvogadoDialog } from '../components/advogados/credenciais-advogado-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import { toast } from 'sonner';
 import { GRAU_LABELS } from '@/lib/design-system';
-import type { Credencial } from '@/app/app/captura/types';
+import type { Credencial } from '@/app/(authenticated)/captura/types';
 
 export default function CredenciaisPage() {
   const searchParams = useSearchParams();

@@ -17,7 +17,7 @@ export * from './repository';
  * evitando que dependências Node (ex: ioredis) sejam empacotadas no browser.
  *
  * Exemplo:
- * import { actionListarClientes } from "@/app/app/partes/server";
+ * import { actionListarClientes } from "@/app/(authenticated)/partes/server";
  */
 
 export * from './actions/index';

@@ -10,12 +10,12 @@
  * - AssinaturaDigitalSegmento é compatível com Segmento (mesma estrutura)
  *
  * Acoplamento com domain types:
- * - ClienteBase de @/app/app/partes/domain
+ * - ClienteBase de @/app/(authenticated)/partes/domain
  * - ParteContraria para dados de partes contrárias
  * - contrato_id: Referência ao contrato associado
  */
 
-import type { ClienteBase, ParteContraria } from "@/app/app/partes";
+import type { ClienteBase, ParteContraria } from "@/app/(authenticated)/partes";
 
 export interface AssinaturaDigitalTemplate {
   id: number;
@@ -453,7 +453,7 @@ export type {
   ClienteBase,
   ClientePessoaFisica,
   ParteContraria,
-} from "@/app/app/partes";
+} from "@/app/(authenticated)/partes";
 
 // =============================================================================
 // NOVO FLUXO: Documento via upload de PDF + links públicos

@@ -31,14 +31,14 @@ import {
   Clock,
   Building2,
 } from 'lucide-react';
-import { usePartes, type TipoEntidade } from '@/app/app/partes';
+import { usePartes, type TipoEntidade } from '@/app/(authenticated)/partes';
 import { EntityCard, getInitials, timeAgo, type EntityCardData } from '@/components/dashboard/entity-card';
 import { EntityListRow } from '@/components/dashboard/entity-list-row';
 import { PulseStrip, type PulseItem } from '@/components/dashboard/pulse-strip';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle } from '@/components/dashboard/view-toggle';
-import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

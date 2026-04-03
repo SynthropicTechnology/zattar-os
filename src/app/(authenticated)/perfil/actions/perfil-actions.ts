@@ -2,9 +2,9 @@
 
 import { createClient } from "@/lib/supabase/server";
 // FSD: server-only action — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
-import { service as usuariosService } from "@/app/app/usuarios/service";
+import { service as usuariosService } from "@/app/(authenticated)/usuarios/service";
 import { revalidatePath } from "next/cache";
-import type { Usuario, UsuarioDados } from "@/app/app/usuarios";
+import type { Usuario, UsuarioDados } from "@/app/(authenticated)/usuarios";
 
 export async function actionObterPerfil(): Promise<
   { success: true; data: Usuario & { podeGerenciarPermissoes: boolean } } | { success: false; error: string }

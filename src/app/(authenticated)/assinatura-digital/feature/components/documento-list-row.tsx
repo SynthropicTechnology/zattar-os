@@ -1,7 +1,7 @@
 "use client";
 
 import { Camera, ChevronRight, FileText } from "lucide-react";
-import { ProgressRing } from "@/app/app/dashboard/mock/widgets/primitives";
+import { ProgressRing } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 import type { DocumentoCardData } from "../adapters/documento-card-adapter";
 import { STATUS_CONFIG, getSignerProgress, timeAgo } from "./documento-card";
 

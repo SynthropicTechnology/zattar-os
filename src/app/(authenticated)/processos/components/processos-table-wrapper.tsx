@@ -17,7 +17,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TablePagination } from '@/components/shared/table-pagination';
-import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/app/app/partes/components/shared';
+import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 import {
   GrauBadgesSimple,
   ProcessosEmptyState,
@@ -25,14 +25,14 @@ import {
   ProximaAudienciaPopover,
   ProcessoTagsDialog,
   ProcessoForm,
-} from '@/app/app/processos/components';
-import { actionListarProcessos } from '@/app/app/processos/actions';
+} from '@/app/(authenticated)/processos/components';
+import { actionListarProcessos } from '@/app/(authenticated)/processos/actions';
 import { type Tag, actionListarTagsDosProcessos } from '@/lib/domain/tags';
 import { TagBadgeList } from '@/components/ui/tag-badge';
 import type {
   Processo,
   ProcessoUnificado,
-} from '@/app/app/processos/types';
+} from '@/app/(authenticated)/processos/types';
 import {
   buildProcessosFilterOptions,
   buildProcessosFilterGroups,
@@ -47,11 +47,11 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { CopyButton } from '@/app/app/partes';
+import { CopyButton } from '@/app/(authenticated)/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { ProcessosBulkActions } from './processos-bulk-actions';
-import { actionListarUsuarios } from '@/app/app/usuarios';
+import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { ConfigAtribuicaoDialog } from '@/lib/domain/config-atribuicao';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';

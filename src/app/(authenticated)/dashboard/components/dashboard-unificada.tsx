@@ -31,7 +31,7 @@ import type {
   Lembrete,
 } from '../domain';
 import type { ProgressoDiario } from '../repositories/progresso-diario';
-import type { Task } from '@/app/app/tarefas/domain';
+import type { Task } from '@/app/(authenticated)/tarefas/domain';
 
 import {
   WidgetFluxoCaixa,

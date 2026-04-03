@@ -19,7 +19,7 @@ import {
   Sparkline,
   AnimatedNumber,
   ProgressRing,
-} from '@/app/app/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import type { Audiencia } from '../domain';
 import { StatusAudiencia } from '../domain';
 import { calcPrepItems, calcPrepScore } from './prep-score';

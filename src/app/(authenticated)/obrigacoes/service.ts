@@ -2,11 +2,11 @@ import { AcordoComParcelas, AcordoCondenacao, AtualizarAcordoParams, AtualizarPa
 import { TipoObrigacao, StatusAcordo } from "./domain";
 import { ObrigacoesRepository } from "./repository";
 import { calcularDataVencimento } from "./utils";
-import { normalizarDocumento } from "@/app/app/partes";
-import { findClienteByCPF, findClienteByCNPJ } from "@/app/app/partes/server";
+import { normalizarDocumento } from "@/app/(authenticated)/partes";
+import { findClienteByCPF, findClienteByCNPJ } from "@/app/(authenticated)/partes/server";
 import { err, appError } from "@/types";
-import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ, buscarProcessoPorNumero } from "@/app/app/processos";
-import { normalizarNumeroProcesso } from "@/app/app/processos/utils";
+import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ, buscarProcessoPorNumero } from "@/app/(authenticated)/processos";
+import { normalizarNumeroProcesso } from "@/app/(authenticated)/processos/utils";
 
 // --- Acordos Services ---
 

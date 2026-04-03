@@ -2,7 +2,7 @@
  * Feature: Calendar
  *
  * Barrel export para a Agenda global (agregação de eventos).
- * Nota: componentes do template em `src/app/app/calendar/*` permanecem como UI.
+ * Nota: componentes do template em `src/app/(authenticated)/calendar/*` permanecem como UI.
  */
 
 export type {

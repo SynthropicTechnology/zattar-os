@@ -191,7 +191,7 @@ export async function gerarPecaDeContrato(
   } = resolvePlateContent(modelo.conteudo as unknown[], context);
 
   // 3. Criar documento (importar dinamicamente para evitar dependência circular)
-  const { criarDocumento } = await import("@/app/app/documentos/service");
+  const { criarDocumento } = await import("@/app/(authenticated)/documentos/service");
 
   if (!userId) {
     return err(appError("VALIDATION_ERROR", "Usuário não autenticado"));

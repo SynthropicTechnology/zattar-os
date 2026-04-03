@@ -39,13 +39,13 @@ import {
   type CalendarEvent,
   type CalendarView
 } from "./";
-import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/app/app/calendar";
+import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/app/(authenticated)/calendar";
 import {
   actionCriarAgendaEvento,
   actionAtualizarAgendaEvento,
   actionDeletarAgendaEvento,
-} from "@/app/app/agenda";
-import { FilterPopoverMulti, type FilterOption } from "@/app/app/partes";
+} from "@/app/(authenticated)/agenda";
+import { FilterPopoverMulti, type FilterOption } from "@/app/(authenticated)/partes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

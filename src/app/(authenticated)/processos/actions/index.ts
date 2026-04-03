@@ -903,15 +903,15 @@ export async function actionObterDetalhesComplementaresProcesso(
     const [audienciasResult, expedientesResult, periciasResult] =
       await Promise.allSettled([
         // Audiências: usar repo direto (findAudienciasByProcessoId)
-        import("@/app/app/audiencias/repository").then((mod) =>
+        import("@/app/(authenticated)/audiencias/repository").then((mod) =>
           mod.findAudienciasByProcessoId(processoId)
         ),
         // Expedientes: usar service (listarExpedientes com processoId)
-        import("@/app/app/expedientes/service").then((mod) =>
+        import("@/app/(authenticated)/expedientes/service").then((mod) =>
           mod.listarExpedientes({ processoId, limite: 100 })
         ),
         // Perícias: usar service (listarPericias com processoId)
-        import("@/app/app/pericias/service").then((mod) =>
+        import("@/app/(authenticated)/pericias/service").then((mod) =>
           mod.listarPericias({ processoId, limite: 100 })
         ),
       ]);

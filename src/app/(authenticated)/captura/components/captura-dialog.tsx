@@ -13,7 +13,7 @@ import { TimelineForm } from './timeline-form';
 import { PartesForm } from './partes-form';
 import { CombinadaForm } from './combinada-form';
 import { PericiasForm } from './pericias-form';
-import type { CapturaFormHandle } from '@/app/app/captura/types';
+import type { CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 
 interface CapturaDialogProps {
   open: boolean;

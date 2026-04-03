@@ -16,11 +16,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatarData } from '@/app/app/partes/utils';
-import { StatusProcesso, STATUS_PROCESSO_LABELS, GRAU_LABELS } from '@/app/app/processos';
+import { formatarData } from '@/app/(authenticated)/partes/utils';
+import { StatusProcesso, STATUS_PROCESSO_LABELS, GRAU_LABELS } from '@/app/(authenticated)/processos';
 import type { ProcessoVinculo } from '../../types';
 import type { ProfileData } from '../../configs/types';
-import type { GrauProcesso, PoloProcessoParte } from '@/app/app/partes';
+import type { GrauProcesso, PoloProcessoParte } from '@/app/(authenticated)/partes';
 
 interface EntidadeProcessosTableProps {
   data: ProfileData;

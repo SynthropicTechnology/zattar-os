@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
-import type { Credencial } from '@/app/app/captura/types';
-import { formatOabs } from '@/app/app/advogados';
+import type { Credencial } from '@/app/(authenticated)/captura/types';
+import { formatOabs } from '@/app/(authenticated)/advogados';
 
 type Params = {
   onViewAdvogado?: (credencial: Credencial) => void;

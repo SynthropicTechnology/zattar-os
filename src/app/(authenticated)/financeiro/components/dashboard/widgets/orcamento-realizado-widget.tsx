@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { cn } from '@/lib/utils';
-import type { AnaliseOrcamentariaUI } from '@/app/app/financeiro/actions/orcamentos';
+import type { AnaliseOrcamentariaUI } from '@/app/(authenticated)/financeiro/actions/orcamentos';
 
 // ============================================================================
 // Helpers

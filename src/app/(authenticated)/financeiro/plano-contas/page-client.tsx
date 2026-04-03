@@ -29,9 +29,9 @@ import {
   NATUREZA_LABELS,
   NIVEL_LABELS,
   MaisFiltrosPlanoContasPopover,
-} from '@/app/app/financeiro';
-import { actionAtualizarConta } from '@/app/app/financeiro/server-actions';
-import { FilterPopover } from '@/app/app/partes';
+} from '@/app/(authenticated)/financeiro';
+import { actionAtualizarConta } from '@/app/(authenticated)/financeiro/server-actions';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';

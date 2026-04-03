@@ -14,14 +14,14 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageShell } from '@/components/shared/page-shell';
 import { Typography } from '@/components/ui/typography';
-import { FilterPopover } from '@/app/app/partes';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 
 import {
   useUsuarios,
   UsuarioCreateDialog,
   CargosManagementDialog,
   UsuariosGridView,
-} from '@/app/app/usuarios';
+} from '@/app/(authenticated)/usuarios';
 
 // =============================================================================
 // COMPONENT

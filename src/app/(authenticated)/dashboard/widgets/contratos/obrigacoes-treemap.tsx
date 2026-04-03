@@ -7,7 +7,7 @@
  * Agrupa obrigações por tipo (acordo, condenação, custas) com valores reais.
  *
  * Uso:
- *   import { WidgetObrigacoesTreemap } from '@/app/app/dashboard/widgets/contratos/obrigacoes-treemap'
+ *   import { WidgetObrigacoesTreemap } from '@/app/(authenticated)/dashboard/widgets/contratos/obrigacoes-treemap'
  * ============================================================================
  */
 
@@ -19,7 +19,7 @@ import {
   fmtMoeda,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { actionListarAcordos } from '@/app/app/obrigacoes/server-actions';
+import { actionListarAcordos } from '@/app/(authenticated)/obrigacoes/server-actions';
 
 interface ObrigacaoPorTipo {
   label: string;

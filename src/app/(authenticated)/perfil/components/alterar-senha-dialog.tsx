@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import { actionAlterarSenhaComVerificacao } from '@/app/app/usuarios';
+import { actionAlterarSenhaComVerificacao } from '@/app/(authenticated)/usuarios';
 
 interface AlterarSenhaDialogProps {
   open: boolean;

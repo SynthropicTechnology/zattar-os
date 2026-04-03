@@ -35,7 +35,7 @@ import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { actionBuscarAudienciaPorId } from '../actions';
-import { useUsuarios } from '@/app/app/usuarios';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 // =============================================================================
 // SECTION COMPONENT - Padroniza as seções do sheet

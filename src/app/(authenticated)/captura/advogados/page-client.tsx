@@ -29,8 +29,8 @@ import {
   type Advogado,
   type CriarAdvogadoParams,
   type AtualizarAdvogadoParams,
-} from '@/app/app/advogados';
-import { UFS_BRASIL } from '@/app/app/advogados';
+} from '@/app/(authenticated)/advogados';
+import { UFS_BRASIL } from '@/app/(authenticated)/advogados';
 import { criarColunasAdvogados } from '../components/advogados/advogados-columns';
 import { AdvogadoDialog } from '../components/advogados/advogado-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';

@@ -11,7 +11,7 @@
  *   - Restantes     = total - vencidos - proximos7dias
  *
  * Uso:
- *   import { AgingFunnel } from '@/app/app/dashboard/widgets/expedientes/aging-funnel'
+ *   import { AgingFunnel } from '@/app/(authenticated)/dashboard/widgets/expedientes/aging-funnel'
  * ============================================================================
  */
 

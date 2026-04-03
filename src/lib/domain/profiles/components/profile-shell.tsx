@@ -1,11 +1,11 @@
 
 import { ProfileShellClient } from "./profile-shell-client";
-import { actionBuscarCliente } from "@/app/app/partes/actions/clientes-actions";
-import { actionBuscarParteContraria } from "@/app/app/partes/actions/partes-contrarias-actions";
-import { actionBuscarTerceiro } from "@/app/app/partes/actions/terceiros-actions";
-import { actionBuscarRepresentantePorId } from "@/app/app/partes/actions/representantes-actions";
-import { actionBuscarUsuario } from "@/app/app/usuarios/actions/usuarios-actions";
-import { actionBuscarProcessosPorEntidade, actionBuscarClientesPorRepresentante } from "@/app/app/partes/actions/processo-partes-actions";
+import { actionBuscarCliente } from "@/app/(authenticated)/partes/actions/clientes-actions";
+import { actionBuscarParteContraria } from "@/app/(authenticated)/partes/actions/partes-contrarias-actions";
+import { actionBuscarTerceiro } from "@/app/(authenticated)/partes/actions/terceiros-actions";
+import { actionBuscarRepresentantePorId } from "@/app/(authenticated)/partes/actions/representantes-actions";
+import { actionBuscarUsuario } from "@/app/(authenticated)/usuarios/actions/usuarios-actions";
+import { actionBuscarProcessosPorEntidade, actionBuscarClientesPorRepresentante } from "@/app/(authenticated)/partes/actions/processo-partes-actions";
 import { actionBuscarAtividadesPorEntidade } from "../actions/profile-actions";
 import {
   adaptClienteToProfile,
@@ -16,7 +16,7 @@ import {
 } from "../utils/profile-adapters";
 import { createDbClient } from "@/lib/supabase";
 import { ProfileData } from "../configs/types";
-import { mapCodigoStatusToEnum, StatusProcesso } from "@/app/app/processos";
+import { mapCodigoStatusToEnum, StatusProcesso } from "@/app/(authenticated)/processos";
 import type { ProcessoVinculo } from "../types";
 
 interface ProfileShellProps {

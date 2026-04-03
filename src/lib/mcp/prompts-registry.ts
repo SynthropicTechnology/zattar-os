@@ -6,7 +6,7 @@
 
 import { z } from "zod";
 import { registerMcpPrompt, createPromptResult } from "./prompts";
-import type { Processo } from "@/app/app/processos";
+import type { Processo } from "@/app/(authenticated)/processos";
 
 /**
  * Registra todos os prompts disponíveis
@@ -36,7 +36,7 @@ export async function registerAllPrompts(): Promise<void> {
 
       // Buscar dados do processo
       const { actionBuscarProcesso } = await import(
-        "@/app/app/processos/actions"
+        "@/app/(authenticated)/processos/actions"
       );
       const result = await actionBuscarProcesso(processo_id);
 
@@ -110,7 +110,7 @@ ${focoTextos[foco]}`;
 
       if (processo_id) {
         const { actionBuscarProcesso } = await import(
-          "@/app/app/processos/actions"
+          "@/app/(authenticated)/processos/actions"
         );
         const result = await actionBuscarProcesso(processo_id);
 
@@ -248,7 +248,7 @@ ${fontes.length > 0 ? `**Fontes**:\n${fontes.join("\n")}` : ""}`;
         throw new Error("Usuário não autenticado");
       }
 
-      const { buscarDocumento } = await import("@/app/app/documentos/service");
+      const { buscarDocumento } = await import("@/app/(authenticated)/documentos/service");
       const doc = await buscarDocumento(documento_id, user.id);
 
       const formatoInstrucoes: Record<string, string> = {

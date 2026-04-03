@@ -32,7 +32,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/app/app/dashboard/mock/widgets/primitives";
+import { GlassPanel } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 import {
   type CalendarView,
   type EventSource,

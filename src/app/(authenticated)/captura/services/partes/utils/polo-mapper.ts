@@ -7,9 +7,9 @@
  * - Normalizar valores de polo
  */
 
-import type { PoloProcessoParte, TipoParteProcesso } from "@/app/app/partes";
-import { TIPOS_PARTE_PROCESSO_VALIDOS } from "@/app/app/partes";
-import type { Polo } from "@/app/app/partes/types";
+import type { PoloProcessoParte, TipoParteProcesso } from "@/app/(authenticated)/partes";
+import { TIPOS_PARTE_PROCESSO_VALIDOS } from "@/app/(authenticated)/partes";
+import type { Polo } from "@/app/(authenticated)/partes/types";
 
 /**
  * Mapeamento de polos PJE para o sistema interno

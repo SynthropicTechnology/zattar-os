@@ -29,7 +29,7 @@ const mockService = {
 };
 
 // Mock auth utility — use getter to avoid hoisting issue
-jest.mock('@/app/app/usuarios/actions/utils', () => ({
+jest.mock('@/app/(authenticated)/usuarios/actions/utils', () => ({
   get requireAuth() {
     return mockRequireAuth;
   },

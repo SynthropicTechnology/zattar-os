@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { PageShell } from '@/components/shared/page-shell';
-import { ComunicaCNJTabsContent } from '@/app/app/captura';
+import { ComunicaCNJTabsContent } from '@/app/(authenticated)/captura';
 
 export const dynamic = 'force-dynamic';
 

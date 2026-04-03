@@ -13,9 +13,9 @@
 import { useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { useAdvogados } from '@/app/app/advogados';
-import { useCredenciais } from '@/app/app/advogados';
-import type { Credencial } from '@/app/app/captura/types';
+import { useAdvogados } from '@/app/(authenticated)/advogados';
+import { useCredenciais } from '@/app/(authenticated)/advogados';
+import type { Credencial } from '@/app/(authenticated)/captura/types';
 import { AdvogadoCombobox } from './advogado-combobox';
 import { CredenciaisCombobox } from './credenciais-combobox';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';

@@ -14,7 +14,7 @@ import {
   Briefcase,
   Clock,
 } from "lucide-react";
-import { formatarEnderecoCompleto } from "@/app/app/usuarios/utils";
+import { formatarEnderecoCompleto } from "@/app/(authenticated)/usuarios/utils";
 
 // Wrapper para formatar endereço com tipo compatível
 const formatEndereco = (value: unknown): string => {

@@ -9,16 +9,16 @@
  *
  * @example
  * // Importar componentes
- * import { AudienciasContent, AudienciaCard } from '@/app/app/audiencias';
+ * import { AudienciasContent, AudienciaCard } from '@/app/(authenticated)/audiencias';
  *
  * // Importar hooks
- * import { useAudiencias, useTiposAudiencias } from '@/app/app/audiencias';
+ * import { useAudiencias, useTiposAudiencias } from '@/app/(authenticated)/audiencias';
  *
  * // Importar actions
- * import { actionCriarAudiencia } from '@/app/app/audiencias';
+ * import { actionCriarAudiencia } from '@/app/(authenticated)/audiencias';
  *
  * // Importar tipos
- * import type { Audiencia, BuscarAudienciasParams } from '@/app/app/audiencias';
+ * import type { Audiencia, BuscarAudienciasParams } from '@/app/(authenticated)/audiencias';
  */
 
 // ============================================================================
@@ -87,7 +87,7 @@ export type { ActionResult } from "./actions";
 // ============================================================================
 // NOTE: Service functions are NOT exported here because service.ts imports
 // repository.ts which uses Redis cache-utils with 'server-only'.
-// Import directly: import { listarAudiencias } from '@/app/app/audiencias/service';
+// Import directly: import { listarAudiencias } from '@/app/(authenticated)/audiencias/service';
 
 // ============================================================================
 // Repository

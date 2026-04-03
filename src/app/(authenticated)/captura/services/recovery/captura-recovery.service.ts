@@ -7,7 +7,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { CapturaRawLog } from '@/app/app/captura/types/captura-raw-log';
+import type { CapturaRawLog } from '@/app/(authenticated)/captura/types/captura-raw-log';
 import type {
   ListarLogsRecoveryParams,
   ListarLogsRecoveryResult,

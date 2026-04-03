@@ -13,19 +13,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { addDays, addMonths, addWeeks, endOfMonth, format, startOfMonth, subMonths, subWeeks } from "date-fns";
 import { toast } from "sonner";
 
-import type { CalendarSource, UnifiedCalendarEvent } from "@/app/app/calendar";
-import type { CalendarView } from "@/app/app/calendar/briefing-domain";
-import { actionListarEventosCalendar } from "@/app/app/calendar";
-import { generateWeekPulse, getDaySummary } from "@/app/app/calendar/briefing-helpers";
+import type { CalendarSource, UnifiedCalendarEvent } from "@/app/(authenticated)/calendar";
+import type { CalendarView } from "@/app/(authenticated)/calendar/briefing-domain";
+import { actionListarEventosCalendar } from "@/app/(authenticated)/calendar";
+import { generateWeekPulse, getDaySummary } from "@/app/(authenticated)/calendar/briefing-helpers";
 import {
   actionCriarAgendaEvento,
   actionAtualizarAgendaEvento,
   actionDeletarAgendaEvento,
-} from "@/app/app/agenda";
+} from "@/app/(authenticated)/agenda";
 
-import type { CalendarEvent } from "@/app/app/calendar/types";
-import { EventDialog } from "@/app/app/calendar/components/event-dialog";
-import { AgendaDaysToShow } from "@/app/app/calendar/constants";
+import type { CalendarEvent } from "@/app/(authenticated)/calendar/types";
+import { EventDialog } from "@/app/(authenticated)/calendar/components/event-dialog";
+import { AgendaDaysToShow } from "@/app/(authenticated)/calendar/constants";
 
 import { adaptEvents, filterBySearch, filterBySource, type AgendaEvent } from "../lib/adapters";
 import { AgendaToolbar } from "./toolbar";

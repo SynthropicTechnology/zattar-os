@@ -23,7 +23,7 @@ import { ResponsiveFilterPanel } from '@/components/ui/responsive-filter-panel';
 import { AppBadge } from '@/components/ui/app-badge';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeekDaysCarousel } from '@/components/shared';
 
@@ -33,7 +33,7 @@ import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 import { buildExpedientesFilterGroups, parseExpedientesFilters } from './expedientes-toolbar-filters';
-import { TiposExpedientesList } from '@/app/app/tipos-expedientes';
+import { TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
 import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 
 type UsuarioOption = { id: number; nome_exibicao?: string; nomeExibicao?: string; nome?: string };

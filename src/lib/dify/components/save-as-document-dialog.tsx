@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { FileText, Loader2 } from 'lucide-react';
-import { actionCriarDocumento } from '@/app/app/documentos/actions/documentos-actions';
+import { actionCriarDocumento } from '@/app/(authenticated)/documentos/actions/documentos-actions';
 import { markdownToPlate } from '../utils/markdown-to-plate';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';

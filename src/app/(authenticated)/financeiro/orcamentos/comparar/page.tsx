@@ -50,7 +50,7 @@ import {
   type OrcamentoComItens,
   type RelatorioComparativo,
   useOrcamentos,
-} from '@/app/app/financeiro';
+} from '@/app/(authenticated)/financeiro';
 import { toast } from 'sonner';
 
 // ============================================================================

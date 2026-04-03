@@ -17,7 +17,7 @@ import type { ActionResult } from '@/lib/safe-action';
 export async function registerCapturaTools(): Promise<void> {
   const {
     actionListarComunicacoesCapturadas,
-  } = await import('@/app/app/captura/actions/comunica-cnj-actions');
+  } = await import('@/app/(authenticated)/captura/actions/comunica-cnj-actions');
 
   /**
    * Lista capturas do sistema Comunica CNJ

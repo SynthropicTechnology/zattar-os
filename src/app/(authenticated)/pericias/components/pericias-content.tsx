@@ -24,7 +24,7 @@ import {
   type ViewType,
 } from '@/components/shared';
 
-import { useUsuarios } from '@/app/app/usuarios';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
 import { usePeritos } from '../hooks/use-peritos';
 

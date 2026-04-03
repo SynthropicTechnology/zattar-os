@@ -18,7 +18,7 @@ import {
 import {
   FilterPopoverMulti,
   type FilterOption,
-} from "@/app/app/partes";
+} from "@/app/(authenticated)/partes";
 import { TaskStatusBadge } from "../components/shared/project-status-badge";
 import { PriorityIndicator } from "../components/shared/priority-indicator";
 import {

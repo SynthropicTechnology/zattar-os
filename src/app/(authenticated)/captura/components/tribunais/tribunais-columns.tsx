@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
-import type { TribunalConfigDb } from '@/app/app/captura';
+import type { TribunalConfigDb } from '@/app/(authenticated)/captura';
 
 type Params = {
   onEdit?: (tribunal: TribunalConfigDb) => void;

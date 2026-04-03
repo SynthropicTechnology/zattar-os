@@ -1,4 +1,4 @@
-import type { TipoCaptura, StatusCaptura } from '@/app/app/captura/types';
+import type { TipoCaptura, StatusCaptura } from '@/app/(authenticated)/captura/types';
 
 /**
  * Tipos de captura disponíveis para seleção

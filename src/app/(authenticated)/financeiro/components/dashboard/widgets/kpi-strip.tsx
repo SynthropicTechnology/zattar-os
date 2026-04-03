@@ -8,9 +8,9 @@ import {
   ArrowUpFromLine,
   AlertTriangle,
 } from 'lucide-react';
-import { StatCard } from '@/app/app/dashboard/components/widgets/stat-card';
+import { StatCard } from '@/app/(authenticated)/dashboard/components/widgets/stat-card';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { DashboardFinanceiroData } from '@/app/app/financeiro/actions/dashboard';
+import type { DashboardFinanceiroData } from '@/app/(authenticated)/financeiro/actions/dashboard';
 
 // ============================================================================
 // Helpers

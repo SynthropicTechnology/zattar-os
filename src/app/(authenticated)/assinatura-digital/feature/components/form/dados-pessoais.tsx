@@ -10,7 +10,7 @@ import {
 } from '../../validations/dados-pessoais.schema';
 import InputCPF from '../inputs/input-cpf';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import { InputCEP, type InputCepAddress } from '@/app/app/enderecos';
+import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import InputData from '../inputs/input-data';
 import { useFormularioStore } from '../../store';
 import { toast } from 'sonner';

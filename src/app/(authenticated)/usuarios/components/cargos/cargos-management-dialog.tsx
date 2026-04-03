@@ -18,8 +18,8 @@ import {
   FileX,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCargos } from '@/app/app/cargos';
-import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/app/app/cargos';
+import { useCargos } from '@/app/(authenticated)/cargos';
+import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/app/(authenticated)/cargos';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';

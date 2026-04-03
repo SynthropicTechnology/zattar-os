@@ -1,4 +1,4 @@
-import { validarCpfDigitos, normalizarDocumento } from "@/app/app/partes";
+import { validarCpfDigitos, normalizarDocumento } from "@/app/(authenticated)/partes";
 
 export interface ValidacaoCpf {
   valido: boolean;

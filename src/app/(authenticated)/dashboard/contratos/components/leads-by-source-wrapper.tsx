@@ -1,4 +1,4 @@
-import { actionContarClientesPorEstado } from "@/app/app/partes/server-actions";
+import { actionContarClientesPorEstado } from "@/app/(authenticated)/partes/server-actions";
 import { LeadBySourceCard } from "./leads-by-source";
 import type { CrmDateFilter } from "../crm-date-filter";
 import { toCrmDateFilterInput } from "../crm-date-filter";

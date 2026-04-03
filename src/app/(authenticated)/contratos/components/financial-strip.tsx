@@ -18,7 +18,7 @@ import {
   AnimatedNumber,
   ProgressRing,
   Sparkline,
-} from '@/app/app/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

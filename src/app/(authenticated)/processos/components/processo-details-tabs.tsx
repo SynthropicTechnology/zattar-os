@@ -17,18 +17,18 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { actionObterDetalhesComplementaresProcesso } from '../actions';
-import { ExpedienteVisualizarDialog } from '@/app/app/expedientes/components/expediente-visualizar-dialog';
-import { actionListarUsuarios } from '@/app/app/usuarios';
-import { actionListarTiposExpedientes } from '@/app/app/tipos-expedientes';
-import type { Audiencia } from '@/app/app/audiencias';
+import { ExpedienteVisualizarDialog } from '@/app/(authenticated)/expedientes/components/expediente-visualizar-dialog';
+import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
+import { actionListarTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
+import type { Audiencia } from '@/app/(authenticated)/audiencias';
 import {
   StatusAudiencia,
   STATUS_AUDIENCIA_LABELS,
   MODALIDADE_AUDIENCIA_LABELS,
-} from '@/app/app/audiencias';
-import type { Expediente } from '@/app/app/expedientes';
-import type { Pericia } from '@/app/app/pericias';
-import { SITUACAO_PERICIA_LABELS, type SituacaoPericiaCodigo } from '@/app/app/pericias';
+} from '@/app/(authenticated)/audiencias';
+import type { Expediente } from '@/app/(authenticated)/expedientes';
+import type { Pericia } from '@/app/(authenticated)/pericias';
+import { SITUACAO_PERICIA_LABELS, type SituacaoPericiaCodigo } from '@/app/(authenticated)/pericias';
 
 interface UsuarioInfo {
   id: number;

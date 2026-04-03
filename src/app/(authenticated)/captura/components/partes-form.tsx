@@ -3,8 +3,8 @@
 import { forwardRef, useImperativeHandle, useMemo, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
-import { capturarPartes } from '@/app/app/captura/services/api-client';
-import type { CapturaPartesParams, Credencial, CapturaFormHandle } from '@/app/app/captura/types';
+import { capturarPartes } from '@/app/(authenticated)/captura/services/api-client';
+import type { CapturaPartesParams, Credencial, CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

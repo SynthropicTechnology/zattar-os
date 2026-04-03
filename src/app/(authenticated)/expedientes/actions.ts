@@ -19,7 +19,7 @@ import {
 import { after } from "next/server";
 import { indexDocument } from "@/lib/ai/services/indexing.service";
 import { authenticateRequest } from "@/lib/auth";
-import { listarUploads } from "@/app/app/documentos/service";
+import { listarUploads } from "@/app/(authenticated)/documentos/service";
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -184,7 +184,7 @@ export async function actionCriarExpediente(
           );
 
           const { gerarPecaAutomatica } = await import(
-            '@/app/app/assistentes/geracao-automatica-service'
+            '@/app/(authenticated)/assistentes/geracao-automatica-service'
           );
 
           const resultado = await gerarPecaAutomatica(expedienteId, user.id);

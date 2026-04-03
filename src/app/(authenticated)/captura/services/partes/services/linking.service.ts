@@ -7,10 +7,10 @@
  * - Validar dados de vinculação
  */
 
-import type { PartePJE } from "@/app/app/captura/pje-trt/partes/types";
+import type { PartePJE } from "@/app/(authenticated)/captura/pje-trt/partes/types";
 import type { TipoParteClassificacao } from "../types";
 import type { ProcessoParaCaptura } from "../partes-capture.service";
-import { vincularParteProcesso } from "@/app/app/partes/server";
+import { vincularParteProcesso } from "@/app/(authenticated)/partes/server";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { ValidationError, PersistenceError } from "../errors";

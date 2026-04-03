@@ -15,13 +15,13 @@ import {
   getCacheStats,
 } from '@/lib/auth/authorization';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { isPermissaoValida } from '@/app/app/usuarios';
-import type { Recurso, Operacao } from '@/app/app/usuarios';
+import { isPermissaoValida } from '@/app/(authenticated)/usuarios';
+import type { Recurso, Operacao } from '@/app/(authenticated)/usuarios';
 import type { SupabaseClient as _SupabaseClient } from '@supabase/supabase-js';
 
 // Mocks
 jest.mock('@/lib/supabase/service-client');
-jest.mock('@/app/app/usuarios', () => ({
+jest.mock('@/app/(authenticated)/usuarios', () => ({
   isPermissaoValida: jest.fn(),
 }));
 

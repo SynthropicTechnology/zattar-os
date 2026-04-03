@@ -16,7 +16,7 @@ interface ChartSkeletonProps {
  * @example
  * ```typescript
  * const WidgetFluxoCaixa = dynamic(
- *   () => import('@/app/app/dashboard').then(m => ({ default: m.WidgetFluxoCaixa })),
+ *   () => import('@/app/(authenticated)/dashboard').then(m => ({ default: m.WidgetFluxoCaixa })),
  *   {
  *     ssr: false,
  *     loading: () => <ChartSkeleton title="Fluxo de Caixa" />

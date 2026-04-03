@@ -1021,7 +1021,7 @@ export interface ListarTerceirosParams {
 // TIPOS COM RELACIONAMENTOS (JOINs)
 // =============================================================================
 
-import type { Endereco } from '@/app/app/enderecos';
+import type { Endereco } from '@/app/(authenticated)/enderecos';
 
 /**
  * Processo relacionado a uma parte (resumo expandido para HoverCard)

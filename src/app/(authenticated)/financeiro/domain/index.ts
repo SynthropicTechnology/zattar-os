@@ -5,7 +5,7 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado (import direto):
- * import { validarCriacaoLancamento } from '@/app/app/financeiro/domain/lancamentos';
+ * import { validarCriacaoLancamento } from '@/app/(authenticated)/financeiro/domain/lancamentos';
  *
  * NOTA: orcamentos e dre são exportados como namespaces para evitar conflitos
  * de nomes entre símbolos como MESES, TENDENCIA_LABELS, calcularVariacao, etc.
@@ -96,7 +96,7 @@ export {
 // ============================================================================
 // Plano de Contas - Tipos e Validações
 // ============================================================================
-// Obrigações: tipos agora vêm de @/app/app/obrigacoes
+// Obrigações: tipos agora vêm de @/app/(authenticated)/obrigacoes
 export type {
   TipoContaContabil,
   NaturezaConta,

@@ -8,7 +8,7 @@
  * - Agregar métricas de processamento
  */
 
-import type { PartePJE } from "@/app/app/captura/pje-trt/partes/types";
+import type { PartePJE } from "@/app/(authenticated)/captura/pje-trt/partes/types";
 import type { TipoParteClassificacao } from "../types";
 import type { ProcessoParaCaptura } from "../partes-capture.service";
 import type { AdvogadoIdentificacao } from "../identificacao-partes.service";

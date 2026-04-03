@@ -13,7 +13,7 @@
  *   />
  */
 
-import { fmtMoeda } from '@/app/app/dashboard/mock/widgets/primitives';
+import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { ContratoCard } from './contrato-card';
 import type { ContratoCardData } from './contrato-card';
 

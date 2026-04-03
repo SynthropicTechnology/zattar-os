@@ -5,7 +5,7 @@ import type {
   CapturaLog,
   ListarCapturasLogParams,
   ListarCapturasLogResult,
-} from '@/app/app/captura/types';
+} from '@/app/(authenticated)/captura/types';
 
 interface CapturasLogApiResponse {
   success: boolean;

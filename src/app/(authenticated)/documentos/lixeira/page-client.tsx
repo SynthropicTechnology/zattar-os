@@ -35,16 +35,16 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageShell } from '@/components/shared/page-shell';
-import { FilterPopover } from '@/app/app/partes';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { DocumentoComUsuario } from '@/app/app/documentos';
+import type { DocumentoComUsuario } from '@/app/(authenticated)/documentos';
 import {
   actionListarLixeira,
   actionRestaurarDaLixeira,
   actionDeletarPermanentemente
-} from '@/app/app/documentos';
+} from '@/app/(authenticated)/documentos';
 
 // ============================================================================
 // Constantes

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-import { CopyButton, MapButton } from "@/app/app/partes/components/shared";
+import { CopyButton, MapButton } from "@/app/(authenticated)/partes/components/shared";
 
 interface ClienteEnderecoSectionProps {
   data: Record<string, unknown>;

@@ -28,10 +28,10 @@ import { AppBadge } from '@/components/ui/app-badge';
 
 import type { Pericia } from '../domain';
 import { SituacaoPericiaCodigo, SITUACAO_PERICIA_LABELS } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '@/app/app/expedientes';
+import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 import type { GrauTribunal } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
-import { useUsuarios } from '@/app/app/usuarios';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
 import { usePeritos } from '../hooks/use-peritos';
 import { columns } from './columns';

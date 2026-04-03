@@ -46,7 +46,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { getAvatarUrl } from '@/app/app/usuarios';
+import { getAvatarUrl } from '@/app/(authenticated)/usuarios';
 
 import { FileUploadDialogUnified } from './file-upload-dialog-unified';
 import { CreateFolderDialog } from './create-folder-dialog';

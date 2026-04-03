@@ -27,7 +27,7 @@ export async function registerPartesTools(): Promise<void> {
     actionListarPartesContrarias,
     actionListarTerceiros,
     actionListarRepresentantes,
-  } = await import('@/app/app/partes/server');
+  } = await import('@/app/(authenticated)/partes/server');
 
   /**
    * Lista clientes/partes do sistema com filtros (nome, CPF/CNPJ, tipo)

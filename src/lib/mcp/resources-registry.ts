@@ -5,10 +5,10 @@
  */
 
 import { registerMcpResource, jsonResourceResult } from "./resources";
-import type { Processo } from "@/app/app/processos";
-import type { Cliente } from "@/app/app/partes";
-import type { Contrato } from "@/app/app/contratos";
-import type { Audiencia } from "@/app/app/audiencias";
+import type { Processo } from "@/app/(authenticated)/processos";
+import type { Cliente } from "@/app/(authenticated)/partes";
+import type { Contrato } from "@/app/(authenticated)/contratos";
+import type { Audiencia } from "@/app/(authenticated)/audiencias";
 
 /**
  * Registra todos os resources disponíveis
@@ -36,7 +36,7 @@ export async function registerAllResources(): Promise<void> {
       }
 
       // Import dinâmico para evitar dependências circulares
-      const { buscarDocumento } = await import("@/app/app/documentos/service");
+      const { buscarDocumento } = await import("@/app/(authenticated)/documentos/service");
 
       const doc = await buscarDocumento(id, user.id);
 
@@ -63,7 +63,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { actionBuscarProcesso } = await import(
-        "@/app/app/processos/actions"
+        "@/app/(authenticated)/processos/actions"
       );
 
       const result = await actionBuscarProcesso(id);
@@ -94,7 +94,7 @@ export async function registerAllResources(): Promise<void> {
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarCliente } = await import("@/app/app/partes/server");
+      const { actionBuscarCliente } = await import("@/app/(authenticated)/partes/server");
 
       const result = await actionBuscarCliente(id);
 
@@ -125,7 +125,7 @@ export async function registerAllResources(): Promise<void> {
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarContrato } = await import("@/app/app/contratos");
+      const { actionBuscarContrato } = await import("@/app/(authenticated)/contratos");
 
       const result = await actionBuscarContrato(id);
 
@@ -155,7 +155,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { buscarExpediente } = await import(
-        "@/app/app/expedientes/service"
+        "@/app/(authenticated)/expedientes/service"
       );
 
       const result = await buscarExpediente(id);
@@ -185,7 +185,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { actionBuscarAudienciaPorId } = await import(
-        "@/app/app/audiencias/actions"
+        "@/app/(authenticated)/audiencias/actions"
       );
 
       const result = await actionBuscarAudienciaPorId(id);
@@ -216,7 +216,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { actionBuscarLancamento } = await import(
-        "@/app/app/financeiro/actions"
+        "@/app/(authenticated)/financeiro/actions"
       );
 
       const result = await actionBuscarLancamento(id);
@@ -246,7 +246,7 @@ export async function registerAllResources(): Promise<void> {
     mimeType: "application/json",
     handler: async (uri) => {
       const { actionListarProcessos } = await import(
-        "@/app/app/processos/actions"
+        "@/app/(authenticated)/processos/actions"
       );
 
       const result = await actionListarProcessos({ limite: 50 });
@@ -271,7 +271,7 @@ export async function registerAllResources(): Promise<void> {
     description: "Lista clientes cadastrados",
     mimeType: "application/json",
     handler: async (uri) => {
-      const { actionListarClientes } = await import("@/app/app/partes/server");
+      const { actionListarClientes } = await import("@/app/(authenticated)/partes/server");
 
       const result = await actionListarClientes({ limite: 50 });
 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { NACIONALIDADES } from "@/app/app/assinatura-digital/feature/constants/nacionalidades";
-import { applyRateLimit } from "@/app/app/assinatura-digital/feature/utils/rate-limit";
+import { NACIONALIDADES } from "@/app/(authenticated)/assinatura-digital/feature/constants/nacionalidades";
+import { applyRateLimit } from "@/app/(authenticated)/assinatura-digital/feature/utils/rate-limit";
 
 const schema = z.object({ cpf: z.string().length(11) });
 

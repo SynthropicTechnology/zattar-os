@@ -5,8 +5,8 @@
  * Importações devem ser feitas preferencialmente a partir deste arquivo:
  *
  * @example
- * import { DashboardContent, useDashboard, actionObterDashboard } from '@/app/app/dashboard';
- * import type { DashboardData, DashboardUsuarioData } from '@/app/app/dashboard';
+ * import { DashboardContent, useDashboard, actionObterDashboard } from '@/app/(authenticated)/dashboard';
+ * import type { DashboardData, DashboardUsuarioData } from '@/app/(authenticated)/dashboard';
  */
 
 // Types

@@ -5,8 +5,8 @@ import { History, ArrowRight, Circle, CheckCircle2, XCircle, Clock } from 'lucid
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { ContratoStatusHistorico, StatusContrato } from '@/app/app/contratos';
-import { STATUS_CONTRATO_LABELS, getStatusVariant } from '@/app/app/contratos';
+import type { ContratoStatusHistorico, StatusContrato } from '@/app/(authenticated)/contratos';
+import { STATUS_CONTRATO_LABELS, getStatusVariant } from '@/app/(authenticated)/contratos';
 import { cn } from '@/lib/utils';
 
 interface ContratoTimelineProps {

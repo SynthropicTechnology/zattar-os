@@ -38,7 +38,7 @@ export async function registerTarefasTools(): Promise<void> {
     listarQuadros,
     criarQuadroCustom,
     excluirQuadroCustom,
-  } = await import('@/app/app/tarefas/service');
+  } = await import('@/app/(authenticated)/tarefas/service');
 
   /**
    * Lista tarefas do sistema com filtros

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { actionBuscarAssistente, requireAuth } from '@/app/app/assistentes/feature';
+import { actionBuscarAssistente, requireAuth } from '@/app/(authenticated)/assistentes/feature';
 import { getDifyAppAction } from '@/lib/dify/actions';
 import { AssistenteNativoView } from './components/assistente-nativo-view';
 

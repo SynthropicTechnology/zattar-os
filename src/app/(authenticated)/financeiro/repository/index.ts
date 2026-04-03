@@ -5,7 +5,7 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado:
- * import { LancamentosRepository } from '@/app/app/financeiro/repository/lancamentos';
+ * import { LancamentosRepository } from '@/app/(authenticated)/financeiro/repository/lancamentos';
  */
 
 // ============================================================================

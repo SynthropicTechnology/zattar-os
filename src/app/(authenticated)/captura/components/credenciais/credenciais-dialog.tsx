@@ -22,7 +22,7 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { GRAU_LABELS, TRIBUNAL_VARIANTS } from '@/lib/design-system';
 
-import type { Credencial } from '@/app/app/captura/types';
+import type { Credencial } from '@/app/(authenticated)/captura/types';
 
 type Props = {
   credencial: Credencial | null;

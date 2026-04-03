@@ -363,5 +363,5 @@ export interface ContratosStatsData {
 // =============================================================================
 // NOTA: Tipos auxiliares (API Response, Filtros, PaginationInfo, ClienteInfo)
 // foram movidos para ./types.ts para separação de concerns.
-// Importe-os de '@/app/app/contratos/types' ou '@/app/app/contratos'
+// Importe-os de '@/app/(authenticated)/contratos/types' ou '@/app/(authenticated)/contratos'
 // =============================================================================

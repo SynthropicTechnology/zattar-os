@@ -5,11 +5,11 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado (import direto):
- * import { useClientes } from '@/app/app/partes/hooks/use-clientes';
- * import { ClientesTableWrapper } from '@/app/app/partes/components/clientes';
+ * import { useClientes } from '@/app/(authenticated)/partes/hooks/use-clientes';
+ * import { ClientesTableWrapper } from '@/app/(authenticated)/partes/components/clientes';
  *
  * ⚠️ Use com moderação (barrel export):
- * import { useClientes, ClientesTableWrapper } from '@/app/app/partes';
+ * import { useClientes, ClientesTableWrapper } from '@/app/(authenticated)/partes';
  *
  * Este modulo centraliza toda a funcionalidade relacionada a partes processuais:
  * - Clientes
@@ -19,16 +19,16 @@
  *
  * @example
  * // Importar componentes
- * import { ClientesTableWrapper, ClienteForm } from '@/app/app/partes';
+ * import { ClientesTableWrapper, ClienteForm } from '@/app/(authenticated)/partes';
  *
  * // Importar hooks
- * import { usePartesContrarias, useTerceiros } from '@/app/app/partes';
+ * import { usePartesContrarias, useTerceiros } from '@/app/(authenticated)/partes';
  *
  * // Importar utils
- * import { formatarCpf, formatarNome } from '@/app/app/partes';
+ * import { formatarCpf, formatarNome } from '@/app/(authenticated)/partes';
  *
  * // Importar tipos
- * import type { Cliente, ParteContraria } from '@/app/app/partes';
+ * import type { Cliente, ParteContraria } from '@/app/(authenticated)/partes';
  */
 
 // ============================================================================
@@ -194,7 +194,7 @@ export {
 // Server-only exports
 // ============================================================================
 // Actions, Services e Repositories devem ser importados via server entrypoint:
-//   import { findClienteById } from '@/app/app/partes/server';
+//   import { findClienteById } from '@/app/(authenticated)/partes/server';
 // NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.
 
 // ============================================================================

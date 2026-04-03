@@ -2,7 +2,7 @@
 
 import { listarAgendamentos as listarAgendamentosPersistence } from '../persistence/agendamento-persistence.service';
 import type { ListarAgendamentosParams } from '../../types/agendamentos-types';
-import type { Paginacao } from '@/app/app/captura/types/paginacao';
+import type { Paginacao } from '@/app/(authenticated)/captura/types/paginacao';
 
 export interface ListarAgendamentosResult {
   agendamentos: Array<{

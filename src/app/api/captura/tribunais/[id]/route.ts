@@ -6,8 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { clearConfigCache } from '@/app/app/captura/services/trt/config';
-import type { TipoAcessoTribunal, CustomTimeouts, CodigoTRT } from '@/app/app/captura';
+import { clearConfigCache } from '@/app/(authenticated)/captura/services/trt/config';
+import type { TipoAcessoTribunal, CustomTimeouts, CodigoTRT } from '@/app/(authenticated)/captura';
 
 interface UpdateTribunalBody {
   tipo_acesso?: TipoAcessoTribunal;

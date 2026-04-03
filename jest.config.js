@@ -35,7 +35,7 @@ const config = {
       preset: 'ts-jest',
       testEnvironment: 'node',
       testMatch: [
-        '<rootDir>/src/app/app/**/__tests__/**/*.test.ts',
+        '<rootDir>/src/app/(authenticated)/**/__tests__/**/*.test.ts',
         '<rootDir>/src/lib/**/__tests__/**/*.test.ts',
       ],
       moduleNameMapper: {

@@ -15,7 +15,7 @@ import {
   FileX,
   AlertTriangle,
 } from 'lucide-react';
-import type { CapturaRawLog } from '@/app/app/captura';
+import type { CapturaRawLog } from '@/app/(authenticated)/captura';
 import type { LogEntry, LogRegistroInserido, LogRegistroAtualizado, LogErro } from '../services/persistence/capture-log.service';
 
 function formatarGrau(grau: string): string {

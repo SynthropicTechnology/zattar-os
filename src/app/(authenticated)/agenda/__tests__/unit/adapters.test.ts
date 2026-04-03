@@ -4,7 +4,7 @@
  * Verifica conversao de UnifiedCalendarEvent -> AgendaEvent e filtragem.
  */
 
-import type { UnifiedCalendarEvent } from "@/app/app/calendar/domain";
+import type { UnifiedCalendarEvent } from "@/app/(authenticated)/calendar/domain";
 import { adaptToAgendaEvent, adaptEvents, filterBySource, filterBySearch } from "../../lib/adapters";
 
 // ─── Fixtures ──────────────────────────────────────────────────────────

@@ -5,17 +5,17 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado (import direto):
- * import { useContasPagar } from '@/app/app/financeiro/hooks/use-contas-pagar';
- * import { ContaPagarFormDialog } from '@/app/app/financeiro/components/contas-pagar/conta-pagar-form-dialog';
+ * import { useContasPagar } from '@/app/(authenticated)/financeiro/hooks/use-contas-pagar';
+ * import { ContaPagarFormDialog } from '@/app/(authenticated)/financeiro/components/contas-pagar/conta-pagar-form-dialog';
  *
  * ⚠️ Use com moderação (barrel export):
- * import { useContasPagar, ContaPagarFormDialog } from '@/app/app/financeiro';
+ * import { useContasPagar, ContaPagarFormDialog } from '@/app/(authenticated)/financeiro';
  *
  * @example
- * import { LancamentosService, actionCriarLancamento } from '@/app/app/financeiro';
- * import { useDRE, useOrcamentos } from '@/app/app/financeiro/hooks';
- * import { ImportarExtratoDialog } from '@/app/app/financeiro/components';
- * import { exportHelpers } from '@/app/app/financeiro'; // namespace para helpers de exportação
+ * import { LancamentosService, actionCriarLancamento } from '@/app/(authenticated)/financeiro';
+ * import { useDRE, useOrcamentos } from '@/app/(authenticated)/financeiro/hooks';
+ * import { ImportarExtratoDialog } from '@/app/(authenticated)/financeiro/components';
+ * import { exportHelpers } from '@/app/(authenticated)/financeiro'; // namespace para helpers de exportação
  */
 
 // ============================================================================
@@ -253,8 +253,8 @@ export {
 // o barrel público da feature (este arquivo) exporta apenas código client-safe.
 //
 // Use:
-// - `@/app/app/financeiro/server` para services e helpers server-side
-// - `@/app/app/financeiro/server-actions` para Server Actions
+// - `@/app/(authenticated)/financeiro/server` para services e helpers server-side
+// - `@/app/(authenticated)/financeiro/server-actions` para Server Actions
 
 // ============================================================================
 // Utils - Utilitários de Exportação

@@ -18,7 +18,7 @@ import {
   useChatSubscription,
   type SalaChat,
   type MensagemComUsuario,
-} from '@/app/app/chat';
+} from '@/app/(authenticated)/chat';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 

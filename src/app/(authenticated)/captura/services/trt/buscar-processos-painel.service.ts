@@ -8,8 +8,8 @@
  */
 
 import type { AuthResult } from "./trt-auth.service";
-import { obterProcessosAcervoGeral } from "@/app/app/captura/pje-trt/acervo-geral/obter-processos";
-import { obterProcessosArquivados } from "@/app/app/captura/pje-trt/arquivados/obter-processos";
+import { obterProcessosAcervoGeral } from "@/app/(authenticated)/captura/pje-trt/acervo-geral/obter-processos";
+import { obterProcessosArquivados } from "@/app/(authenticated)/captura/pje-trt/arquivados/obter-processos";
 import type { Processo } from "../../types/types";
 
 type OrigemProcesso = "acervo_geral" | "arquivado";

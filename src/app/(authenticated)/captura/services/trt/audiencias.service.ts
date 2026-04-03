@@ -47,15 +47,15 @@
 import { todayDateString, addDays } from "@/lib/date-utils";
 import { autenticarPJE, type AuthResult } from "./trt-auth.service";
 import type { CapturaAudienciasParams } from "./trt-capture.service";
-import { obterTodasAudiencias } from "@/app/app/captura/pje-trt";
+import { obterTodasAudiencias } from "@/app/(authenticated)/captura/pje-trt";
 import type { Audiencia, PagedResponse } from "../../types/types";
 import {
   salvarAudiencias,
   type SalvarAudienciasResult,
 } from "../persistence/audiencias-persistence.service";
-import { obterTimeline } from "@/app/app/captura/pje-trt/timeline/obter-timeline";
-import { obterDocumento } from "@/app/app/captura/pje-trt/timeline/obter-documento";
-import { baixarDocumento } from "@/app/app/captura/pje-trt/timeline/baixar-documento";
+import { obterTimeline } from "@/app/(authenticated)/captura/pje-trt/timeline/obter-timeline";
+import { obterDocumento } from "@/app/(authenticated)/captura/pje-trt/timeline/obter-documento";
+import { baixarDocumento } from "@/app/(authenticated)/captura/pje-trt/timeline/baixar-documento";
 import { uploadToBackblaze } from "@/lib/storage/backblaze-b2.service";
 import {
   gerarNomeDocumentoAudiencia,

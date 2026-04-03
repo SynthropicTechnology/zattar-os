@@ -7,7 +7,7 @@
  * - Extrair campos específicos do PJE de representantes
  */
 
-import type { PartePJE, RepresentantePJE } from "@/app/app/captura/pje-trt/partes/types";
+import type { PartePJE, RepresentantePJE } from "@/app/(authenticated)/captura/pje-trt/partes/types";
 import { normalizarPolo } from "./polo-mapper";
 
 // ============================================================================

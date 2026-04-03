@@ -4,8 +4,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { listarExpedientes } from '@/app/app/expedientes/service';
-import type { ListarExpedientesParams } from '@/app/app/expedientes';
+import { listarExpedientes } from '@/app/(authenticated)/expedientes/service';
+import type { ListarExpedientesParams } from '@/app/(authenticated)/expedientes';
 
 /**
  * @swagger

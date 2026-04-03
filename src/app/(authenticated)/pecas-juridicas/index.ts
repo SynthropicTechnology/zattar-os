@@ -23,7 +23,7 @@
  *   // Actions
  *   actionCriarPecaModelo,
  *   actionGerarPecaDeContrato,
- * } from '@/app/app/pecas-juridicas';
+ * } from '@/app/(authenticated)/pecas-juridicas';
  * ```
  */
 

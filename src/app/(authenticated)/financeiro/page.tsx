@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PageShell } from '@/components/shared/page-shell';
-import { FinanceiroDashboard } from '@/app/app/financeiro';
+import { FinanceiroDashboard } from '@/app/(authenticated)/financeiro';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FinanceiroNavigationSelect } from './components/financeiro-navigation-select';
 

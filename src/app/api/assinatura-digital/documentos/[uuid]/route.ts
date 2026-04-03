@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requirePermission } from "@/lib/auth/require-permission";
-import { getDocumentoByUuid } from "@/app/app/assinatura-digital/feature/services/documentos.service";
+import { getDocumentoByUuid } from "@/app/(authenticated)/assinatura-digital/feature/services/documentos.service";
 
 export async function GET(
   request: NextRequest,

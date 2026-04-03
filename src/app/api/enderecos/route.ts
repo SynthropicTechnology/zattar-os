@@ -6,8 +6,8 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
 import {
   listarEnderecos,
   criarEndereco,
-} from '@/app/app/enderecos';
-import type { CriarEnderecoParams, ListarEnderecosParams } from '@/app/app/enderecos/types';
+} from '@/app/(authenticated)/enderecos';
+import type { CriarEnderecoParams, ListarEnderecosParams } from '@/app/(authenticated)/enderecos/types';
 
 /**
  * @swagger

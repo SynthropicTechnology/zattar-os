@@ -10,7 +10,7 @@
  * - Sheets de criação, edição e visualização
  *
  * Implementação seguindo o padrão DataShell.
- * Referência: src/app/app/partes/components/clientes/clientes-table-wrapper.tsx
+ * Referência: src/app/(authenticated)/partes/components/clientes/clientes-table-wrapper.tsx
  */
 
 import * as React from 'react';
@@ -25,7 +25,7 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 import { ViewModePopover, type ViewModeOption } from '@/components/shared/view-mode-popover';
 import { Button } from '@/components/ui/button';
 import {
@@ -49,7 +49,7 @@ import {
   AlterarSegmentoMassaDialog,
   ExcluirMassaDialog,
 } from './contratos-bulk-actions';
-import { GerarPecaDialog } from '@/app/app/pecas-juridicas/components';
+import { GerarPecaDialog } from '@/app/(authenticated)/pecas-juridicas/components';
 import type {
   Contrato,
   ListarContratosParams,

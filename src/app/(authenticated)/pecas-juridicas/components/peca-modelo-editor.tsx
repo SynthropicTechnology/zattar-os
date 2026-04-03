@@ -50,9 +50,9 @@ import {
   TIPOS_PECA_JURIDICA,
 } from '../domain';
 import { PlaceholderToolbarButton } from './placeholder-insert-menu';
-import { exportToDocx, exportTextToPdf } from '@/app/app/documentos/utils';
+import { exportToDocx, exportTextToPdf } from '@/app/(authenticated)/documentos/utils';
 
-import type { Value } from '@/app/app/documentos/types';
+import type { Value } from '@/app/(authenticated)/documentos/types';
 import type { PlateEditorRef } from '@/components/editor/plate/plate-editor';
 
 // =============================================================================

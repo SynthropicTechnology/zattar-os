@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useCentrosCusto, useContasBancarias, usePlanoContas } from '@/app/app/financeiro';
+import { useCentrosCusto, useContasBancarias, usePlanoContas } from '@/app/(authenticated)/financeiro';
 import { aprovarFolha } from '../../hooks';
 import type { AprovarFolhaDTO } from '../../types';
 import { toast } from 'sonner';

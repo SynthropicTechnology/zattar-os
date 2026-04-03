@@ -3,7 +3,7 @@
 import { ObrigacoesService } from '../services/obrigacoes';
 import { verificarConsistencia } from '../services/obrigacoes-integracao';
 import { revalidatePath } from 'next/cache';
-import type { ParcelaComLancamento } from '@/app/app/obrigacoes';
+import type { ParcelaComLancamento } from '@/app/(authenticated)/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
 import { todayDateString } from '@/lib/date-utils';
 

@@ -16,8 +16,8 @@ import {
   IntegracaoFinanceiraSection,
   type AcordoComParcelas,
   type Parcela,
-} from '@/app/app/obrigacoes';
-import { actionBuscarAcordo, actionDeletarAcordo } from '@/app/app/obrigacoes/server-actions';
+} from '@/app/(authenticated)/obrigacoes';
+import { actionBuscarAcordo, actionDeletarAcordo } from '@/app/(authenticated)/obrigacoes/server-actions';
 import { formatDate } from '@/lib/formatters';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import {

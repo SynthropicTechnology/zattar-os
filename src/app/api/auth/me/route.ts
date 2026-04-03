@@ -14,7 +14,7 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
 import { resolveAvatarUrl } from '@/lib/avatar-url';
 import { createServiceClient } from '@/lib/supabase/service-client';
 // FSD: server-only API route — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
-import { listarPermissoesUsuario } from '@/app/app/usuarios/repository';
+import { listarPermissoesUsuario } from '@/app/(authenticated)/usuarios/repository';
 
 export async function GET(request: NextRequest) {
   try {

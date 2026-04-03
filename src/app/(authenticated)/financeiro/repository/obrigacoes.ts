@@ -5,14 +5,14 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import * as ObrigacoesRepoBase from '@/app/app/obrigacoes/repository';
+import * as ObrigacoesRepoBase from '@/app/(authenticated)/obrigacoes/repository';
 import type {
     AcordoComParcelas,
     ParcelaComLancamento,
     StatusRepasse,
     TipoObrigacao,
     FormaPagamento as ObrigacoesFormaPagamento,
-} from '@/app/app/obrigacoes';
+} from '@/app/(authenticated)/obrigacoes';
 import type {
     ListarLancamentosParams,
     Lancamento,

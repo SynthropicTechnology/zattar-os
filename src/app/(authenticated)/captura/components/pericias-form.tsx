@@ -3,11 +3,11 @@
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
-import { capturarPericias } from '@/app/app/captura/services/api-client';
-import { SITUACAO_PERICIA_OPTIONS } from '@/app/app/captura/constants';
+import { capturarPericias } from '@/app/(authenticated)/captura/services/api-client';
+import { SITUACAO_PERICIA_OPTIONS } from '@/app/(authenticated)/captura/constants';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { CapturaFormHandle } from '@/app/app/captura/types';
+import type { CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 
 interface PericiasFormProps {
   onSuccess?: () => void;

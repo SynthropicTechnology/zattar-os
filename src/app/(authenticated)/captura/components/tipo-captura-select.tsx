@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Database, Archive, Calendar, AlertCircle, FileText, Users, Layers, Microscope } from 'lucide-react';
-import { TipoCaptura } from '@/app/app/captura/types';
+import { TipoCaptura } from '@/app/(authenticated)/captura/types';
 
 interface TipoCapturaSelectProps {
   value: TipoCaptura;

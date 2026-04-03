@@ -1,5 +1,5 @@
 import { PageShell } from '@/components/shared/page-shell';
-import { RepassesPageContent } from '@/app/app/repasses';
+import { RepassesPageContent } from '@/app/(authenticated)/repasses';
 
 export default function RepassesPage() {
   return (

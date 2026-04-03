@@ -85,7 +85,7 @@ src/
 Every feature follows **Domain -> Service -> Repository -> Actions**, colocated inside its route directory:
 
 ```
-src/app/app/{modulo}/
+src/app/(authenticated)/{modulo}/
 ├── domain.ts            # Zod schemas, types, constants, pure business rules
 ├── service.ts           # Use cases, business logic orchestration
 ├── repository.ts        # Supabase data access (CRUD, filters)
@@ -126,10 +126,10 @@ UI (React) -> Server Action (authenticatedAction + Zod validation)
 
 ```typescript
 // CORRECT — use barrel exports
-import { ClientesTable, actionListarClientes } from "@/app/app/partes";
+import { ClientesTable, actionListarClientes } from "@/app/(authenticated)/partes";
 
 // WRONG — no deep imports into module internals
-import { ClientesTable } from "@/app/app/partes/components/clientes/clientes-table";
+import { ClientesTable } from "@/app/(authenticated)/partes/components/clientes/clientes-table";
 ```
 
 Relative imports within the same module are allowed. Cross-module imports must use the module's barrel export (`index.ts`).
@@ -139,7 +139,7 @@ Relative imports within the same module are allowed. Cross-module imports must u
 - Always use `authenticatedAction` wrapper from `@/lib/safe-action`
 - Naming: `actionCriar`, `actionAtualizar`, `actionListar`, `actionDeletar`
 - Return type: `{ success: boolean; data?: T; error?: string }`
-- Place in `src/app/app/{modulo}/actions/{entity}-actions.ts`
+- Place in `src/app/(authenticated)/{modulo}/actions/{entity}-actions.ts`
 - Validate with Zod schemas defined in `domain.ts`
 
 ### UI Components — Mandatory Patterns
@@ -155,7 +155,7 @@ Relative imports within the same module are allowed. Cross-module imports must u
 | Detail panel | `DetailSheet` | `@/components/shared/detail-sheet` |
 | Empty states | `EmptyState` | `@/components/shared/empty-state` |
 
-**Gold standard reference**: `src/app/app/partes/components/clientes/clientes-table-wrapper.tsx`
+**Gold standard reference**: `src/app/(authenticated)/partes/components/clientes/clientes-table-wrapper.tsx`
 
 **Full component documentation**: `src/components/shared/AI_INSTRUCTIONS.md`
 
@@ -243,4 +243,4 @@ Full list in `.env.example`.
 
 - `docs/architecture/AGENTS.md` — Full agent-friendly reference with data flows, troubleshooting, and development hints
 - `src/components/shared/AI_INSTRUCTIONS.md` — Complete UI component patterns with code examples
-- `src/app/app/*/RULES.md` — Business rules per module (processos, partes, documentos, financeiro, contratos, notificacoes, obrigacoes, audiencias)
+- `src/app/(authenticated)/*/RULES.md` — Business rules per module (processos, partes, documentos, financeiro, contratos, notificacoes, obrigacoes, audiencias)

@@ -1,7 +1,7 @@
 "use client";
 
 import { GitBranch } from "lucide-react";
-import { GlassPanel } from "@/app/app/dashboard/mock/widgets/primitives";
+import { GlassPanel } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 import type { DocumentosStats } from "../services/documentos.service";
 import type { DocStatus } from "../adapters/documento-card-adapter";
 import { STATUS_CONFIG } from "./documento-card";

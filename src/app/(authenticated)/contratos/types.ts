@@ -2,7 +2,7 @@
  * CONTRATOS FEATURE - Tipos Auxiliares
  *
  * Tipos utilizados pela UI e API, separados dos tipos de domínio.
- * Este arquivo resolve o import `@/app/app/contratos/types` usado em outros módulos.
+ * Este arquivo resolve o import `@/app/(authenticated)/contratos/types` usado em outros módulos.
  *
  * NOTA: Tipos de domínio principais (Contrato, ParteContrato, enums) estão em domain.ts
  *       mas são re-exportados aqui para compatibilidade com imports existentes.

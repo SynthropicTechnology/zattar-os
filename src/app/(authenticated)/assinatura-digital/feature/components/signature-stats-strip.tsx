@@ -6,7 +6,7 @@ import {
   ProgressRing,
   AnimatedNumber,
   Sparkline,
-} from "@/app/app/dashboard/mock/widgets/primitives";
+} from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 import type { DocumentosStats } from "../services/documentos.service";
 
 interface SignatureStatsStripProps {

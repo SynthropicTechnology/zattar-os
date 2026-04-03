@@ -1,4 +1,4 @@
-import { TerceirosTableWrapper } from '@/app/app/partes';
+import { TerceirosTableWrapper } from '@/app/(authenticated)/partes';
 
 /**
  * Página de Terceiros

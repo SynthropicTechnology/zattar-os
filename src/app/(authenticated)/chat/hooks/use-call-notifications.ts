@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { TipoChamada, actionResponderChamada } from '@/app/app/chat';
+import { TipoChamada, actionResponderChamada } from '@/app/(authenticated)/chat';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { toast } from 'sonner';
 

@@ -36,7 +36,7 @@ import type {
 } from '../../types/documento-types';
 import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { gerarCaminhoCompletoPendente } from '@/lib/storage/file-naming.utils';
-import { atualizarDocumentoPendente } from '@/app/app/captura/services/persistence/pendentes-persistence.service';
+import { atualizarDocumentoPendente } from '@/app/(authenticated)/captura/services/persistence/pendentes-persistence.service';
 
 /**
  * Função: fetchDocumentoMetadata

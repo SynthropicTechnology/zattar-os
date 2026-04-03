@@ -86,7 +86,7 @@ export {
 } from "./slug-helpers";
 
 // Rate Limiting - Server-only, import directly:
-// import { applyRateLimit, checkPublicRateLimit } from "@/app/app/assinatura-digital/feature/utils/rate-limit";
+// import { applyRateLimit, checkPublicRateLimit } from "@/app/(authenticated)/assinatura-digital/feature/utils/rate-limit";
 
 // File Validation (magic bytes para PDF e imagens)
 export type {

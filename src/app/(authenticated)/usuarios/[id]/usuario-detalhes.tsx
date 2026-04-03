@@ -33,8 +33,8 @@ import {
   getAvatarUrl,
   type Usuario,
   actionAtualizarUsuario,
-} from '@/app/app/usuarios';
-import { actionObterPerfil } from '@/app/app/perfil';
+} from '@/app/(authenticated)/usuarios';
+import { actionObterPerfil } from '@/app/(authenticated)/perfil';
 
 function DataField({ label, value }: { label: string; value: string | null | undefined }) {
   return (

@@ -31,8 +31,8 @@ import {
   type ViewType,
 } from '@/components/shared';
 
-import { useUsuarios } from '@/app/app/usuarios';
-import { useTiposExpedientes, TiposExpedientesList } from '@/app/app/tipos-expedientes';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
+import { useTiposExpedientes, TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
 
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';

@@ -13,7 +13,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { GlassPanel, ProgressRing } from "@/app/app/dashboard/mock/widgets/primitives";
+import { GlassPanel, ProgressRing } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 import type { DocumentoCardData } from "../adapters/documento-card-adapter";
 import { STATUS_CONFIG, getSignerProgress, timeAgo } from "./documento-card";
 

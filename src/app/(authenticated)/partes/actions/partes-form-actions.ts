@@ -8,8 +8,8 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { criarEndereco, atualizarEndereco } from '@/app/app/enderecos/service';
-import type { EntidadeTipoEndereco } from '@/app/app/enderecos/types';
+import { criarEndereco, atualizarEndereco } from '@/app/(authenticated)/enderecos/service';
+import type { EntidadeTipoEndereco } from '@/app/(authenticated)/enderecos/types';
 import {
   type CreateClienteInput,
   type UpdateClienteInput,

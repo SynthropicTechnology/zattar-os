@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { listarCapturasLog } from '@/app/app/captura/services/persistence/captura-log-persistence.service';
-import type { ListarCapturasLogParams } from '@/app/app/captura/types';
+import { listarCapturasLog } from '@/app/(authenticated)/captura/services/persistence/captura-log-persistence.service';
+import type { ListarCapturasLogParams } from '@/app/(authenticated)/captura/types';
 
 /**
  * @swagger

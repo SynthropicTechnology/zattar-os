@@ -4,7 +4,7 @@ import { FileText, Activity, Lock } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/app/app/partes';
+import type { GrauProcesso } from '@/app/(authenticated)/partes';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { cn } from '@/lib/utils';
 

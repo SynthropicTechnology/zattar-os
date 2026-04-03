@@ -14,7 +14,7 @@
  *   actionEnviarMensagem,
  *   SalaChat,
  *   TipoSalaChat
- * } from '@/app/app/chat';
+ * } from '@/app/(authenticated)/chat';
  * ```
  */
 
@@ -64,14 +64,14 @@ export {
 // =============================================================================
 // NOTA: ChatRepository e createChatRepository NÃO são exportados aqui
 // porque usam código do servidor (next/headers). Use import dinâmico
-// em Server Components/Actions: await import('@/app/app/chat/repository')
+// em Server Components/Actions: await import('@/app/(authenticated)/chat/repository')
 
 // =============================================================================
 // SERVICE
 // =============================================================================
 // NOTA: ChatService e createChatService NÃO são exportados aqui
 // porque usam código do servidor (next/headers). Use import direto
-// em Server Components/Actions: import { createChatService } from '@/app/app/chat/service'
+// em Server Components/Actions: import { createChatService } from '@/app/(authenticated)/chat/service'
 
 // =============================================================================
 // ACTIONS (Server Actions)

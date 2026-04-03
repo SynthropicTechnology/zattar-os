@@ -13,7 +13,7 @@ import type {
   SituacaoPericiaCodigo,
   CriarPericiaInput,
 } from "./domain";
-import type { CodigoTribunal, GrauTribunal } from "@/app/app/expedientes";
+import type { CodigoTribunal, GrauTribunal } from "@/app/(authenticated)/expedientes";
 
 const TABLE_PERICIAS = "pericias";
 

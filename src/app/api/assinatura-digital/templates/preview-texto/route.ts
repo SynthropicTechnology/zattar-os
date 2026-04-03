@@ -6,7 +6,7 @@ import { checkPermission } from '@/lib/auth/authorization';
 import {
   generatePreviewHtml,
   DEFAULT_SAMPLE_DATA,
-} from '@/app/app/assinatura-digital/feature/services/template-texto-pdf.service';
+} from '@/app/(authenticated)/assinatura-digital/feature/services/template-texto-pdf.service';
 
 // Schema for request validation
 const previewRequestSchema = z.object({

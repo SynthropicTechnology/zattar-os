@@ -10,10 +10,10 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { EventCalendar } from "@/app/app/calendar/components/event-calendar";
-import type { CalendarEvent, CalendarView as LegacyCalendarView } from "@/app/app/calendar/types";
+import { EventCalendar } from "@/app/(authenticated)/calendar/components/event-calendar";
+import type { CalendarEvent, CalendarView as LegacyCalendarView } from "@/app/(authenticated)/calendar/types";
 import type { AgendaEvent } from "../../lib/adapters";
-import type { CalendarView } from "@/app/app/calendar/briefing-domain";
+import type { CalendarView } from "@/app/(authenticated)/calendar/briefing-domain";
 
 // ─── Props ─────────────────────────────────────────────────────────────
 

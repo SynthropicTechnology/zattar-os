@@ -4,7 +4,7 @@
  */
 
 import type { Lancamento } from '../types/lancamentos';
-import type { ParcelaComLancamento } from '@/app/app/obrigacoes';
+import type { ParcelaComLancamento } from '@/app/(authenticated)/obrigacoes';
 
 type ParcelaObrigacao = ParcelaComLancamento;
 

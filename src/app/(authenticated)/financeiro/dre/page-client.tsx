@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FilterPopover } from '@/app/app/partes';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 import { PageShell } from '@/components/shared/page-shell';
 import {
   DataShell,
@@ -46,7 +46,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/app/app/financeiro';
+import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/app/(authenticated)/financeiro';
 import { toast } from 'sonner';
 import type {
   ResumoDRE,
@@ -54,7 +54,7 @@ import type {
   EvolucaoDRE,
   PeriodoDRE,
   VariacoesDRE,
-} from '@/app/app/financeiro';
+} from '@/app/(authenticated)/financeiro';
 import {
   PieChart,
   Pie,

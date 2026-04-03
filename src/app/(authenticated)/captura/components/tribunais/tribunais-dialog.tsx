@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import type { TribunalConfigDb } from '@/app/app/captura';
+import type { TribunalConfigDb } from '@/app/(authenticated)/captura';
 
 type Props = {
   tribunal: TribunalConfigDb | null;

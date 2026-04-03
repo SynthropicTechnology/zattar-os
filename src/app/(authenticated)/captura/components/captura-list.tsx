@@ -7,15 +7,15 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilterPopover } from '@/app/app/partes';
+import { FilterPopover } from '@/app/(authenticated)/partes';
 import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';
 import { useCredenciaisMap } from '../hooks/use-credenciais-map';
-import { deletarCapturaLog } from '@/app/app/captura/services/api-client';
+import { deletarCapturaLog } from '@/app/(authenticated)/captura/services/api-client';
 import type { ColumnDef, RowSelectionState, Table as TanstackTable } from '@tanstack/react-table';
-import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/app/app/captura/types';
-import type { CodigoTRT } from '@/app/app/captura';
+import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/app/(authenticated)/captura/types';
+import type { CodigoTRT } from '@/app/(authenticated)/captura';
 import { Eye, Settings, Trash2 } from 'lucide-react';
 import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
 import {

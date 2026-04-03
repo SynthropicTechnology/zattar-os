@@ -5,7 +5,7 @@
  * Inclui payloads de request, responses e tipos de conformidade legal.
  *
  * IMPORTANTE: Tipos alinhados com entidades de outros módulos:
- * - ClienteBase, ParteContraria de @/app/app/partes
+ * - ClienteBase, ParteContraria de @/app/(authenticated)/partes
  */
 
 import type {

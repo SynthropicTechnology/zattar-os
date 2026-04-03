@@ -1,12 +1,12 @@
 import { compartilharDocumento } from '../../service';
 import * as documentosRepo from '../../repositories/documentos-repository';
 import * as compartilhamentoRepo from '../../repositories/compartilhamento-repository';
-import { usuarioRepository } from '@/app/app/usuarios/repository';
+import { usuarioRepository } from '@/app/(authenticated)/usuarios/repository';
 
 // Mock dependencies
 jest.mock('../../repositories/documentos-repository');
 jest.mock('../../repositories/compartilhamento-repository');
-jest.mock('@/app/app/usuarios/repository', () => ({
+jest.mock('@/app/(authenticated)/usuarios/repository', () => ({
   usuarioRepository: {
     findById: jest.fn(),
   },

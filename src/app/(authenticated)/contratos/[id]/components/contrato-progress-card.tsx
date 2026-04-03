@@ -3,8 +3,8 @@
 import { CheckCircle2, Circle, XCircle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { StatusContrato } from '@/app/app/contratos';
-import { formatarStatusContrato } from '@/app/app/contratos';
+import type { StatusContrato } from '@/app/(authenticated)/contratos';
+import { formatarStatusContrato } from '@/app/(authenticated)/contratos';
 import { cn } from '@/lib/utils';
 
 interface ContratoProgressCardProps {

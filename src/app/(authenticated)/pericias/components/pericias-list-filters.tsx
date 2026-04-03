@@ -11,14 +11,14 @@
  */
 
 import * as React from 'react';
-import { FilterPopover, type FilterOption } from '@/app/app/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 
 import {
   CodigoTribunal,
   SituacaoPericiaCodigo,
   SITUACAO_PERICIA_LABELS,
 } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '@/app/app/expedientes';
+import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
 
 // =============================================================================

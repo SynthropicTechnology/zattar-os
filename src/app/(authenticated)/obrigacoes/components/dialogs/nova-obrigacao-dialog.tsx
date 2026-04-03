@@ -4,12 +4,12 @@
 import * as React from 'react';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Combobox } from '@/components/ui/combobox';
-import { actionListarAcervoPaginado, type GrauAcervo } from '@/app/app/acervo';
+import { actionListarAcervoPaginado, type GrauAcervo } from '@/app/(authenticated)/acervo';
 import { AcordoForm } from './acordo-form';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import type { Acervo } from '@/app/app/acervo';
+import type { Acervo } from '@/app/(authenticated)/acervo';
 
 interface NovaObrigacaoDialogProps {
   open: boolean;

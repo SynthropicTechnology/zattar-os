@@ -11,7 +11,7 @@
  */
 
 import { ChevronRight, Building2 } from 'lucide-react';
-import { fmtMoeda } from '@/app/app/dashboard/mock/widgets/primitives';
+import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import type { ContratoCardData } from './contrato-card';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SemanticBadge, StatusSemanticBadge } from "@/components/ui/semantic-badge";
 import { Shield } from "lucide-react";
-import { CopyButton } from "@/app/app/partes/components/shared";
+import { CopyButton } from "@/app/(authenticated)/partes/components/shared";
 
 interface ClientePJESectionProps {
   data: Record<string, unknown>;

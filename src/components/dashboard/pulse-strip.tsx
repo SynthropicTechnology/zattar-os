@@ -14,7 +14,7 @@
 'use client';
 
 import { type LucideIcon } from 'lucide-react';
-import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

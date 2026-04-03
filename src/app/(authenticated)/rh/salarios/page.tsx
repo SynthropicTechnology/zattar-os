@@ -1,4 +1,4 @@
-import { SalariosList } from '@/app/app/rh';
+import { SalariosList } from '@/app/(authenticated)/rh';
 import { PageShell } from '@/components/shared/page-shell';
 
 // Force dynamic rendering to avoid static prerendering issues with CopilotKit context

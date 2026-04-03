@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from './api-auth';
 import { checkPermission } from './authorization';
-import type { Recurso, Operacao } from '@/app/app/usuarios';
+import type { Recurso, Operacao } from '@/app/(authenticated)/usuarios';
 
 /**
  * Resultado de autenticação/autorização bem-sucedida

@@ -35,7 +35,7 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { formatarData } from "@/app/app/partes/utils/format";
+import { formatarData } from "@/app/(authenticated)/partes/utils/format";
 import { cn } from "@/lib/utils";
 
 interface Activity {

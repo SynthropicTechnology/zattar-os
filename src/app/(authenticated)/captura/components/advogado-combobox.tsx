@@ -2,8 +2,8 @@
 
 import { useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import type { Advogado } from '@/app/app/advogados';
-import { formatOabs } from '@/app/app/advogados';
+import type { Advogado } from '@/app/(authenticated)/advogados';
+import { formatOabs } from '@/app/(authenticated)/advogados';
 
 interface AdvogadoComboboxProps {
   advogados: Advogado[];

@@ -74,8 +74,8 @@ export {
 // NOTE: Server-side service and repository are NOT exported here to prevent
 // Redis/Node.js dependencies from being bundled in client components.
 // These should only be used by server actions and can be imported directly:
-//   import { service } from '@/app/app/usuarios/service';
-//   import { usuarioRepository } from '@/app/app/usuarios/repository';
+//   import { service } from '@/app/(authenticated)/usuarios/service';
+//   import { usuarioRepository } from '@/app/(authenticated)/usuarios/repository';
 
 // Auth Utils
 export { requireAuth } from "./actions/utils";

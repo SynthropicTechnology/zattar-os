@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Typography } from '@/components/ui/typography';
 import { Loader2 } from 'lucide-react';
 import { actionAtualizarPerfil } from '../actions/perfil-actions';
-import type { Usuario, UsuarioDados, GeneroUsuario, Endereco } from '@/app/app/usuarios';
+import type { Usuario, UsuarioDados, GeneroUsuario, Endereco } from '@/app/(authenticated)/usuarios';
 
 interface PerfilEditSheetProps {
   open: boolean;

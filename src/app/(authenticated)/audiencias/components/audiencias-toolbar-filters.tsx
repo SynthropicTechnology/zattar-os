@@ -4,7 +4,7 @@ import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar
 import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { AudienciasFilters } from '../domain';
 import { GrauTribunal } from '../domain';
-import type { Usuario } from '@/app/app/usuarios';
+import type { Usuario } from '@/app/(authenticated)/usuarios';
 
 const TRIBUNAIS = [
   'TRT1',

@@ -3,7 +3,7 @@
  * 
  * PROPÓSITO:
  * Re-exporta todas as APIs do PJE-TRT de forma centralizada.
- * Permite imports diretos do módulo principal: import { obterTodosProcessosAcervoGeral } from '@/app/app/captura/pje-trt'
+ * Permite imports diretos do módulo principal: import { obterTodosProcessosAcervoGeral } from '@/app/(authenticated)/captura/pje-trt'
  */
 
 // Acervo Geral

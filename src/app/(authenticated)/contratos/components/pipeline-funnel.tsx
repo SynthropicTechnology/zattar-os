@@ -11,7 +11,7 @@
  */
 
 import { GitBranch, ArrowRight } from 'lucide-react';
-import { GlassPanel, fmtMoeda } from '@/app/app/dashboard/mock/widgets/primitives';
+import { GlassPanel, fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

@@ -51,7 +51,7 @@ import {
 // FIXTURES
 // =============================================================================
 
-import type { ParcelaComLancamento } from '@/app/app/obrigacoes';
+import type { ParcelaComLancamento } from '@/app/(authenticated)/obrigacoes';
 
 function criarParcelaMock(overrides: Partial<ParcelaComLancamento> = {}): ParcelaComLancamento {
   return {

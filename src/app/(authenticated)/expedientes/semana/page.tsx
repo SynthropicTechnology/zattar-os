@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { ExpedientesContent } from '@/app/app/expedientes';
+import { ExpedientesContent } from '@/app/(authenticated)/expedientes';
 import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 

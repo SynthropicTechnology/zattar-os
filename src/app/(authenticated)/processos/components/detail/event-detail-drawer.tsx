@@ -11,7 +11,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { actionGerarUrlDownload } from '@/app/app/documentos';
+import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 
 import { EventMetadata } from './event-metadata';
 import { EventSignatureInfo } from './event-signature-info';

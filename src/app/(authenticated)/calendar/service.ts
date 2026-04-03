@@ -2,17 +2,17 @@ import "server-only";
 
 import { endOfDay, startOfDay } from "date-fns";
 
-import type { Audiencia } from "@/app/app/audiencias";
-import { StatusAudiencia } from "@/app/app/audiencias";
+import type { Audiencia } from "@/app/(authenticated)/audiencias";
+import { StatusAudiencia } from "@/app/(authenticated)/audiencias";
 
-import type { Expediente } from "@/app/app/expedientes";
+import type { Expediente } from "@/app/(authenticated)/expedientes";
 
-import type { AcordoComParcelas } from "@/app/app/obrigacoes";
+import type { AcordoComParcelas } from "@/app/(authenticated)/obrigacoes";
 
-import type { Pericia } from "@/app/app/pericias";
-import { SituacaoPericiaCodigo } from "@/app/app/pericias";
+import type { Pericia } from "@/app/(authenticated)/pericias";
+import { SituacaoPericiaCodigo } from "@/app/(authenticated)/pericias";
 
-import type { AgendaEvento } from "@/app/app/agenda";
+import type { AgendaEvento } from "@/app/(authenticated)/agenda";
 
 import {
   buildUnifiedEventId,

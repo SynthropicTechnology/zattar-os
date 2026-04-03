@@ -5,10 +5,10 @@
  * Prefira imports diretos quando possível para melhor tree-shaking:
  *
  * ✅ Recomendado (import direto):
- * import { useContasPagar } from '@/app/app/financeiro/hooks/use-contas-pagar';
+ * import { useContasPagar } from '@/app/(authenticated)/financeiro/hooks/use-contas-pagar';
  *
  * ⚠️ Use com moderação (barrel export):
- * import { useContasPagar, useContasReceber } from '@/app/app/financeiro/hooks';
+ * import { useContasPagar, useContasReceber } from '@/app/(authenticated)/financeiro/hooks';
  */
 
 // ============================================================================

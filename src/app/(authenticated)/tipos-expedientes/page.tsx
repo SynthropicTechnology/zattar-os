@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PageShell } from '@/components/shared/page-shell';
-import { TiposExpedientesList, listar } from '@/app/app/tipos-expedientes';
+import { TiposExpedientesList, listar } from '@/app/(authenticated)/tipos-expedientes';
 
 export const dynamic = 'force-dynamic';
 

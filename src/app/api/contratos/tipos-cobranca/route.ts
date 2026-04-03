@@ -11,7 +11,7 @@ import { requirePermission, requireAuthentication } from '@/lib/auth/require-per
 import {
   contratoTiposCobrancaRepo,
   createContratoTipoSchema,
-} from '@/app/app/contratos/tipos-config';
+} from '@/app/(authenticated)/contratos/tipos-config';
 
 export async function GET(request: NextRequest) {
   // Tipos de cobrança são dados de referência/lookup — qualquer usuário autenticado pode ler

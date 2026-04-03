@@ -6,8 +6,8 @@
  * comparando com os dados persistidos no PostgreSQL.
  */
 
-import type { CapturaRawLog } from '@/app/app/captura/types/captura-raw-log';
-import type { EntidadeTipoEndereco } from '@/app/app/enderecos/types';
+import type { CapturaRawLog } from '@/app/(authenticated)/captura/types/captura-raw-log';
+import type { EntidadeTipoEndereco } from '@/app/(authenticated)/enderecos/types';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { buscarLogPorRawLogId } from './captura-recovery.service';
 import type { TipoCaptura } from '../../domain';

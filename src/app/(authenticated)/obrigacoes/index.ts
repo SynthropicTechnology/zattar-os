@@ -69,11 +69,11 @@ export {
 
 // Repository (for internal financeiro usage)
 // NOTE: exports server-only removidos do barrel publico para evitar bundling no browser.
-// Use `@/app/app/obrigacoes/server` (server-only) quando precisar de repository/service.
+// Use `@/app/(authenticated)/obrigacoes/server` (server-only) quando precisar de repository/service.
 
 // Actions
 // NOTE: exports de Server Actions removidos do barrel público para evitar bundling no browser.
-// Use `@/app/app/obrigacoes/server-actions`.
+// Use `@/app/(authenticated)/obrigacoes/server-actions`.
 
 // Hooks
 export { useRepassesPendentes } from './hooks/use-repasses-pendentes';

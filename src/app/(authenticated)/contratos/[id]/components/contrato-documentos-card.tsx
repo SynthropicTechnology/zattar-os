@@ -5,7 +5,7 @@ import { FileText, Plus, Upload } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ContratoDocumentosList } from '@/app/app/pecas-juridicas/components';
+import { ContratoDocumentosList } from '@/app/(authenticated)/pecas-juridicas/components';
 import { ContratoDocumentoUploadDialog } from './contrato-documento-upload-dialog';
 
 interface ContratoDocumentosCardProps {

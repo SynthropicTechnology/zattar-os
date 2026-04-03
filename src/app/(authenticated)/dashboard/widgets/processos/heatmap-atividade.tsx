@@ -10,7 +10,7 @@
  * a partir das baixas semanais/mensais agregadas de todos os advogados.
  *
  * Uso:
- *   import { WidgetHeatmapAtividade } from '@/app/app/dashboard/widgets/processos/heatmap-atividade'
+ *   import { WidgetHeatmapAtividade } from '@/app/(authenticated)/dashboard/widgets/processos/heatmap-atividade'
  * ============================================================================
  */
 

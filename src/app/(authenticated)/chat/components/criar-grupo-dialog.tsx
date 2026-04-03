@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { actionCriarGrupo } from "../actions/chat-actions";
-import { actionListarUsuarios } from "@/app/app/usuarios";
+import { actionListarUsuarios } from "@/app/(authenticated)/usuarios";
 import { type ChatItem } from "../domain";
 import useChatStore from "./useChatStore";
 

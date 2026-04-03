@@ -6,7 +6,7 @@
  * - Saldo, contas a pagar/receber, alertas
  */
 
-import { getDashboardFinanceiro } from '@/app/app/financeiro/services/dashboard';
+import { getDashboardFinanceiro } from '@/app/(authenticated)/financeiro/services/dashboard';
 import { formatarMoeda } from './shared/formatters';
 import type { DadosFinanceirosConsolidados } from '../domain';
 

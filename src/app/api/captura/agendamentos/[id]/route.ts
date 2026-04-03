@@ -3,10 +3,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { buscarAgendamento } from '@/app/app/captura/services/agendamentos/buscar-agendamento.service';
-import { atualizarAgendamento } from '@/app/app/captura/services/agendamentos/atualizar-agendamento.service';
-import { deletarAgendamento } from '@/app/app/captura/services/agendamentos/deletar-agendamento.service';
-import type { AtualizarAgendamentoParams } from '@/app/app/captura';
+import { buscarAgendamento } from '@/app/(authenticated)/captura/services/agendamentos/buscar-agendamento.service';
+import { atualizarAgendamento } from '@/app/(authenticated)/captura/services/agendamentos/atualizar-agendamento.service';
+import { deletarAgendamento } from '@/app/(authenticated)/captura/services/agendamentos/deletar-agendamento.service';
+import type { AtualizarAgendamentoParams } from '@/app/(authenticated)/captura';
 
 /**
  * @swagger

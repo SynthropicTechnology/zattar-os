@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createChatService } from '@/app/app/chat/service';
+import { createChatService } from '@/app/(authenticated)/chat/service';
 import { getRecordingDetails } from '@/lib/dyte/client';
 
 export async function POST(request: NextRequest) {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Buscar chamada pelo meetingId
-      const { createCallsRepository } = await import('@/app/app/chat/repository');
+      const { createCallsRepository } = await import('@/app/(authenticated)/chat/repository');
       const callsRepo = await createCallsRepository();
       const chamadaResult = await callsRepo.findChamadaByMeetingId(meetingId);
       

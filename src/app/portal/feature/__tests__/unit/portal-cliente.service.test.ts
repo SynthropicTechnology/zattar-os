@@ -7,18 +7,18 @@ jest.mock('playwright-core', () => ({}));
 import * as service from '../../service';
 import { criarProcessoMock, criarContratoMock, criarAudienciaMock, criarPagamentoMock } from '../fixtures';
 import { ok, err, appError } from '@/types';
-import * as partesService from '@/app/app/partes/server';
-import * as acervoService from '@/app/app/acervo/service';
-import * as contratosService from '@/app/app/contratos/service';
-import * as audienciasService from '@/app/app/audiencias/service';
-import * as obrigacoesService from '@/app/app/obrigacoes/service';
+import * as partesService from '@/app/(authenticated)/partes/server';
+import * as acervoService from '@/app/(authenticated)/acervo/service';
+import * as contratosService from '@/app/(authenticated)/contratos/service';
+import * as audienciasService from '@/app/(authenticated)/audiencias/service';
+import * as obrigacoesService from '@/app/(authenticated)/obrigacoes/service';
 
 // Mock feature services
-jest.mock('@/app/app/partes/server');
-jest.mock('@/app/app/acervo/service');
-jest.mock('@/app/app/contratos/service');
-jest.mock('@/app/app/audiencias/service');
-jest.mock('@/app/app/obrigacoes/service');
+jest.mock('@/app/(authenticated)/partes/server');
+jest.mock('@/app/(authenticated)/acervo/service');
+jest.mock('@/app/(authenticated)/contratos/service');
+jest.mock('@/app/(authenticated)/audiencias/service');
+jest.mock('@/app/(authenticated)/obrigacoes/service');
 
 const mockPartesService = partesService as jest.Mocked<typeof partesService>;
 const mockAcervoService = acervoService as jest.Mocked<typeof acervoService>;

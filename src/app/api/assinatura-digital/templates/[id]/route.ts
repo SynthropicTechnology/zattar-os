@@ -5,8 +5,8 @@ import {
   deleteTemplate,
   getTemplate,
   updateTemplate,
-} from '@/app/app/assinatura-digital/feature/services/templates.service';
-import type { UpsertTemplateInput } from '@/app/app/assinatura-digital/feature';
+} from '@/app/(authenticated)/assinatura-digital/feature/services/templates.service';
+import type { UpsertTemplateInput } from '@/app/(authenticated)/assinatura-digital/feature';
 
 const updateSchema = z.object({
   template_uuid: z.string().uuid().optional(),

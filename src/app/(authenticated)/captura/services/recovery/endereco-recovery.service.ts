@@ -7,11 +7,11 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { upsertEnderecoPorIdPje } from '@/app/app/enderecos';
+import { upsertEnderecoPorIdPje } from '@/app/(authenticated)/enderecos';
 
 type UpsertEnderecoPorIdPjeParams = Parameters<typeof upsertEnderecoPorIdPje>[0];
 import { withRetry } from '@/lib/utils/retry';
-import type { EntidadeTipoEndereco, SituacaoEndereco } from '@/app/app/enderecos/types';
+import type { EntidadeTipoEndereco, SituacaoEndereco } from '@/app/(authenticated)/enderecos/types';
 import { buscarLogPorRawLogId } from './captura-recovery.service';
 import { analisarDocumento } from './recovery-analysis.service';
 import type {

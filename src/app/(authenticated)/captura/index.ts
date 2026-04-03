@@ -139,4 +139,4 @@ export { CredenciaisCombobox } from "./components/credenciais-combobox";
 
 // Comunica CNJ & heavy server-only code
 // NOTE: `comunica-cnj/*` and internal services depend on Node APIs / Playwright.
-// Import them from `@/app/app/captura/server` (server-side only).
+// Import them from `@/app/(authenticated)/captura/server` (server-side only).

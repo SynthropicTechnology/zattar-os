@@ -13,7 +13,7 @@ import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { DataTableColumnHeader } from '@/components/shared/data-shell';
 
-import { GRAU_TRIBUNAL_LABELS, type GrauTribunal } from '@/app/app/expedientes';
+import { GRAU_TRIBUNAL_LABELS, type GrauTribunal } from '@/app/(authenticated)/expedientes';
 
 import {
   AcordoComParcelas,

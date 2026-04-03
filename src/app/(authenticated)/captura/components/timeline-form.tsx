@@ -6,7 +6,7 @@ import { CapturaResult, CapturaResultData } from './captura-result';
 import { capturarTimeline } from '../services/api-client';
 import type { TimelineParams, FiltroDocumentosTimeline, CapturaFormHandle } from '../types';
 import { grauCredencialToGrauTRT } from '../domain';
-import { useCredenciais } from '@/app/app/advogados';
+import { useCredenciais } from '@/app/(authenticated)/advogados';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';

@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { fetchContratoCompleto } from '@/app/app/contratos/queries';
-import { LancamentosRepository } from '@/app/app/financeiro/repository/lancamentos';
-import { fetchEntrevistaByContratoId } from '@/app/app/entrevistas-trabalhistas/queries';
+import { fetchContratoCompleto } from '@/app/(authenticated)/contratos/queries';
+import { LancamentosRepository } from '@/app/(authenticated)/financeiro/repository/lancamentos';
+import { fetchEntrevistaByContratoId } from '@/app/(authenticated)/entrevistas-trabalhistas/queries';
 import { ContratoDetalhesClient } from './contrato-detalhes-client';
 
 interface PageProps {

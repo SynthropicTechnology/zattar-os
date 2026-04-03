@@ -8,17 +8,17 @@
  * - Registrar representantes em cadastros_pje
  */
 
-import type { RepresentantePJE } from "@/app/app/captura/pje-trt/partes/types";
+import type { RepresentantePJE } from "@/app/(authenticated)/captura/pje-trt/partes/types";
 import type { TipoParteClassificacao } from "../types";
 import type { ProcessoParaCaptura } from "../partes-capture.service";
 import type {
   SituacaoOAB,
   TipoRepresentante,
-} from "@/app/app/partes/types";
+} from "@/app/(authenticated)/partes/types";
 import {
   upsertRepresentantePorCPFRepo as upsertRepresentantePorCPF,
   buscarRepresentantePorCPFRepo as buscarRepresentantePorCPF,
-} from "@/app/app/partes/server";
+} from "@/app/(authenticated)/partes/server";
 import getLogger from "@/lib/logger";
 import { normalizarDocumento } from "../utils";
 import { extrairCamposRepresentantePJE } from "../utils";

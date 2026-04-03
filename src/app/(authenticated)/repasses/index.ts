@@ -1,10 +1,10 @@
 /**
  * Barrel export do módulo Repasses
  *
- * Feature minimalista que delega para @/app/app/obrigacoes
+ * Feature minimalista que delega para @/app/(authenticated)/obrigacoes
  *
  * @example
- * import { RepassesPageContent } from '@/app/app/repasses';
+ * import { RepassesPageContent } from '@/app/(authenticated)/repasses';
  */
 
 export { RepassesPageContent } from './components/repasses-page-content';
@@ -13,6 +13,6 @@ export { RepassesPageContent } from './components/repasses-page-content';
 export type {
   RepassePendente,
   FiltrosRepasses,
-} from '@/app/app/obrigacoes';
+} from '@/app/(authenticated)/obrigacoes';
 
-export { useRepassesPendentes } from '@/app/app/obrigacoes';
+export { useRepassesPendentes } from '@/app/(authenticated)/obrigacoes';

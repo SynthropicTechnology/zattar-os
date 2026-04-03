@@ -32,8 +32,8 @@ import {
   Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { InputCEP, type InputCepAddress } from '@/app/app/enderecos';
-import type { Endereco } from '@/app/app/enderecos/types';
+import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
+import type { Endereco } from '@/app/(authenticated)/enderecos/types';
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { actionCriarCliente, actionAtualizarClienteForm, type ActionResult } from '../../actions';
 import type { Cliente } from '../../types';

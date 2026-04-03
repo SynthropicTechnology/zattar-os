@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const CONTRATOS_COMPONENTS_DIR = path.resolve(__dirname, '../../components');
-const CONTRATOS_CLIENT = path.resolve(__dirname, '../../../../app/app/contratos/contratos-client.tsx');
+const CONTRATOS_CLIENT = path.resolve(__dirname, '../../../../(authenticated)/contratos/contratos-client.tsx');
 
 const FORBIDDEN_COLOR_PATTERNS = [
   /\btext-(red|green|blue|orange|amber|emerald|sky|pink|gray)-\d{2,3}\b/,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { PublicSignatureFlow } from "@/app/app/assinatura-digital/feature";
+import { PublicSignatureFlow } from "@/app/(authenticated)/assinatura-digital/feature";
 
 export function AssinaturaPublicaClient() {
   const params = useParams<{ token: string }>();

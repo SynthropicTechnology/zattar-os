@@ -18,12 +18,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
-import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
+import { MetricasDBContent } from '@/app/(authenticated)/admin/metricas-db/components/metricas-db-content';
+import { BlockedIpsContent } from '@/app/(authenticated)/admin/security/blocked-ips/components/blocked-ips-content';
 import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard, EditorIAIntegrationCard } from '@/lib/integracoes';
 import { PromptsIAContent } from '@/lib/system-prompts';
 import { AparenciaContent } from './aparencia-content';
-import type { MetricasDB } from '@/app/app/admin';
+import type { MetricasDB } from '@/app/(authenticated)/admin';
 import type { Integracao } from '@/lib/integracoes';
 import type { SystemPrompt } from '@/lib/system-prompts';
 

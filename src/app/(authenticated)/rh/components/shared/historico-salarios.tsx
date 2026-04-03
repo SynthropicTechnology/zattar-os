@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { useSalariosDoUsuario } from '../../hooks/use-salarios';
-import { calcularDuracaoVigencia } from '@/app/app/rh/utils';
+import { calcularDuracaoVigencia } from '@/app/(authenticated)/rh/utils';
 
 interface HistoricoSalariosProps {
   usuarioId: number;

@@ -135,7 +135,7 @@ export class DistributedLock {
 
     if (!acquired) {
       // Importa LockError dinamicamente para evitar dependência circular
-      const { LockError } = await import('@/app/app/captura/services/partes/errors');
+      const { LockError } = await import('@/app/(authenticated)/captura/services/partes/errors');
       throw new LockError(`Captura já em andamento`, this.key);
     }
 

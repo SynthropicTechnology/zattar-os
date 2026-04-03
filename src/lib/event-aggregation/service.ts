@@ -15,19 +15,19 @@ import type { UnifiedEventItem, EventSource } from "./domain";
 import { buildEventId, calcularPrioridade } from "./domain";
 
 // --- Cross-module imports (mesmo padrão de kanban/service.ts) ---
-import type { Audiencia } from "@/app/app/audiencias";
-import { StatusAudiencia } from "@/app/app/audiencias";
-import { listarAudiencias, atualizarStatusAudiencia } from "@/app/app/audiencias/service";
+import type { Audiencia } from "@/app/(authenticated)/audiencias";
+import { StatusAudiencia } from "@/app/(authenticated)/audiencias";
+import { listarAudiencias, atualizarStatusAudiencia } from "@/app/(authenticated)/audiencias/service";
 
-import type { Expediente } from "@/app/app/expedientes";
-import { listarExpedientes, realizarBaixa as realizarBaixaExpediente, reverterBaixa as reverterBaixaExpediente } from "@/app/app/expedientes/service";
+import type { Expediente } from "@/app/(authenticated)/expedientes";
+import { listarExpedientes, realizarBaixa as realizarBaixaExpediente, reverterBaixa as reverterBaixaExpediente } from "@/app/(authenticated)/expedientes/service";
 
-import type { Pericia } from "@/app/app/pericias";
-import { SituacaoPericiaCodigo } from "@/app/app/pericias";
-import { listarPericias } from "@/app/app/pericias/service";
+import type { Pericia } from "@/app/(authenticated)/pericias";
+import { SituacaoPericiaCodigo } from "@/app/(authenticated)/pericias";
+import { listarPericias } from "@/app/(authenticated)/pericias/service";
 
-import type { AcordoComParcelas } from "@/app/app/obrigacoes";
-import { listarAcordos } from "@/app/app/obrigacoes/service";
+import type { AcordoComParcelas } from "@/app/(authenticated)/obrigacoes";
+import { listarAcordos } from "@/app/(authenticated)/obrigacoes/service";
 
 import { appError, err, ok, Result } from "@/types";
 
@@ -370,19 +370,19 @@ export async function atualizarStatusEntidadeOrigem(
         if (situacao) {
           // Importação dinâmica para evitar ciclos se necessário, ou garantir que o import no topo está correto.
           // Como pericias/index.ts exporta o service, idealmente usariamos o service aqui.
-          // Mas o `event-aggregation/service.ts` já importa de `@/app/app/pericias`.
+          // Mas o `event-aggregation/service.ts` já importa de `@/app/(authenticated)/pericias`.
           // Vou assumir que falta expor `atualizarSituacao` no index.ts de pericias ou importar direto do service.
-          // Olhando os imports: `import { ... } from "@/app/app/pericias";`
-          // Vou precisar garantir que `atualizarSituacao` esteja exportado em `@/app/app/pericias` ou importar de `@/app/app/pericias/service`
+          // Olhando os imports: `import { ... } from "@/app/(authenticated)/pericias";`
+          // Vou precisar garantir que `atualizarSituacao` esteja exportado em `@/app/(authenticated)/pericias` ou importar de `@/app/(authenticated)/pericias/service`
 
           // Por segurança e padrão, vou usar uma importação direta do service se não estiver no index, 
-          // mas o arquivo já tem imports de `@/app/app/pericias`. Vou checar se precisa atualizar o index.ts.
+          // mas o arquivo já tem imports de `@/app/(authenticated)/pericias`. Vou checar se precisa atualizar o index.ts.
           // O código abaixo assume que `atualizarSituacao` sera disponibilizado.
 
           // Para evitar erro de build agora, vou chamar direto do service que acabei de criar,
           // mas preciso adicionar o import.
 
-          const { atualizarSituacao } = await import("@/app/app/pericias/service");
+          const { atualizarSituacao } = await import("@/app/(authenticated)/pericias/service");
           const result = await atualizarSituacao(numericId, situacao);
           if (!result.success) return err(result.error);
         }

@@ -10,11 +10,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
-import { getCredentialComplete } from '@/app/app/captura/credentials/credential.service';
-import { autenticarPJE } from '@/app/app/captura/services/trt/trt-auth.service';
-import { getTribunalConfig } from '@/app/app/captura/services/trt/config';
-import { downloadAndUploadDocumento } from '@/app/app/captura/services/pje/pje-expediente-documento.service';
-import type { FetchDocumentoParams, CodigoTRT, GrauTRT } from '@/app/app/captura';
+import { getCredentialComplete } from '@/app/(authenticated)/captura/credentials/credential.service';
+import { autenticarPJE } from '@/app/(authenticated)/captura/services/trt/trt-auth.service';
+import { getTribunalConfig } from '@/app/(authenticated)/captura/services/trt/config';
+import { downloadAndUploadDocumento } from '@/app/(authenticated)/captura/services/pje/pje-expediente-documento.service';
+import type { FetchDocumentoParams, CodigoTRT, GrauTRT } from '@/app/(authenticated)/captura';
 
 interface DocumentoRequestBody {
   expediente_id: number;

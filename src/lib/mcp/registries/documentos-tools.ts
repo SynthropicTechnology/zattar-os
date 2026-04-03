@@ -21,7 +21,7 @@ import type { ActionResult } from '@/lib/safe-action';
  */
 export async function registerDocumentosTools(): Promise<void> {
   // Documentos
-  const { actionListarDocumentos } = await import('@/app/app/documentos/actions/documentos-actions');
+  const { actionListarDocumentos } = await import('@/app/(authenticated)/documentos/actions/documentos-actions');
 
   // Templates
   const {
@@ -29,7 +29,7 @@ export async function registerDocumentosTools(): Promise<void> {
     actionUsarTemplate,
     actionListarCategorias,
     actionListarTemplatesMaisUsados,
-  } = await import('@/app/app/documentos/actions/templates-actions');
+  } = await import('@/app/(authenticated)/documentos/actions/templates-actions');
 
   /**
    * Lista documentos do sistema com filtros por pasta, tags e busca textual

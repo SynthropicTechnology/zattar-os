@@ -5,8 +5,8 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Acervo } from '@/app/app/acervo';
-import { actionBuscarProcesso } from '@/app/app/acervo';
+import type { Acervo } from '@/app/(authenticated)/acervo';
+import { actionBuscarProcesso } from '@/app/(authenticated)/acervo';
 
 interface UseProcessoDetailResult {
   processo: Acervo | null;

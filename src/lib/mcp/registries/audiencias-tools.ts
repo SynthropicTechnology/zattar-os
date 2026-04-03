@@ -25,9 +25,9 @@ export async function registerAudienciasTools(): Promise<void> {
     actionAtualizarStatusAudiencia,
     actionListarTiposAudiencia,
     actionBuscarAudienciasPorNumeroProcesso,
-  } = await import('@/app/app/audiencias/actions');
+  } = await import('@/app/(authenticated)/audiencias/actions');
 
-  const { StatusAudiencia, ModalidadeAudiencia, GrauTribunal, CODIGO_TRIBUNAL } = await import('@/app/app/audiencias/domain');
+  const { StatusAudiencia, ModalidadeAudiencia, GrauTribunal, CODIGO_TRIBUNAL } = await import('@/app/(authenticated)/audiencias/domain');
 
   /**
    * Lista audiências do sistema com filtros por data, tipo, status, processo
@@ -129,7 +129,7 @@ export async function registerAudienciasTools(): Promise<void> {
       try {
         const limite = args.limite ?? 20;
 
-        const { actionListarClientes } = await import('@/app/app/partes/server');
+        const { actionListarClientes } = await import('@/app/(authenticated)/partes/server');
         const clienteResult = await actionListarClientes({ busca: args.cpf, limite: 1 });
 
         if (!clienteResult.success) {
@@ -143,7 +143,7 @@ export async function registerAudienciasTools(): Promise<void> {
           return errorResult('Cliente não encontrado com este CPF');
         }
 
-        const { actionListarProcessos } = await import('@/app/app/processos/actions');
+        const { actionListarProcessos } = await import('@/app/(authenticated)/processos/actions');
         const processosResult = await actionListarProcessos({ busca: args.cpf });
 
         if (!processosResult.success) {
@@ -194,7 +194,7 @@ export async function registerAudienciasTools(): Promise<void> {
       try {
         const limite = args.limite ?? 20;
 
-        const { actionListarClientes } = await import('@/app/app/partes/server');
+        const { actionListarClientes } = await import('@/app/(authenticated)/partes/server');
         const clienteResult = await actionListarClientes({ busca: args.cnpj, limite: 1 });
 
         if (!clienteResult.success) {
@@ -208,7 +208,7 @@ export async function registerAudienciasTools(): Promise<void> {
           return errorResult('Cliente não encontrado com este CNPJ');
         }
 
-        const { actionListarProcessos } = await import('@/app/app/processos/actions');
+        const { actionListarProcessos } = await import('@/app/(authenticated)/processos/actions');
         const processosResult = await actionListarProcessos({ busca: args.cnpj });
 
         if (!processosResult.success) {

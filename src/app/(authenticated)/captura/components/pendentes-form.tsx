@@ -3,9 +3,9 @@
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
-import { capturarPendentes } from '@/app/app/captura/services/api-client';
-import { FILTROS_PRAZO } from '@/app/app/captura/constants';
-import type { FiltroPrazoPendentes, CapturaFormHandle } from '@/app/app/captura/types';
+import { capturarPendentes } from '@/app/(authenticated)/captura/services/api-client';
+import { FILTROS_PRAZO } from '@/app/(authenticated)/captura/constants';
+import type { FiltroPrazoPendentes, CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 

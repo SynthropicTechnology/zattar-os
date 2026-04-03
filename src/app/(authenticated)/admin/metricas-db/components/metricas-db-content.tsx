@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import type { MetricasDB } from "@/app/app/admin";
+import type { MetricasDB } from "@/app/(authenticated)/admin";
 import { DiskIOCard } from "./disk-io-card";
 
 interface MetricasDBContentProps {

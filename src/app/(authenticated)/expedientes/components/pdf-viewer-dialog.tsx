@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Loader2, FileText } from 'lucide-react';
-import { actionGerarUrlDownload } from '@/app/app/documentos';
+import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Button } from '@/components/ui/button';
 

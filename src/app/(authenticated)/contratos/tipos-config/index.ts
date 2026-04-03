@@ -5,7 +5,7 @@
  * Exporta tipos, schemas e repositórios para uso externo.
  *
  * Uso:
- * import { contratoTiposRepo, ContratoTipo, createContratoTipoSchema } from '@/app/app/contratos/tipos-config';
+ * import { contratoTiposRepo, ContratoTipo, createContratoTipoSchema } from '@/app/(authenticated)/contratos/tipos-config';
  */
 
 // =============================================================================

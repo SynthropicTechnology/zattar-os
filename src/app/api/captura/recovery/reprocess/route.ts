@@ -8,8 +8,8 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
 import {
   reprocessarElementos,
   reprocessarEnderecosPorCapturaLogId,
-} from '@/app/app/captura/services/recovery/endereco-recovery.service';
-import type { TipoEntidadeRecuperavel } from '@/app/app/captura/services/recovery/types';
+} from '@/app/(authenticated)/captura/services/recovery/endereco-recovery.service';
+import type { TipoEntidadeRecuperavel } from '@/app/(authenticated)/captura/services/recovery/types';
 
 /**
  * @swagger

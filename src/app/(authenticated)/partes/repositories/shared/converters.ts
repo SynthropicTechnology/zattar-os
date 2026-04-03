@@ -17,7 +17,7 @@ import type {
   TerceiroPessoaJuridica,
   TipoPessoa,
 } from "../../domain";
-import type { Endereco } from "@/app/app/enderecos";
+import type { Endereco } from "@/app/(authenticated)/enderecos";
 
 /**
  * Converte dados do banco para entidade Cliente tipada
@@ -396,4 +396,4 @@ export function converterParaEndereco(
 }
 
 // Re-export types for convenience
-export type { Endereco } from "@/app/app/enderecos";
+export type { Endereco } from "@/app/(authenticated)/enderecos";

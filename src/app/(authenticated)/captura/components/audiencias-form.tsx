@@ -3,12 +3,12 @@
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
-import { capturarAudiencias } from '@/app/app/captura/services/api-client';
-import { STATUS_AUDIENCIA_OPTIONS } from '@/app/app/captura/constants';
+import { capturarAudiencias } from '@/app/(authenticated)/captura/services/api-client';
+import { STATUS_AUDIENCIA_OPTIONS } from '@/app/(authenticated)/captura/constants';
 import { Label } from '@/components/ui/label';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { StatusAudiencia, CapturaFormHandle } from '@/app/app/captura/types';
+import type { StatusAudiencia, CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 
 const ORDEM_STATUS: StatusAudiencia[] = ['C', 'M', 'F'];
 

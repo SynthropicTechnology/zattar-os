@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { CallWindowContent, MeetingSkeleton } from "@/app/app/chat";
+import { CallWindowContent, MeetingSkeleton } from "@/app/(authenticated)/chat";
 
 function CallPageInner() {
   const searchParams = useSearchParams();

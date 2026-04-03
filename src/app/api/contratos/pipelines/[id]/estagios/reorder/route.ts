@@ -17,7 +17,7 @@ import {
   findPipelineById,
   reorderEstagios,
   reorderEstagiosSchema,
-} from '@/app/app/contratos/pipelines';
+} from '@/app/(authenticated)/contratos/pipelines';
 
 type RouteContext = { params: Promise<{ id: string }> };
 

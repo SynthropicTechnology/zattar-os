@@ -12,7 +12,7 @@ import { requirePermission } from '@/lib/auth/require-permission';
 import {
   contratoTiposRepo,
   updateContratoTipoSchema,
-} from '@/app/app/contratos/tipos-config';
+} from '@/app/(authenticated)/contratos/tipos-config';
 
 export async function GET(
   request: NextRequest,

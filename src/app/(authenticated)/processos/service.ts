@@ -38,7 +38,7 @@ import {
   usuarioExists,
 } from "./repository";
 // FSD: server-only service — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
-import { usuarioRepository } from "@/app/app/usuarios/repository";
+import { usuarioRepository } from "@/app/(authenticated)/usuarios/repository";
 
 // =============================================================================
 // SERVICOS - PROCESSO
@@ -431,8 +431,8 @@ export async function buscarProcessosPorClienteCPF(
   client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
-  const { findClienteByCPF } = await import("@/app/app/partes/server");
-  const { normalizarDocumento } = await import("@/app/app/partes");
+  const { findClienteByCPF } = await import("@/app/(authenticated)/partes/server");
+  const { normalizarDocumento } = await import("@/app/(authenticated)/partes");
 
   if (!cpf || !cpf.trim()) {
     return err(appError("VALIDATION_ERROR", "CPF e obrigatorio"));
@@ -483,8 +483,8 @@ export async function buscarProcessosPorClienteCNPJ(
   client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
-  const { findClienteByCNPJ } = await import("@/app/app/partes/server");
-  const { normalizarDocumento } = await import("@/app/app/partes");
+  const { findClienteByCNPJ } = await import("@/app/(authenticated)/partes/server");
+  const { normalizarDocumento } = await import("@/app/(authenticated)/partes");
 
   if (!cnpj || !cnpj.trim()) {
     return err(appError("VALIDATION_ERROR", "CNPJ e obrigatorio"));

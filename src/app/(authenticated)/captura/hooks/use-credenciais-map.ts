@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { CodigoTRT } from '@/app/app/captura';
+import type { CodigoTRT } from '@/app/(authenticated)/captura';
 
 type CredencialInfo = { tribunal: CodigoTRT; grau: string };
 

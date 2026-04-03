@@ -35,7 +35,7 @@ import {
 import { toast } from 'sonner';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 
-import type { Agendamento } from '@/app/app/captura';
+import type { Agendamento } from '@/app/(authenticated)/captura';
 
 type ApiOk = { success: true; data: { agendamentos: Agendamento[] } | { data: Agendamento[] } | Agendamento[] };
 

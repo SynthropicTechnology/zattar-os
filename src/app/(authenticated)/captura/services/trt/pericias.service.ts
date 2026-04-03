@@ -52,14 +52,14 @@
 
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
-import { obterPericias } from '@/app/app/captura/pje-trt';
+import { obterPericias } from '@/app/(authenticated)/captura/pje-trt';
 import type { Pericia } from '../../types/pericias-types';
 import { salvarPericias, type SalvarPericiasResult } from '../persistence/pericias-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import type { Processo } from '../../types/types';
-import { obterProcessosAcervoGeral } from '@/app/app/captura/pje-trt/acervo-geral/obter-processos';
-import { obterProcessosArquivados } from '@/app/app/captura/pje-trt/arquivados/obter-processos';
+import { obterProcessosAcervoGeral } from '@/app/(authenticated)/captura/pje-trt/acervo-geral/obter-processos';
+import { obterProcessosArquivados } from '@/app/(authenticated)/captura/pje-trt/arquivados/obter-processos';
 import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
 import { salvarAcervoBatch } from '../persistence/acervo-persistence.service';
 import { salvarTimeline } from '../timeline/timeline-persistence.service';

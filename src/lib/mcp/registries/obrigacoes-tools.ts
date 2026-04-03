@@ -24,11 +24,11 @@ export async function registerObrigacoesTools(): Promise<void> {
     actionBuscarAcordosPorCPF,
     actionBuscarAcordosPorCNPJ,
     actionBuscarAcordosPorNumeroProcesso,
-  } = await import('@/app/app/obrigacoes/actions/acordos');
+  } = await import('@/app/(authenticated)/obrigacoes/actions/acordos');
 
   const {
     actionListarRepassesPendentes,
-  } = await import('@/app/app/obrigacoes/actions/repasses');
+  } = await import('@/app/(authenticated)/obrigacoes/actions/repasses');
 
   /**
    * Lista acordos/condenações do sistema com filtros

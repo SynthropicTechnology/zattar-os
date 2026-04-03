@@ -101,27 +101,27 @@ const eslintConfig = defineConfig([
           patterns: [
             {
               // Bloqueia imports absolutos de caminhos internos de módulos colocados
-              // Exemplo proibido: import { X } from '@/app/app/partes/components/...'
-              // Exemplo permitido: import { X } from '@/app/app/partes'
+              // Exemplo proibido: import { X } from '@/app/(authenticated)/partes/components/...'
+              // Exemplo permitido: import { X } from '@/app/(authenticated)/partes'
               // Exemplo permitido (dentro do módulo): import { X } from '../hooks/...'
               group: [
-                "@/app/app/*/components/**",
-                "@/app/app/*/hooks/**",
-                "@/app/app/*/actions/**",
-                "@/app/app/*/utils/**",
-                "@/app/app/*/types/**",
-                "@/app/app/*/domain.ts",
-                "@/app/app/*/service.ts",
-                "@/app/app/*/repository.ts",
+                "@/app/(authenticated)/*/components/**",
+                "@/app/(authenticated)/*/hooks/**",
+                "@/app/(authenticated)/*/actions/**",
+                "@/app/(authenticated)/*/utils/**",
+                "@/app/(authenticated)/*/types/**",
+                "@/app/(authenticated)/*/domain.ts",
+                "@/app/(authenticated)/*/service.ts",
+                "@/app/(authenticated)/*/repository.ts",
               ],
               message:
-                "Use barrel exports (@/app/app/{modulo}) instead of direct internal paths. For imports within the same module, use relative paths (../hooks/...). Example: import { Component } from '@/app/app/partes'",
+                "Use barrel exports (@/app/(authenticated)/{modulo}) instead of direct internal paths. For imports within the same module, use relative paths (../hooks/...). Example: import { Component } from '@/app/(authenticated)/partes'",
             },
             {
               // Bloqueia imports de pastas legadas em src/
               group: ["**/backend/**", "@/core/**", "@/app/_lib/**", "@/features/**"],
               message:
-                "Legacy imports are not allowed. Use modules from @/app/app/{modulo}, @/lib/{service}, or @/components/{type} instead.",
+                "Legacy imports are not allowed. Use modules from @/app/(authenticated)/{modulo}, @/lib/{service}, or @/components/{type} instead.",
             },
           ],
         },
@@ -160,7 +160,7 @@ const eslintConfig = defineConfig([
   },
   // Serviços de recovery/análise (internos) — permitir `any` para lidar com payloads heterogêneos.
   {
-    files: ["src/app/app/captura/services/recovery/**/*.ts"],
+    files: ["src/app/(authenticated)/captura/services/recovery/**/*.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
     },
@@ -168,7 +168,7 @@ const eslintConfig = defineConfig([
   // Governança do Design System: impedir uso direto do Badge em módulos de feature.
   // Use SemanticBadge / wrappers semânticos para manter consistência.
   {
-    files: ["src/app/app/**"],
+    files: ["src/app/(authenticated)/**"],
     rules: {
       "no-restricted-imports": [
         "error",

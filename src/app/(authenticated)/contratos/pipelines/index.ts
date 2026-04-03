@@ -4,7 +4,7 @@
  * Re-exporta todos os módulos públicos do sub-módulo de pipelines.
  *
  * Uso:
- * import { ContratoPipeline, findAllPipelines } from '@/app/app/contratos/pipelines';
+ * import { ContratoPipeline, findAllPipelines } from '@/app/(authenticated)/contratos/pipelines';
  */
 
 // =============================================================================

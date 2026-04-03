@@ -6,7 +6,7 @@ import {
   CallHistoryList,
   TipoChamada,
   StatusChamada
-} from '@/app/app/chat';
+} from '@/app/(authenticated)/chat';
 import { PageShell } from '@/components/shared/page-shell';
 
 export const dynamic = 'force-dynamic';

@@ -50,7 +50,7 @@ import type { CapturaPendentesManifestacaoParams } from "./trt-capture.service";
 import {
   obterTodosProcessosPendentesManifestacao,
   obterTotalizadoresPendentesManifestacao,
-} from "@/app/app/captura/pje-trt";
+} from "@/app/(authenticated)/captura/pje-trt";
 import type { Processo } from "../../types";
 import {
   salvarPendentes,

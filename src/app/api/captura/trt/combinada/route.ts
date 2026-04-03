@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { getCredentialComplete } from '@/app/app/captura/credentials/credential.service';
-import { getTribunalConfig } from '@/app/app/captura/services/trt/config';
-import { ordenarCredenciaisPorTRT } from '@/app/app/captura';
-import { iniciarCapturaLog, atualizarCapturaLog } from '@/app/app/captura/services/captura-log.service';
-import { capturaCombinada } from '@/app/app/captura/services/trt/captura-combinada.service';
-import { registrarCapturaRawLog } from '@/app/app/captura/services/persistence/captura-raw-log.service';
-import { buscarAdvogado } from '@/app/app/advogados';
+import { getCredentialComplete } from '@/app/(authenticated)/captura/credentials/credential.service';
+import { getTribunalConfig } from '@/app/(authenticated)/captura/services/trt/config';
+import { ordenarCredenciaisPorTRT } from '@/app/(authenticated)/captura';
+import { iniciarCapturaLog, atualizarCapturaLog } from '@/app/(authenticated)/captura/services/captura-log.service';
+import { capturaCombinada } from '@/app/(authenticated)/captura/services/trt/captura-combinada.service';
+import { registrarCapturaRawLog } from '@/app/(authenticated)/captura/services/persistence/captura-raw-log.service';
+import { buscarAdvogado } from '@/app/(authenticated)/advogados';
 
 /**
  * @swagger
