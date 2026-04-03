@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { LayoutGrid } from 'lucide-react';
 import { usePermissoes } from '@/providers/user-provider';
+import { DashboardProvider } from '../hooks/use-dashboard';
 import { useWidgetLayout } from '../hooks/use-widget-layout';
 import { GlassPanel } from '../mock/widgets/primitives';
 import { WidgetPicker, type WidgetDefinition } from './widget-picker';
@@ -51,11 +52,12 @@ function getColSpanClass(size: WidgetDefinition['size']): string {
 interface WidgetDashboardProps {
   currentUserId: number;
   currentUserName: string;
+  initialData?: import('../domain').DashboardData | null;
 }
 
 // ─── Componente ──────────────────────────────────────────────────────────────
 
-export function WidgetDashboard({ currentUserId, currentUserName }: WidgetDashboardProps) {
+export function WidgetDashboard({ currentUserId, currentUserName, initialData }: WidgetDashboardProps) {
   const { temPermissao } = usePermissoes();
   const {
     enabledWidgets,
@@ -113,6 +115,7 @@ export function WidgetDashboard({ currentUserId, currentUserName }: WidgetDashbo
   }).replace(/^\w/, (c) => c.toUpperCase());
 
   return (
+    <DashboardProvider initialData={initialData}>
     <div className="space-y-5 pb-8">
       {/* ── Cabecalho ───────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
@@ -169,6 +172,7 @@ export function WidgetDashboard({ currentUserId, currentUserName }: WidgetDashbo
         <EmptyState onOpenPicker={undefined} />
       )}
     </div>
+    </DashboardProvider>
   );
 }
 

@@ -4,6 +4,7 @@
 
 export {
   useDashboard,
+  DashboardProvider,
   isDashboardAdmin,
   isDashboardUsuario,
 } from './use-dashboard';
