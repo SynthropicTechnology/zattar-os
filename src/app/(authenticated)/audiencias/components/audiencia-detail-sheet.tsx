@@ -1,17 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   ExternalLink,
   CalendarDays,
@@ -23,10 +13,10 @@ import {
   FileText,
   ShieldAlert,
   Monitor,
-  AlertTriangle,
   Scale,
+  Video,
+  Gavel,
 } from 'lucide-react';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { GRAU_TRIBUNAL_LABELS, StatusAudiencia, type Audiencia } from '../domain';
 import { format, parseISO } from 'date-fns';
@@ -36,51 +26,24 @@ import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { actionBuscarAudienciaPorId } from '../actions';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
+import {
+  DetailSheet,
+  DetailSheetHeader,
+  DetailSheetTitle,
+  DetailSheetDescription,
+  DetailSheetContent,
+  DetailSheetSection,
+  DetailSheetInfoRow,
+  DetailSheetSeparator,
+  DetailSheetMetaGrid,
+  DetailSheetMetaItem,
+  DetailSheetAudit,
+  DetailSheetFooter,
+  DetailSheetEmpty,
+} from '@/components/shared/detail-sheet';
 
 // =============================================================================
-// SECTION COMPONENT - Padroniza as seções do sheet
-// =============================================================================
-
-interface DetailSectionProps {
-  icon: React.ReactNode;
-  title: string;
-  children: React.ReactNode;
-}
-
-function DetailSection({ icon, title, children }: DetailSectionProps) {
-  return (
-    <div className="rounded-lg border bg-card p-4">
-      <h4 className="flex items-center gap-2 text-sm font-semibold text-foreground mb-3">
-        {icon}
-        {title}
-      </h4>
-      <div className="space-y-2">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// =============================================================================
-// INFO ROW COMPONENT
-// =============================================================================
-
-interface InfoRowProps {
-  label: string;
-  children: React.ReactNode;
-}
-
-function InfoRow({ label, children }: InfoRowProps) {
-  return (
-    <div className="flex items-start gap-2 text-sm">
-      <span className="text-muted-foreground min-w-25 shrink-0">{label}:</span>
-      <span className="text-foreground">{children}</span>
-    </div>
-  );
-}
-
-// =============================================================================
-// HELPER - Get initials
+// HELPER
 // =============================================================================
 
 function getInitials(name: string | null | undefined): string {
@@ -116,9 +79,7 @@ export function AudienciaDetailSheet({
   const shouldFetch = !!audienciaId && !audienciaProp;
 
   React.useEffect(() => {
-    if (!shouldFetch || !open) {
-      return;
-    }
+    if (!shouldFetch || !open) return;
 
     let cancelled = false;
     setIsLoading(true);
@@ -140,14 +101,10 @@ export function AudienciaDetailSheet({
         setError(err instanceof Error ? err.message : 'Erro desconhecido');
       })
       .finally(() => {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+        if (!cancelled) setIsLoading(false);
       });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [audienciaId, shouldFetch, open]);
 
   const audiencia = audienciaProp || fetchedAudiencia;
@@ -161,169 +118,140 @@ export function AudienciaDetailSheet({
     [usuarios]
   );
 
-  // =============================================================================
-  // RENDER: Loading State
-  // =============================================================================
-
-  if (shouldFetch && isLoading) {
+  // ─── Estado vazio ───
+  if (!audiencia && !isLoading && !error) {
     return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
-          <SheetHeader className="border-b pb-4">
-            <SheetTitle className="sr-only">Carregando</SheetTitle>
-            <Skeleton className="h-7 w-48" />
-            <Skeleton className="h-4 w-64 mt-2" />
-          </SheetHeader>
-          <div className="flex-1 p-4 space-y-4">
-            <Skeleton className="h-32 w-full rounded-lg" />
-            <Skeleton className="h-24 w-full rounded-lg" />
-            <Skeleton className="h-24 w-full rounded-lg" />
-          </div>
-        </SheetContent>
-      </Sheet>
+      <DetailSheet open={open} onOpenChange={onOpenChange}>
+        <DetailSheetHeader>
+          <DetailSheetTitle>Audiência</DetailSheetTitle>
+        </DetailSheetHeader>
+        <DetailSheetEmpty
+          title="Audiência não encontrada"
+          description="Os detalhes desta audiência não puderam ser carregados."
+        />
+        <DetailSheetFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Fechar
+          </Button>
+        </DetailSheetFooter>
+      </DetailSheet>
     );
   }
 
-  // =============================================================================
-  // RENDER: Error State
-  // =============================================================================
-
-  if (shouldFetch && error) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
-          <SheetHeader className="border-b pb-4">
-            <SheetTitle className="sr-only">Erro</SheetTitle>
-          </SheetHeader>
-          <div className="flex-1 flex items-center justify-center p-4">
-            <Empty>
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <AlertTriangle className="text-destructive" />
-                </EmptyMedia>
-                <EmptyTitle>Erro ao carregar audiência</EmptyTitle>
-                <EmptyDescription>{error}</EmptyDescription>
-              </EmptyHeader>
-            </Empty>
-          </div>
-          <SheetFooter className="border-t pt-4">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Fechar
-            </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
-  // =============================================================================
-  // RENDER: Not Found State
-  // =============================================================================
-
-  if (!audiencia) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
-          <SheetHeader className="border-b pb-4">
-            <SheetTitle className="sr-only">Não encontrada</SheetTitle>
-          </SheetHeader>
-          <div className="flex-1 flex items-center justify-center p-4">
-            <Empty>
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <AlertTriangle />
-                </EmptyMedia>
-                <EmptyTitle>Audiência não encontrada</EmptyTitle>
-                <EmptyDescription>
-                  Os detalhes desta audiência não puderam ser carregados.
-                </EmptyDescription>
-              </EmptyHeader>
-            </Empty>
-          </div>
-          <SheetFooter className="border-t pt-4">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Fechar
-            </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
-  // =============================================================================
-  // RENDER: Main Content
-  // =============================================================================
-
-  const dataInicio = parseISO(audiencia.dataInicio);
-  const dataFim = parseISO(audiencia.dataFim);
-  const responsavelNome = getResponsavelNome(audiencia.responsavelId);
-  const responsavelAvatar = audiencia.responsavelId
+  // ─── Dados derivados ───
+  const dataInicio = audiencia ? parseISO(audiencia.dataInicio) : null;
+  const dataFim = audiencia ? parseISO(audiencia.dataFim) : null;
+  const responsavelNome = audiencia ? getResponsavelNome(audiencia.responsavelId) : null;
+  const responsavelAvatar = audiencia?.responsavelId
     ? usuarios.find((u) => u.id === audiencia.responsavelId)?.avatarUrl ?? null
     : null;
-
-  // Verifica se a audiência tem ata disponível
-  const hasAta = audiencia.ataAudienciaId || audiencia.urlAtaAudiencia;
-  const isRealizada = audiencia.status === StatusAudiencia.Finalizada;
+  const hasAta = audiencia?.ataAudienciaId || audiencia?.urlAtaAudiencia;
+  const isRealizada = audiencia?.status === StatusAudiencia.Finalizada;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
-        {/* Header */}
-        <SheetHeader className="border-b pb-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <SheetTitle className="text-xl font-heading font-bold truncate">
-                {audiencia.tipoDescricao || 'Audiência'}
-              </SheetTitle>
-              <SheetDescription className="flex items-center gap-2 mt-1">
-                <CalendarDays className="h-4 w-4" />
-                <span>{format(dataInicio, "dd/MM/yyyy", { locale: ptBR })}</span>
-                <Clock className="h-4 w-4 ml-1" />
-                <span>
-                  {format(dataInicio, 'HH:mm', { locale: ptBR })} -{' '}
-                  {format(dataFim, 'HH:mm', { locale: ptBR })}
-                </span>
-              </SheetDescription>
-            </div>
-            <AudienciaStatusBadge status={audiencia.status} className="shrink-0" />
+    <DetailSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      loading={shouldFetch && isLoading}
+      error={shouldFetch ? error : null}
+    >
+      {/* ─── Header com hierarquia visual forte ─── */}
+      <DetailSheetHeader className="pb-0 border-b-0">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <Gavel className="h-5 w-5 text-primary" />
           </div>
-        </SheetHeader>
+          <div className="flex-1 min-w-0">
+            <DetailSheetTitle badge={audiencia && <AudienciaStatusBadge status={audiencia.status} />}>
+              {audiencia?.tipoDescricao || 'Audiência'}
+            </DetailSheetTitle>
+            {dataInicio && dataFim && (
+              <DetailSheetDescription>
+                <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>{format(dataInicio, "EEEE, dd 'de' MMMM", { locale: ptBR })}</span>
+              </DetailSheetDescription>
+            )}
+          </div>
+        </div>
+      </DetailSheetHeader>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {/* Ata de Audiência Section - Appears first if available */}
-          {isRealizada && hasAta && (
-            <DetailSection icon={<FileText className="h-4 w-4" />} title="Ata de Audiência">
-              <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1 rounded-md bg-green-500/15 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
-                  Ata Disponível
+      {/* ─── Conteúdo ─── */}
+      <DetailSheetContent>
+        {/* Meta strip — info de quick-scan no topo */}
+        {audiencia && (
+          <DetailSheetMetaGrid className="rounded-lg border bg-muted/40 p-4">
+            <DetailSheetMetaItem label="Horário">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              {dataInicio && dataFim && (
+                <span>
+                  {format(dataInicio, 'HH:mm')} - {format(dataFim, 'HH:mm')}
                 </span>
-                {audiencia.urlAtaAudiencia && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={audiencia.urlAtaAudiencia}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Visualizar Ata
-                    </a>
-                  </Button>
-                )}
-              </div>
-            </DetailSection>
-          )}
+              )}
+            </DetailSheetMetaItem>
+            <DetailSheetMetaItem label="Modalidade">
+              <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+            </DetailSheetMetaItem>
+            <DetailSheetMetaItem label="Responsável">
+              {audiencia.responsavelId && responsavelNome ? (
+                <div className="flex items-center gap-1.5">
+                  <Avatar className="h-5 w-5">
+                    <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
+                    <AvatarFallback className="text-[10px]">
+                      {getInitials(responsavelNome)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="truncate">{responsavelNome}</span>
+                </div>
+              ) : (
+                <span className="text-muted-foreground">Não atribuído</span>
+              )}
+            </DetailSheetMetaItem>
+          </DetailSheetMetaGrid>
+        )}
 
-          {/* Processo Section */}
-          <DetailSection icon={<ClipboardList className="h-4 w-4" />} title="Processo">
-            <InfoRow label="Número">
-              <span className="font-mono font-medium">{audiencia.numeroProcesso}</span>
-            </InfoRow>
-            <InfoRow label="Tribunal">
+        {/* CTA: Sala Virtual / Ata — ações primárias destacadas */}
+        {audiencia && (audiencia.urlAudienciaVirtual || (isRealizada && hasAta)) && (
+          <div className="flex flex-wrap gap-2">
+            {audiencia.urlAudienciaVirtual && (
+              <Button variant="default" size="sm" className="gap-2" asChild>
+                <a
+                  href={audiencia.urlAudienciaVirtual}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Video className="h-4 w-4" />
+                  Entrar na Sala Virtual
+                </a>
+              </Button>
+            )}
+            {isRealizada && hasAta && audiencia.urlAtaAudiencia && (
+              <Button variant="outline" size="sm" className="gap-2" asChild>
+                <a
+                  href={audiencia.urlAtaAudiencia}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FileText className="h-4 w-4" />
+                  Visualizar Ata
+                </a>
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Processo */}
+        {audiencia && (
+          <DetailSheetSection icon={<ClipboardList className="h-4 w-4" />} title="Processo">
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-sm font-semibold tracking-tight">
+                {audiencia.numeroProcesso}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
               {audiencia.trt} - {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-            </InfoRow>
-            <Separator className="my-2" />
-            <div className="text-sm space-y-1.5">
+            </p>
+            <DetailSheetSeparator />
+            <div className="space-y-1.5">
               <ParteBadge polo="ATIVO" className="flex" truncate maxWidth="100%">
                 {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '-'}
               </ParteBadge>
@@ -331,30 +259,17 @@ export function AudienciaDetailSheet({
                 {audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '-'}
               </ParteBadge>
             </div>
-          </DetailSection>
+          </DetailSheetSection>
+        )}
 
-          {/* Local/Link Section */}
-          <DetailSection icon={<MapPin className="h-4 w-4" />} title="Local / Link">
-            <div className="flex items-center gap-2 flex-wrap">
-              <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
-              {audiencia.urlAudienciaVirtual && (
-                <Button variant="outline" size="sm" asChild>
-                  <a
-                    href={audiencia.urlAudienciaVirtual}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    Entrar na Sala
-                  </a>
-                </Button>
-              )}
-            </div>
+        {/* Local / Endereço — só exibe se houver endereço ou sala */}
+        {audiencia && (audiencia.salaAudienciaNome || audiencia.enderecoPresencial) && (
+          <DetailSheetSection icon={<MapPin className="h-4 w-4" />} title="Local">
             {audiencia.salaAudienciaNome && (
-              <InfoRow label="Sala">{audiencia.salaAudienciaNome}</InfoRow>
+              <DetailSheetInfoRow label="Sala">{audiencia.salaAudienciaNome}</DetailSheetInfoRow>
             )}
             {audiencia.enderecoPresencial && (
-              <div className="text-sm text-muted-foreground mt-2">
+              <div className="text-sm text-muted-foreground">
                 {audiencia.enderecoPresencial.logradouro}, {audiencia.enderecoPresencial.numero}
                 {audiencia.enderecoPresencial.complemento && ` - ${audiencia.enderecoPresencial.complemento}`}
                 <br />
@@ -364,75 +279,56 @@ export function AudienciaDetailSheet({
                 CEP: {audiencia.enderecoPresencial.cep}
               </div>
             )}
-          </DetailSection>
+          </DetailSheetSection>
+        )}
 
-          {/* Responsável Section */}
-          <DetailSection icon={<User className="h-4 w-4" />} title="Responsável">
-            {audiencia.responsavelId && responsavelNome ? (
-              <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9">
-                  <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
-                  <AvatarFallback className="text-xs font-medium">
-                    {getInitials(responsavelNome)}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="font-medium">{responsavelNome}</span>
-              </div>
-            ) : (
-              <span className="text-muted-foreground text-sm">Sem responsável atribuído</span>
+        {/* Flags — Segredo de Justiça, Juízo Digital, Situação */}
+        {audiencia && (audiencia.segredoJustica || audiencia.juizoDigital || audiencia.statusDescricao) && (
+          <DetailSheetSection icon={<Scale className="h-4 w-4" />} title="Informações Adicionais">
+            {audiencia.statusDescricao && (
+              <DetailSheetInfoRow label="Situação">{audiencia.statusDescricao}</DetailSheetInfoRow>
             )}
-          </DetailSection>
-
-          {/* Informações Adicionais Section */}
-          {(audiencia.segredoJustica || audiencia.juizoDigital || audiencia.statusDescricao) && (
-            <DetailSection icon={<Scale className="h-4 w-4" />} title="Informações Adicionais">
-              {audiencia.statusDescricao && (
-                <InfoRow label="Situação">{audiencia.statusDescricao}</InfoRow>
+            <div className="flex flex-wrap gap-2">
+              {audiencia.segredoJustica && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-orange-500/15 px-2 py-0.5 text-xs font-medium text-orange-700 dark:text-orange-400">
+                  <ShieldAlert className="h-3 w-3" />
+                  Segredo de Justiça
+                </span>
               )}
-              <div className="flex flex-wrap gap-2 mt-2">
-                {audiencia.segredoJustica && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-orange-500/15 px-2 py-0.5 text-xs font-medium text-orange-700 dark:text-orange-400">
-                    <ShieldAlert className="h-3 w-3" />
-                    Segredo de Justiça
-                  </span>
-                )}
-                {audiencia.juizoDigital && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/15 px-2 py-0.5 text-xs font-medium text-sky-700 dark:text-sky-400">
-                    <Monitor className="h-3 w-3" />
-                    Juízo Digital
-                  </span>
-                )}
-              </div>
-            </DetailSection>
-          )}
+              {audiencia.juizoDigital && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/15 px-2 py-0.5 text-xs font-medium text-sky-700 dark:text-sky-400">
+                  <Monitor className="h-3 w-3" />
+                  Juízo Digital
+                </span>
+              )}
+            </div>
+          </DetailSheetSection>
+        )}
 
-          {/* Observações Section */}
-          {audiencia.observacoes && (
-            <DetailSection icon={<BookOpen className="h-4 w-4" />} title="Observações">
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                {audiencia.observacoes}
-              </p>
-            </DetailSection>
-          )}
-
-          {/* Audit Info */}
-          <div className="text-xs text-muted-foreground space-y-1 pt-2">
-            <p>
-              Criado em: {format(parseISO(audiencia.createdAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+        {/* Observações */}
+        {audiencia?.observacoes && (
+          <DetailSheetSection icon={<BookOpen className="h-4 w-4" />} title="Observações">
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+              {audiencia.observacoes}
             </p>
-            <p>
-              Atualizado em: {format(parseISO(audiencia.updatedAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
-            </p>
-          </div>
-        </div>
+          </DetailSheetSection>
+        )}
 
-        {/* Footer */}
-        <SheetFooter className="border-t pt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Fechar
-          </Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        {/* Audit */}
+        {audiencia && (
+          <DetailSheetAudit
+            createdAt={audiencia.createdAt}
+            updatedAt={audiencia.updatedAt}
+          />
+        )}
+      </DetailSheetContent>
+
+      {/* Footer */}
+      <DetailSheetFooter>
+        <Button variant="outline" onClick={() => onOpenChange(false)}>
+          Fechar
+        </Button>
+      </DetailSheetFooter>
+    </DetailSheet>
   );
 }
