@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react"
 import Notifications from "@/components/layout/header/notifications"
 import { AuthenticatorPopover } from "@/components/layout/header/authenticator-popover"
 import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
+import { useNotificacoes } from "@/app/(authenticated)/notificacoes"
 import { CommandHub } from "@/components/layout/header/command-hub"
 import { Terminal, MessageSquare } from "lucide-react"
 import "@copilotkit/react-core/v2/styles.css"
@@ -121,11 +122,19 @@ function DashboardHeader({
   onOpenCommand: () => void
   onOpenBriefing: () => void
 }) {
+  const { contador } = useNotificacoes({ pagina: 1, limite: 1, lida: false })
+  const hasUnread = contador.total > 0
+
   return (
     <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
       {/* Esquerda: Avatar + ícones hover-reveal */}
       <div className="group/avatar flex items-center gap-1">
-        <HeaderUserMenu />
+        <div className="relative">
+          <HeaderUserMenu />
+          {hasUnread && (
+            <span className="absolute -right-0.5 -top-0.5 block size-2.5 rounded-full bg-destructive ring-2 ring-background" />
+          )}
+        </div>
 
         {/* Ícones aparecem com animação no hover */}
         <div

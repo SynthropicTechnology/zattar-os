@@ -137,38 +137,43 @@ export function AuthenticatorPopover() {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent align="end" className="w-[calc(100vw-2rem)] sm:w-80 p-0">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b px-4 py-3">
+      <PopoverContent
+        align="start"
+        sideOffset={8}
+        className="w-[calc(100vw-2rem)] rounded-xl border-border/20 bg-popover/80 p-0 shadow-lg backdrop-blur-xl dark:bg-popover/70 sm:w-80"
+      >
+        {/* ── Header ── */}
+        <div className="relative flex items-center justify-between rounded-t-xl px-3.5 py-2.5">
+          <div className="pointer-events-none absolute inset-0 rounded-t-xl bg-linear-to-br from-primary/6 via-transparent to-transparent" />
           {selectedAccount ? (
             <>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-auto p-0 text-sm"
+                className="relative h-auto p-0 text-[13px]"
                 onClick={handleBack}
               >
-                <ChevronLeftIcon className="h-4 w-4 mr-1" />
+                <ChevronLeftIcon className="mr-1 h-3.5 w-3.5" />
                 Voltar
               </Button>
-              <span className="text-sm font-medium">Autenticador</span>
+              <span className="relative text-[13px] font-semibold tracking-tight">Autenticador</span>
             </>
           ) : (
-            <span className="text-sm font-medium">Contas 2FA</span>
+            <span className="relative text-[13px] font-semibold tracking-tight">Contas 2FA</span>
           )}
         </div>
+        <div className="mx-3 h-px bg-border/30" />
 
-        {/* Content */}
+        {/* ── Content ── */}
         {selectedAccount ? (
-          // Visualizacao do OTP
-          <div className="p-4 space-y-4">
+          <div className="space-y-3.5 p-3.5">
             {/* Ícone e nome da conta */}
             <div className="flex flex-col items-center text-center">
               <AccountIcon account={selectedAccount} size="md" />
-              <div className="mt-2 text-sm text-muted-foreground">
+              <div className="mt-2 text-[13px] text-muted-foreground">
                 {selectedAccount.service || "Conta"}
               </div>
-              <div className="text-xs text-muted-foreground/70">
+              <div className="text-[11px] text-muted-foreground/60">
                 {selectedAccount.account || `ID: ${selectedAccount.id}`}
               </div>
             </div>
@@ -176,21 +181,21 @@ export function AuthenticatorPopover() {
             {/* Codigo OTP */}
             <div className="flex flex-col items-center gap-2">
               {otpLoading ? (
-                <div className="flex items-center justify-center h-16">
-                  <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
+                <div className="flex h-14 items-center justify-center">
+                  <Loader2Icon className="h-5 w-5 animate-spin text-muted-foreground/60" />
                 </div>
               ) : otpError ? (
                 <div className="flex flex-col items-center gap-2 text-destructive">
-                  <AlertCircleIcon className="h-6 w-6" />
-                  <span className="text-xs text-center">{otpError}</span>
+                  <AlertCircleIcon className="h-5 w-5" />
+                  <span className="text-[11px] text-center">{otpError}</span>
                 </div>
               ) : currentOTP ? (
                 <>
                   <div
                     className={cn(
-                      "text-3xl font-mono font-bold tracking-wider cursor-pointer select-all",
-                      "hover:text-primary transition-colors",
-                      timeRemaining <= 5 && "text-destructive animate-pulse"
+                      "cursor-pointer select-all font-mono text-2xl font-bold tracking-wider",
+                      "transition-colors hover:text-primary",
+                      timeRemaining <= 5 && "animate-pulse text-destructive"
                     )}
                     onClick={handleCopy}
                     title="Clique para copiar"
@@ -203,16 +208,16 @@ export function AuthenticatorPopover() {
                     <Progress
                       value={progress}
                       className={cn(
-                        "h-1.5",
+                        "h-1",
                         timeRemaining <= 5 && "[&>div]:bg-destructive"
                       )}
                     />
-                    <div className="flex justify-between text-xs text-muted-foreground">
+                    <div className="flex justify-between text-[11px] text-muted-foreground/60">
                       <span>Expira em</span>
                       <span
                         className={cn(
                           "font-mono",
-                          timeRemaining <= 5 && "text-destructive font-bold"
+                          timeRemaining <= 5 && "font-bold text-destructive"
                         )}
                       >
                         {timeRemaining}s
@@ -224,18 +229,18 @@ export function AuthenticatorPopover() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full mt-2"
+                    className="mt-1 w-full rounded-lg border-border/30 text-[13px]"
                     onClick={handleCopy}
                   >
                     {copied ? (
                       <>
-                        <CheckIcon className="h-4 w-4 mr-2 text-green-500" />
+                        <CheckIcon className="mr-2 h-3.5 w-3.5 text-green-500" />
                         Copiado!
                       </>
                     ) : (
                       <>
-                        <CopyIcon className="h-4 w-4 mr-2" />
-                        Copiar Codigo
+                        <CopyIcon className="mr-2 h-3.5 w-3.5" />
+                        Copiar Código
                       </>
                     )}
                   </Button>
@@ -244,57 +249,55 @@ export function AuthenticatorPopover() {
             </div>
           </div>
         ) : (
-          // Lista de contas
           <ScrollArea className="h-64">
             {isLoading ? (
-              <div className="flex items-center justify-center h-full p-8">
-                <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
+              <div className="flex h-full items-center justify-center p-8">
+                <Loader2Icon className="h-5 w-5 animate-spin text-muted-foreground/60" />
               </div>
             ) : error ? (
-              <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <AlertCircleIcon className="h-8 w-8 text-destructive mb-2" />
-                <span className="text-sm text-muted-foreground">{error}</span>
+              <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+                <AlertCircleIcon className="mb-2 h-7 w-7 text-destructive" />
+                <span className="text-[13px] text-muted-foreground">{error}</span>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="mt-4"
+                  className="mt-3 rounded-lg border-border/30 text-[13px]"
                   onClick={fetchAccounts}
                 >
                   Tentar novamente
                 </Button>
               </div>
             ) : accounts.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <KeyRoundIcon className="h-8 w-8 text-muted-foreground mb-2" />
-                <span className="text-sm text-muted-foreground">
+              <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+                <KeyRoundIcon className="mb-2 h-7 w-7 text-muted-foreground/40" />
+                <span className="text-[13px] text-muted-foreground/70">
                   Nenhuma conta 2FA cadastrada
                 </span>
               </div>
             ) : (
-              <div className="py-1">
+              <div className="p-1">
                 {accounts.map((account) => (
                   <button
                     key={account.id}
                     className={cn(
-                      "flex items-center gap-3 w-full px-4 py-3 text-left",
-                      "hover:bg-accent transition-colors",
-                      "border-b border-border/50 last:border-b-0"
+                      "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left",
+                      "cursor-pointer transition-colors duration-150 hover:bg-primary/6"
                     )}
                     onClick={() => selectAccount(account)}
                   >
                     <div className="shrink-0">
-                      <AccountIcon account={account} />
+                      <AccountIcon account={account} size="sm" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-[13px] font-medium">
                         {account.service || `Conta #${account.id}`}
                       </div>
-                      <div className="text-xs text-muted-foreground truncate">
+                      <div className="truncate text-[11px] text-muted-foreground/60">
                         {account.account || account.otp_type.toUpperCase()}
                       </div>
                     </div>
-                    <div className="shrink-0 text-xs text-muted-foreground">
-                      {account.digits} digitos
+                    <div className="shrink-0 text-[10px] text-muted-foreground/50">
+                      {account.digits} dígitos
                     </div>
                   </button>
                 ))}
