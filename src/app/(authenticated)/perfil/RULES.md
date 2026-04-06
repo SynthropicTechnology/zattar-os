@@ -1,19 +1,43 @@
-# Regras de Negocio - Perfil
+# Regras de Negócio - Perfil
 
 ## Contexto
-Pagina de visualizacao e edicao do perfil do usuario autenticado. Reutiliza o tipo `Usuario` do modulo de usuarios.
+Módulo de visualização e edição do perfil do usuário autenticado. Funciona como camada de apresentação sobre o módulo `usuarios`, oferecendo actions específicas para que o usuário consulte e atualize seus próprios dados. Inclui funcionalidades de alteração de senha e upload de avatar.
 
-## Estrutura
-- `domain.ts` — Re-exporta `Usuario` de `@/app/(authenticated)/usuarios`
-- `components/perfil-view.tsx` — Exibicao de dados pessoais, contato, endereco, OAB
-- `components/perfil-edit-sheet.tsx` — Sheet lateral para edicao do perfil
-- `components/alterar-senha-dialog.tsx` — Dialog para troca de senha
-- `hooks/use-perfil.ts` — Hook client-side que chama `actionObterPerfil`
-- `actions/` — Server Actions do perfil
+## Entidades Principais
+- **Usuario**: Re-exportado de `@/app/(authenticated)/usuarios` — contém dados pessoais, profissionais e de acesso
 
-## Regras Principais
-- **Tipo compartilhado**: Usa `Usuario` do modulo `usuarios`, nao define tipo proprio
-- **Formatadores reutilizados**: CPF, telefone, OAB, data, endereco e genero vem de `usuarios/utils`
-- **Avatar**: Usa `AvatarEditDialog` importado de `@/app/(authenticated)/usuarios`
-- **Alteracao de senha**: Nao dispara refetch apos sucesso (nao afeta dados exibidos)
-- **PageShell**: Pagina usa `PageShell` como wrapper padrao
+## Regras de Negócio
+
+### Obter Perfil
+1. Autenticar via `supabase.auth.getUser()`
+2. Buscar dados do usuário na tabela `usuarios` pelo `auth_user_id`
+3. Incluir dados do cargo via join com `cargos`
+4. Buscar permissões do usuário na tabela `permissoes_usuarios`
+5. Retornar flag `podeGerenciarPermissoes` baseada na presença de `usuarios:gerenciar_permissoes`
+
+### Atualizar Perfil
+1. Autenticar via `supabase.auth.getUser()`
+2. Localizar ID do usuário pelo `auth_user_id`
+3. Delegar atualização para `usuariosService.atualizarUsuario()`
+4. Revalidar cache do perfil após sucesso
+
+### Campos Editáveis
+- Dados pessoais: nome, CPF, RG, data de nascimento, gênero
+- Dados profissionais: OAB, UF da OAB
+- Contato: email pessoal, email corporativo, telefone, ramal
+- Endereço
+- Avatar e capa
+
+## Restrições de Acesso
+- Apenas o próprio usuário pode ver/editar seu perfil
+- Autenticação obrigatória via Supabase Auth
+- Permissão `usuarios:gerenciar_permissoes` é consultada mas não bloqueia — apenas exibe flag na UI
+
+## Integrações
+- **Usuarios**: `service.atualizarUsuario()` para persistência de alterações
+- **Supabase Auth**: Autenticação e identificação do usuário
+- **Cargos**: Join para exibir cargo do usuário
+
+## Revalidação de Cache
+Após mutações, revalidar:
+- `/app/perfil` — Página do perfil
