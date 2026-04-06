@@ -11,7 +11,7 @@ export async function actionMarcarParcelaRecebida(
 ) {
   try {
     const data = await service.marcarParcelaRecebida(parcelaId, dados);
-    revalidatePath('/app/acordos-condenacoes');
+    revalidatePath('/app/obrigacoes');
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -24,7 +24,7 @@ export async function actionAtualizarParcela(
 ) {
   try {
     const data = await service.atualizarParcela(parcelaId, valores);
-    revalidatePath('/app/acordos-condenacoes');
+    revalidatePath('/app/obrigacoes');
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -34,7 +34,7 @@ export async function actionAtualizarParcela(
 export async function actionRecalcularDistribuicao(acordoId: number) {
   try {
     const data = await service.recalcularDistribuicao(acordoId);
-    revalidatePath(`/app/acordos-condenacoes/${acordoId}`);
+    revalidatePath(`/app/obrigacoes/${acordoId}`);
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };

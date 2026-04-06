@@ -286,7 +286,7 @@ export function ObrigacaoDetalhesDialog({
               <Button
                 variant="outline"
                 onClick={() => {
-                  window.location.href = `/acordos-condenacoes/${obrigacao.acordoId}`;
+                  window.location.href = `/obrigacoes/${obrigacao.acordoId}`;
                 }}
               >
                 <FileText className="mr-2 h-4 w-4" />

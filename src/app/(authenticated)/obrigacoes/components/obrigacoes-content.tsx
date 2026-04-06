@@ -35,19 +35,19 @@ import { ObrigacoesYearWrapper } from './calendar/obrigacoes-year-wrapper';
 // =============================================================================
 
 const VIEW_ROUTES: Record<ViewType, string> = {
-  semana: '/acordos-condenacoes/semana',
-  mes: '/acordos-condenacoes/mes',
-  ano: '/acordos-condenacoes/ano',
-  lista: '/acordos-condenacoes/lista',
-  quadro: '/acordos-condenacoes/quadro',
+  semana: '/obrigacoes/semana',
+  mes: '/obrigacoes/mes',
+  ano: '/obrigacoes/ano',
+  lista: '/obrigacoes/lista',
+  quadro: '/obrigacoes/quadro',
 };
 
 const ROUTE_TO_VIEW: Record<string, ViewType> = {
-  '/acordos-condenacoes': 'semana',
-  '/acordos-condenacoes/semana': 'semana',
-  '/acordos-condenacoes/mes': 'mes',
-  '/acordos-condenacoes/ano': 'ano',
-  '/acordos-condenacoes/lista': 'lista',
+  '/obrigacoes': 'semana',
+  '/obrigacoes/semana': 'semana',
+  '/obrigacoes/mes': 'mes',
+  '/obrigacoes/ano': 'ano',
+  '/obrigacoes/lista': 'lista',
 };
 
 // =============================================================================

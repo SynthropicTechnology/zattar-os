@@ -46,7 +46,7 @@ const routeLabels: Record<string, string> = {
   historico: "Histórico",
   movimentacoes: "Movimentações",
   andamentos: "Andamentos",
-  "acordos-condenacoes": "Obrigações",
+  obrigacoes: "Obrigações",
   // Assinatura Digital
   "assinatura-digital": "Assinatura Digital",
   novo: "Novo Documento",

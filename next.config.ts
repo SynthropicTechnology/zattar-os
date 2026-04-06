@@ -15,7 +15,7 @@ const withBundleAnalyzer =
     : (config: NextConfig) => config;
 
 const APP_MODULES = [
-  "acordos-condenacoes",
+  "obrigacoes",
   "assinatura-digital",
   "assistentes",
   "audiencias",

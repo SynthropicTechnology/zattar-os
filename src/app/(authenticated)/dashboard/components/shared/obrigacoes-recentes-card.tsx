@@ -116,7 +116,7 @@ export function ObrigacoesRecentesCard() {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>Obrigações Recentes</CardTitle>
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/acordos-condenacoes">
+          <Link href="/obrigacoes">
             Ver todas
             <ArrowRight className="h-4 w-4 ml-2" />
           </Link>

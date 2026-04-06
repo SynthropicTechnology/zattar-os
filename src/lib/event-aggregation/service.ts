@@ -122,7 +122,7 @@ function acordoParcelasToEventItems(acordo: AcordoComParcelas): UnifiedEventItem
       responsavelId: null, // obrigações não têm responsável
       responsavelNome: undefined,
       statusOrigem: status,
-      url: `/app/acordos-condenacoes?acordoId=${acordo.id}`,
+      url: `/app/obrigacoes?acordoId=${acordo.id}`,
     };
   });
 }

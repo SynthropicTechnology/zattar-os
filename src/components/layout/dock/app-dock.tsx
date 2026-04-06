@@ -47,7 +47,7 @@ const navPrincipal: NavItemDef[] = [
   { id: 'audiencias',  title: 'Audiências',  url: '/app/audiencias/semana'   },
   { id: 'contratos',   title: 'Contratos',   url: '/app/contratos'           },
   { id: 'expedientes', title: 'Expedientes', url: '/app/expedientes'         },
-  { id: 'obrigacoes',  title: 'Obrigações',  url: '/app/acordos-condenacoes' },
+  { id: 'obrigacoes',  title: 'Obrigações',  url: '/app/obrigacoes'          },
   { id: 'partes',      title: 'Partes',      url: '/app/partes'              },
   { id: 'pericias',    title: 'Perícias',    url: '/app/pericias'            },
   { id: 'processos',   title: 'Processos',   url: '/app/processos'           },

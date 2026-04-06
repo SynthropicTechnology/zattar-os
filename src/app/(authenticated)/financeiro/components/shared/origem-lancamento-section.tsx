@@ -287,7 +287,7 @@ export function OrigemLancamentoSection({
           <div className="flex flex-wrap gap-2 pt-2 border-t">
             {acordo && (
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/acordos-condenacoes/${acordo.id}`}>
+                <Link href={`/obrigacoes/${acordo.id}`}>
                   <Scale className="h-4 w-4 mr-2" />
                   Ver Acordo
                   <ExternalLink className="h-3 w-3 ml-2" />

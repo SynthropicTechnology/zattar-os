@@ -46,7 +46,7 @@ const navEscritorio: HubNavItem[] = [
   { id: "audiencias",  title: "Audiências",   url: "/app/audiencias/semana",   icon: Calendar,        shortcut: "⌘2", description: "Pautas da semana" },
   { id: "contratos",   title: "Contratos",    url: "/app/contratos",           icon: FileText,        shortcut: "⌘3", description: "Gestão contratual" },
   { id: "expedientes", title: "Expedientes",  url: "/app/expedientes",         icon: FolderOpen,      shortcut: "⌘4", description: "Prazos e intimações" },
-  { id: "obrigacoes",  title: "Obrigações",   url: "/app/acordos-condenacoes", icon: Handshake,       shortcut: "⌘5", description: "Acordos e prazos" },
+  { id: "obrigacoes",  title: "Obrigações",   url: "/app/obrigacoes",          icon: Handshake,       shortcut: "⌘5", description: "Acordos e prazos" },
   { id: "partes",      title: "Partes",       url: "/app/partes",              icon: Users,           shortcut: "⌘6", description: "Clientes e partes" },
   { id: "pericias",    title: "Perícias",     url: "/app/pericias",            icon: Microscope,      shortcut: "⌘7", description: "Laudos e perícias" },
   { id: "processos",   title: "Processos",    url: "/app/processos",           icon: Scale,           shortcut: "⌘8", description: "Casos ativos" },

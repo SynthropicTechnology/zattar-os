@@ -176,7 +176,7 @@ function getModuleKey(pathname: string): string {
 
   // Normalizar chaves compostas
   const raw = match[1];
-  if (raw === 'acordos-condenacoes') return 'processos';
+  if (raw === 'obrigacoes') return 'processos';
   if (raw === 'assinatura-digital') return 'documentos';
   if (raw === 'pecas-juridicas') return 'documentos';
   if (raw === 'captura') return 'documentos';

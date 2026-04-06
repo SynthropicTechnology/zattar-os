@@ -29,7 +29,7 @@ const MODULE_LABELS: Record<string, string> = {
   '/app/pericias': 'Perícias',
   '/app/captura': 'Captura de Documentos',
   '/app/assistentes': 'Assistentes IA',
-  '/app/acordos-condenacoes': 'Acordos e Condenações',
+  '/app/obrigacoes': 'Obrigações',
   '/app/assinatura-digital': 'Assinatura Digital',
   '/app/mail': 'E-mail',
   '/app/calendar': 'Calendário',

@@ -8,7 +8,7 @@ export type ModuloSistema =
   | 'processos'
   | 'audiencias'
   | 'expedientes'
-  | 'acordos-condenacoes'
+  | 'obrigacoes'
   | 'contratos'
   | 'assistentes'
   | 'clientes'

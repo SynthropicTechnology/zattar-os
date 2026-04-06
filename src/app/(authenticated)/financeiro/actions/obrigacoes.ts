@@ -70,7 +70,7 @@ export async function actionSincronizarParcela(parcelaId: number, forcar: boolea
     try {
         const result = await ObrigacoesService.sincronizarParcela(parcelaId, forcar);
         revalidatePath('/app/financeiro');
-        revalidatePath('/app/acordos-condenacoes');
+        revalidatePath('/app/obrigacoes');
         if (result.sucesso) {
             return { success: true, message: result.mensagem };
         }
@@ -113,8 +113,8 @@ export async function actionSincronizarAcordo(acordoId: number, forcar: boolean 
     try {
         const result = await ObrigacoesService.sincronizarAcordo(acordoId, forcar);
         revalidatePath('/app/financeiro');
-        revalidatePath('/app/acordos-condenacoes');
-        revalidatePath(`/app/acordos-condenacoes/${acordoId}`);
+        revalidatePath('/app/obrigacoes');
+        revalidatePath(`/app/obrigacoes/${acordoId}`);
         if (result.sucesso) {
             return { success: true, message: result.mensagem };
         }

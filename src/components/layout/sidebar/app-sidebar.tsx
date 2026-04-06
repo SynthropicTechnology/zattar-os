@@ -59,7 +59,7 @@ const navPrincipal = [
   },
   {
     title: "Obrigações",
-    url: "/app/acordos-condenacoes",
+    url: "/app/obrigacoes",
     icon: Handshake,
   },
   {

@@ -115,3 +115,70 @@ export const Typography = {
 
 // Exportações individuais para uso direto
 export { H1, H2, H3, H4, P, Blockquote, List, InlineCode, Lead, Large, Small, Muted, Table };
+
+// =============================================================================
+// DESIGN SYSTEM: Typed Typography Components
+// =============================================================================
+
+const HEADING_LEVELS = {
+  page: { className: 'text-page-title', tag: 'h1' as const },
+  section: { className: 'text-section-title', tag: 'h2' as const },
+  card: { className: 'text-card-title', tag: 'h3' as const },
+  subsection: { className: 'text-subsection-title', tag: 'h4' as const },
+  widget: { className: 'text-widget-title', tag: 'h3' as const },
+} as const;
+
+type HeadingLevel = keyof typeof HEADING_LEVELS;
+
+interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  level: HeadingLevel;
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  children: React.ReactNode;
+}
+
+function Heading({ level, as: asTag, className: userClassName, children, ...props }: HeadingProps) {
+  const config = HEADING_LEVELS[level];
+  const Tag = asTag ?? config.tag;
+  return (
+    <Tag className={cn(config.className, userClassName)} {...props}>
+      {children}
+    </Tag>
+  );
+}
+Heading.displayName = 'Heading';
+
+const TEXT_VARIANTS = {
+  'kpi-value': { className: 'text-kpi-value', tag: 'span' as const },
+  label: { className: 'text-label', tag: 'span' as const },
+  caption: { className: 'text-caption', tag: 'p' as const },
+  'widget-sub': { className: 'text-widget-sub', tag: 'p' as const },
+  'meta-label': { className: 'text-meta-label', tag: 'span' as const },
+  'mono-num': { className: 'text-mono-num', tag: 'span' as const },
+  'micro-caption': { className: 'text-micro-caption', tag: 'span' as const },
+  'micro-badge': { className: 'text-micro-badge', tag: 'span' as const },
+  overline: { className: 'text-overline', tag: 'span' as const },
+} as const;
+
+type TextVariant = keyof typeof TEXT_VARIANTS;
+
+interface TextProps extends React.HTMLAttributes<HTMLElement> {
+  variant: TextVariant;
+  as?: React.ElementType;
+  children: React.ReactNode;
+}
+
+function Text({ variant, as: asTag, className: userClassName, children, ...props }: TextProps) {
+  const config = TEXT_VARIANTS[variant];
+  const Tag = asTag ?? config.tag;
+  return (
+    <Tag className={cn(config.className, userClassName)} {...props}>
+      {children}
+    </Tag>
+  );
+}
+Text.displayName = 'Text';
+
+// Design System typed typography
+export { Heading, Text };
+export type { HeadingLevel, TextVariant, HeadingProps, TextProps };
+export { HEADING_LEVELS, TEXT_VARIANTS };

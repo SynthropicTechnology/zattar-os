@@ -186,7 +186,7 @@ function acordoParcelaToEvents(acordo: AcordoComParcelas): UnifiedCalendarEvent[
       allDay: true,
       source: "obrigacoes",
       sourceEntityId: parcela.id,
-      url: `/app/acordos-condenacoes?acordoId=${acordo.id}`,
+      url: `/app/obrigacoes?acordoId=${acordo.id}`,
       responsavelId: null,
       color,
       metadata: {
