@@ -26,7 +26,7 @@ import { GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS, type Expediente } from 
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
-import { ExpedienteControlDetailSheet } from './expediente-control-detail-sheet';
+import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 
 interface UsuarioData {
   id: number;
@@ -478,20 +478,6 @@ export function ExpedientesControlView({
   return (
     <>
       <div className="mx-auto flex max-w-350 flex-col gap-5">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h1 className="font-heading text-2xl font-semibold tracking-tight">Controle de Expedientes</h1>
-            <p className="mt-1 text-sm text-muted-foreground/50">
-              Triagem central de risco, classificacao e distribuicao operacional do escritorio.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 self-start lg:self-auto">
-            {viewModeSlot}
-            {settingsSlot}
-          </div>
-        </div>
-
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
           <ControlMetricCard
             title="Vencidos"
@@ -562,8 +548,8 @@ export function ExpedientesControlView({
                     <QueueListRow
                       key={expediente.id}
                       expediente={expediente}
-                      responsavelNome={expediente.responsavelId ? usuariosMap.get(expediente.responsavelId) : null}
-                      tipoExpedienteNome={expediente.tipoExpedienteId ? tiposMap.get(expediente.tipoExpedienteId) : null}
+                      
+                      
                       selected={selectedExpediente?.id === expediente.id}
                       onSelect={() => {
                         setSelectedExpediente(expediente);
@@ -577,8 +563,8 @@ export function ExpedientesControlView({
                   <QueueCard
                     key={expediente.id}
                     expediente={expediente}
-                    responsavelNome={expediente.responsavelId ? usuariosMap.get(expediente.responsavelId) : null}
-                    tipoExpedienteNome={expediente.tipoExpedienteId ? tiposMap.get(expediente.tipoExpedienteId) : null}
+                    
+                    
                     selected={selectedExpediente?.id === expediente.id}
                     onSelect={() => {
                       setSelectedExpediente(expediente);
@@ -665,12 +651,12 @@ export function ExpedientesControlView({
         </div>
       </div>
 
-      <ExpedienteControlDetailSheet
-        expediente={selectedExpediente}
+      <ExpedienteVisualizarDialog
+        expediente={selectedExpediente as any}
         open={detailOpen}
         onOpenChange={setDetailOpen}
-        responsavelNome={selectedExpediente?.responsavelId ? usuariosMap.get(selectedExpediente.responsavelId) : null}
-        tipoExpedienteNome={selectedExpediente?.tipoExpedienteId ? tiposMap.get(selectedExpediente.tipoExpedienteId) : null}
+        
+        
       />
     </>
   );

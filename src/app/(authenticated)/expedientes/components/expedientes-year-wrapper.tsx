@@ -33,9 +33,8 @@ export function ExpedientesYearWrapper({
     isLoading,
     error,
     refetch,
-    selectedDate,
-    setSelectedDate,
-  } = useExpedientes();
+    } = useExpedientes();
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
 
   if (isLoading) {
     return <TemporalViewLoading message="Carregando visão anual..." />;
@@ -48,9 +47,9 @@ export function ExpedientesYearWrapper({
   return (
     <div className="flex flex-col gap-4">
       <ExpedientesCalendarYear
-        expedientes={expedientes}
+        
         currentDate={selectedDate!}
-        onDateSelect={setSelectedDate}
+        
       />
     </div>
   );

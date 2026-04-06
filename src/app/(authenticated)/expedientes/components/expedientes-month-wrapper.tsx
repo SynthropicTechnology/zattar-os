@@ -5,7 +5,7 @@ import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { ExpedientesCalendarCompact } from './expedientes-calendar-compact';
 import { ExpedientesDayList } from './expedientes-day-list';
-import { ExpedienteDialog } from './expediente-dialog';
+import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 
 interface UsuarioData {
   id: number;
@@ -35,9 +35,9 @@ export function ExpedientesMonthWrapper({
     isLoading,
     error,
     refetch,
-    selectedDate,
-    setSelectedDate,
-  } = useExpedientes();
+    } = useExpedientes();
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
+  const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
 
   const [selectedBaixarId, setSelectedBaixarId] = React.useState<number | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
@@ -60,6 +60,8 @@ export function ExpedientesMonthWrapper({
             expedientes={expedientes}
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
+            currentMonth={currentMonth}
+            onMonthChange={setCurrentMonth}
           />
         </div>
 
@@ -67,25 +69,17 @@ export function ExpedientesMonthWrapper({
           <ExpedientesDayList
             selectedDate={selectedDate!}
             expedientes={expedientes}
-            usuarios={usuariosData}
-            tipos={tiposExpedientesData}
-            onEdit={setSelectedExpedienteId}
+                                    
           />
         </div>
       </div>
 
-      <ExpedienteDialog
-        expedienteId={selectedExpedienteId || undefined}
-        open={!!selectedExpedienteId || isCreateDialogOpen}
+      <ExpedienteVisualizarDialog
+        expediente={expedientes.find(e => e.id === selectedExpedienteId) as any}
+        open={!!selectedExpedienteId}
         onOpenChange={(open) => {
-          if (!open) {
-            setSelectedExpedienteId(null);
-            setIsCreateDialogOpen(false);
-          }
+          if (!open) setSelectedExpedienteId(null);
         }}
-        onSuccess={() => refetch()}
-        usuarios={usuariosData}
-        tipos={tiposExpedientesData}
       />
     </div>
   );

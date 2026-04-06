@@ -23,6 +23,7 @@ interface TipoExpedienteData {
 }
 
 export interface ExpedientesListWrapperProps {
+  searchQuery?: string;
   viewModeSlot?: React.ReactNode;
   settingsSlot?: React.ReactNode;
   usuariosData?: UsuarioData[];
@@ -48,7 +49,7 @@ export function ExpedientesListWrapper({
   }
 
   if (error) {
-    return <TemporalViewError message={error.message || 'Erro ao carregar expedientes'} onRetry={refetch} />;
+    return <TemporalViewError message={'Erro ao carregar expedientes'} onRetry={refetch} />;
   }
 
   return (
@@ -85,7 +86,7 @@ export function ExpedientesListWrapper({
       {/* Dialogs de Quick Action */}
       {selectedBaixarId && (
         <ExpedientesBaixarDialog
-          expedienteId={selectedBaixarId}
+          expediente={expedientes.find(e => e.id === selectedBaixarId) as any}
           open={true}
           onOpenChange={(open) => !open && setSelectedBaixarId(null)}
           onSuccess={() => {
@@ -95,11 +96,13 @@ export function ExpedientesListWrapper({
         />
       )}
 
-      <ExpedienteVisualizarDialog
-        expedienteId={selectedVisualizarId}
+      {selectedVisualizarId && (
+        <ExpedienteVisualizarDialog
+        expediente={expedientes.find(e => e.id === selectedVisualizarId) as any}
         open={!!selectedVisualizarId}
         onOpenChange={(open) => !open && setSelectedVisualizarId(null)}
       />
+      )}
     </div>
   );
 }

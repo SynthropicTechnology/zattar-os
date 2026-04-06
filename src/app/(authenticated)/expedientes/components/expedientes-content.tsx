@@ -83,9 +83,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           {/* O seletor de View */}
           <ViewModePopover
             options={expedientesViewOptions}
-            currentView={visualizacao}
-            onViewChange={handleNavigate}
-            triggerClassName="w-[140px] h-9"
+            value={visualizacao}
+            onValueChange={handleNavigate}
+            className="w-[140px] h-9"
           />
           <Button className="h-9 gap-2">
             <Plus className="w-4 h-4" />

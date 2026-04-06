@@ -32,6 +32,7 @@ import {
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { AppBadge } from '@/components/ui/app-badge';
 import { cn } from '@/lib/utils';
+import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 
 import { GRAU_TRIBUNAL_LABELS, type Expediente } from '../domain';
 import { useExpedientes } from '../hooks/use-expedientes';
@@ -354,11 +355,12 @@ export function ExpedientesWeekMission({
   }, [weekNavigatorProps.weekDays, contagemPorDia]);
 
   // Selected expediente for detail sheet
-  const [, setSelectedExpediente] = React.useState<Expediente | null>(null);
+  const [selectedExpediente, setSelectedExpediente] = React.useState<Expediente | null>(null);
+  const [detailOpen, setDetailOpen] = React.useState(false);
 
   const handleSelect = React.useCallback((exp: Expediente) => {
     setSelectedExpediente(exp);
-    // TODO: abrir detail sheet
+    setDetailOpen(true);
   }, []);
 
   const dateLabel = React.useMemo(() => {
@@ -376,19 +378,6 @@ export function ExpedientesWeekMission({
   return (
     <div className="mx-auto flex max-w-350 flex-col gap-5">
       {/* Header */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <h1 className="font-heading text-2xl font-semibold tracking-tight">Briefing Diario</h1>
-          <p className="mt-1 text-sm text-muted-foreground/50">
-            Missao do dia — expedientes agrupados por prioridade de acao.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 self-start lg:self-auto">
-          {viewModeSlot}
-          {settingsSlot}
-        </div>
-      </div>
-
       {/* Week Navigator */}
       <WeekNavigator
         weekDays={weekDaysComContagem}
@@ -519,7 +508,12 @@ export function ExpedientesWeekMission({
             )}
           </>
         )}
-      </div>
+            </div>
+      <ExpedienteVisualizarDialog
+        expediente={selectedExpediente as any}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+      />
     </div>
   );
 }
