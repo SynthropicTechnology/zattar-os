@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -18,7 +19,7 @@ interface SettingsNavProps {
 export function SettingsNav({ activeTab, onTabChange }: SettingsNavProps) {
   return (
     <nav className="w-55 shrink-0 hidden md:block">
-      <div className="rounded-2xl border border-border/20 glass-widget bg-transparent p-3 sticky top-4 self-start">
+      <GlassPanel className="p-3 sticky top-4 self-start">
         <div className="space-y-4">
           {SETTINGS_NAV_GROUPS.map((group) => (
             <div key={group.label}>
@@ -72,7 +73,7 @@ export function SettingsNav({ activeTab, onTabChange }: SettingsNavProps) {
             </div>
           </>
         )}
-      </div>
+      </GlassPanel>
     </nav>
   );
 }

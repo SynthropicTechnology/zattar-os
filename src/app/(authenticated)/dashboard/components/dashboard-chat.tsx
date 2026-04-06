@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -174,7 +175,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
   }
 
   return (
-    <Card className="row-span-2 flex flex-col glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel className="row-span-2">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="size-5" />
@@ -202,7 +203,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
                 return (
                   <div key={mensagem.id} className={cn('flex gap-2', isOwn ? 'flex-row-reverse' : 'flex-row')}>
                     {!isOwn && (
-                      <Avatar className="size-8">
+                      <Avatar>
                         <AvatarImage src={mensagem.usuario.avatar || undefined} />
                         <AvatarFallback className="text-xs">
                           {obterIniciais(mensagem.usuario.nomeExibicao || mensagem.usuario.nomeCompleto)}
@@ -241,6 +242,6 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
           </Button>
         </form>
       </CardFooter>
-    </Card>
+    </GlassPanel>
   );
 }

@@ -115,7 +115,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
             {tarefa.assignees.slice(0, 3).map((assignee, index) => (
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
-                  <Avatar className="border-background border-2 h-6 w-6">
+                  <Avatar size="sm" className="border-background border-2">
                     <AvatarImage
                       src={assignee.avatarUrl || "/placeholder.svg"}
                       alt={assignee.name}

@@ -1,6 +1,7 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppBadge } from "@/components/ui/app-badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -70,7 +71,7 @@ export function ObrigacoesRecentesCard() {
 
   if (isLoading) {
     return (
-      <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel className="col-span-full">
         <CardHeader>
           <Skeleton className="h-6 w-48" />
         </CardHeader>
@@ -81,38 +82,38 @@ export function ObrigacoesRecentesCard() {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (error) {
     return (
-      <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel className="col-span-full">
         <CardHeader>
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">Erro ao carregar obrigações: {error}</p>
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (obrigacoesOrdenadas.length === 0) {
     return (
-      <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel className="col-span-full">
         <CardHeader>
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">Nenhuma obrigação encontrada.</p>
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   return (
-    <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel className="col-span-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>Obrigações Recentes</CardTitle>
         <Button variant="ghost" size="sm" asChild>
@@ -154,7 +155,7 @@ export function ObrigacoesRecentesCard() {
           </TableBody>
         </Table>
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 }
 

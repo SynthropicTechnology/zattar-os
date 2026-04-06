@@ -143,7 +143,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                       className="flex items-center justify-between py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <Avatar className="size-9">
+                        <Avatar size="lg">
                           {membro.usuarioAvatar && (
                             <AvatarImage src={membro.usuarioAvatar} />
                           )}

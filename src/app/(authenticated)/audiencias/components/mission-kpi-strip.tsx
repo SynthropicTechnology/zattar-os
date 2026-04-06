@@ -15,6 +15,7 @@ import { CalendarDays, Clock, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { parseISO, isSameWeek, isSameMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import {
   Sparkline,
   AnimatedNumber,
@@ -141,9 +142,9 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               <span className="text-[10px] text-muted-foreground/40">audiências</span>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-primary/8">
             <CalendarDays className="size-4 text-primary/50" />
-          </div>
+          </IconContainer>
         </div>
         {/* Sparkline de tendência 6m */}
         <div className="mt-2.5 flex items-center gap-2">
@@ -171,9 +172,9 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               </p>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-warning/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-warning/8">
             <Clock className="size-4 text-warning/50" />
-          </div>
+          </IconContainer>
         </div>
         {/* Detalhe do tribunal + modalidade */}
         <div className="mt-2.5">
@@ -201,9 +202,9 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               <span className="text-[10px] text-muted-foreground/40">/ {stats.relevantesMes} mês</span>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-success/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-success/8">
             <CheckCircle2 className="size-4 text-success/50" />
-          </div>
+          </IconContainer>
         </div>
         {/* Barra de taxa de realização */}
         <div className="mt-2.5 flex items-center gap-2">
@@ -233,9 +234,9 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               <span className="text-[10px] text-muted-foreground/40">média</span>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-primary/8">
             <ShieldCheck className="size-4 text-primary/50" />
-          </div>
+          </IconContainer>
         </div>
         {/* Barra de preparo com cor dinâmica */}
         <div className="mt-2.5 flex items-center gap-2">

@@ -12,6 +12,7 @@
 
 import { AlertTriangle, Clock, CalendarClock, UserX } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import {
   AnimatedNumber,
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
@@ -106,13 +107,12 @@ export function ExpedientesPulseStrip({
                   </p>
                 </div>
               </div>
-              <div className={cn(
-                'size-8 rounded-lg flex items-center justify-center shrink-0',
+              <IconContainer size="md" className={cn(
                 `${metric.bgColor}/8`,
                 metric.highlight && metric.value > 0 && 'border border-destructive/20',
               )}>
                 <Icon className={cn('size-4', `${metric.color}/60`)} />
-              </div>
+              </IconContainer>
             </div>
 
             {/* Barra de proporção */}

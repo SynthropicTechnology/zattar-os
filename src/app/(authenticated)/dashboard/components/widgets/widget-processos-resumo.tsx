@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,27 +23,27 @@ interface WidgetProcessosResumoProps {
 export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosResumoProps) {
   if (loading) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><Skeleton className="h-5 w-24" /></CardHeader>
         <CardContent className="space-y-3">
           <Skeleton className="h-20 w-full" />
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (error) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><CardTitle>Processos</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (data.total === 0) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader>
           <CardTitle>Processos</CardTitle>
           <CardDescription>Distribuição e análise</CardDescription>
@@ -51,14 +51,14 @@ export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosR
         <CardContent>
           <p className="text-sm text-muted-foreground py-8 text-center">Nenhum processo atribuído</p>
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   const ativosPercent = Math.round((data.ativos / data.total) * 100);
 
   return (
-    <Card className="glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel>
       <CardHeader>
         <CardTitle>Processos</CardTitle>
         <CardDescription>Distribuição e análise</CardDescription>
@@ -121,6 +121,6 @@ export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosR
           </Button>
         </Link>
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 }

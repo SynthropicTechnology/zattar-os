@@ -118,7 +118,7 @@ function ProcessoResponsavelCell({
               className="rounded-full transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
               aria-label={responsavel ? `Alterar responsável: ${nomeExibicao}` : 'Atribuir responsável'}
             >
-              <Avatar className="h-8 w-8 shrink-0 border">
+              <Avatar className="border">
                 <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeExibicao} />
                 <AvatarFallback className="text-[10px] font-medium">
                   {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}

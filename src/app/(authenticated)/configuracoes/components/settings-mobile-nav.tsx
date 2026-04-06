@@ -1,5 +1,6 @@
 'use client';
 
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { ALL_NAV_ITEMS, type SettingsTab } from './settings-nav-items';
@@ -13,7 +14,7 @@ export function SettingsMobileNav({ activeTab, onTabChange }: SettingsMobileNavP
   return (
     <div className="md:hidden">
       <ScrollArea className="w-full">
-        <div className="flex gap-1 p-1 rounded-xl border border-border/20 glass-widget bg-transparent">
+        <GlassPanel className="flex-row gap-1 p-1 rounded-xl">
           {ALL_NAV_ITEMS.map((item) => {
             const isActive = activeTab === item.id;
             return (
@@ -32,7 +33,7 @@ export function SettingsMobileNav({ activeTab, onTabChange }: SettingsMobileNavP
               </button>
             );
           })}
-        </div>
+        </GlassPanel>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>

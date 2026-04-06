@@ -180,7 +180,7 @@ export function Comment(props: {
       onMouseLeave={() => setHovering(false)}
     >
       <div className="relative flex items-center">
-        <Avatar className="size-5">
+        <Avatar size="xs">
           <AvatarImage alt={userInfo?.name} src={userInfo?.avatarUrl} />
           <AvatarFallback>{userInfo?.name?.[0]}</AvatarFallback>
         </Avatar>
@@ -556,7 +556,7 @@ export function CommentCreateForm({
     <div className={cn('flex w-full', className)}>
       <div className="mt-2 mr-1 shrink-0">
         {/* Replace to your own backend or refer to potion */}
-        <Avatar className="size-5">
+        <Avatar size="xs">
           <AvatarImage alt={userInfo?.name} src={userInfo?.avatarUrl} />
           <AvatarFallback>{userInfo?.name?.[0]}</AvatarFallback>
         </Avatar>

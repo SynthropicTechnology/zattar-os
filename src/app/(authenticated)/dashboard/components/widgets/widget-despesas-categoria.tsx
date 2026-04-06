@@ -6,6 +6,7 @@ import { PieChart as PieIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { ClientOnly } from '@/components/shared/client-only';
 import { Heading } from '@/components/ui/typography';
 import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
@@ -47,32 +48,32 @@ export function WidgetDespesasCategoria() {
 
   if (isLoading) {
     return (
-      <Card className="h-full glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel className="h-full transition-all duration-200">
         <CardHeader>
           <Skeleton className="h-5 w-52" />
         </CardHeader>
         <CardContent className="min-h-80 lg:min-h-90">
           <Skeleton className="h-full w-full" />
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (error) {
     return (
-      <Card className="h-full glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel className="h-full transition-all duration-200">
         <CardHeader>
           <CardTitle className="text-sm">Despesas por Categoria</CardTitle>
         </CardHeader>
         <CardContent className="min-h-80 lg:min-h-90 flex items-center justify-center">
           <p className="text-sm text-muted-foreground">Erro ao carregar dados</p>
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   return (
-    <Card className="h-full flex flex-col glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel className="h-full transition-all duration-200">
       <CardHeader className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:justify-between">
         <Heading level="widget" className="flex min-w-0 flex-1 items-center gap-2">
           <PieIcon className="h-4 w-4 text-muted-foreground" />
@@ -129,6 +130,6 @@ export function WidgetDespesasCategoria() {
           )}
         </div>
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 }

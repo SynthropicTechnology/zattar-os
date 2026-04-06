@@ -277,7 +277,7 @@ function ProcessoResponsavelCell({
       >
         {responsavel ? (
           <>
-            <Avatar className="h-6 w-6 shrink-0">
+            <Avatar size="sm">
               <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
               <AvatarFallback className="text-[10px] font-medium">
                 {getInitials(responsavel.nomeExibicao)}

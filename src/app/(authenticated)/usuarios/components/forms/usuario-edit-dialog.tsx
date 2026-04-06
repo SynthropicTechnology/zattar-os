@@ -264,7 +264,7 @@ export function UsuarioEditDialog({
               className="relative group cursor-pointer"
               onClick={() => setAvatarDialogOpen(true)}
             >
-              <Avatar className="h-16 w-16 border-2 border-muted">
+              <Avatar size="2xl" className="border-2 border-muted">
                 <AvatarImage src={currentAvatarUrl || undefined} alt={formData.nomeExibicao || usuario.nomeExibicao} />
                 <AvatarFallback className="text-lg font-medium">
                   {getInitials(formData.nomeExibicao || usuario.nomeExibicao)}

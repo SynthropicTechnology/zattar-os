@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { AlertTriangle, Calendar, ArrowRight, Clock } from 'lucide-react';
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -32,26 +32,26 @@ function getUrgency(dias: number) {
 export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedientesUrgentesProps) {
   if (loading) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><Skeleton className="h-5 w-44" /></CardHeader>
         <CardContent className="space-y-3">
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-lg" />)}
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (error) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><CardTitle>Expedientes Urgentes</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   return (
-    <Card className="glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel>
       <CardHeader>
         <CardTitle>Expedientes Urgentes</CardTitle>
         <CardDescription>
@@ -117,6 +117,6 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
           </div>
         )}
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 }

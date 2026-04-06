@@ -3,12 +3,12 @@
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
   CardAction,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
 import { Bell, CircleCheck, Trash2 } from 'lucide-react';
 import { AddReminderDialog } from '../geral/components/add-reminder-dialog';
@@ -36,7 +36,7 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
   };
 
   return (
-    <Card className="glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bell className="size-5" />
@@ -118,6 +118,6 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
           </>
         )}
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 }

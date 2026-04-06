@@ -48,7 +48,7 @@ export function UsuarioCard({ usuario, onView }: UsuarioCardProps) {
     >
       <CardHeader className="px-0 py-0 gap-1.5">
         <div className="flex items-center gap-2.5">
-          <Avatar className="h-9 w-9 shrink-0">
+          <Avatar size="lg">
             <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
             <AvatarFallback className="text-xs font-medium">
               {getInitials(usuario.nomeExibicao || usuario.nomeCompleto)}

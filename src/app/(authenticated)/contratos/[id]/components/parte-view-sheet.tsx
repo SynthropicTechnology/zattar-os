@@ -52,7 +52,7 @@ export function ParteViewSheet({ open, onOpenChange, parte }: ParteViewSheetProp
       <SheetContent>
         <SheetHeader>
           <SheetTitle className="flex items-center gap-3">
-            <Avatar className="size-12">
+            <Avatar size="xl">
               <AvatarFallback
                 className={
                   isCliente

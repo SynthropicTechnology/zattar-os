@@ -97,7 +97,7 @@ export function PerfilView() {
             className="relative group cursor-pointer"
             onClick={() => setAvatarDialogOpen(true)}
           >
-            <Avatar className="h-24 w-24 border-2 border-muted">
+            <Avatar size="3xl" className="border-2 border-muted">
               <AvatarImage src={avatarUrl || undefined} alt={usuario.nomeExibicao} />
               <AvatarFallback className="text-2xl font-medium">
                 {getInitials(usuario.nomeExibicao)}

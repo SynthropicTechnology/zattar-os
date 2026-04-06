@@ -2,7 +2,8 @@
 
 import { LucideIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 
@@ -91,7 +92,7 @@ export function StatCard({
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
 
   const content = (
-    <Card className={cn('transition-all hover:shadow-md glass-kpi bg-transparent', href && 'cursor-pointer', className)}>
+    <GlassPanel depth={2} className={cn('transition-all hover:shadow-md', href && 'cursor-pointer', className)}>
       <CardContent className="pt-4 sm:pt-6">
         <div className="flex items-start justify-between gap-2">
           <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
@@ -121,7 +122,7 @@ export function StatCard({
           )}
         </div>
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 
   if (href) {

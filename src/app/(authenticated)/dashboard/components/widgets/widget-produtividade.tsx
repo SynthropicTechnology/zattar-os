@@ -2,12 +2,12 @@
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -22,21 +22,21 @@ interface WidgetProdutividadeProps {
 export function WidgetProdutividade({ data, loading, error }: WidgetProdutividadeProps) {
   if (loading) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><Skeleton className="h-5 w-28" /></CardHeader>
         <CardContent className="space-y-3">
           <Skeleton className="h-20 w-full" />
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (error) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><CardTitle>Produtividade</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
@@ -51,7 +51,7 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
   const maxBaixas = Math.max(...porDia.map((d) => d.baixas), 1);
 
   return (
-    <Card className="glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel>
       <CardHeader>
         <CardTitle>Produtividade</CardTitle>
         <CardDescription>Baixas e atividades recentes</CardDescription>
@@ -115,6 +115,6 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
           </div>
         )}
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 }

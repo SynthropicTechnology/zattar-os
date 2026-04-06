@@ -29,6 +29,7 @@ import { SituacaoPericiaCodigo, type Pericia } from '../domain';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { Badge } from '@/components/ui/badge';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import { PericiasKpiStrip } from './pericias-kpi-strip';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
 import { Heading } from '@/components/ui/typography';
@@ -265,9 +266,9 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
                     {/* Cabeçalho do Card */}
                     <div className="flex justify-between items-start gap-3">
                       <div className="flex items-center gap-2.5">
-                         <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                         <IconContainer size="md" className="bg-primary/10">
                            <Icone className="size-4 text-primary" />
-                         </div>
+                         </IconContainer>
                          <div>
                            <h3 className="font-heading text-base font-semibold tracking-tight">{pericia.numeroProcesso || pericia.processo?.numeroProcesso}</h3>
                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">{pericia.especialidade?.descricao || 'Perícia Técnica'}</span>

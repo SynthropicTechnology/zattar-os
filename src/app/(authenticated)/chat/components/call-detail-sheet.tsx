@@ -145,7 +145,7 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
                   <div className="flex justify-between items-center pt-2 border-t">
                     <span className="text-sm font-medium">Iniciado por</span>
                     <div className="flex items-center gap-2">
-                      <Avatar className="h-6 w-6">
+                      <Avatar size="sm">
                         <AvatarImage src={chamada.iniciador.avatar} />
                         <AvatarFallback>{chamada.iniciador.nomeCompleto.charAt(0)}</AvatarFallback>
                       </Avatar>
@@ -195,7 +195,7 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
                   {chamada.participantes.map((p) => (
                     <div key={p.id} className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
+                        <Avatar>
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">

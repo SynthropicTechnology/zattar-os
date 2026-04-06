@@ -12,6 +12,7 @@
 
 import { Clock, Building2 } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -68,13 +69,13 @@ export function ContratoCard({ contrato: c, stageColor, onClick }: ContratoCardP
       />
       <div className="flex items-start gap-2.5">
         {/* Avatar */}
-        <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+        <IconContainer size="md" className="bg-primary/8">
           {c.clienteTipo === 'pj' ? (
             <Building2 className="size-3.5 text-primary/60" />
           ) : (
             <span className="text-[9px] font-bold text-primary/60">{getInitials(c.cliente)}</span>
           )}
-        </div>
+        </IconContainer>
 
         <div className="flex-1 min-w-0">
           {/* Client name */}

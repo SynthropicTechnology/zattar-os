@@ -72,7 +72,7 @@ export function HeaderUserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
-          <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-border/30 transition-all duration-200 hover:ring-primary/40">
+          <Avatar className="cursor-pointer ring-2 ring-border/30 transition-all duration-200 hover:ring-primary/40">
             <AvatarImage src={avatar} alt={name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
@@ -88,7 +88,7 @@ export function HeaderUserMenu() {
           <div className="pointer-events-none absolute inset-0 rounded-t-xl bg-linear-to-br from-primary/6 via-transparent to-transparent" />
           <div className="relative flex items-center gap-2.5">
             <div className="shrink-0 rounded-full bg-linear-to-br from-primary/40 to-primary/10 p-[1.5px]">
-              <Avatar className="h-9 w-9 ring-[1.5px] ring-background">
+              <Avatar size="lg" className="ring-[1.5px] ring-background">
                 <AvatarImage src={avatar} alt={name} />
                 <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
                   {initials}

@@ -121,7 +121,7 @@ export function BlockSuggestionCard({
       <div className="flex flex-col p-4">
         <div className="relative flex items-center">
           {/* Replace to your own backend or refer to potion */}
-          <Avatar className="size-5">
+          <Avatar size="xs">
             <AvatarImage alt={userInfo?.name} src={userInfo?.avatarUrl} />
             <AvatarFallback>{userInfo?.name?.[0]}</AvatarFallback>
           </Avatar>

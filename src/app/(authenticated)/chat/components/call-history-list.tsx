@@ -215,7 +215,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const user = row.original.iniciador;
         return user ? (
           <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
+            <Avatar size="sm">
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.nomeCompleto.charAt(0)}</AvatarFallback>
             </Avatar>

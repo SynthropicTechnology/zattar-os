@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CopyButton } from '@/app/(authenticated)/partes';
 import { timeAgo } from '@/components/dashboard/entity-card';
 import { cn } from '@/lib/utils';
+import { IconContainer } from '@/components/ui/icon-container';
 import type { ProcessoUnificado } from '../domain';
 import { GRAU_LABELS } from '@/lib/design-system';
 
@@ -75,9 +76,9 @@ export function ProcessoCard({
     >
       <div onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onClick()}>
         <div className="flex items-start gap-3">
-          <div className={cn('size-10 rounded-xl flex items-center justify-center shrink-0', statusClasses.bg)}>
+          <IconContainer size="lg" className={statusClasses.bg}>
             <Scale className={cn('size-5', statusClasses.text)} />
-          </div>
+          </IconContainer>
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-semibold truncate">{tituloPartes}</h3>
             <div className="flex items-center gap-1 mt-0.5">
@@ -136,7 +137,7 @@ export function ProcessoCard({
 
         <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/10">
           <div className="flex items-center gap-1.5">
-            <Avatar className="h-5 w-5 border">
+            <Avatar size="xs" className="border">
               <AvatarImage src={responsavel?.avatarUrl || undefined} />
               <AvatarFallback className="text-[8px]">
                 {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}

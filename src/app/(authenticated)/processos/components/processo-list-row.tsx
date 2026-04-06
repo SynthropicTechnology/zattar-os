@@ -4,6 +4,7 @@ import { Scale, ChevronRight } from 'lucide-react';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { IconContainer } from '@/components/ui/icon-container';
 import type { ProcessoUnificado } from '../domain';
 
 interface Usuario {
@@ -54,9 +55,9 @@ export function ProcessoListRow({
       )}
     >
       <div className={cn('size-2.5 rounded-full shrink-0', dotColor)} />
-      <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+      <IconContainer size="md" className="bg-primary/8">
         <Scale className="size-3.5 text-primary/50" />
-      </div>
+      </IconContainer>
       <div className="flex-1 min-w-0 text-left">
         <p className="text-xs font-medium truncate">{tituloPartes}</p>
         <p className="text-[10px] text-muted-foreground/55 font-mono tabular-nums truncate">
@@ -66,7 +67,7 @@ export function ProcessoListRow({
       <SemanticBadge category="tribunal" value={trt} className="text-[9px] shrink-0 hidden sm:flex">
         {trt}
       </SemanticBadge>
-      <Avatar className="h-6 w-6 border shrink-0">
+      <Avatar size="sm" className="border">
         <AvatarImage src={responsavel?.avatarUrl || undefined} />
         <AvatarFallback className="text-[8px]">
           {responsavel?.nomeExibicao?.slice(0, 2).toUpperCase() || 'NA'}

@@ -30,6 +30,7 @@ import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 
 import type { Audiencia } from '../domain';
 import { MODALIDADE_AUDIENCIA_LABELS } from '../domain';
@@ -164,9 +165,9 @@ export function MissionCard({
         {/* Header: Status + Countdown */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <IconContainer size="md" className="bg-primary/10">
               <Gavel className="size-4 text-primary" />
-            </div>
+            </IconContainer>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[9px] font-semibold uppercase tracking-wider text-primary/60">

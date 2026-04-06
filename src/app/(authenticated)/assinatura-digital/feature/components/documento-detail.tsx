@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import { ProgressRing } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import type { DocumentoCardData } from "../adapters/documento-card-adapter";
 import { STATUS_CONFIG, getSignerProgress, timeAgo } from "./documento-card";
@@ -33,11 +34,9 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div
-            className={`size-10 rounded-xl ${cfg.bg} flex items-center justify-center shrink-0`}
-          >
+          <IconContainer size="lg" className={cfg.bg}>
             <Icon className={`size-5 ${cfg.color}`} />
-          </div>
+          </IconContainer>
           <div className="min-w-0">
             <h2 className="text-sm font-heading font-semibold leading-tight">
               {doc.titulo}

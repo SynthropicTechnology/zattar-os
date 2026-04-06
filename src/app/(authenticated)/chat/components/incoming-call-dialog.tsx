@@ -151,7 +151,7 @@ export function IncomingCallDialog({
           <DialogTitle className="sr-only">Recebendo chamada</DialogTitle>
           
           <div className="relative">
-            <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+            <Avatar size="3xl" className="border-4 border-background shadow-lg">
               <AvatarImage src={callData.iniciadorAvatar} />
               <AvatarFallback className="text-2xl">
                 {callData.iniciadorNome?.substring(0, 2).toUpperCase()}

@@ -52,7 +52,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
         {collaborators.length > 5 && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Avatar className="h-8 w-8 border-2 border-background">
+              <Avatar className="border-2 border-background">
                 <AvatarFallback className="text-xs">
                   +{collaborators.length - 5}
                 </AvatarFallback>

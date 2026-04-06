@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { Calendar, Clock, Video, MapPin, ArrowRight } from 'lucide-react';
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -52,26 +52,26 @@ const urgencyStyles = {
 export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienciasProximasProps) {
   if (loading) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><Skeleton className="h-5 w-40" /></CardHeader>
         <CardContent className="space-y-3">
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-lg" />)}
         </CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   if (error) {
     return (
-      <Card className="glass-widget bg-transparent transition-all duration-200">
+      <GlassPanel>
         <CardHeader><CardTitle>Próximas Audiências</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
-      </Card>
+      </GlassPanel>
     );
   }
 
   return (
-    <Card className="glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel>
       <CardHeader>
         <CardTitle>Próximas Audiências</CardTitle>
         <CardDescription>
@@ -150,6 +150,6 @@ export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienc
           </div>
         )}
       </CardContent>
-    </Card>
+    </GlassPanel>
   );
 }

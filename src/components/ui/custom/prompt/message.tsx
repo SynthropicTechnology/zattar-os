@@ -24,7 +24,7 @@ export type MessageAvatarProps = {
 
 const MessageAvatar = ({ src, alt, fallback, delayMs, className }: MessageAvatarProps) => {
   return (
-    <Avatar className={cn("h-8 w-8 shrink-0", className)}>
+    <Avatar className={cn("shrink-0", className)}>
       <AvatarImage src={src} alt={alt} />
       {fallback && <AvatarFallback delayMs={delayMs}>{fallback}</AvatarFallback>}
     </Avatar>

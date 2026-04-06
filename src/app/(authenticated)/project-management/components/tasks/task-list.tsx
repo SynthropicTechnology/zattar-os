@@ -57,7 +57,7 @@ const columns: ColumnDef<Tarefa>[] = [
       if (!nome) return "—";
       return (
         <div className="flex items-center gap-2">
-          <Avatar className="size-6">
+          <Avatar size="sm">
             <AvatarImage
               src={row.original.responsavelAvatar ?? ""}
               alt={nome}

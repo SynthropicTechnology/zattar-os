@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { Target, AlertTriangle, ShieldCheck, DollarSign } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import {
   Sparkline,
   AnimatedNumber,
@@ -90,9 +91,9 @@ export function PericiasKpiStrip({ pericias, className }: PericiasKpiStripProps)
               </p>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-primary/8">
             <Target className="size-4 text-primary/50" />
-          </div>
+          </IconContainer>
         </div>
         <div className="mt-2.5 flex items-center gap-2">
           <Sparkline data={stats.trendAtivas} width={80} height={16} />
@@ -116,9 +117,9 @@ export function PericiasKpiStrip({ pericias, className }: PericiasKpiStripProps)
               </p>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-warning/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-warning/8">
             <DollarSign className="size-4 text-warning/50" />
-          </div>
+          </IconContainer>
         </div>
         <div className="mt-2.5">
           <span className="text-[9px] text-muted-foreground/50 truncate block uppercase tracking-wider">
@@ -141,9 +142,9 @@ export function PericiasKpiStrip({ pericias, className }: PericiasKpiStripProps)
               <span className="text-[10px] text-muted-foreground/40">% teses</span>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-success/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-success/8">
             <ShieldCheck className="size-4 text-success/50" />
-          </div>
+          </IconContainer>
         </div>
         <div className="mt-2.5 flex items-center gap-2">
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
@@ -172,9 +173,9 @@ export function PericiasKpiStrip({ pericias, className }: PericiasKpiStripProps)
               <span className="text-[10px] text-muted-foreground/40">em 7d</span>
             </div>
           </div>
-          <div className="size-8 rounded-lg bg-destructive/8 flex items-center justify-center shrink-0">
+          <IconContainer size="md" className="bg-destructive/8">
             <AlertTriangle className="size-4 text-destructive/50" />
-          </div>
+          </IconContainer>
         </div>
         <div className="mt-2.5 flex items-center gap-2">
           <Sparkline data={stats.trendCriticos} width={80} height={16} />

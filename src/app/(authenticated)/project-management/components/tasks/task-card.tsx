@@ -102,7 +102,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
 
               {tarefa.responsavelNome && (
                 <div className="flex items-center gap-1.5">
-                  <Avatar className="size-5">
+                  <Avatar size="xs">
                     <AvatarImage
                       src={tarefa.responsavelAvatar ?? ""}
                       alt={tarefa.responsavelNome}

@@ -163,7 +163,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         </DetailSheetMetaItem>
         <DetailSheetMetaItem label="Responsável">
           <div className="flex items-center gap-1.5 min-w-0">
-            <Avatar className="size-5">
+            <Avatar size="xs">
               <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
               <AvatarFallback className="text-[9px]">
                 {getInitials(responsavelNome)}

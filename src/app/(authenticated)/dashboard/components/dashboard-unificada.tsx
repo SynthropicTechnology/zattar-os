@@ -22,6 +22,7 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
 import { useDashboard, useWidgetPermissions } from '../hooks';
 import type {
@@ -92,8 +93,8 @@ interface KpiProps {
 
 function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
   const inner = (
-    <Card className={cn(
-      'glass-kpi bg-transparent transition-all duration-200',
+    <GlassPanel depth={2} className={cn(
+      'transition-all duration-200',
       href && 'hover:bg-transparent cursor-pointer',
     )}>
       <CardHeader>
@@ -118,7 +119,7 @@ function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
           </div>
         </CardAction>
       </CardHeader>
-    </Card>
+    </GlassPanel>
   );
 
   return href ? <Link href={href} className="block">{inner}</Link> : inner;
@@ -137,7 +138,7 @@ function ProgressKpi({ progresso }: { progresso: ProgressoDiario }) {
         : `${progresso.concluidos} de ${progresso.total} concluídos`;
 
   return (
-    <Card className="glass-kpi bg-transparent transition-all duration-200">
+    <GlassPanel depth={2} className="transition-all duration-200">
       <CardHeader>
         <CardDescription>Progresso do Dia</CardDescription>
         <div className="flex flex-col gap-2">
@@ -150,7 +151,7 @@ function ProgressKpi({ progresso }: { progresso: ProgressoDiario }) {
           </div>
         </CardAction>
       </CardHeader>
-    </Card>
+    </GlassPanel>
   );
 }
 
@@ -164,7 +165,7 @@ function DashboardSkeleton() {
       <Skeleton className="h-8 w-56" />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i} className="glass-kpi bg-transparent">
+          <GlassPanel key={i} depth={2}>
             <CardHeader>
               <Skeleton className="h-4 w-28" />
               <div className="flex flex-col gap-2">
@@ -175,7 +176,7 @@ function DashboardSkeleton() {
                 <Skeleton className="size-12 rounded-full" />
               </CardAction>
             </CardHeader>
-          </Card>
+          </GlassPanel>
         ))}
       </div>
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">

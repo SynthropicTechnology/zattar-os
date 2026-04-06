@@ -11,6 +11,7 @@
  */
 
 import { ChevronRight, Building2 } from 'lucide-react';
+import { IconContainer } from '@/components/ui/icon-container';
 import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import type { ContratoCardData } from './contrato-card';
 
@@ -64,13 +65,13 @@ export function ContratoListRow({
       />
 
       {/* Avatar */}
-      <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+      <IconContainer size="md" className="bg-primary/8">
         {c.clienteTipo === 'pj' ? (
           <Building2 className="size-3.5 text-primary/60" />
         ) : (
           <span className="text-[9px] font-bold text-primary/60">{getInitials(c.cliente)}</span>
         )}
-      </div>
+      </IconContainer>
 
       {/* Name */}
       <div className="flex-1 min-w-0">

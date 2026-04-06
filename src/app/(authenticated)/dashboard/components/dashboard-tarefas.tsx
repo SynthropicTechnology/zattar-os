@@ -7,12 +7,12 @@ import { cn } from '@/lib/utils';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
   CardAction,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DialogFormShell } from '@/components/shared';
 import { Input } from '@/components/ui/input';
@@ -122,7 +122,7 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
   };
 
   return (
-    <Card className="h-full glass-widget bg-transparent transition-all duration-200">
+    <GlassPanel className="h-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CheckSquare className="size-5" />
@@ -248,6 +248,6 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
           )}
         </form>
       </DialogFormShell>
-    </Card>
+    </GlassPanel>
   );
 }

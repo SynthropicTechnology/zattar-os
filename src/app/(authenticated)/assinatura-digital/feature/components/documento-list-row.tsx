@@ -1,6 +1,7 @@
 "use client";
 
 import { Camera, ChevronRight, FileText } from "lucide-react";
+import { IconContainer } from '@/components/ui/icon-container';
 import { ProgressRing } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 import type { DocumentoCardData } from "../adapters/documento-card-adapter";
 import { STATUS_CONFIG, getSignerProgress, timeAgo } from "./documento-card";
@@ -28,11 +29,9 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
             : `hover:bg-white/4 border border-transparent ${hasPendingLong ? "ring-1 ring-warning/10" : ""}`
         }`}
     >
-      <div
-        className={`size-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}
-      >
+      <IconContainer size="md" className={cfg.bg}>
         <cfg.icon className={`size-3.5 ${cfg.color}`} />
-      </div>
+      </IconContainer>
 
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{doc.titulo}</p>

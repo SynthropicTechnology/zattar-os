@@ -85,7 +85,7 @@ function ResponsavelCell({
       >
         {nome ? (
           <>
-            <Avatar className="h-6 w-6 shrink-0">
+            <Avatar size="sm">
               <AvatarImage src={usuarioResp?.avatarUrl || undefined} alt={nome} />
               <AvatarFallback className="text-[10px] font-medium">
                 {getInitials(nome)}

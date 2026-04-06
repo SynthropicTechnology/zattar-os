@@ -67,7 +67,7 @@ export interface PartesClientProps {
 
 function CardSkeleton() {
   return (
-    <div className="rounded-2xl border border-border/20 glass-widget bg-transparent p-4 animate-pulse">
+    <GlassPanel className="p-4 animate-pulse">
       <div className="flex items-start gap-3">
         <div className="size-10 rounded-xl bg-muted-foreground/10 shrink-0" />
         <div className="flex-1 space-y-2">
@@ -83,7 +83,7 @@ function CardSkeleton() {
         <div className="h-2 bg-muted-foreground/8 rounded w-24" />
         <div className="h-2 bg-muted-foreground/8 rounded w-12" />
       </div>
-    </div>
+    </GlassPanel>
   );
 }
 

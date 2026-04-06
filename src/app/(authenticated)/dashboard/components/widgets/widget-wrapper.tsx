@@ -4,6 +4,7 @@ import { LucideIcon, GripVertical, MoreHorizontal, X, Settings } from 'lucide-re
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -85,7 +86,7 @@ export function WidgetWrapper({
   }
 
   return (
-    <Card className={cn('group relative glass-widget bg-transparent transition-all duration-200', className)}>
+    <GlassPanel className={cn('group relative', className)}>
       <CardHeader className={cn('pb-2', headerClassName)}>
         <div className="flex items-center justify-between">
           <Heading level="widget" className="flex items-center gap-2">
@@ -129,7 +130,7 @@ export function WidgetWrapper({
         </div>
       </CardHeader>
       <CardContent className={contentClassName}>{children}</CardContent>
-    </Card>
+    </GlassPanel>
   );
 }
 

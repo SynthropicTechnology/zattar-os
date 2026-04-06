@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { IconContainer } from '@/components/ui/icon-container';
 import type { Audiencia } from '../domain';
 import { StatusAudiencia } from '../domain';
 import { calcPrepItems, calcPrepScore } from './prep-score';
@@ -126,9 +127,9 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       <div className={cn('size-2.5 rounded-full shrink-0', statusDotColor)} />
 
       {/* Icon */}
-      <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+      <IconContainer size="md" className="bg-primary/8">
         <Gavel className="size-3.5 text-primary/50" />
-      </div>
+      </IconContainer>
 
       {/* Main info */}
       <div className="flex-1 min-w-0">

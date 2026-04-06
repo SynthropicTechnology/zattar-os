@@ -470,7 +470,7 @@ export function ResponsavelCell({
       >
         {responsavel || audiencia.responsavelId ? (
           <>
-            <Avatar className="h-6 w-6 shrink-0">
+            <Avatar size="sm">
               <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeExibicao} />
               <AvatarFallback className="text-[10px] font-medium">
                 {getInitials(nomeExibicao)}

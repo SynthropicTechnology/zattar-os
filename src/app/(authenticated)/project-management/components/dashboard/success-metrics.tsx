@@ -59,7 +59,7 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
               {membros.map((membro) => (
                 <Tooltip key={membro.usuarioId}>
                   <TooltipTrigger>
-                    <Avatar className="border-card size-12 border-4 hover:z-10">
+                    <Avatar size="xl" className="border-card border-4 hover:z-10">
                       <AvatarImage
                         src={membro.avatar ?? ""}
                         alt={membro.nome}

@@ -272,7 +272,7 @@ export function ShareDocumentDialog({
                           setSearchResults([]);
                         }}
                       >
-                        <Avatar className="h-8 w-8">
+                        <Avatar>
                           <AvatarFallback className="text-xs">
                             {getInitials(usuario.nomeCompleto)}
                           </AvatarFallback>
@@ -297,7 +297,7 @@ export function ShareDocumentDialog({
               {selectedUser && (
                 <div className="mt-2 flex items-center justify-between rounded-md border bg-muted/50 p-2">
                   <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
+                    <Avatar>
                       <AvatarFallback className="text-xs">
                         {getInitials(selectedUser.nomeCompleto)}
                       </AvatarFallback>
@@ -354,7 +354,7 @@ export function ShareDocumentDialog({
                         className="flex items-center justify-between rounded-md border p-2"
                       >
                         <div className="flex items-center gap-3">
-                          <Avatar className="h-9 w-9">
+                          <Avatar size="lg">
                             <AvatarFallback className="text-xs">
                               {getInitials(compartilhamento.usuario.nomeCompleto)}
                             </AvatarFallback>
