@@ -47,11 +47,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/logos/logo-z-dark.png", media: "(prefers-color-scheme: light)", type: "image/png" },
+      { url: "/logos/logo-z-light.png", media: "(prefers-color-scheme: dark)", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/logos/logo-z-dark.png", sizes: "180x180", type: "image/png" }],
   },
 };
 
