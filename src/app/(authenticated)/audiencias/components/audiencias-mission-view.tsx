@@ -60,6 +60,7 @@ import { RhythmStrip } from './rhythm-strip';
 import { LoadHeatmap } from './load-heatmap';
 import { calcPrepItems, calcPrepScore } from './prep-score';
 import { HearingCountdown } from './hearing-countdown';
+import { Heading } from '@/components/ui/typography';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -248,7 +249,7 @@ export function AudienciasMissionView({
       {/* ── Header ─────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-page-title">Audiências</h1>
+          <Heading level="page">Audiências</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {dayAudiencias.length} hoje · {totalMarcadas} marcada{totalMarcadas !== 1 ? 's' : ''} no período
           </p>

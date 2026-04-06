@@ -228,10 +228,14 @@ export const TYPOGRAPHY = {
 
 /**
  * Padrões tipográficos recorrentes extraídos de Processos, Audiências, Dashboard e Partes.
- * Use estes tokens para garantir consistência visual em labels, números e badges.
+ * @deprecated Use typed components from `@/components/ui/typography` instead:
+ *   `<Heading level="page">` instead of TEXT_PATTERNS.pageTitle
+ *   `<Heading level="widget">` instead of TEXT_PATTERNS.widgetTitle
+ *   `<Text variant="kpi-value">` instead of TEXT_PATTERNS.kpiValue
+ *   `<Text variant="meta-label">` instead of TEXT_PATTERNS.metaLabel
+ *   `<Text variant="mono-num">` instead of TEXT_PATTERNS.monoNum
  *
- * @ai-context Use TEXT_PATTERNS em vez de compor classes manualmente.
- * Cada padrão tem uma classe CSS correspondente em globals.css (.text-meta-label, etc.)
+ * Kept for backwards compatibility. Will be removed in a future version.
  */
 export const TEXT_PATTERNS = {
   /**

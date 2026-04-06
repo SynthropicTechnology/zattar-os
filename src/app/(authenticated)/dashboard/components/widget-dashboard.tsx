@@ -8,6 +8,7 @@ import { useWidgetLayout } from '../hooks/use-widget-layout';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { WidgetPicker, type WidgetDefinition } from './widget-picker';
 import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/typography';
 
 // ─── Registry import (gerado por agent paralelo) ────────────────────────────
 // Se o arquivo ainda não existir no momento do build, o dashboard renderiza
@@ -137,9 +138,9 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
       {/* ── Cabecalho ───────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-page-title">
+          <Heading level="page">
             {saudacao}, {primeiroNome}.
-          </h1>
+          </Heading>
           <p className="text-sm text-muted-foreground/60 mt-0.5">
             {hoje} &mdash;{' '}
             {visibleWidgets.length === 0

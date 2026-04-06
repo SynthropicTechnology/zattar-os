@@ -21,6 +21,7 @@ import { VALID_TABS, findNavItem, type SettingsTab } from './settings-nav-items'
 import type { MetricasDB } from '@/app/(authenticated)/admin';
 import type { Integracao } from '@/lib/integracoes';
 import type { SystemPrompt } from '@/lib/system-prompts';
+import { Heading } from '@/components/ui/typography';
 
 // =============================================================================
 // PROPS
@@ -68,9 +69,9 @@ export function ConfiguracoesSettingsLayout({
     <div className="flex flex-col min-h-0 space-y-5">
       {/* Page header */}
       <div>
-        <h1 className="text-page-title">
+        <Heading level="page">
           Configurações
-        </h1>
+        </Heading>
         <p className="text-[10px] text-muted-foreground/60 mt-0.5">
           Gerencie integrações, aparência e configurações do sistema
         </p>

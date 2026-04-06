@@ -40,6 +40,7 @@ import { usePresignedPdfUrl } from "../../feature/hooks/use-presigned-pdf-url";
 import { actionGetPresignedPdfUrl } from "../../feature/actions/documentos-actions";
 import PdfPreviewDynamic from "../../feature/components/pdf/PdfPreviewDynamic";
 import { AssinanteCard } from "./components/assinante-card";
+import { Heading } from '@/components/ui/typography';
 
 // =============================================================================
 // HASH DISPLAY COMPONENT
@@ -198,9 +199,9 @@ export function DocumentoVerificacaoClient({
               </Button>
 
               <div className="min-w-0">
-                <h1 className="text-page-title truncate lg:text-[2rem]">
+                <Heading level="page" className="truncate lg:text-[2rem]">
                   {displayTitle}
-                </h1>
+                </Heading>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5" />

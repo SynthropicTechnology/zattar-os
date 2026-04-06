@@ -43,6 +43,7 @@ import {
   actionDeleteDocumento,
 } from "../../feature";
 import { createColumns, type DocumentoListItem } from "./components/columns";
+import { Heading } from '@/components/ui/typography';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -341,9 +342,9 @@ export function DocumentosTableWrapper({
     <>
       {/* Row 1: Título + Botão "Novo Documento" */}
       <div className="flex items-center justify-between">
-        <h1 className="text-page-title">
+        <Heading level="page">
           Assinatura Digital
-        </h1>
+        </Heading>
         <Button
           size="sm"
           className="h-9"

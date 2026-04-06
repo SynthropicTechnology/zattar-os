@@ -24,6 +24,7 @@ import {
   TIPO_COBRANCA_LABELS,
   ContratoDeleteDialog,
 } from '@/app/(authenticated)/contratos';
+import { Heading } from '@/components/ui/typography';
 
 function getInitials(nome: string): string {
   const parts = nome.split(' ').filter(Boolean);
@@ -105,9 +106,9 @@ export function ContratoDetalhesHeader({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="text-page-title truncate">
+                <Heading level="page" className="truncate">
                   {clienteNome}
-                </h1>
+                </Heading>
                 {parteContrariaNome && (
                   <p className="text-sm font-medium text-foreground/70 mt-0.5">
                     vs. {parteContrariaNome}

@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { resolveSlug } from '../docs-registry';
+import { Heading } from '@/components/ui/typography';
 
 function DocLoading() {
   return (
@@ -20,7 +21,7 @@ function DocLoading() {
 function NotFound() {
   return (
     <div className="max-w-4xl space-y-4">
-      <h1 className="text-page-title">Página não encontrada</h1>
+      <Heading level="page">Página não encontrada</Heading>
       <p className="text-muted-foreground">
         O tópico de documentação que você procura não existe ou foi movido.
       </p>

@@ -32,6 +32,7 @@ import { ExpedientesWeekMission } from './expedientes-week-mission';
 import { ExpedienteDialog } from './expediente-dialog';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
+import { Heading } from '@/components/ui/typography';
 
 // ─── Route constants ──────────────────────────────────────────────────────────
 
@@ -234,9 +235,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       {/* 1. Header */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-page-title">
+          <Heading level="page">
             Expedientes
-          </h1>
+          </Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
         </div>
 

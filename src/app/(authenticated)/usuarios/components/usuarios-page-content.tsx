@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageShell } from '@/components/shared/page-shell';
-import { Typography } from '@/components/ui/typography';
+import { Typography, Heading } from '@/components/ui/typography';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 
 import {
@@ -73,7 +73,7 @@ export function UsuariosPageContent() {
       className="space-y-4"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <Typography.H1 className="text-page-title">Equipe</Typography.H1>
+        <Heading level="page">Equipe</Heading>
         <div className="flex items-center gap-2 shrink-0">
           <Button
             type="button"

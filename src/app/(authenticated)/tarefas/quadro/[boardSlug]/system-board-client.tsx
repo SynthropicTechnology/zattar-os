@@ -16,6 +16,7 @@ import { QuadroSelector } from "../../components/quadro-selector";
 import { SystemBoardCard } from "../../components/system-board-card";
 import { actionAtualizarStatusQuadroSistema } from "../../actions/tarefas-actions";
 import { SYSTEM_BOARD_DEFINITIONS } from "../../domain";
+import { Heading } from '@/components/ui/typography';
 
 interface SystemBoardClientProps {
   board: SystemBoardDefinition;
@@ -139,9 +140,9 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-1.5">
-        <h1 className="text-page-title sm:text-3xl">
+        <Heading level="page" className="sm:text-3xl">
           Quadro - {board.titulo}
-        </h1>
+        </Heading>
       </div>
 
       {/* Toolbar */}

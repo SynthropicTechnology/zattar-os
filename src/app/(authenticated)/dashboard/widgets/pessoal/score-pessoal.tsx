@@ -14,6 +14,7 @@ import {
   AnimatedNumber,
   InsightBanner,
 } from '../../mock/widgets/primitives';
+import { Text } from '@/components/ui/typography';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, useReminders, isDashboardUsuario } from '../../hooks';
 
@@ -60,9 +61,9 @@ export function WidgetScorePessoal() {
             <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Lembretes pendentes
             </span>
-            <span className="text-kpi-value">
+            <Text variant="kpi-value">
               <AnimatedNumber value={isPending ? 0 : lembretePendentes} duration={800} />
-            </span>
+            </Text>
           </div>
           <InsightBanner type="info">
             Acesse o painel administrativo para métricas do escritório.

@@ -13,6 +13,7 @@ import { ProcessoListRow } from './components/processo-list-row';
 import { ProcessoDetailSheet } from './components/processo-detail-sheet';
 import type { ProcessoUnificado } from './domain';
 import type { ProcessoStats } from './service-estatisticas';
+import { Heading } from '@/components/ui/typography';
 
 interface Usuario {
   id: number;
@@ -130,7 +131,7 @@ export function ProcessosClient({
     <>
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-page-title">Processos</h1>
+          <Heading level="page">Processos</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
         </div>
       </div>

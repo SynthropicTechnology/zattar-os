@@ -44,6 +44,7 @@ import { ClienteFormDialog } from './components/clientes/cliente-form';
 import { ParteContrariaFormDialog } from './components/partes-contrarias/parte-contraria-form';
 import { TerceiroFormDialog } from './components/terceiros/terceiro-form';
 import { RepresentanteFormDialog } from './components/representantes/representante-form';
+import { Heading } from '@/components/ui/typography';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -373,7 +374,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-page-title">Partes</h1>
+          <Heading level="page">Partes</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {totalGeral > 0
               ? `${totalGeral.toLocaleString('pt-BR')} registros${novosEsteMes > 0 ? ` · ${novosEsteMes} novos este mês` : ''}`

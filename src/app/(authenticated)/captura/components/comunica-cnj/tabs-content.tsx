@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ComunicaCNJConsulta } from './consulta';
 import { ComunicaCNJCapturadas } from './capturadas';
+import { Heading } from '@/components/ui/typography';
 
 type DiarioOficialView = 'consulta' | 'capturadas';
 
@@ -36,9 +37,9 @@ export function ComunicaCNJTabsContent({ initialTab = 'consulta' }: ComunicaCNJT
     return (
         <div className="flex flex-col min-h-0">
             <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:items-center sm:justify-between">
-                <h1 className="text-page-title">
+                <Heading level="page">
                     Diário Oficial
-                </h1>
+                </Heading>
                 <ToggleGroup
                     type="single"
                     value={activeTab}

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 
 /**
  * PageShell - Container principal para páginas.
@@ -59,9 +60,7 @@ export function PageShell({
           <div className="space-y-1.5">
             {badge && <div className="mb-2">{badge}</div>}
             {title && (
-              <h1 className="text-page-title">
-                {title}
-              </h1>
+              <Heading level="page">{title}</Heading>
             )}
             {description && (
               <p className="text-sm text-muted-foreground/50 mt-0.5">

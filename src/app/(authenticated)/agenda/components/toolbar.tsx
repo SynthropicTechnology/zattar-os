@@ -26,6 +26,7 @@ import { ViewToggle, type ViewToggleOption } from "@/components/dashboard/view-t
 import type { CalendarSource } from "@/app/(authenticated)/calendar";
 import { SOURCE_CONFIG, type CalendarView } from "@/app/(authenticated)/calendar/briefing-domain";
 import { monthName, fmtDateFull, startOfWeek, addDays } from "@/app/(authenticated)/calendar/briefing-helpers";
+import { Heading } from '@/components/ui/typography';
 
 // ─── View Options ──────────────────────────────────────────────────────
 
@@ -91,7 +92,7 @@ export function AgendaToolbar({
       {/* Row 1: Title + New Event */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-page-title">Agenda</h1>
+          <Heading level="page">Agenda</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{dateLabel}</p>
         </div>
         <button

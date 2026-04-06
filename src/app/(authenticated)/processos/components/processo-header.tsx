@@ -22,6 +22,7 @@ import { GRAU_LABELS } from '@/lib/design-system';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Text } from '@/components/ui/typography';
 
 /**
  * Informações de instância para exibição
@@ -246,9 +247,9 @@ export function ProcessoHeader({
                 <span className="truncate text-muted-foreground">{orgaoJulgador}</span>
 
                 <div className="ml-0 flex items-center gap-2 sm:ml-auto">
-                  <span className="text-meta-label">
+                  <Text variant="meta-label">
                     Responsável
-                  </span>
+                  </Text>
                   <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => {}} />
                 </div>
               </div>

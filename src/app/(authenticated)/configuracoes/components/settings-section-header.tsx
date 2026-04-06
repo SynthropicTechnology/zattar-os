@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { Heading } from '@/components/ui/typography';
 
 interface SettingsSectionHeaderProps {
   icon: LucideIcon;
@@ -19,7 +20,7 @@ export function SettingsSectionHeader({
       <div className="flex items-center gap-2">
         <Icon className="size-4 text-muted-foreground/50" />
         <div>
-          <h3 className="text-widget-title">{title}</h3>
+          <Heading level="widget">{title}</Heading>
           <p className="text-[10px] text-muted-foreground/60">{description}</p>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { AcordoForm } from '@/app/(authenticated)/obrigacoes';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Heading } from '@/components/ui/typography';
 
 export default function NovaObrigacaoClient() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function NovaObrigacaoClient() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-page-title">Nova Obrigação</h1>
+          <Heading level="page">Nova Obrigação</Heading>
         </div>
       </div>
 

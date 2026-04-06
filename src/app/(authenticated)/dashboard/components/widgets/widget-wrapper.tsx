@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 
 interface WidgetWrapperProps {
   title: string;
@@ -68,10 +69,10 @@ export function WidgetWrapper({
       <Card className={cn('border-destructive/50', className)}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-widget-title flex items-center gap-2">
+            <Heading level="widget" className="flex items-center gap-2">
               {Icon && <Icon className="h-4 w-4" />}
               {title}
-            </CardTitle>
+            </Heading>
           </div>
         </CardHeader>
         <CardContent>
@@ -87,10 +88,10 @@ export function WidgetWrapper({
     <Card className={cn('group relative glass-widget bg-transparent transition-all duration-200', className)}>
       <CardHeader className={cn('pb-2', headerClassName)}>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-widget-title flex items-center gap-2">
+          <Heading level="widget" className="flex items-center gap-2">
             {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
             {title}
-          </CardTitle>
+          </Heading>
           <div className="flex items-center gap-1">
             {actions}
             {(onSettings || onRemove) && (
@@ -148,7 +149,7 @@ export function WidgetEmpty({ icon: Icon, title, description, action }: WidgetEm
           <Icon className="h-6 w-6 text-muted-foreground" />
         </div>
       )}
-      <p className="text-widget-title">{title}</p>
+      <Heading level="widget">{title}</Heading>
       {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>

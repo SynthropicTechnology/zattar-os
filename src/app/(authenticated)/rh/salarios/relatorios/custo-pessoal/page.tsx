@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select';
 
 import { useFolhasPagamento } from '@/app/(authenticated)/rh/hooks';
+import { Heading } from '@/components/ui/typography';
 
 const formatCurrency = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor ?? 0);
@@ -39,7 +40,7 @@ export default function RelatorioCustoPessoalPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-page-title">Custo Total com Pessoal</h1>
+          <Heading level="page">Custo Total com Pessoal</Heading>
         </div>
         <Button variant="outline" onClick={() => refetch()}>
           Atualizar

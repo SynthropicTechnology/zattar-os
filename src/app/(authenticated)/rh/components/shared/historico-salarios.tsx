@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { useSalariosDoUsuario } from '../../hooks/use-salarios';
 import { calcularDuracaoVigencia } from '@/app/(authenticated)/rh/utils';
+import { Heading } from '@/components/ui/typography';
 
 interface HistoricoSalariosProps {
   usuarioId: number;
@@ -49,7 +50,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-page-title">Histórico Salarial - {usuarioNome}</h1>
+          <Heading level="page">Histórico Salarial - {usuarioNome}</Heading>
         </div>
         <button
           className="text-sm text-primary underline"

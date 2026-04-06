@@ -216,7 +216,32 @@ Tamanhos micro usam `px` fixo para precisao (imunes ao root 18px).
 
 > **Nota**: `font-display` e `font-heading` apontam para a mesma fonte (Montserrat). A separacao semantica facilita buscas: `font-display` = numeros/metricas, `font-heading` = titulos/headers.
 
-### 3.2 Escala Tipografica (Classes CSS Utilitarias)
+### 3.2 Componentes Tipados (Enforcement)
+
+Usar os componentes tipados `<Heading>` e `<Text>` de `@/components/ui/typography`:
+
+| Componente | Uso | CSS Class |
+|-----------|-----|-----------|
+| `<Heading level="page">` | Titulo de pagina | `.text-page-title` |
+| `<Heading level="section">` | Secao principal | `.text-section-title` |
+| `<Heading level="card">` | Card grande, painel | `.text-card-title` |
+| `<Heading level="subsection">` | Subsecao, accordion | `.text-subsection-title` |
+| `<Heading level="widget">` | Widget header | `.text-widget-title` |
+| `<Text variant="kpi-value">` | Metricas de destaque | `.text-kpi-value` |
+| `<Text variant="meta-label">` | Labels uppercase | `.text-meta-label` |
+| `<Text variant="mono-num">` | Numeros de processo | `.text-mono-num` |
+| `<Text variant="widget-sub">` | Subtitulo de widget | `.text-widget-sub` |
+| `<Text variant="caption">` | Texto auxiliar | `.text-caption` |
+| `<Text variant="micro-badge">` | Texto de badge | `.text-micro-badge` |
+| `<Text variant="overline">` | Label ALL-CAPS | `.text-overline` |
+| `<Text variant="label">` | Labels de campo | `.text-label` |
+| `<Text variant="micro-caption">` | Timestamps terciarios | `.text-micro-caption` |
+
+> **Regra**: NUNCA compor `font-heading text-2xl font-bold` manualmente.
+> Usar `<Heading level="page">` que resolve para a CSS class correta.
+> Variantes invalidas produzem erro de TypeScript em tempo de compilacao.
+
+### 3.3 Escala Tipografica (Classes CSS Utilitarias)
 
 O sistema define classes CSS em `globals.css` com tamanhos em **px fixo** para headings/UI e **rem** para body text:
 
@@ -239,7 +264,7 @@ O sistema define classes CSS em `globals.css` com tamanhos em **px fixo** para h
 | `.text-micro-caption` | 10px | Normal | Default | Timestamps tercarios |
 | `.text-micro-badge` | 9px | Medium | Default | Texto dentro de badges |
 
-### 3.3 Patterns Tipograficos Recorrentes (tokens.ts)
+### 3.4 Patterns Tipograficos Recorrentes (tokens.ts)
 
 ```
 Titulo de pagina:     text-page-title (ou font-heading text-2xl font-bold tracking-tight)
@@ -255,7 +280,7 @@ Numero tabular:       tabular-nums (em qualquer numero alinhado)
 Texto truncado:       truncate (single line), line-clamp-2 (multi)
 ```
 
-### 3.4 Regras Criticas
+### 3.5 Regras Criticas
 
 - **Minimo body text**: `text-sm` (~15.75px real) em desktop, `text-xs` (~13.5px real) em mobile
 - **Numeros financeiros**: Sempre `tabular-nums` para alinhamento
@@ -860,7 +885,9 @@ Nunca hardcodar cores de badges. Usar `getSemanticBadgeVariant(category, value)`
 | Badges fake (ISO, SOC2, versoes) | Design genuino com personalidade |
 | `text-gray-400` em light mode | `text-muted-foreground/50` minimo |
 | `font-display` sem `tabular-nums` em KPIs | `font-display text-2xl font-bold tabular-nums` |
-| `font-mono` para numeros de processo | `text-mono-num` ou `tabular-nums` com `font-mono` |
+| `font-mono` para numeros de processo | `<Text variant="mono-num">` ou `text-mono-num` |
+| `<h1 className="text-page-title">` | `<Heading level="page">` (typed component) |
+| Compor `font-heading text-2xl font-bold` manualmente | `<Heading level="page">` |
 | Botoes icon-only sem `aria-label` | Sempre incluir `aria-label` |
 
 ---

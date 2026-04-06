@@ -12,6 +12,7 @@
 
 import { GitBranch, ArrowRight } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
 import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -43,7 +44,7 @@ export function PipelineFunnel({ stages, desistencias }: PipelineFunnelProps) {
     <GlassPanel className="p-5">
       <div className="flex items-center gap-2 mb-5">
         <GitBranch className="size-4 text-muted-foreground/50" />
-        <h2 className="text-widget-title">Pipeline de Conversão</h2>
+        <Heading level="widget">Pipeline de Conversão</Heading>
         {desistCount > 0 && (
           <span className="text-[10px] text-muted-foreground/55 ml-auto">
             {desistCount} desistência{desistCount !== 1 ? 's' : ''}

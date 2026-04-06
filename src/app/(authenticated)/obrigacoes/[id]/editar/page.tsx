@@ -10,6 +10,7 @@ import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
+import { Heading } from '@/components/ui/typography';
 
 interface EditarObrigacaoPageProps {
   params: Promise<{ id: string }>;
@@ -84,7 +85,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
           <Link href={`/obrigacoes/${acordoId}`}><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div>
-          <h1 className="text-page-title">Editar Obrigação</h1>
+          <Heading level="page">Editar Obrigação</Heading>
         </div>
       </div>
 

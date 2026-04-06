@@ -51,6 +51,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Heading } from '@/components/ui/typography';
 
 const capitalizeFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -376,7 +377,7 @@ export default function EventCalendarApp({
     <div className="flex min-h-[calc(100vh-var(--header-height)-2rem)] flex-col gap-4">
       {/* Row 1: Title + Create button */}
       <div className="flex items-center justify-between">
-        <h1 className="text-page-title">Agenda</h1>
+        <Heading level="page">Agenda</Heading>
         <Button onClick={handleCreateClick}>
           <PlusIcon size={16} aria-hidden="true" />
           <span className="max-sm:sr-only">Novo evento</span>

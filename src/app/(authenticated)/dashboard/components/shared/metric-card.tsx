@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { type LucideIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 import {
   Card,
   CardContent,
@@ -72,9 +73,9 @@ function MetricCardContent({
   return (
     <CardContent className="p-6 flex flex-col h-full relative">
       <CardHeader className="p-0 flex flex-row items-center justify-between mb-4 space-y-0">
-        <CardTitle className="text-widget-title text-muted-foreground">
+        <Heading level="widget" className="text-muted-foreground">
           {title}
-        </CardTitle>
+        </Heading>
         {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
       </CardHeader>
       <div className="flex flex-col flex-1">

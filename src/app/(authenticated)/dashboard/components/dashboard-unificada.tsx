@@ -47,6 +47,7 @@ import { TarefasWidget } from './dashboard-tarefas';
 import { LembretesWidget } from './dashboard-lembretes';
 import { ChatWidget } from './dashboard-chat';
 import { AdminWidgets } from './dashboard-admin';
+import { Heading } from '@/components/ui/typography';
 
 // ============================================================================
 // Types
@@ -205,7 +206,7 @@ function DashboardError({ error, onRetry }: { error: string; onRetry: () => void
 function SemPermissoes({ nome }: { nome: string }) {
   return (
     <div className="space-y-4">
-      <h1 className="text-page-title">{getSaudacao()}, {nome}!</h1>
+      <Heading level="page">{getSaudacao()}, {nome}!</Heading>
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <div className="rounded-full bg-muted p-5 mb-5">
           <FileWarning className="h-10 w-10 text-muted-foreground" />
@@ -248,9 +249,9 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
 
   return (
     <div className="space-y-4">
-      <h1 className="text-page-title">
+      <Heading level="page">
         {getSaudacao()}, {d.usuario.nome}!
-      </h1>
+      </Heading>
 
       {/* KPI Cards — mesmo padrão visual de contratos */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -368,9 +369,9 @@ function AdminContent({ data, progresso, lembretes, tarefas, currentUserId, curr
 
   return (
     <div className="space-y-4">
-      <h1 className="text-page-title">
+      <Heading level="page">
         {getSaudacao()}, {d.usuario.nome}!
-      </h1>
+      </Heading>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <ProgressKpi progresso={progresso} />

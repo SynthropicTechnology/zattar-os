@@ -58,6 +58,7 @@ import {
 } from '../actions/arquivos-actions';
 import { actionDeletarDocumento } from '../actions/documentos-actions';
 import type { ItemDocumento } from '../domain';
+import { Heading } from '@/components/ui/typography';
 
 type SortOption = 'name' | 'date' | 'size';
 type SortDirection = 'asc' | 'desc';
@@ -338,7 +339,7 @@ export function FileManager() {
             <div className="flex min-w-0 flex-1 flex-col">
                 {/* Linha 1: Título + Botão de Ação (py-4 = mesmo espaçamento do DataTableToolbar) */}
                 <div className="flex items-center justify-between py-4">
-                    <h1 className="text-page-title">Documentos</h1>
+                    <Heading level="page">Documentos</Heading>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button className="h-9">

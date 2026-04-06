@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useFolhaDoPeriodo } from '@/app/(authenticated)/rh/hooks';
 
 import { MESES_LABELS, STATUS_FOLHA_LABELS } from '@/app/(authenticated)/rh';
+import { Heading } from '@/components/ui/typography';
 
 const formatCurrency = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor ?? 0);
@@ -30,7 +31,7 @@ export default function RelatorioMensalFolhaPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-page-title">Relatório Mensal da Folha</h1>
+          <Heading level="page">Relatório Mensal da Folha</Heading>
         </div>
         <Button variant="outline" onClick={() => refetch()}>
           Atualizar

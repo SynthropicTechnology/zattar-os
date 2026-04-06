@@ -48,6 +48,7 @@ import {
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { TransacaoComConciliacao } from '@/app/(authenticated)/financeiro';
+import { Heading } from '@/components/ui/typography';
 
 // =============================================================================
 // HELPERS
@@ -317,7 +318,7 @@ export default function ConciliacaoBancariaPage() {
       <div className="space-y-4">
         {/* Linha 1: Título + Botão Importar Extrato */}
         <div className="flex items-center justify-between">
-          <h1 className="text-page-title">Conciliação Bancária</h1>
+          <Heading level="page">Conciliação Bancária</Heading>
           <Button onClick={() => setImportarOpen(true)}>
             <Upload className="h-4 w-4" />
             Importar Extrato

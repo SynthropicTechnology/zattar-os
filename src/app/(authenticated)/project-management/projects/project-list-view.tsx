@@ -8,6 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ProjectTable } from "../components/projects/project-table";
 import { ProjectCard } from "../components/projects/project-card";
 import type { Projeto } from "../lib/domain";
+import { Heading } from '@/components/ui/typography';
 
 interface ProjectListViewProps {
   projetos: Projeto[];
@@ -39,9 +40,9 @@ export function ProjectListView({ projetos }: ProjectListViewProps) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between py-4">
-          <h1 className="text-page-title">
+          <Heading level="page">
             Projetos
-          </h1>
+          </Heading>
           <div className="flex items-center gap-2">
             {viewModeToggle}
             <Button

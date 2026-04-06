@@ -11,6 +11,7 @@ import Summary from "./components/summary";
 import Transactions from "./components/transactions";
 import SavingGoal from "./components/saving-goal";
 import KPICards from "./components/kpi-cards";
+import { Heading } from '@/components/ui/typography';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -24,7 +25,7 @@ export default function Page() {
   return (
     <div className="space-y-4">
       <div className="flex flex-row items-center justify-between">
-        <h1 className="text-page-title">Dashboard Financeiro</h1>
+        <Heading level="page">Dashboard Financeiro</Heading>
         <Suspense fallback={<Skeleton className="h-10 w-65" />}>
           <CalendarDateRangePicker />
         </Suspense>

@@ -18,6 +18,7 @@ import { DocumentListRow } from "../../feature/components/documento-list-row";
 import { DocumentDetail } from "../../feature/components/documento-detail";
 import { SignaturePipeline } from "../../feature/components/signature-pipeline";
 import { SignatureStatsStrip } from "../../feature/components/signature-stats-strip";
+import { Heading } from '@/components/ui/typography';
 
 // ─── View Options ──────────────────────────────────────────────────────
 
@@ -58,9 +59,9 @@ export function DocumentosCommandCenter({
       {/* ── Header ──────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-page-title">
+          <Heading level="page">
             Assinatura Digital
-          </h1>
+          </Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {stats?.total ?? 0} documentos &middot;{" "}
             {stats?.aguardando ?? 0} aguardando assinatura

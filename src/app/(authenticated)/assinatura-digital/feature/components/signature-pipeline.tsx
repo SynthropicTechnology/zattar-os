@@ -2,6 +2,7 @@
 
 import { GitBranch } from "lucide-react";
 import { GlassPanel } from "@/components/shared/glass-panel";
+import { Heading } from "@/components/ui/typography";
 import type { DocumentosStats } from "../services/documentos.service";
 import type { DocStatus } from "../adapters/documento-card-adapter";
 import { STATUS_CONFIG } from "./documento-card";
@@ -22,9 +23,9 @@ export function SignaturePipeline({ stats }: SignaturePipelineProps) {
     <GlassPanel className="p-5">
       <div className="flex items-center gap-2 mb-4">
         <GitBranch className="size-4 text-muted-foreground/50" />
-        <h2 className="text-widget-title">
+        <Heading level="widget">
           Pipeline de Assinaturas
-        </h2>
+        </Heading>
         <span className="text-[10px] text-muted-foreground/55 ml-auto">
           {stats.cancelados} cancelado{stats.cancelados !== 1 ? "s" : ""}
         </span>

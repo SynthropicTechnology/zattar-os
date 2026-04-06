@@ -40,6 +40,7 @@ import {
 import { actionFinalizeDocumento } from "../../../feature/actions/documentos-actions";
 import { DocumentFlowShell } from "../../../feature/components/flow";
 import type { AssinaturaDigitalDocumentoAssinanteTipo } from "../../../feature/domain";
+import { Heading } from '@/components/ui/typography';
 
 // ─── Types ─────────────────────────────────────────────────────────────
 
@@ -493,9 +494,9 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         {/* ── Header ─────────────────────────────────── */}
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-page-title">
+            <Heading level="page">
               {documento.titulo || "Documento sem título"}
-            </h1>
+            </Heading>
             <p className="text-sm text-muted-foreground/50 mt-0.5">
               Confira as configurações antes de compartilhar
             </p>

@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ClientOnly } from '@/components/shared/client-only';
+import { Heading } from '@/components/ui/typography';
 import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 import { useDespesasPorCategoria } from '../../hooks';
 
@@ -73,10 +74,10 @@ export function WidgetDespesasCategoria() {
   return (
     <Card className="h-full flex flex-col glass-widget bg-transparent transition-all duration-200">
       <CardHeader className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:justify-between">
-        <CardTitle className="flex min-w-0 flex-1 items-center gap-2 text-widget-title">
+        <Heading level="widget" className="flex min-w-0 flex-1 items-center gap-2">
           <PieIcon className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">Despesas por Categoria</span>
-        </CardTitle>
+        </Heading>
         <Button variant="ghost" size="sm" asChild className="w-full shrink-0 sm:w-auto">
           <Link href="/financeiro/dre">DRE</Link>
         </Button>

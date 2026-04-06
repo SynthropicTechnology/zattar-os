@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { actionObterDetalhesComplementaresProcesso } from '../actions';
+import { Text } from '@/components/ui/typography';
 import { ExpedienteVisualizarDialog } from '@/app/(authenticated)/expedientes/components/expediente-visualizar-dialog';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { actionListarTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
@@ -306,9 +307,9 @@ function ExpedientesTable({
 
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <span className="text-meta-label">
+                    <Text variant="meta-label">
                       Responsável
-                    </span>
+                    </Text>
                     <ResponsavelAvatar usuario={responsavel} />
                   </div>
 

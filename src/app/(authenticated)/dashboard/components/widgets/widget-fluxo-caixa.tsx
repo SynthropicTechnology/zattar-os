@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ClientOnly } from '@/components/shared/client-only';
+import { Heading } from '@/components/ui/typography';
 import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 import { useFluxoCaixa } from '../../hooks';
 
@@ -45,10 +46,10 @@ export function WidgetFluxoCaixa() {
   return (
     <Card className="h-full flex flex-col glass-widget bg-transparent transition-all duration-200">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-2">
-        <CardTitle className="flex items-center gap-2 text-widget-title">
+        <Heading level="widget" className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">Fluxo de Caixa (6 meses)</span>
-        </CardTitle>
+        </Heading>
         <Button variant="ghost" size="sm" asChild className="w-full sm:w-auto">
           <Link href="/financeiro/dre">Ver mais</Link>
         </Button>
