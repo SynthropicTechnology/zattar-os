@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "@/testing/e2e/fixtures";
 import { navigateToPage, waitForToast } from "@/testing/e2e/helpers";
 
 // Stub uploadFile locally if not exported handy, or use the base64 mock method
@@ -38,10 +38,10 @@ const PDF_CONTENT =
 
 test.describe("Novo Fluxo de Assinatura", () => {
   test("deve completar fluxo de upload e configuração de documento", async ({
-    page,
+    authenticatedPage: page,
   }) => {
     // 1. Navegar para página
-    await navigateToPage(page, "/assinatura-digital/documentos/novo");
+    await navigateToPage(page, "/app/assinatura-digital/documentos/novo");
 
     // 2. Validar stepper inicial (assumindo que renderiza "Upload" como passo atual)
     await expect(page.getByTestId("workflow-stepper")).toBeVisible();
@@ -112,8 +112,8 @@ test.describe("Novo Fluxo de Assinatura", () => {
     // await waitForToast(page, 'Configuração salva');
   });
 
-  test("deve rejeitar tipos de arquivo não suportados", async ({ page }) => {
-    await navigateToPage(page, "/assinatura-digital/documentos/novo");
+  test("deve rejeitar tipos de arquivo não suportados", async ({ authenticatedPage: page }) => {
+    await navigateToPage(page, "/app/assinatura-digital/documentos/novo");
     const btnNovo = page.getByRole("button", { name: /novo documento/i });
     if (await btnNovo.isVisible()) {
       await btnNovo.click();
@@ -128,8 +128,8 @@ test.describe("Novo Fluxo de Assinatura", () => {
     ).toBeDisabled();
   });
 
-  test("deve rejeitar arquivos muito grandes", async ({ page }) => {
-    await navigateToPage(page, "/assinatura-digital/documentos/novo");
+  test("deve rejeitar arquivos muito grandes", async ({ authenticatedPage: page }) => {
+    await navigateToPage(page, "/app/assinatura-digital/documentos/novo");
     const btnNovo = page.getByRole("button", { name: /novo documento/i });
     if (await btnNovo.isVisible()) {
       await btnNovo.click();

@@ -1,0 +1,41 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - heading "Command Palette" [level=2] [ref=e3]
+    - paragraph [ref=e4]: Search for a command to run...
+  - generic [ref=e7]:
+    - img "Zattar Advogados" [ref=e10]
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: Email
+          - textbox "Email" [ref=e15]:
+            - /placeholder: voce@zattar.com.br
+        - generic [ref=e16]:
+          - generic [ref=e17]: Senha
+          - generic [ref=e18]:
+            - textbox "Senha" [ref=e19]:
+              - /placeholder: Digite sua senha
+            - button "Mostrar senha" [ref=e20] [cursor=pointer]:
+              - img [ref=e21]
+        - button "Entrar" [ref=e24] [cursor=pointer]:
+          - text: Entrar
+          - img
+      - link "Esqueci minha senha" [ref=e26] [cursor=pointer]:
+        - /url: /app/forgot-password
+  - region "Notifications alt+T"
+  - generic [ref=e31] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e32]:
+      - img [ref=e33]
+    - generic [ref=e36]:
+      - button "Open issues overlay" [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: "0"
+          - generic [ref=e40]: "1"
+        - generic [ref=e41]: Issue
+      - button "Collapse issues badge" [ref=e42]:
+        - img [ref=e43]
+  - alert [ref=e45]: Zattar Advogados
+```

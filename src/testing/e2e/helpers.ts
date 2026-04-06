@@ -347,5 +347,5 @@ export async function expectNotLoading(page: Page) {
  */
 export async function navigateToPage(page: Page, path: string) {
   await page.goto(path);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
