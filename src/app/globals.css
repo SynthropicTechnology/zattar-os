@@ -739,6 +739,10 @@
     font-size: 18px;
   }
 
+  html.website-root-scale {
+    font-size: 16.2px;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }

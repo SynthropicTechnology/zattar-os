@@ -1,4 +1,4 @@
-import { PericiasContent } from '@/app/(authenticated)/pericias';
+import { PericiasMockClient } from '@/app/(authenticated)/pericias/components/pericias-mock-client';
 import { PageShell } from '@/components/shared';
 
 export const dynamic = 'force-dynamic';
@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export default function PericiasPage() {
   return (
     <PageShell>
-      <PericiasContent visualizacao="semana" />
+      <PericiasMockClient />
     </PageShell>
   );
 }
