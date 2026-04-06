@@ -126,7 +126,7 @@ export function ProcessosClient({
 
   const totalFiltered = filteredProcessos.length;
   const totalPages = Math.ceil(totalFiltered / pageSize);
-  const subtitle = `${total} processo${total !== 1 ? 's' : ''}${stats.ativos > 0 ? ` · ${stats.ativos} ativos` : ''}`;
+  const subtitle = `${total} processo${total !== 1 ? 's' : ''}${stats.emCurso > 0 ? ` · ${stats.emCurso} em curso` : ''}`;
 
   return (
     <>
