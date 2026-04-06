@@ -43,7 +43,7 @@ export function PdfViewerCanvas({
       renderAnnotationLayer={true}
       onPageChange={onPageChange}
       onLoadSuccess={onLoadSuccess}
-      className="w-full [&_.react-pdf__Document]:flex [&_.react-pdf__Document]:justify-center [&_.react-pdf__Page]:shadow-xl [&_.react-pdf__Page]:rounded-sm [&_.react-pdf__Page]:bg-white"
+      className="w-full [&_.react-pdf__Document]:flex [&_.react-pdf__Document]:justify-center [&_.react-pdf__Page]:shadow-lg [&_.react-pdf__Page]:rounded-sm [&_.react-pdf__Page]:bg-white"
     />
   );
 }

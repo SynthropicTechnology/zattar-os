@@ -55,7 +55,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
       {allParticipants.map((p: DyteParticipant) => (
         <div key={p.id} className="flex flex-col items-center gap-4 group">
           <div className={cn(
-            "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-xl transition-transform",
+            "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg transition-transform",
             "bg-linear-to-br from-blue-500 to-purple-600",
             p.audioEnabled && "animate-pulse ring-4 ring-green-500/30",
             "group-hover:scale-105"

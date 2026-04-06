@@ -55,7 +55,7 @@ export function DocumentAnnotationOverlay({
   }
 
   return (
-    <aside className="pointer-events-auto absolute inset-y-3 right-3 z-20 hidden w-72 rounded-2xl border bg-background/96 shadow-xl backdrop-blur lg:flex lg:flex-col">
+    <aside className="pointer-events-auto absolute inset-y-3 right-3 z-20 hidden w-72 rounded-2xl border bg-background/96 shadow-lg backdrop-blur lg:flex lg:flex-col">
       <div className="border-b px-3 py-2.5">
         <div className="flex items-center gap-2">
           <div className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">

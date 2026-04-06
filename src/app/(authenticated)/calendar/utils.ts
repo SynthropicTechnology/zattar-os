@@ -22,15 +22,13 @@ export function getEventColorClasses(color?: EventColor | string): string {
     case "amber":
       return "bg-warning/10 hover:bg-warning/8 text-warning shadow-warning/8";
     case "violet":
-      /* TODO: add violet to design system semantic tokens */
-      return "bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8";
+      return "bg-primary/10 hover:bg-primary/8 text-primary shadow-primary/8";
     case "rose":
       return "bg-destructive/10 hover:bg-destructive/8 text-destructive shadow-destructive/8";
     case "emerald":
       return "bg-success/10 hover:bg-success/8 text-success shadow-success/8";
     case "orange":
-      /* TODO: add orange to design system semantic tokens */
-      return "bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80 dark:bg-orange-400/25 dark:hover:bg-orange-400/20 dark:text-orange-200 shadow-orange-700/8";
+      return "bg-highlight/10 hover:bg-highlight/8 text-highlight shadow-highlight/8";
     default:
       return "bg-info/10 hover:bg-info/8 text-info shadow-info/8";
   }

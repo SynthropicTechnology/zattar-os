@@ -151,7 +151,7 @@ export function IncomingCallDialog({
           <DialogTitle className="sr-only">Recebendo chamada</DialogTitle>
           
           <div className="relative">
-            <Avatar className="h-24 w-24 border-4 border-background shadow-xl">
+            <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
               <AvatarImage src={callData.iniciadorAvatar} />
               <AvatarFallback className="text-2xl">
                 {callData.iniciadorNome?.substring(0, 2).toUpperCase()}
@@ -181,7 +181,7 @@ export function IncomingCallDialog({
             <Button
               variant="destructive"
               size="icon" aria-label="Desligar"
-              className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-200"
+              className="h-14 w-14 rounded-full shadow-lg hover:shadow-lg hover:opacity-90 transition-all duration-200"
               onClick={handleReject}
               disabled={isProcessing}
             >
@@ -194,7 +194,7 @@ export function IncomingCallDialog({
             <Button
               variant="default"
               size="icon" aria-label="Câmera"
-              className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-lg"
               onClick={handleAccept}
               disabled={isProcessing}
             >

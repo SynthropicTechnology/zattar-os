@@ -37,7 +37,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
 
   return (
     <div className={cn(
-      "absolute right-4 top-4 bottom-24 w-64 bg-gray-900/90 backdrop-blur-md rounded-lg border border-gray-800 shadow-xl z-30 flex flex-col",
+      "absolute right-4 top-4 bottom-24 w-64 bg-gray-900/90 backdrop-blur-md rounded-lg border border-gray-800 shadow-lg z-30 flex flex-col",
       "animate-in slide-in-from-right-10 duration-300",
       className
     )}>
