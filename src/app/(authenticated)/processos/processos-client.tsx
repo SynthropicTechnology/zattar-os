@@ -50,6 +50,7 @@ export function ProcessosClient({
   const [processos] = useState(initialProcessos);
   const [total] = useState(initialTotal);
   const [stats] = useState(initialStats);
+  const eventosSet = useMemo(() => new Set(stats.processoIdsComEventos), [stats.processoIdsComEventos]);
 
   const [activeTab, setActiveTab] = useState<ProcessoTab>('todos');
   const [search, setSearch] = useState('');
@@ -86,7 +87,7 @@ export function ProcessosClient({
         filtered = filtered.filter((p) => !p.responsavelId);
         break;
       case 'com_eventos':
-        filtered = filtered.filter((p) => !!p.dataProximaAudiencia);
+        filtered = filtered.filter((p) => eventosSet.has(p.id));
         break;
     }
 
@@ -101,7 +102,7 @@ export function ProcessosClient({
     }
 
     return filtered;
-  }, [processos, activeTab, debouncedSearch, currentUserId]);
+  }, [processos, activeTab, debouncedSearch, currentUserId, eventosSet]);
 
   const paginatedProcessos = useMemo(() => {
     const start = pageIndex * pageSize;

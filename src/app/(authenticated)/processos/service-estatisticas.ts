@@ -15,6 +15,8 @@ export interface ProcessoStats {
   comAudienciaProxima: number;
   /** Processos com eventos pendentes (expedientes, audiências ou obrigações ativas) */
   comEventos: number;
+  /** IDs dos processos com eventos pendentes — usado para filtragem client-side */
+  processoIdsComEventos: number[];
 }
 
 /**
@@ -70,5 +72,6 @@ export async function obterEstatisticasProcessos(): Promise<ProcessoStats> {
     semResponsavel: semResponsavel ?? 0,
     comAudienciaProxima: comAudiencia ?? 0,
     comEventos: processoIdsComEventos.size,
+    processoIdsComEventos: Array.from(processoIdsComEventos),
   };
 }
