@@ -72,7 +72,7 @@ function MetricCardContent({
   return (
     <CardContent className="p-6 flex flex-col h-full relative">
       <CardHeader className="p-0 flex flex-row items-center justify-between mb-4 space-y-0">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+        <CardTitle className="text-widget-title text-muted-foreground">
           {title}
         </CardTitle>
         {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}

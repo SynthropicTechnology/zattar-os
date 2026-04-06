@@ -68,7 +68,7 @@ export function WidgetWrapper({
       <Card className={cn('border-destructive/50', className)}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <CardTitle className="text-widget-title flex items-center gap-2">
               {Icon && <Icon className="h-4 w-4" />}
               {title}
             </CardTitle>
@@ -87,7 +87,7 @@ export function WidgetWrapper({
     <Card className={cn('group relative glass-widget bg-transparent transition-all duration-200', className)}>
       <CardHeader className={cn('pb-2', headerClassName)}>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <CardTitle className="text-widget-title flex items-center gap-2">
             {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
             {title}
           </CardTitle>
@@ -148,7 +148,7 @@ export function WidgetEmpty({ icon: Icon, title, description, action }: WidgetEm
           <Icon className="h-6 w-6 text-muted-foreground" />
         </div>
       )}
-      <p className="text-sm font-medium">{title}</p>
+      <p className="text-widget-title">{title}</p>
       {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>

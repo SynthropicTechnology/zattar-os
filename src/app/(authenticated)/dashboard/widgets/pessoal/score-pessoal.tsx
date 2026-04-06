@@ -60,7 +60,7 @@ export function WidgetScorePessoal() {
             <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
               Lembretes pendentes
             </span>
-            <span className="font-display text-2xl font-bold tabular-nums">
+            <span className="text-kpi-value">
               <AnimatedNumber value={isPending ? 0 : lembretePendentes} duration={800} />
             </span>
           </div>

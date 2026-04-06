@@ -73,7 +73,7 @@ export function UsuariosPageContent() {
       className="space-y-4"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <Typography.H1 className="text-2xl font-bold tracking-tight font-heading">Equipe</Typography.H1>
+        <Typography.H1 className="text-page-title">Equipe</Typography.H1>
         <div className="flex items-center gap-2 shrink-0">
           <Button
             type="button"

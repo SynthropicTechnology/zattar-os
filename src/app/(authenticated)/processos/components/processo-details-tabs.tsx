@@ -306,7 +306,7 @@ function ExpedientesTable({
 
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    <span className="text-meta-label">
                       Responsável
                     </span>
                     <ResponsavelAvatar usuario={responsavel} />

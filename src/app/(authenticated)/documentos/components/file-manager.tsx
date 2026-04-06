@@ -338,7 +338,7 @@ export function FileManager() {
             <div className="flex min-w-0 flex-1 flex-col">
                 {/* Linha 1: Título + Botão de Ação (py-4 = mesmo espaçamento do DataTableToolbar) */}
                 <div className="flex items-center justify-between py-4">
-                    <h1 className="text-2xl font-bold tracking-tight font-heading">Documentos</h1>
+                    <h1 className="text-page-title">Documentos</h1>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button className="h-9">

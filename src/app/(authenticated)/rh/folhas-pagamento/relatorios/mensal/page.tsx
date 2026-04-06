@@ -30,7 +30,7 @@ export default function RelatorioMensalFolhaPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight font-heading">Relatório Mensal da Folha</h1>
+          <h1 className="text-page-title">Relatório Mensal da Folha</h1>
         </div>
         <Button variant="outline" onClick={() => refetch()}>
           Atualizar

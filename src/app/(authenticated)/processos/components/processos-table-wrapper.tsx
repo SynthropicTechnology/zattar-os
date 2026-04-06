@@ -923,7 +923,7 @@ export function ProcessosTableWrapper({
       <div className="w-full">
         {/* Linha 1: Título à esquerda, botão de criar à direita */}
         <div className="flex items-center justify-between py-4">
-          <h1 className="text-2xl font-bold tracking-tight font-heading">Processos</h1>
+          <h1 className="text-page-title">Processos</h1>
           <Button
             className="h-9"
             onClick={() => setCreateProcessoOpen(true)}

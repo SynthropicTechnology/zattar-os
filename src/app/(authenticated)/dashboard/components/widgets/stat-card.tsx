@@ -94,7 +94,7 @@ export function StatCard({
       <CardContent className="pt-4 sm:pt-6">
         <div className="flex items-start justify-between gap-2">
           <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
-            <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+            <p className="text-widget-title text-muted-foreground truncate">{title}</p>
             <div className="flex items-baseline gap-2 flex-wrap">
               <p className="text-2xl sm:text-3xl font-bold tracking-tight break-all">
                 {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}

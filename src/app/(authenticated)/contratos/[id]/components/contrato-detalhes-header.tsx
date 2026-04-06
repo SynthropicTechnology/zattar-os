@@ -105,7 +105,7 @@ export function ContratoDetalhesHeader({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="text-2xl font-bold tracking-tight font-heading truncate">
+                <h1 className="text-page-title truncate">
                   {clienteNome}
                 </h1>
                 {parteContrariaNome && (

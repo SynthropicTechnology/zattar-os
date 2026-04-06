@@ -45,7 +45,7 @@ export function WidgetFluxoCaixa() {
   return (
     <Card className="h-full flex flex-col glass-widget bg-transparent transition-all duration-200">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium">
+        <CardTitle className="flex items-center gap-2 text-widget-title">
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">Fluxo de Caixa (6 meses)</span>
         </CardTitle>

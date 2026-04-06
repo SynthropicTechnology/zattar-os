@@ -130,7 +130,7 @@ export function ProcessosClient({
     <>
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Processos</h1>
+          <h1 className="text-page-title">Processos</h1>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
         </div>
       </div>

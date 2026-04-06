@@ -376,7 +376,7 @@ export default function EventCalendarApp({
     <div className="flex min-h-[calc(100vh-var(--header-height)-2rem)] flex-col gap-4">
       {/* Row 1: Title + Create button */}
       <div className="flex items-center justify-between">
-        <h1 className="font-heading text-2xl font-bold tracking-tight">Agenda</h1>
+        <h1 className="text-page-title">Agenda</h1>
         <Button onClick={handleCreateClick}>
           <PlusIcon size={16} aria-hidden="true" />
           <span className="max-sm:sr-only">Novo evento</span>

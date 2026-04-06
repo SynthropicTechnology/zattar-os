@@ -59,12 +59,12 @@ export function PageShell({
           <div className="space-y-1.5">
             {badge && <div className="mb-2">{badge}</div>}
             {title && (
-              <h1 className="text-2xl font-bold tracking-tight font-heading">
+              <h1 className="text-page-title">
                 {title}
               </h1>
             )}
             {description && (
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl sm:text-base">
+              <p className="text-sm text-muted-foreground/50 mt-0.5">
                 {description}
               </p>
             )}

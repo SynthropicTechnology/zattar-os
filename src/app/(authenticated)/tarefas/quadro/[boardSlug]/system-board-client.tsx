@@ -139,7 +139,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-1.5">
-        <h1 className="text-2xl font-bold tracking-tight font-heading text-foreground sm:text-3xl">
+        <h1 className="text-page-title sm:text-3xl">
           Quadro - {board.titulo}
         </h1>
       </div>

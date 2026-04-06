@@ -317,7 +317,7 @@ export default function ConciliacaoBancariaPage() {
       <div className="space-y-4">
         {/* Linha 1: Título + Botão Importar Extrato */}
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight font-heading">Conciliação Bancária</h1>
+          <h1 className="text-page-title">Conciliação Bancária</h1>
           <Button onClick={() => setImportarOpen(true)}>
             <Upload className="h-4 w-4" />
             Importar Extrato

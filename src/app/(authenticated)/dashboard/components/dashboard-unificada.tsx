@@ -205,7 +205,7 @@ function DashboardError({ error, onRetry }: { error: string; onRetry: () => void
 function SemPermissoes({ nome }: { nome: string }) {
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold tracking-tight font-heading">{getSaudacao()}, {nome}!</h1>
+      <h1 className="text-page-title">{getSaudacao()}, {nome}!</h1>
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <div className="rounded-full bg-muted p-5 mb-5">
           <FileWarning className="h-10 w-10 text-muted-foreground" />
@@ -248,7 +248,7 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold tracking-tight font-heading">
+      <h1 className="text-page-title">
         {getSaudacao()}, {d.usuario.nome}!
       </h1>
 
@@ -368,7 +368,7 @@ function AdminContent({ data, progresso, lembretes, tarefas, currentUserId, curr
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold tracking-tight font-heading">
+      <h1 className="text-page-title">
         {getSaudacao()}, {d.usuario.nome}!
       </h1>
 

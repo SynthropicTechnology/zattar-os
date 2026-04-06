@@ -137,7 +137,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
       {/* ── Cabecalho ───────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">
+          <h1 className="text-page-title">
             {saudacao}, {primeiroNome}.
           </h1>
           <p className="text-sm text-muted-foreground/60 mt-0.5">

@@ -66,9 +66,9 @@ export function ConfiguracoesSettingsLayout({
 
   return (
     <div className="flex flex-col min-h-0 space-y-5">
-      {/* Page header — segue padrão dashboard: text-2xl font-heading */}
+      {/* Page header */}
       <div>
-        <h1 className="text-2xl font-heading font-semibold tracking-tight">
+        <h1 className="text-page-title">
           Configurações
         </h1>
         <p className="text-[10px] text-muted-foreground/60 mt-0.5">

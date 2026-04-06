@@ -345,7 +345,7 @@ export function GallerySection({
   return (
     <section>
       <div className="mb-5">
-        <h2 className="font-heading text-lg font-semibold tracking-tight">{title}</h2>
+        <h2 className="text-card-title tracking-tight">{title}</h2>
         {description && <p className="text-sm text-muted-foreground/50 mt-0.5">{description}</p>}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">

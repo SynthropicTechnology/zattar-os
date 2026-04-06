@@ -203,7 +203,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
         {/* --- HEADER --- */}
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-heading font-semibold tracking-tight">Perícias</h1>
+            <h1 className="text-page-title">Perícias</h1>
             <p className="text-sm text-muted-foreground/50 mt-0.5">Gerenciamento técnico, financeiro e temporal de peritos judiciais.</p>
           </div>
           <div className="flex items-center gap-2">

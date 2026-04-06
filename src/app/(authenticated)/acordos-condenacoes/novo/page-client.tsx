@@ -31,7 +31,7 @@ export default function NovoAcordoCondenacaoClient() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight font-heading">Novo Acordo/Condenação</h1>
+          <h1 className="text-page-title">Novo Acordo/Condenação</h1>
         </div>
       </div>
 

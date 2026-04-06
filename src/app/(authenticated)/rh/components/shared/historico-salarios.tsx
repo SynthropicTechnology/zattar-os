@@ -49,7 +49,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight font-heading">Histórico Salarial - {usuarioNome}</h1>
+          <h1 className="text-page-title">Histórico Salarial - {usuarioNome}</h1>
         </div>
         <button
           className="text-sm text-primary underline"

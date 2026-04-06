@@ -246,7 +246,7 @@ export function ProcessoHeader({
                 <span className="truncate text-muted-foreground">{orgaoJulgador}</span>
 
                 <div className="ml-0 flex items-center gap-2 sm:ml-auto">
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="text-meta-label">
                     Responsável
                   </span>
                   <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => {}} />

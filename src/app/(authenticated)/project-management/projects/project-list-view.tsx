@@ -39,7 +39,7 @@ export function ProjectListView({ projetos }: ProjectListViewProps) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between py-4">
-          <h1 className="text-2xl font-bold tracking-tight font-heading">
+          <h1 className="text-page-title">
             Projetos
           </h1>
           <div className="flex items-center gap-2">

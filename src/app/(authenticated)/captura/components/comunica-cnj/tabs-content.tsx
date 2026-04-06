@@ -36,7 +36,7 @@ export function ComunicaCNJTabsContent({ initialTab = 'consulta' }: ComunicaCNJT
     return (
         <div className="flex flex-col min-h-0">
             <div className="flex flex-col gap-3 pb-4 sm:flex-row sm:items-center sm:justify-between">
-                <h1 className="text-2xl font-bold tracking-tight font-heading">
+                <h1 className="text-page-title">
                     Diário Oficial
                 </h1>
                 <ToggleGroup

@@ -248,7 +248,7 @@ export function AudienciasMissionView({
       {/* ── Header ─────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Audiências</h1>
+          <h1 className="text-page-title">Audiências</h1>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {dayAudiencias.length} hoje · {totalMarcadas} marcada{totalMarcadas !== 1 ? 's' : ''} no período
           </p>

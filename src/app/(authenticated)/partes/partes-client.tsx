@@ -373,7 +373,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Partes</h1>
+          <h1 className="text-page-title">Partes</h1>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {totalGeral > 0
               ? `${totalGeral.toLocaleString('pt-BR')} registros${novosEsteMes > 0 ? ` · ${novosEsteMes} novos este mês` : ''}`

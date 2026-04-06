@@ -493,7 +493,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         {/* ── Header ─────────────────────────────────── */}
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-heading font-semibold tracking-tight">
+            <h1 className="text-page-title">
               {documento.titulo || "Documento sem título"}
             </h1>
             <p className="text-sm text-muted-foreground/50 mt-0.5">

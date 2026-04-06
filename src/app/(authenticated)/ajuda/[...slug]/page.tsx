@@ -20,7 +20,7 @@ function DocLoading() {
 function NotFound() {
   return (
     <div className="max-w-4xl space-y-4">
-      <h1 className="text-2xl font-bold tracking-tight font-heading">Página não encontrada</h1>
+      <h1 className="text-page-title">Página não encontrada</h1>
       <p className="text-muted-foreground">
         O tópico de documentação que você procura não existe ou foi movido.
       </p>

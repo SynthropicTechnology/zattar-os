@@ -24,7 +24,7 @@ export default function Page() {
   return (
     <div className="space-y-4">
       <div className="flex flex-row items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight font-heading">Dashboard Financeiro</h1>
+        <h1 className="text-page-title">Dashboard Financeiro</h1>
         <Suspense fallback={<Skeleton className="h-10 w-65" />}>
           <CalendarDateRangePicker />
         </Suspense>

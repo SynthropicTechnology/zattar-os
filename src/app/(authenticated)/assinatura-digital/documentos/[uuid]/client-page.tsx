@@ -198,7 +198,7 @@ export function DocumentoVerificacaoClient({
               </Button>
 
               <div className="min-w-0">
-                <h1 className="truncate text-2xl font-bold tracking-tight font-heading lg:text-[2rem]">
+                <h1 className="text-page-title truncate lg:text-[2rem]">
                   {displayTitle}
                 </h1>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">

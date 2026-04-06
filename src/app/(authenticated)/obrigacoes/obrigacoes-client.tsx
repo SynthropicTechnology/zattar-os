@@ -64,7 +64,7 @@ export function ObrigacoesClient() {
         {/* ── Header ─────────────────────────────────────────── */}
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-heading font-semibold tracking-tight">Obrigações</h1>
+            <h1 className="text-page-title">Obrigações</h1>
             <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
           </div>
           <div className="relative flex items-center justify-end gap-2">

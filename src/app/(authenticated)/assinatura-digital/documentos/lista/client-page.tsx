@@ -341,7 +341,7 @@ export function DocumentosTableWrapper({
     <>
       {/* Row 1: Título + Botão "Novo Documento" */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight font-heading">
+        <h1 className="text-page-title">
           Assinatura Digital
         </h1>
         <Button

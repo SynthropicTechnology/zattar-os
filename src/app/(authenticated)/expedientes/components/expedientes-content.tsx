@@ -234,7 +234,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       {/* 1. Header */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
+          <h1 className="text-page-title">
             Expedientes
           </h1>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
