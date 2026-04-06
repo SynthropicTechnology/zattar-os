@@ -24,13 +24,13 @@ export async function obterEstatisticasProcessos(): Promise<ProcessoStats> {
     { count: semResponsavel },
     { count: comAudiencia },
   ] = await Promise.all([
-    client.from('acervo').select('*', { count: 'exact', head: true }),
-    client.from('acervo').select('*', { count: 'exact', head: true }).in('codigo_status_processo', ['ATIVO', 'DISTRIBUIDO', 'EM_ANDAMENTO']),
-    client.from('acervo').select('*', { count: 'exact', head: true }).in('codigo_status_processo', ['PENDENTE', 'SUSPENSO']),
-    client.from('acervo').select('*', { count: 'exact', head: true }).in('codigo_status_processo', ['EM_RECURSO']),
-    client.from('acervo').select('*', { count: 'exact', head: true }).eq('origem', 'arquivado'),
-    client.from('acervo').select('*', { count: 'exact', head: true }).is('responsavel_id', null),
-    client.from('acervo').select('*', { count: 'exact', head: true }).not('data_proxima_audiencia', 'is', null).gte('data_proxima_audiencia', new Date().toISOString()),
+    client.from('acervo_unificado').select('*', { count: 'exact', head: true }),
+    client.from('acervo_unificado').select('*', { count: 'exact', head: true }).in('codigo_status_processo', ['ATIVO', 'DISTRIBUIDO', 'EM_ANDAMENTO']),
+    client.from('acervo_unificado').select('*', { count: 'exact', head: true }).in('codigo_status_processo', ['PENDENTE', 'SUSPENSO']),
+    client.from('acervo_unificado').select('*', { count: 'exact', head: true }).in('codigo_status_processo', ['EM_RECURSO']),
+    client.from('acervo_unificado').select('*', { count: 'exact', head: true }).eq('origem', 'arquivado'),
+    client.from('acervo_unificado').select('*', { count: 'exact', head: true }).is('responsavel_id', null),
+    client.from('acervo_unificado').select('*', { count: 'exact', head: true }).not('data_proxima_audiencia', 'is', null).gte('data_proxima_audiencia', new Date().toISOString()),
   ]);
 
   return {
