@@ -31,6 +31,8 @@ import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
 import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
 import { ExpedientesWeekMission } from './expedientes-week-mission';
 import { ExpedienteDialog } from './expediente-dialog';
+import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
+import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 
 // ─── Route constants ──────────────────────────────────────────────────────────
 
@@ -90,7 +92,12 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
+  const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('todos');
+
+  // Detail/baixa dialog state
+  const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [baixarExpediente, setBaixarExpediente] = useState<Expediente | null>(null);
 
   // Sync view mode with URL
   useEffect(() => {
@@ -103,7 +110,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
   const weekNav = useWeekNavigator();
 
-  const { expedientes: allExpedientes, isLoading } = useExpedientes({
+  const { expedientes: allExpedientes, isLoading, refetch } = useExpedientes({
     pagina: 1,
     limite: 500,
     incluirSemPrazo: true,
@@ -122,7 +129,11 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   );
 
   const vencidos = useMemo(
-    () => pendentes.filter((e) => e.prazoVencido),
+    () => pendentes.filter((e) => {
+      if (e.prazoVencido) return true;
+      const dias = calcularDiasRestantes(e);
+      return dias !== null && dias < 0;
+    }),
     [pendentes],
   );
 
@@ -191,6 +202,22 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
   const showVencidosBanner = vencidos.length > 0;
   const showSemResponsavelBanner = semResponsavel.length > 3 && !showVencidosBanner;
+
+  // ─── Detail/action handlers ──────────────────────────────────────────────────
+
+  const handleViewDetail = useCallback((expediente: Expediente) => {
+    setSelectedExpediente(expediente);
+    setIsDetailOpen(true);
+  }, []);
+
+  const handleBaixar = useCallback((expediente: Expediente) => {
+    setBaixarExpediente(expediente);
+  }, []);
+
+  const handleBaixaSuccess = useCallback(() => {
+    setBaixarExpediente(null);
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="max-w-350 mx-auto space-y-5">
@@ -291,16 +318,21 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
         {!isLoading && viewMode === 'quadro' && (
           <ExpedientesControlView
+            expedientes={filteredExpedientes}
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
+            onBaixar={handleBaixar}
+            onViewDetail={handleViewDetail}
           />
         )}
 
         {!isLoading && viewMode === 'lista' && (
           <ExpedientesListWrapper
+            expedientes={filteredExpedientes}
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
-            searchQuery={search}
+            onBaixar={handleBaixar}
+            onViewDetail={handleViewDetail}
           />
         )}
 
@@ -339,8 +371,23 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       <ExpedienteDialog
         open={isCreateOpen}
         onOpenChange={setIsCreateOpen}
-        onSuccess={() => setIsCreateOpen(false)}
+        onSuccess={() => { setIsCreateOpen(false); refetch(); }}
       />
+
+      <ExpedienteVisualizarDialog
+        expediente={selectedExpediente}
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
+      />
+
+      {baixarExpediente && (
+        <ExpedientesBaixarDialog
+          expediente={baixarExpediente}
+          open={!!baixarExpediente}
+          onOpenChange={(open) => { if (!open) setBaixarExpediente(null); }}
+          onSuccess={handleBaixaSuccess}
+        />
+      )}
 
       <DialogFormShell
         open={isSettingsOpen}

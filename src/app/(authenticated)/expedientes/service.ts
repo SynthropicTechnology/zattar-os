@@ -68,7 +68,7 @@ export async function listarExpedientes(params: ListarExpedientesParams): Promis
   const saneParams = {
     ...params,
     pagina: params.pagina && params.pagina > 0 ? params.pagina : 1,
-    limite: params.limite && params.limite > 0 && params.limite <= 100 ? params.limite : 50,
+    limite: params.limite && params.limite > 0 && params.limite <= 1000 ? params.limite : 50,
     ordenarPor: params.ordenarPor ?? 'data_prazo_legal_parte',
     ordem: params.ordem ?? 'asc',
   };
