@@ -229,7 +229,6 @@ Usar os componentes tipados `<Heading>` e `<Text>` de `@/components/ui/typograph
 | `<Heading level="widget">` | Widget header | `.text-widget-title` |
 | `<Text variant="kpi-value">` | Metricas de destaque | `.text-kpi-value` |
 | `<Text variant="meta-label">` | Labels uppercase | `.text-meta-label` |
-| `<Text variant="mono-num">` | Numeros de processo | `.text-mono-num` |
 | `<Text variant="widget-sub">` | Subtitulo de widget | `.text-widget-sub` |
 | `<Text variant="caption">` | Texto auxiliar | `.text-caption` |
 | `<Text variant="micro-badge">` | Texto de badge | `.text-micro-badge` |
@@ -885,7 +884,7 @@ Nunca hardcodar cores de badges. Usar `getSemanticBadgeVariant(category, value)`
 | Badges fake (ISO, SOC2, versoes) | Design genuino com personalidade |
 | `text-gray-400` em light mode | `text-muted-foreground/50` minimo |
 | `font-display` sem `tabular-nums` em KPIs | `font-display text-2xl font-bold tabular-nums` |
-| `font-mono` para numeros de processo | `<Text variant="mono-num">` ou `text-mono-num` |
+| `font-mono` para numeros de processo | `tabular-nums` (numeros alinhados sem font-mono) |
 | `<h1 className="text-page-title">` | `<Heading level="page">` (typed component) |
 | Compor `font-heading text-2xl font-bold` manualmente | `<Heading level="page">` |
 | Botoes icon-only sem `aria-label` | Sempre incluir `aria-label` |

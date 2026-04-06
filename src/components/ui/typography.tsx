@@ -153,7 +153,6 @@ const TEXT_VARIANTS = {
   caption: { className: 'text-caption', tag: 'p' as const },
   'widget-sub': { className: 'text-widget-sub', tag: 'p' as const },
   'meta-label': { className: 'text-meta-label', tag: 'span' as const },
-  'mono-num': { className: 'text-mono-num', tag: 'span' as const },
   'micro-caption': { className: 'text-micro-caption', tag: 'span' as const },
   'micro-badge': { className: 'text-micro-badge', tag: 'span' as const },
   overline: { className: 'text-overline', tag: 'span' as const },
