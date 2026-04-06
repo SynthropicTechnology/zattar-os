@@ -1,29 +1,51 @@
 # Regras de Negocio - Cargos
 
 ## Contexto
-Cadastro auxiliar de cargos (funcoes) dos usuarios do sistema. Modulo CRUD com validacao de unicidade e protecao contra exclusao de cargos em uso.
+Modulo de gerenciamento de cargos (funcoes/posicoes) do escritorio. Permite criar, editar, listar e excluir cargos que sao atribuidos a usuarios. Utiliza cache Redis para otimizar leituras.
 
 ## Entidades Principais
-- **Cargo**: Registro com nome, descricao, status ativo e criador
+- **Cargo**: Cargo com `id`, `nome`, `descricao`, `ativo`, `created_by`, `created_at`, `updated_at`
+- **CargoComUsuariosError**: Erro estruturado retornado ao tentar excluir cargo com usuarios associados (`cargoId`, `cargoNome`, `totalUsuarios`, `usuarios[]`)
 
 ## Regras de Validacao
 - `nome`: obrigatorio, minimo 3 caracteres
 - `descricao`: opcional
-- `ativo`: boolean, default `true`
-- Atualizacao: todos os campos sao opcionais (partial)
+- `ativo`: booleano, default `true`
+- Na atualizacao, todos os campos sao opcionais (schema parcial)
 
 ## Regras de Negocio
-- **Unicidade de nome**: nao permite criar cargo com nome ja existente (case-insensitive na atualizacao)
-- **Protecao contra exclusao com usuarios**: nao permite deletar cargo que possui usuarios associados; retorna `CargoComUsuariosError` com lista de usuarios vinculados
-- **Verificacao de existencia**: atualizar e deletar exigem que o registro exista
-- Service lanca `Error` (nao usa pattern Result)
+- **Unicidade de nome**: Ao criar ou atualizar, verifica se ja existe cargo com mesmo nome (case-insensitive via `ilike`); constraint unique no banco (codigo 23505)
+- **Protecao contra exclusao**: Nao permite excluir cargo que possui usuarios associados; retorna erro estruturado `CargoComUsuariosError` com lista de usuarios vinculados (id, nome_completo, email_corporativo)
+- **Exclusao fisica**: DELETE direto, sem soft delete
+- **Verificacao de existencia**: Atualizar e deletar exigem que o registro exista
+- **created_by**: Preenchido automaticamente com o `userId` do usuario autenticado na criacao
+- **Trim automatico**: Nome e descricao sao trimados antes de persistir
+- **Service lanca Error**: Nao utiliza pattern Result, lanca excecoes diretamente
 
-## Filtros de Listagem
-- `busca`: busca textual
-- `ativo`: filtrar por status
-- `ordenarPor`: `nome`, `createdAt`, `updatedAt`
-- `ordem`: `asc`, `desc`
+## Filtros Disponiveis
+- `busca`: busca por nome (ilike)
+- `ativo`: filtro por status ativo/inativo
+- `ordenarPor`: `"nome" | "createdAt" | "updatedAt"` (mapeado para snake_case no repo)
+- `ordem`: `"asc" | "desc"`
+- `pagina` / `limite`: paginacao (default limite = 50)
+
+## Tabelas
+- `cargos` (tabela principal, constraint unique no nome)
+- `usuarios` (relacionamento via `cargo_id` para verificar vinculo)
+
+## Restricoes de Acesso
+- Listagem: requer permissao `cargos:visualizar` OU `usuarios:visualizar`
+- Busca por ID: requer permissao `cargos:visualizar`
+- Criacao/Atualizacao/Exclusao: requer permissao `cargos:editar` OU `usuarios:editar`
+- Todas as actions verificam autenticacao via `getCurrentUser`
+
+## Integracoes
+- `@/lib/redis` (cache com TTL de 1 hora; invalidacao por pattern `cargos:*` em todas as operacoes de escrita)
+- `@/lib/supabase/service-client` (acesso via service role)
+- `@/lib/auth/authorization` (`checkPermission`)
 
 ## Revalidacao de Cache
-- `revalidatePath("/app/usuarios/cargos")` ao criar, atualizar e deletar
-- `revalidatePath("/app/usuarios")` ao criar
+- `actionCriarCargo`: revalida `/app/usuarios/cargos` e `/app/usuarios`
+- `actionAtualizarCargo`: revalida `/app/usuarios/cargos`
+- `actionDeletarCargo`: revalida `/app/usuarios/cargos`
+- Redis: invalida pattern `cargos:*` em criar, atualizar e deletar

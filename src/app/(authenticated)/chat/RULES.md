@@ -1,134 +1,106 @@
 # Regras de Negocio - Chat
 
 ## Contexto
-Modulo de comunicacao interna com salas de chat, mensagens em tempo real (Supabase Realtime), chamadas de audio/video (Dyte) e upload de arquivos. Suporta salas gerais, privadas, de grupo e vinculadas a documentos.
+Modulo de comunicacao interna do Sinesys responsavel por salas de chat (texto, midia), chamadas de audio/video (via Dyte) com transcricao e gravacao, e historico de conversas. Integra-se com Supabase Realtime para mensagens em tempo real e com IA para geracao de resumos de chamadas.
 
 ## Entidades Principais
-- **SalaChat**: Sala de conversa (geral, privada, grupo, documento)
-- **MensagemChat**: Mensagem enviada em uma sala
-- **Chamada**: Chamada de audio/video com integracao Dyte
-- **ChamadaParticipante**: Participante de uma chamada
+- **SalaChat**: Sala de conversa com tipo (geral, documento, privado, grupo), vinculacao opcional a documento ou participante, e flag de arquivamento
+- **MensagemChat**: Mensagem enviada em uma sala, com tipo de midia, status de entrega e dados extras (arquivo, imagem, video, audio)
+- **ChatItem**: Extensao de SalaChat com dados de exibicao (ultima mensagem, contagem de nao lidas, avatar)
+- **Chamada**: Chamada de audio/video vinculada a uma sala, com meetingId do Dyte, status, transcricao, resumo e URL de gravacao
+- **ChamadaParticipante**: Registro de participacao em chamada com timestamps de entrada/saida e resposta
+- **UsuarioChat**: Dados resumidos de usuario para exibicao no chat (avatar, status online, ultima vez visto)
 
 ## Enums e Tipos
-
-### Tipo de Sala
-| Tipo | Descricao |
-|------|-----------|
-| `geral` | Sala publica compartilhada por todos |
-| `documento` | Vinculada a um documento especifico |
-| `privado` | Conversa 1-para-1 |
-| `grupo` | Grupo criado manualmente |
-
-### Tipo de Mensagem
-- `texto`: Mensagem de texto
-- `arquivo`: Mensagem com anexo
-- `imagem`: Imagem
-- `video`: Video
-- `audio`: Audio
-- `sistema`: Notificacao do sistema
-
-### Status de Mensagem
-- `sending`: Enviando (temporario, nao persistido)
-- `sent`: Enviada
-- `forwarded`: Encaminhada
-- `read`: Lida
-- `failed`: Falhou (temporario, nao persistido)
-
-### Tipo de Chamada
-- `audio`: Chamada de audio
-- `video`: Chamada de video
-
-### Status de Chamada
-- `iniciada`: Chamada criada, aguardando participantes
-- `em_andamento`: Pelo menos um participante ativo
-- `finalizada`: Encerrada normalmente
-- `cancelada`: Cancelada antes de iniciar
-- `recusada`: Recusada pelo convidado
+- **TipoSalaChat**: `geral`, `documento`, `privado`, `grupo`
+- **TipoMensagemChat**: `texto`, `arquivo`, `imagem`, `video`, `audio`, `sistema`
+- **MessageStatus**: `sending`, `sent`, `forwarded`, `read`, `failed` (apenas `sent`, `forwarded` e `read` sao persistidos)
+- **TipoChamada**: `audio`, `video`
+- **StatusChamada**: `iniciada`, `em_andamento`, `finalizada`, `cancelada`, `recusada`
 
 ## Regras de Validacao
 
-### Criar Sala
-- `nome`: 1-200 caracteres
-- `tipo`: enum TipoSalaChat
-- Se tipo `documento`: `documentoId` obrigatorio
-- Se tipo `privado`: `participanteId` obrigatorio
+### Criacao de Sala (criarSalaChatSchema)
+- `nome`: obrigatorio, 1-200 caracteres
+- `tipo`: enum TipoSalaChat obrigatorio
+- `documentoId`: obrigatorio quando tipo = `documento`
+- `participanteId`: obrigatorio quando tipo = `privado`
 
-### Criar Mensagem
-- `salaId`: obrigatorio (numero)
-- `conteudo`: minimo 1 caractere
+### Criacao de Mensagem (criarMensagemChatSchema)
+- `salaId`: numero obrigatorio
+- `conteudo`: string nao vazia obrigatoria
 - `tipo`: default `texto`
-- `data`: objeto opcional com metadados de midia (fileName, fileUrl, mimeType, size, etc.)
+- `data`: objeto opcional com campos de midia (fileName, fileUrl, fileKey, mimeType, size, duration, cover)
 
-### Criar Chamada
-- `salaId`: obrigatorio
-- `tipo`: audio ou video
-- `meetingId`: string Dyte
+### Criacao de Chamada (criarChamadaSchema)
+- `salaId`: numero obrigatorio
+- `tipo`: enum TipoChamada obrigatorio
+- `meetingId`: string obrigatoria
+
+### Resposta a Chamada (responderChamadaSchema)
+- `chamadaId`: numero obrigatorio
+- `aceitou`: booleano obrigatorio
 
 ## Regras de Negocio
 
-### Sala Geral
-- Existe apenas UMA por sistema
-- Criada via seed/migracao (NUNCA via API)
-- Nao pode ser deletada nem removida da lista
+### Salas
+1. **Sala Geral**: Nao pode ser criada via `criarSala()`. Existe apenas uma, criada por seed/migracao. Nao pode ser deletada nem removida da lista.
+2. **Salas Privadas**: Antes de criar, o sistema verifica se ja existe conversa 1-para-1 entre os dois usuarios. Se existir, retorna a sala existente e garante membership para ambos.
+3. **Grupos**: Requerem nome nao vazio e pelo menos um membro alem do criador. O criador e automaticamente adicionado como membro.
+4. **Edicao de Nome**: Apenas grupos podem ter nome editado, e somente pelo criador.
+5. **Arquivamento/Desarquivamento**: Apenas criador ou participante podem arquivar/desarquivar. A flag `isArchive` e na tabela da sala.
+6. **Remocao de Conversa**: Soft delete por usuario via membership. A conversa continua existindo para outros participantes.
+7. **Hard Delete**: Apenas o criador pode deletar permanentemente uma sala. Sala Geral nunca pode ser deletada.
 
-### Criacao de Sala Privada
-1. Verificar se ja existe sala entre os dois usuarios
-2. Se existe: retornar sala existente e garantir memberships
-3. Se nao existe: criar nova sala
-4. Adicionar criador e participante como membros
+### Mensagens
+1. A sala deve existir para aceitar mensagens.
+2. Status default ao salvar e `sent`. Status `sending` e `failed` sao temporarios (apenas UI).
+3. Supabase Realtime dispara evento automaticamente ao inserir mensagem.
+4. Soft delete de mensagens (campo `deletedAt`).
 
-### Criacao de Grupo
-1. Nome obrigatorio e nao vazio
-2. Pelo menos 1 membro alem do criador
-3. Criador automaticamente adicionado como membro
-
-### Permissoes de Sala
-- Apenas grupos podem ter nome editado
-- Apenas criador pode editar nome do grupo
-- Apenas criador pode fazer hard delete
-- Arquivar/desarquivar: criador ou participante
-- Sala Geral: nao pode ser removida por ninguem
-
-### Envio de Mensagem
-1. Validar schema
-2. Verificar que sala existe
-3. Salvar mensagem (Supabase Realtime dispara evento automaticamente)
-4. Status default: `sent`
-
-### Remocao de Conversa
-- Soft delete: marca como inativo apenas para o usuario (via membros)
-- Conversa continua existindo para outros participantes
-- Sala Geral nao pode ser removida
-
-### Fluxo de Chamada
-1. **Iniciar**: verificar sala existe, usuario e membro, criar chamada com status `iniciada`
-2. **Entrar**: registrar entrada, mudar status para `em_andamento` se era `iniciada`
-3. **Responder**: aceitar ou recusar (recusa muda status para `recusada`)
-4. **Sair**: registrar saida, se nenhum participante ativo finaliza automaticamente
-5. **Finalizar**: apenas iniciador pode forcar finalizacao, calcula duracao
-6. Chamadas encerradas/canceladas nao aceitam novas entradas
-
-### Transcricao e Resumo
-- Salvar transcricao: apenas iniciador ou participante confirmado
-- Gerar resumo: via IA (`gerarResumoTranscricao`), requer transcricao existente
-- Historico de chamadas: max 100 por consulta
+### Chamadas
+1. **Iniciar Chamada**: Valida schema, verifica se sala existe, verifica se usuario e membro ativo da sala. Cria meeting no Dyte, persiste chamada com status `iniciada`, adiciona iniciador como participante e registra entrada automaticamente.
+2. **Responder Chamada**: Chamada nao pode estar finalizada ou cancelada. Se recusou, status muda para `recusada`. Se aceitou, gera token Dyte como `group_call_participant`.
+3. **Entrar na Chamada**: Nao permite entrar em chamada encerrada. Se status era `iniciada`, muda para `em_andamento` quando participante entra.
+4. **Sair da Chamada**: Registra saida e verifica se ainda ha participantes ativos. Se ninguem mais estiver ativo, finaliza a chamada automaticamente com calculo de duracao.
+5. **Finalizar Chamada**: Apenas o iniciador pode encerrar para todos. Calcula duracao total. Dispara geracao de resumo por IA em background se houver transcricao.
+6. **Transcricao**: Apenas iniciador ou participante que aceitou/entrou pode salvar transcricao. Transcricao nao pode ser vazia.
+7. **Resumo IA**: Requer transcricao existente. Usa `gerarResumoTranscricao()` de `@/lib/ai/summarization`.
+8. **Gravacao**: Apenas o iniciador pode iniciar gravacao. Depende de feature flag `isDyteRecordingEnabled`.
+9. **Historico Global**: Limite maximo de 100 resultados por pagina. Usuarios nao-admin veem apenas suas proprias chamadas.
 
 ## Filtros Disponiveis
 
-### Salas
-- **Tipo**: tipo (geral, privado, grupo, documento)
-- **Documento**: documentoId
-- **Arquivadas**: arquivadas (boolean)
-- **Paginacao**: limite, offset
+### Listagem de Salas (ListarSalasParams)
+- `tipo`: filtro por TipoSalaChat
+- `documentoId`: filtro por documento vinculado
+- `limite` e `offset`: paginacao
+- `arquivadas`: filtrar salas arquivadas
 
-### Chamadas
-- **Tipo**: tipo (audio, video)
-- **Status**: status
-- **Datas**: dataInicio, dataFim
-- **Usuario**: usuarioId
-- **Paginacao**: limite, offset, pagina
+### Listagem de Mensagens (ListarMensagensParams)
+- `salaId`: obrigatorio
+- `antesDe`: cursor temporal para paginacao
+- `limite`: quantidade de mensagens
+
+### Listagem de Chamadas (ListarChamadasParams)
+- `tipo`: filtro por TipoChamada
+- `status`: filtro por StatusChamada
+- `dataInicio` e `dataFim`: intervalo temporal
+- `usuarioId`: filtro por usuario
+- `limite`, `offset`, `pagina`: paginacao
+
+## Restricoes de Acesso
+- Todas as actions exigem usuario autenticado via `getCurrentUserId()` ou `getCurrentUser()`.
+- Historico global de chamadas: usuarios nao-admin sao filtrados para ver apenas suas chamadas.
+- Gravacao: restrita ao iniciador da chamada.
+- Transcricao: restrita a iniciador ou participante confirmado.
+
+## Integracoes
+- **Supabase Realtime**: Disparo automatico de eventos ao inserir mensagens
+- **Dyte**: Criacao de meetings, tokens de participante, presets de transcricao, gravacao
+- **IA (Summarization)**: Geracao de resumos de transcricoes via `@/lib/ai/summarization`
+- **Dyte Config**: Feature flags `isDyteTranscriptionEnabled`, `isDyteRecordingEnabled`
 
 ## Revalidacao de Cache
-Apos mutacoes, revalidar:
-- `/app/chat` - Lista de salas
-- `/app/chat/{salaId}` - Sala especifica
+- `revalidatePath('/app/chat')`: ao criar sala, criar grupo, arquivar, desarquivar, remover conversa, deletar sala, atualizar nome, finalizar chamada, gerar resumo, salvar gravacao
+- `revalidatePath('/app/chat/${salaId}')`: ao iniciar chamada em sala especifica

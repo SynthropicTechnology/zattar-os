@@ -1,119 +1,134 @@
-# Regras de Negocio - RH (Recursos Humanos)
+# Regras de Negocio - RH
 
 ## Contexto
-Modulo de gestao de recursos humanos com controle de salarios e folhas de pagamento. Integra-se com o modulo financeiro para gerar lancamentos automaticos ao aprovar/pagar folhas.
+Modulo de Recursos Humanos do Sinesys responsavel pela gestao de salarios e folhas de pagamento. Integra-se com o modulo financeiro para geracao automatica de lancamentos ao aprovar folhas. Subdivide-se em dois subdominios: Salarios (vigencia e cadastro) e Folhas de Pagamento (geracao, aprovacao, pagamento e cancelamento).
 
 ## Entidades Principais
-- **Salario**: Registro de salario bruto de um funcionario com vigencia
-- **FolhaPagamento**: Folha de pagamento mensal
-- **ItemFolhaPagamento**: Item individual da folha (um por funcionario)
-- **LancamentoFinanceiro**: Lancamento gerado automaticamente ao aprovar folha
+- **Salario**: Registro salarial de um funcionario com vigencia, valor bruto e vinculacao a cargo
+- **SalarioComDetalhes**: Salario com dados de usuario e cargo
+- **FolhaPagamento**: Folha mensal com periodo de referencia, valor total, status e data de pagamento
+- **FolhaPagamentoComDetalhes**: Folha com itens detalhados e total de funcionarios
+- **ItemFolhaPagamento**: Item individual da folha vinculando funcionario, salario e lancamento financeiro
+- **ItemFolhaComDetalhes**: Item com dados de usuario, salario e lancamento
 
 ## Enums e Tipos
-
-### Status da Folha de Pagamento
-| Status | Descricao | Transicoes Permitidas |
-|--------|-----------|-----------------------|
-| `rascunho` | Criada, aguardando aprovacao | aprovada, cancelada |
-| `aprovada` | Aprovada, lancamentos criados | paga, cancelada |
-| `paga` | Paga, lancamentos confirmados | (nenhuma) |
-| `cancelada` | Cancelada | (nenhuma) |
-
-### Forma de Pagamento
-- `transferencia_bancaria`
-- `ted`
-- `pix`
-- `deposito`
-- `dinheiro`
+- **StatusFolhaPagamento**: `rascunho`, `aprovada`, `paga`, `cancelada`
+- **FormaPagamentoFolha**: `transferencia_bancaria`, `ted`, `pix`, `deposito`, `dinheiro`
 
 ## Regras de Validacao
 
-### Salario
+### Criar Salario (criarSalarioSchema)
 - `usuarioId`: inteiro positivo obrigatorio
-- `salarioBruto`: numero positivo (maior que zero)
+- `cargoId`: inteiro positivo opcional
+- `salarioBruto`: numero positivo obrigatorio (maior que zero)
 - `dataInicioVigencia`: formato YYYY-MM-DD obrigatorio
-- `cargoId`: inteiro positivo (opcional)
-- Para atualizacao: pelo menos um campo deve ser fornecido
+- `observacoes`: string opcional
 
-### Gerar Folha
-- `mesReferencia`: 1-12
-- `anoReferencia`: >= 2020
-- Periodo nao pode ser mais que 1 mes no futuro
-- `dataPagamento`: formato YYYY-MM-DD (opcional)
+### Atualizar Salario (atualizarSalarioSchema)
+- Pelo menos um campo deve ser fornecido para atualizacao
+- `salarioBruto`: numero positivo opcional
+- `cargoId`: inteiro positivo ou null opcional
+- `dataFimVigencia`: formato YYYY-MM-DD opcional
+- `observacoes`, `ativo`: opcionais
 
-### Aprovar Folha
-- `contaBancariaId`: obrigatorio, deve existir e estar ativa
-- `contaContabilId`: obrigatorio, deve existir, estar ativa e aceitar lancamentos (analitica)
-- `centroCustoId`: opcional, se informado deve existir e estar ativo
+### Gerar Folha (gerarFolhaSchema)
+- `mesReferencia`: inteiro de 1 a 12
+- `anoReferencia`: inteiro >= 2020
+- Periodo nao pode ser mais de 1 mes no futuro
+- `dataPagamento`: formato YYYY-MM-DD opcional
+- `observacoes`: string opcional
 
-### Pagar Folha
-- `formaPagamento`: enum valido
-- `contaBancariaId`: obrigatorio, deve existir e estar ativa
-- `dataEfetivacao`: formato YYYY-MM-DD (opcional, default hoje)
+### Aprovar Folha (aprovarFolhaSchema)
+- `contaBancariaId`: inteiro positivo obrigatorio
+- `contaContabilId`: inteiro positivo obrigatorio
+- `centroCustoId`: inteiro positivo opcional
+
+### Pagar Folha (pagarFolhaSchema)
+- `formaPagamento`: enum FormaPagamentoFolha obrigatorio
+- `contaBancariaId`: inteiro positivo obrigatorio
+- `dataEfetivacao`: formato YYYY-MM-DD opcional
 
 ## Regras de Negocio
 
+### Transicoes de Status da Folha
+- `rascunho` -> `aprovada` ou `cancelada`
+- `aprovada` -> `paga` ou `cancelada`
+- `paga` -> (sem transicao permitida)
+- `cancelada` -> (sem transicao permitida)
+
 ### Geracao de Folha
-1. Validar periodo (nao pode ser muito futuro)
-2. Verificar se ja existe folha para o periodo (unicidade mes/ano)
-3. Buscar todos salarios vigentes no periodo
-4. Se nenhum salario vigente: erro
-5. Criar folha com status `rascunho`
-6. Criar um item para cada salario vigente (valor bruto)
-7. Se todos itens falharam: deletar folha (rollback)
-8. Atualizar valor total da folha
+1. Validar periodo (nao pode ser futuro distante).
+2. Verificar se ja existe folha para o periodo. Se existir, rejeitar.
+3. Buscar salarios vigentes no mes/ano de referencia.
+4. Se nao houver salarios vigentes, rejeitar com mensagem orientando cadastro.
+5. Data de pagamento nao pode ser anterior ao mes de referencia.
+6. Criar folha com status `rascunho`.
+7. Criar item para cada salario vigente. Se todos falharem, deletar folha (rollback).
+8. Atualizar valor total da folha apos criacao dos itens.
 
 ### Aprovacao de Folha
-1. Apenas folhas em `rascunho` podem ser aprovadas
-2. Folha deve ter pelo menos 1 item
-3. Validar conta contabil (ativa, analitica, aceita lancamentos)
-4. Validar conta bancaria (ativa)
-5. Validar centro de custo (se informado)
-6. Para cada item: criar lancamento financeiro tipo `despesa`, categoria `salarios`
-7. Lancamento com dados: descricao, valor, data_competencia, data_vencimento
-8. Vincular lancamento ao item da folha
-9. Se todos lancamentos falharam: erro (folha nao aprovada)
-10. Atualizar status para `aprovada`
+1. Apenas folhas em `rascunho` podem ser aprovadas.
+2. Folha deve ter pelo menos um item.
+3. Conta contabil deve existir, estar ativa e aceitar lancamentos (analitica, nao sintetica).
+4. Conta bancaria deve existir e estar ativa.
+5. Centro de custo (se informado) deve existir e estar ativo.
+6. Para cada item, cria lancamento financeiro do tipo `despesa` com categoria `salarios`, status `pendente` e origem `folha_pagamento`.
+7. Se todos os lancamentos falharem, rejeitar. Erros parciais sao tolerados com warning.
+8. Registra observacao de aprovacao com data.
 
 ### Pagamento de Folha
-1. Apenas folhas `aprovada` podem ser pagas
-2. Todos itens devem ter lancamento vinculado
-3. Para cada lancamento: atualizar status para `confirmado`, forma_pagamento, data_efetivacao
-4. Atualizar status da folha para `paga`
+1. Apenas folhas `aprovada` podem ser pagas.
+2. Todos os itens devem ter lancamento financeiro vinculado. Caso contrario, orienta cancelar e reaprovar.
+3. Conta bancaria deve existir e estar ativa.
+4. Atualiza lancamentos financeiros para status `confirmado` com forma de pagamento e data de efetivacao.
+5. Erros parciais sao tolerados com warning.
 
 ### Cancelamento de Folha
-1. Folhas `paga` NAO podem ser canceladas (usar estorno individual)
-2. Folhas ja `cancelada` retornam erro
-3. Se folha `aprovada`: cancelar lancamentos financeiros vinculados
-4. Lancamentos ja `confirmado` impedem cancelamento
-5. Atualizar status para `cancelada`
+1. Folhas `paga` nao podem ser canceladas (orienta estorno individual).
+2. Folhas ja `cancelada` nao podem ser canceladas novamente.
+3. Para folhas `aprovada`, cancela lancamentos financeiros vinculados (status `cancelado`). Lancamentos ja pagos bloqueiam cancelamento.
+4. Registra observacao de cancelamento com data e motivo.
 
-### Verificacao Pre-Cancelamento
-- Verificar se tem lancamentos pagos vinculados
-- Retornar flag `temLancamentosPagos` e `motivo`
+### Pre-visualizacao
+1. Permite simular geracao sem persistir, mostrando salarios vigentes e valor total estimado.
+
+### Edicao de Folha
+1. Apenas folhas em `rascunho` podem ter dados basicos editados (data pagamento, observacoes).
 
 ## Filtros Disponiveis
 
-### Salarios
-- **Busca**: (via service)
-- **Usuario**: usuarioId
-- **Cargo**: cargoId
-- **Status**: ativo (boolean)
-- **Vigencia**: vigente (filtra salarios vigentes na data atual)
-- **Ordenacao**: data_inicio_vigencia, salario_bruto, usuario, created_at
-- **Paginacao**: pagina, limite
+### Listagem de Salarios (ListarSalariosParams)
+- `busca`: busca textual
+- `usuarioId`: filtro por funcionario
+- `cargoId`: filtro por cargo
+- `ativo`: boolean
+- `vigente`: apenas salarios vigentes na data atual
+- `ordenarPor`: `data_inicio_vigencia`, `salario_bruto`, `usuario`, `created_at`
+- `ordem`: `asc`, `desc`
+- `pagina` e `limite`: paginacao
 
-### Folhas de Pagamento
-- **Periodo**: mesReferencia, anoReferencia
-- **Status**: status (pode ser array)
-- **Ordenacao**: periodo, valor_total, status, created_at
-- **Paginacao**: pagina, limite
+### Listagem de Folhas (ListarFolhasParams)
+- `mesReferencia` e `anoReferencia`: periodo
+- `status`: um ou array de StatusFolhaPagamento
+- `ordenarPor`: `periodo`, `valor_total`, `status`, `created_at`
+- `ordem`: `asc`, `desc`
+- `pagina` e `limite`: paginacao
+
+## Restricoes de Acesso
+- **Salarios**: `salarios:listar`, `salarios:criar`, `salarios:editar`, `salarios:deletar`
+- **Visualizacao restrita**: Sem permissao `salarios:visualizar_todos`, usuario so ve seus proprios salarios
+- **Folhas de Pagamento**: `folhas_pagamento:listar`, `folhas_pagamento:criar`, `folhas_pagamento:editar`, `folhas_pagamento:aprovar`, `folhas_pagamento:pagar`, `folhas_pagamento:cancelar`, `folhas_pagamento:deletar`
+- **Visualizacao restrita de folhas**: Sem permissao `folhas_pagamento:visualizar_todos`, usuario ve apenas itens onde e o funcionario
+- Autenticacao via `requireAuth()` com verificacao de permissoes por `checkPermission()`
+
+## Integracoes
+- **Financeiro**: Criacao automatica de lancamentos financeiros (`lancamentos_financeiros`) ao aprovar folha; atualizacao de status ao pagar; cancelamento ao cancelar folha
+- **Plano de Contas**: Validacao de conta contabil (deve ser analitica e ativa)
+- **Contas Bancarias**: Validacao na aprovacao e pagamento
+- **Centros de Custo**: Validacao opcional na aprovacao
 
 ## Revalidacao de Cache
-Apos mutacoes em salarios, revalidar:
-- `/app/rh/salarios` - Lista de salarios
-
-Apos mutacoes em folhas, revalidar:
-- `/app/rh/folhas-pagamento` - Lista de folhas
-- `/app/rh/folhas-pagamento/{id}` - Detalhe da folha
-- `/app/financeiro` - Modulo financeiro (lancamentos gerados)
+- `revalidatePath('/app/rh/salarios')`: ao criar, atualizar, encerrar vigencia, inativar ou excluir salario
+- `revalidatePath('/app/rh/folhas-pagamento')`: ao gerar, aprovar, pagar, atualizar, cancelar ou excluir folha
+- `revalidatePath('/app/rh/folhas-pagamento/${id}')`: ao aprovar, pagar, atualizar ou cancelar folha especifica
+- `revalidatePath('/app/financeiro')`: ao aprovar, pagar ou cancelar folha (impacta lancamentos)
