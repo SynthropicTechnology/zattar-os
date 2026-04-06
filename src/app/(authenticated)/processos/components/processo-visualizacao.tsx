@@ -219,7 +219,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
         id: `expediente-${exp.id}`,
         tipo: 'expediente',
         data: exp.dataPrazoLegalParte,
-        titulo: exp.tipoExpediente || 'Prazo',
+        titulo: 'Prazo de expediente',
         subtitulo: exp.prazoVencido ? 'Prazo vencido' : undefined,
       });
     }

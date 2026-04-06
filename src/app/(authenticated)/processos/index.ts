@@ -133,7 +133,6 @@ export type { TimelineFilterType, FutureTimelineItem, ProcessoPhase } from './co
 export { ProcessosClient } from './processos-client';
 export { ProcessoCard } from './components/processo-card';
 export { ProcessoListRow } from './components/processo-list-row';
-export { ProcessoDetailSheet } from './components/processo-detail-sheet';
 export { ProcessosPulseStrip } from './components/processos-pulse-strip';
 export { ProcessosInsightBanner } from './components/processos-insight-banner';
 

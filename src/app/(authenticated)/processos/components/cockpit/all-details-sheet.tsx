@@ -123,7 +123,7 @@ export function AllDetailsSheet({
                 <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                   {expedientes.map((exp) => (
                     <div key={exp.id} className="rounded-lg border px-3 py-2.5 text-xs">
-                      <p className="font-medium">{exp.tipoExpediente || 'Expediente'}</p>
+                      <p className="font-medium">Expediente</p>
                       <p className="text-muted-foreground/60 mt-0.5">
                         {exp.dataCriacaoExpediente ? new Date(exp.dataCriacaoExpediente).toLocaleDateString('pt-BR') : '--'}
                         {exp.dataPrazoLegalParte && ` · Prazo: ${new Date(exp.dataPrazoLegalParte).toLocaleDateString('pt-BR')}`}
