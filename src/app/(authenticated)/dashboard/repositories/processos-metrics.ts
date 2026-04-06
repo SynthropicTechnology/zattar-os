@@ -15,28 +15,29 @@
 import { createClient } from '@/lib/supabase/server';
 import type { ProcessoResumo } from '../domain';
 
-// Cores padrão para distribuição por status
+// Cores para gráficos — valores oklch alinhados aos tokens do tema (globals.css)
+// Nota: SVG stroke/fill não resolve var(), então usamos valores literais.
 const STATUS_COLORS: Record<string, string> = {
-  'Ativos': 'hsl(142 60% 45%)',
-  'Suspensos': 'hsl(45 93% 47%)',
-  'Arquivados': 'hsl(215 14% 60%)',
-  'Em Recurso': 'hsl(220 70% 60%)',
+  'Ativos': 'oklch(0.55 0.18 145)',     /* --success */
+  'Suspensos': 'oklch(0.60 0.18 75)',   /* --warning */
+  'Arquivados': 'oklch(0.42 0.01 281)', /* --muted-foreground */
+  'Em Recurso': 'oklch(0.55 0.18 250)', /* --info */
 };
 
 const SEGMENTO_COLORS: Record<string, string> = {
-  'Trabalhista': 'hsl(262 60% 55%)',
-  'Cível': 'hsl(220 70% 60%)',
-  'Previdenciário': 'hsl(280 60% 60%)',
-  'Empresarial': 'hsl(45 93% 47%)',
-  'Criminal': 'hsl(0 72% 51%)',
-  'Outros': 'hsl(215 14% 60%)',
+  'Trabalhista': 'oklch(0.48 0.26 281)',  /* --chart-1 (primary) */
+  'Cível': 'oklch(0.60 0.22 45)',         /* --chart-2 */
+  'Previdenciário': 'oklch(0.55 0.18 150)', /* --chart-4 */
+  'Empresarial': 'oklch(0.60 0.18 75)',   /* --warning */
+  'Criminal': 'oklch(0.55 0.22 25)',      /* --destructive */
+  'Outros': 'oklch(0.70 0.01 281)',       /* --chart-5 */
 };
 
 const AGING_COLORS: Record<string, string> = {
-  '< 1 ano': 'hsl(142 60% 45%)',
-  '1–2 anos': 'hsl(60 70% 50%)',
-  '2–5 anos': 'hsl(30 80% 52%)',
-  '> 5 anos': 'hsl(0 70% 55%)',
+  '< 1 ano': 'oklch(0.55 0.18 145)',  /* --success */
+  '1–2 anos': 'oklch(0.60 0.18 75)',  /* --warning */
+  '2–5 anos': 'oklch(0.60 0.22 45)',  /* --chart-2 (highlight/amber) */
+  '> 5 anos': 'oklch(0.55 0.22 25)',  /* --destructive */
 };
 
 /**
@@ -195,7 +196,7 @@ export async function buscarProcessosDetalhados(
   const porStatus = Array.from(statusMap.entries()).map(([status, count]) => ({
     status,
     count,
-    color: STATUS_COLORS[status] || 'hsl(215 14% 60%)',
+    color: STATUS_COLORS[status] || 'oklch(0.42 0.01 281)' /* --muted-foreground */,
   }));
 
   // --- Distribuição por segmento (derivada de classe_judicial) ---
@@ -215,7 +216,7 @@ export async function buscarProcessosDetalhados(
     .map(([segmento, count]) => ({
       segmento,
       count,
-      color: SEGMENTO_COLORS[segmento] || 'hsl(215 14% 60%)',
+      color: SEGMENTO_COLORS[segmento] || 'oklch(0.70 0.01 281)' /* --chart-5 */,
     }))
     .sort((a, b) => b.count - a.count);
 
@@ -239,7 +240,7 @@ export async function buscarProcessosDetalhados(
     .map((faixa) => ({
       faixa,
       count: agingMap.get(faixa) || 0,
-      color: AGING_COLORS[faixa] || 'hsl(215 14% 60%)',
+      color: AGING_COLORS[faixa] || 'oklch(0.70 0.01 281)' /* --chart-5 */,
     }));
 
   // --- Tendência mensal (últimos 8 meses) ---

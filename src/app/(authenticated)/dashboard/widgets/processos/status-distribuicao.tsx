@@ -56,8 +56,8 @@ export function WidgetStatusDistribuicao() {
     } else {
       // Fallback: build from ativos/arquivados
       segments = [
-        { value: p.ativos, color: 'hsl(142 60% 45%)', label: 'Ativos' },
-        { value: p.arquivados, color: 'hsl(215 14% 60%)', label: 'Arquivados' },
+        { value: p.ativos, color: 'oklch(0.55 0.18 145)' /* --success */, label: 'Ativos' },
+        { value: p.arquivados, color: 'oklch(0.42 0.01 281)' /* --muted-foreground */, label: 'Arquivados' },
       ];
     }
   } else {
