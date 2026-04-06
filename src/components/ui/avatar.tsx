@@ -6,15 +6,33 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Avatar sizes from the design system (AVATAR_SIZES in tokens.ts).
+ * Use the `size` prop instead of className overrides.
+ */
+const AVATAR_SIZES = {
+  xs: 'size-5',    // 20px — inline em texto
+  sm: 'size-6',    // 24px — listas compactas
+  md: 'size-8',    // 32px — listas normais (default)
+  lg: 'size-10',   // 40px — cards, headers
+  xl: 'size-12',   // 48px — detail panels
+  '2xl': 'size-16', // 64px — perfil, hero
+  '3xl': 'size-24', // 96px — perfil grande
+} as const;
+
+type AvatarSize = keyof typeof AVATAR_SIZES;
+
 function Avatar({
   className,
+  size = 'md',
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Root>) {
+}: React.ComponentProps<typeof AvatarPrimitive.Root> & { size?: AvatarSize }) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
       className={cn(
-        "relative flex size-8 shrink-0 overflow-hidden rounded-full",
+        "relative flex shrink-0 overflow-hidden rounded-full",
+        AVATAR_SIZES[size],
         className
       )}
       {...props}
@@ -56,10 +74,10 @@ const avatarIndicatorVariants = cva(
   {
     variants: {
       variant: {
-        online: "bg-green-500",
-        away: "bg-orange-500",
-        offline: "bg-slate-400",
-        success: "bg-green-500",
+        online: "bg-success",
+        away: "bg-warning",
+        offline: "bg-muted-foreground",
+        success: "bg-success",
       },
     },
     defaultVariants: {
@@ -81,4 +99,5 @@ function AvatarIndicator({ className, variant, ...props }: AvatarIndicatorProps)
   )
 }
 
-export { Avatar, AvatarImage, AvatarFallback, AvatarIndicator }
+export { Avatar, AvatarImage, AvatarFallback, AvatarIndicator, AVATAR_SIZES }
+export type { AvatarSize }
