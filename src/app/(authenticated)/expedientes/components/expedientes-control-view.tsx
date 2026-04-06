@@ -1,14 +1,26 @@
 'use client';
 
 import * as React from 'react';
-import { AlertTriangle, Clock, FileText, SearchX, Users, UserX, Layers3, FolderOpen } from 'lucide-react';
+import {
+  AlertTriangle,
+  Clock,
+  FileText,
+  SearchX,
+  Users,
+  UserX,
+  Layers3,
+  FolderOpen,
+} from 'lucide-react';
 import { AppBadge } from '@/components/ui/app-badge';
-import { Button } from '@/components/ui/button';
 import { TemporalViewError, TemporalViewLoading } from '@/components/shared';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import {
+  InsightBanner,
+  UrgencyDot,
+} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { cn } from '@/lib/utils';
 import { GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS, type Expediente } from '../domain';
 import { useExpedientes } from '../hooks/use-expedientes';
@@ -39,6 +51,9 @@ interface ExpedientesControlViewProps {
 
 type QueueMode = 'todos' | 'criticos' | 'hoje' | 'proximos' | 'sem_responsavel' | 'sem_tipo';
 type ContentMode = 'cards' | 'list';
+type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getUsuarioNome(usuario: UsuarioData) {
   return usuario.nomeExibicao || usuario.nome_exibicao || usuario.nomeCompleto || usuario.nome || `Usuario ${usuario.id}`;
@@ -46,7 +61,6 @@ function getUsuarioNome(usuario: UsuarioData) {
 
 function normalizarData(dataISO: string | null | undefined) {
   if (!dataISO) return null;
-
   const data = new Date(dataISO);
   return new Date(data.getFullYear(), data.getMonth(), data.getDate());
 }
@@ -54,84 +68,110 @@ function normalizarData(dataISO: string | null | undefined) {
 function calcularDiasRestantes(expediente: Expediente) {
   const prazo = normalizarData(expediente.dataPrazoLegalParte);
   if (!prazo) return null;
-
   const hoje = new Date();
   const hojeZerado = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
   return Math.round((prazo.getTime() - hojeZerado.getTime()) / 86400000);
 }
 
 function formatarDataCurta(dataISO: string | null | undefined) {
-  if (!dataISO) return 'Sem prazo';
-
+  if (!dataISO) return '—';
   try {
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(new Date(dataISO));
+    return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(dataISO));
   } catch {
-    return 'Sem prazo';
+    return '—';
   }
 }
 
-function getUrgencyLabel(expediente: Expediente) {
-  if (expediente.baixadoEm) return 'Baixado';
-  if (!expediente.dataPrazoLegalParte) return 'Sem prazo';
-  if (expediente.prazoVencido) return 'Vencido';
+function getExpedienteUrgencyLevel(expediente: Expediente, diasRestantes: number | null): UrgencyLevel {
+  if (expediente.baixadoEm) return 'ok';
+  if (expediente.prazoVencido || (diasRestantes !== null && diasRestantes < 0)) return 'critico';
+  if (diasRestantes === 0) return 'alto';
+  if (diasRestantes !== null && diasRestantes <= 3) return 'medio';
+  return 'baixo';
+}
 
-  const diasRestantes = calcularDiasRestantes(expediente);
-
+function getDiasLabel(diasRestantes: number | null, prazoVencido: boolean): string {
   if (diasRestantes === null) return 'Sem prazo';
-  if (diasRestantes <= 0) return 'Hoje';
-  if (diasRestantes <= 3) return `${diasRestantes} dias`;
-  return 'No prazo';
+  if (prazoVencido || diasRestantes < 0) return `${Math.abs(diasRestantes)}d vencido`;
+  if (diasRestantes === 0) return 'Vence hoje';
+  if (diasRestantes === 1) return 'Vence amanhã';
+  return `${diasRestantes}d restantes`;
 }
 
-function getUrgencyVariant(expediente: Expediente): 'default' | 'secondary' | 'destructive' | 'outline' {
-  if (expediente.baixadoEm) return 'secondary';
-  if (expediente.prazoVencido) return 'destructive';
+const URGENCY_BORDER: Record<UrgencyLevel, string> = {
+  critico: 'border-l-[3px] border-l-destructive/70',
+  alto: 'border-l-[3px] border-l-amber-500/70',
+  medio: 'border-l-[3px] border-l-primary/50',
+  baixo: 'border-l-[3px] border-l-border/30',
+  ok: 'border-l-[3px] border-l-success/40',
+};
 
-  const diasRestantes = calcularDiasRestantes(expediente);
-  if (diasRestantes !== null && diasRestantes <= 0) return 'default';
-  return 'outline';
-}
+const URGENCY_LABEL: Record<UrgencyLevel, string> = {
+  critico: 'Vencido',
+  alto: 'Hoje',
+  medio: 'Em breve',
+  baixo: 'No prazo',
+  ok: 'Baixado',
+};
+
+const URGENCY_BADGE_VARIANT: Record<UrgencyLevel, 'destructive' | 'default' | 'secondary' | 'outline'> = {
+  critico: 'destructive',
+  alto: 'default',
+  medio: 'outline',
+  baixo: 'outline',
+  ok: 'secondary',
+};
+
+// ─── Metric Card ──────────────────────────────────────────────────────────────
 
 function ControlMetricCard({
   title,
   value,
   subtitle,
   icon: Icon,
+  iconClassName,
+  highlight,
 }: {
   title: string;
   value: number;
   subtitle: string;
   icon: React.ComponentType<{ className?: string }>;
+  iconClassName?: string;
+  highlight?: boolean;
 }) {
   return (
-    <GlassPanel depth={2} className="p-4 gap-2">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/50">{title}</p>
-          <p className="mt-1 text-2xl font-bold tabular-nums">{value}</p>
+    <GlassPanel
+      depth={value > 0 && highlight ? 2 : 1}
+      className={cn('p-4 gap-1.5', value > 0 && highlight && 'border-destructive/15')}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">{title}</p>
+          <p className={cn(
+            'mt-1 text-2xl font-bold tabular-nums tracking-tight',
+            value > 0 && highlight && 'text-destructive/80',
+          )}>
+            {value}
+          </p>
         </div>
-        <div className="rounded-xl border border-border/20 p-2 text-muted-foreground/60">
-          <Icon className="size-4" />
+        <div className={cn('rounded-xl border border-border/20 p-2 shrink-0 mt-0.5', value > 0 && highlight ? 'border-destructive/20 bg-destructive/6' : 'bg-white/2')}>
+          <Icon className={cn('size-4', iconClassName ?? 'text-muted-foreground/50')} />
         </div>
       </div>
-      <p className="text-xs text-muted-foreground/60">{subtitle}</p>
+      <p className="text-[11px] text-muted-foreground/50 leading-snug">{subtitle}</p>
     </GlassPanel>
   );
 }
 
 function EmptyQueue({ search }: { search: string }) {
   return (
-    <GlassPanel depth={1} className="items-center justify-center p-8 text-center">
-      <SearchX className="size-8 text-muted-foreground/35" />
-      <h3 className="mt-3 text-sm font-medium">Nenhum expediente nesta fila</h3>
-      <p className="mt-1 max-w-md text-sm text-muted-foreground/60">
+    <GlassPanel depth={1} className="flex min-h-45 flex-col items-center justify-center p-8 text-center">
+      <SearchX className="size-10 text-muted-foreground/20" />
+      <h3 className="mt-4 text-sm font-semibold">Nenhum expediente nesta fila</h3>
+      <p className="mt-1.5 max-w-sm text-sm text-muted-foreground/55">
         {search
           ? 'Ajuste a busca para ampliar o recorte operacional.'
-          : 'A fila atual nao possui expedientes pendentes dentro dos criterios selecionados.'}
+          : 'A fila selecionada nao possui expedientes dentro dos criterios ativos.'}
       </p>
     </GlassPanel>
   );
@@ -143,76 +183,138 @@ function QueueCard({
   tipoExpedienteNome,
   selected,
   onSelect,
-  contentMode,
 }: {
   expediente: Expediente;
   responsavelNome?: string | null;
   tipoExpedienteNome?: string | null;
   selected: boolean;
   onSelect: () => void;
-  contentMode: ContentMode;
 }) {
   const diasRestantes = calcularDiasRestantes(expediente);
+  const urgencyLevel = getExpedienteUrgencyLevel(expediente, diasRestantes);
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="w-full cursor-pointer text-left transition-all"
+    >
+      <GlassPanel
+        depth={selected ? 2 : 1}
+        className={cn(
+          'gap-0 overflow-hidden p-0 hover:border-primary/20 hover:bg-primary/2.5',
+          URGENCY_BORDER[urgencyLevel],
+          selected && 'border-primary/20 bg-primary/2.5',
+        )}
+      >
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <UrgencyDot level={urgencyLevel} />
+              <h3 className="truncate text-sm font-semibold leading-snug text-foreground">
+                {tipoExpedienteNome || 'Expediente sem classificacao'}
+              </h3>
+            </div>
+            <AppBadge variant={URGENCY_BADGE_VARIANT[urgencyLevel]} className="shrink-0">
+              {URGENCY_LABEL[urgencyLevel]}
+            </AppBadge>
+          </div>
+
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate font-mono text-xs text-muted-foreground/70">{expediente.numeroProcesso}</p>
+              <div className="mt-1.5 flex items-center gap-2">
+                {expediente.trt && (
+                  <AppBadge variant="outline" className="px-1.5 text-[10px]">{expediente.trt}</AppBadge>
+                )}
+                <AppBadge variant="outline" className="px-1.5 text-[10px]">{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
+                {responsavelNome && (
+                  <span className="truncate text-[10px] text-muted-foreground/45">· {responsavelNome}</span>
+                )}
+              </div>
+            </div>
+            <div className="shrink-0 text-right">
+              {expediente.dataPrazoLegalParte ? (
+                <>
+                  <p className="text-xs font-semibold tabular-nums">{formatarDataCurta(expediente.dataPrazoLegalParte)}</p>
+                  {diasRestantes !== null && !expediente.baixadoEm && (
+                    <p className={cn(
+                      'mt-0.5 text-[10px] tabular-nums',
+                      urgencyLevel === 'critico' ? 'text-destructive/70 font-semibold' :
+                      urgencyLevel === 'alto' ? 'text-amber-500/80 font-semibold' :
+                      'text-muted-foreground/50',
+                    )}>
+                      {getDiasLabel(diasRestantes, expediente.prazoVencido)}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-[10px] text-muted-foreground/35">Sem prazo</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </GlassPanel>
+    </button>
+  );
+}
+
+function QueueListRow({
+  expediente,
+  responsavelNome,
+  tipoExpedienteNome,
+  selected,
+  onSelect,
+}: {
+  expediente: Expediente;
+  responsavelNome?: string | null;
+  tipoExpedienteNome?: string | null;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const diasRestantes = calcularDiasRestantes(expediente);
+  const urgencyLevel = getExpedienteUrgencyLevel(expediente, diasRestantes);
 
   return (
     <button
       type="button"
       onClick={onSelect}
       className={cn(
-        'w-full text-left transition-all cursor-pointer',
-        contentMode === 'cards' ? 'rounded-2xl' : 'rounded-xl',
+        'flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all duration-150',
+        URGENCY_BORDER[urgencyLevel],
+        selected
+          ? 'border-primary/15 bg-primary/5'
+          : 'border-border/15 hover:border-border/25 hover:bg-white/2.5',
       )}
     >
-      <GlassPanel
-        depth={selected ? 2 : 1}
-        className={cn(
-          'gap-3 p-4 hover:border-primary/20 hover:bg-primary/[0.03]',
-          selected && 'border-primary/20 bg-primary/[0.03]'
+      <UrgencyDot level={urgencyLevel} />
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">{tipoExpedienteNome || 'Sem tipo'}</p>
+          <p className="truncate font-mono text-[11px] text-muted-foreground/55">{expediente.numeroProcesso}</p>
+        </div>
+        {responsavelNome && (
+          <p className="hidden max-w-25 truncate text-[11px] text-muted-foreground/45 sm:block">{responsavelNome}</p>
         )}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <AppBadge variant={getUrgencyVariant(expediente)}>{getUrgencyLabel(expediente)}</AppBadge>
-              <AppBadge variant="outline">{expediente.trt}</AppBadge>
-              <AppBadge variant="outline">{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
-            </div>
-            <h3 className="mt-2 text-sm font-semibold leading-tight text-foreground">
-              {tipoExpedienteNome || 'Expediente sem classificacao'}
-            </h3>
-            <p className="mt-1 text-xs text-muted-foreground/70">
-              {expediente.numeroProcesso}
-            </p>
-          </div>
-
-          <div className="shrink-0 text-right">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Prazo</p>
-            <p className="mt-1 text-sm font-semibold tabular-nums">{formatarDataCurta(expediente.dataPrazoLegalParte)}</p>
-            {diasRestantes !== null && !expediente.baixadoEm && (
-              <p className="mt-1 text-[11px] text-muted-foreground/60">
-                {diasRestantes < 0
-                  ? `${Math.abs(diasRestantes)}d vencido`
-                  : diasRestantes === 0
-                    ? 'vence hoje'
-                    : `${diasRestantes}d restantes`}
-              </p>
-            )}
-          </div>
+        <div className="shrink-0 text-right">
+          {expediente.dataPrazoLegalParte ? (
+            <>
+              <p className="text-xs font-semibold tabular-nums">{formatarDataCurta(expediente.dataPrazoLegalParte)}</p>
+              {diasRestantes !== null && (
+                <p className={cn(
+                  'text-[10px] tabular-nums',
+                  urgencyLevel === 'critico' ? 'text-destructive/70 font-semibold' :
+                  urgencyLevel === 'alto' ? 'text-amber-500/80' : 'text-muted-foreground/45',
+                )}>
+                  {getDiasLabel(diasRestantes, expediente.prazoVencido)}
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="text-[10px] text-muted-foreground/35">—</p>
+          )}
         </div>
-
-        <div className={cn('grid gap-3 text-xs text-muted-foreground/75', contentMode === 'cards' ? 'sm:grid-cols-2' : 'grid-cols-1')}>
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Partes</p>
-            <p className="mt-1 truncate">{expediente.nomeParteAutora || 'Autora nao informada'}</p>
-            <p className="truncate">{expediente.nomeParteRe || 'Re nao informada'}</p>
-          </div>
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Operacao</p>
-            <p className="mt-1">Responsavel: {responsavelNome || 'Sem responsavel'}</p>
-            <p>Origem: {ORIGEM_EXPEDIENTE_LABELS[expediente.origem]}</p>
-          </div>
-        </div>
-      </GlassPanel>
+      </div>
     </button>
   );
 }
@@ -288,14 +390,17 @@ export function ExpedientesControlView({
         nome: responsavelId === 0 ? 'Sem responsavel' : usuariosMap.get(responsavelId) || `Usuario ${responsavelId}`,
       }))
       .sort((a, b) => b.total - a.total)
-      .slice(0, 6);
+      .slice(0, 4);
 
     const origemDistribuicao = Object.entries(
       pendentes.reduce<Record<string, number>>((acc, item) => {
         acc[item.origem] = (acc[item.origem] || 0) + 1;
         return acc;
       }, {})
-    ).map(([origem, total]) => ({ origem, total }));
+    )
+      .map(([origem, total]) => ({ origem, total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 3);
 
     const filas: Record<QueueMode, Expediente[]> = {
       todos: pendentes,
@@ -376,7 +481,7 @@ export function ExpedientesControlView({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h1 className="font-heading text-2xl font-semibold tracking-tight">Controle de Expedientes</h1>
-            <p className="mt-1 text-sm text-muted-foreground/60">
+            <p className="mt-1 text-sm text-muted-foreground/50">
               Triagem central de risco, classificacao e distribuicao operacional do escritorio.
             </p>
           </div>
@@ -388,47 +493,57 @@ export function ExpedientesControlView({
         </div>
 
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-          <ControlMetricCard title="Vencidos" value={dadosDerivados.vencidos.length} subtitle="Pedem intervencao imediata" icon={AlertTriangle} />
-          <ControlMetricCard title="Hoje" value={dadosDerivados.hoje.length} subtitle="Fechamento do dia" icon={Clock} />
-          <ControlMetricCard title="3 dias" value={dadosDerivados.proximos.length} subtitle="Janela curta de resposta" icon={FileText} />
-          <ControlMetricCard title="Sem dono" value={dadosDerivados.semResponsavel.length} subtitle="Sem responsavel definido" icon={UserX} />
-          <ControlMetricCard title="Sem tipo" value={dadosDerivados.semTipo.length} subtitle="Classificacao incompleta" icon={Layers3} />
+          <ControlMetricCard
+            title="Vencidos"
+            value={dadosDerivados.vencidos.length}
+            subtitle="Pedem intervencao imediata"
+            icon={AlertTriangle}
+            iconClassName="text-destructive/60"
+            highlight
+          />
+          <ControlMetricCard
+            title="Hoje"
+            value={dadosDerivados.hoje.length}
+            subtitle="Fechamento do dia"
+            icon={Clock}
+            iconClassName="text-amber-500/70"
+          />
+          <ControlMetricCard
+            title="3 dias"
+            value={dadosDerivados.proximos.length}
+            subtitle="Janela curta de resposta"
+            icon={FileText}
+            iconClassName="text-primary/60"
+          />
+          <ControlMetricCard
+            title="Sem dono"
+            value={dadosDerivados.semResponsavel.length}
+            subtitle="Sem responsavel definido"
+            icon={UserX}
+            iconClassName="text-amber-500/60"
+          />
+          <ControlMetricCard
+            title="Sem tipo"
+            value={dadosDerivados.semTipo.length}
+            subtitle="Classificacao incompleta"
+            icon={Layers3}
+            iconClassName="text-muted-foreground/50"
+          />
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.8fr)]">
-          <div className="flex min-w-0 flex-col gap-4">
-            <GlassPanel depth={2} className="p-5">
-              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Fila critica do dia</p>
-                  <h2 className="mt-1 text-lg font-semibold">
-                    {dadosDerivados.vencidos.length > 0
-                      ? `${dadosDerivados.vencidos.length} expediente(s) vencido(s)`
-                      : dadosDerivados.hoje.length > 0
-                        ? `${dadosDerivados.hoje.length} expediente(s) vence(m) hoje`
-                        : 'Nenhuma ruptura critica no momento'}
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground/60">
-                    {dadosDerivados.capturados.length} capturados automaticamente e {dadosDerivados.manuais.length} manuais aguardando tratamento.
-                  </p>
-                </div>
+        {dadosDerivados.vencidos.length > 0 && (
+          <InsightBanner type="alert">
+            <strong>{dadosDerivados.vencidos.length} expediente(s) com prazo vencido</strong> — Esses itens requerem intervencao imediata. Use a fila Criticos para triagem prioritaria.
+          </InsightBanner>
+        )}
+        {dadosDerivados.vencidos.length === 0 && dadosDerivados.semResponsavel.length > 3 && (
+          <InsightBanner type="warning">
+            <strong>{dadosDerivados.semResponsavel.length} expedientes sem responsavel</strong> — Distribua esses itens para evitar filas cegas e perda de prazo.
+          </InsightBanner>
+        )}
 
-                <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-3">
-                  <div className="rounded-xl border border-border/20 px-3 py-2">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Pendentes</p>
-                    <p className="mt-1 text-base font-semibold tabular-nums">{dadosDerivados.pendentes.length}</p>
-                  </div>
-                  <div className="rounded-xl border border-border/20 px-3 py-2">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Captura</p>
-                    <p className="mt-1 text-base font-semibold tabular-nums">{dadosDerivados.capturados.length}</p>
-                  </div>
-                  <div className="rounded-xl border border-border/20 px-3 py-2">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Manual</p>
-                    <p className="mt-1 text-base font-semibold tabular-nums">{dadosDerivados.manuais.length}</p>
-                  </div>
-                </div>
-              </div>
-            </GlassPanel>
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.8fr)]">
+          <div className="flex min-w-0 flex-col gap-4">
 
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <TabPills tabs={queueTabs} active={queueMode} onChange={(value) => setQueueMode(value as QueueMode)} />
@@ -438,9 +553,25 @@ export function ExpedientesControlView({
               </div>
             </div>
 
-            <div className={cn('grid gap-3', contentMode === 'cards' ? 'grid-cols-1' : 'grid-cols-1')}>
+            <div className="flex flex-col gap-2">
               {expedientesDaFila.length === 0 ? (
                 <EmptyQueue search={search} />
+              ) : contentMode === 'list' ? (
+                <GlassPanel depth={1} className="gap-1 p-2">
+                  {expedientesDaFila.map((expediente) => (
+                    <QueueListRow
+                      key={expediente.id}
+                      expediente={expediente}
+                      responsavelNome={expediente.responsavelId ? usuariosMap.get(expediente.responsavelId) : null}
+                      tipoExpedienteNome={expediente.tipoExpedienteId ? tiposMap.get(expediente.tipoExpedienteId) : null}
+                      selected={selectedExpediente?.id === expediente.id}
+                      onSelect={() => {
+                        setSelectedExpediente(expediente);
+                        setDetailOpen(true);
+                      }}
+                    />
+                  ))}
+                </GlassPanel>
               ) : (
                 expedientesDaFila.map((expediente) => (
                   <QueueCard
@@ -453,7 +584,6 @@ export function ExpedientesControlView({
                       setSelectedExpediente(expediente);
                       setDetailOpen(true);
                     }}
-                    contentMode={contentMode}
                   />
                 ))
               )}
@@ -480,12 +610,12 @@ export function ExpedientesControlView({
 
                     return (
                       <div key={item.responsavelId} className="space-y-1.5">
-                        <div className="flex items-center justify-between gap-3 text-sm">
-                          <span className="truncate">{item.nome}</span>
-                          <span className="tabular-nums text-muted-foreground/60">{item.total}</span>
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="truncate text-[11px]">{item.nome}</span>
+                          <span className="tabular-nums text-[11px] text-muted-foreground/60">{item.total}</span>
                         </div>
-                        <div className="h-2 rounded-full bg-border/10">
-                          <div className="h-2 rounded-full bg-primary/40 transition-all" style={{ width: largura }} />
+                        <div className="h-1.5 rounded-full bg-border/10">
+                          <div className="h-1.5 rounded-full bg-primary/40 transition-all" style={{ width: largura }} />
                         </div>
                       </div>
                     );
@@ -503,48 +633,32 @@ export function ExpedientesControlView({
                 <FolderOpen className="size-4 text-muted-foreground/45" />
               </div>
 
-              <div className="mt-4 space-y-3 text-sm">
+              <div className="mt-4 space-y-2">
+                <div className="flex items-center justify-between rounded-xl border border-border/15 px-3 py-2.5">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Sem responsavel</p>
+                    <p className="mt-0.5 text-base font-bold tabular-nums tracking-tight">{dadosDerivados.semResponsavel.length}</p>
+                  </div>
+                  <UserX className="size-4 text-muted-foreground/30" />
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-border/15 px-3 py-2.5">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Sem classificacao</p>
+                    <p className="mt-0.5 text-base font-bold tabular-nums tracking-tight">{dadosDerivados.semTipo.length}</p>
+                  </div>
+                  <Layers3 className="size-4 text-muted-foreground/30" />
+                </div>
+              </div>
+
+              <div className="mt-3 space-y-1.5">
                 {dadosDerivados.origemDistribuicao.map((item) => (
-                  <div key={item.origem} className="flex items-center justify-between gap-3 rounded-xl border border-border/15 px-3 py-2.5">
-                    <div>
-                      <p className="font-medium">{ORIGEM_EXPEDIENTE_LABELS[item.origem as keyof typeof ORIGEM_EXPEDIENTE_LABELS]}</p>
-                      <p className="text-xs text-muted-foreground/60">Expedientes pendentes desta origem</p>
-                    </div>
+                  <div key={item.origem} className="flex items-center justify-between gap-3 rounded-xl border border-border/10 px-3 py-2">
+                    <p className="text-[11px] text-muted-foreground/70">
+                      {ORIGEM_EXPEDIENTE_LABELS[item.origem as keyof typeof ORIGEM_EXPEDIENTE_LABELS]}
+                    </p>
                     <AppBadge variant="outline">{item.total}</AppBadge>
                   </div>
                 ))}
-              </div>
-
-              <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                <div className="rounded-xl border border-border/15 px-3 py-3">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Sem responsavel</p>
-                  <p className="mt-1 text-lg font-semibold tabular-nums">{dadosDerivados.semResponsavel.length}</p>
-                </div>
-                <div className="rounded-xl border border-border/15 px-3 py-3">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Sem tipo</p>
-                  <p className="mt-1 text-lg font-semibold tabular-nums">{dadosDerivados.semTipo.length}</p>
-                </div>
-              </div>
-            </GlassPanel>
-
-            <GlassPanel depth={1} className="p-5">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Acoes sugeridas</p>
-                  <h2 className="mt-1 text-sm font-semibold">Proximos passos do modulo</h2>
-                </div>
-              </div>
-
-              <div className="mt-4 space-y-2">
-                <div className="rounded-xl border border-border/15 px-3 py-3 text-sm text-muted-foreground/75">
-                  Priorize a classificacao dos itens sem tipo antes da baixa em lote.
-                </div>
-                <div className="rounded-xl border border-border/15 px-3 py-3 text-sm text-muted-foreground/75">
-                  Redistribua os itens sem responsavel para reduzir filas cegas do escritorio.
-                </div>
-                <div className="rounded-xl border border-border/15 px-3 py-3 text-sm text-muted-foreground/75">
-                  Use a view Semana para execucao diaria depois da triagem neste quadro.
-                </div>
               </div>
             </GlassPanel>
           </div>

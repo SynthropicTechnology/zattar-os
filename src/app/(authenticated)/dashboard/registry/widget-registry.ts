@@ -326,10 +326,10 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
   {
     id: 'expedientes-urgency-list',
     title: 'Expedientes Urgentes',
-    description: 'Lista de expedientes ordenada por urgência de prazo com origem (PJE, CNJ, Manual).',
+    description: 'Lista de expedientes ordenada por urgência de prazo com contexto processual resumido.',
     module: 'expedientes',
     permission: PERM.expedientes,
-    size: 'md',
+    size: 'half',
     defaultEnabled: true,
     component: UrgencyList,
   },
@@ -349,7 +349,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Barras horizontais com distribuição por janela de prazo: vencidos, hoje, 7 dias e 30 dias.',
     module: 'expedientes',
     permission: PERM.expedientes,
-    size: 'sm',
+    size: 'half',
     defaultEnabled: false,
     component: AgingFunnel,
   },
@@ -712,7 +712,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
 // ├──── half ────┤┌──── half ────┐    │  Row 2: Meu Dia + Foco
 // ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 3: Tarefas, Produtividade, Lembretes
 // ├──── half ────┤┌──── half ────┐    │  Row 4: Audiências em sequência
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 5: Expedientes em sequência
+// ├──── half ────┤┌──── half ────┐    │  Row 5: Expedientes em sequência
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 6: Processos em sequência
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 7: Contratos em sequência
 // ├──────── md ────────┤               │  Row 8: Saúde financeira
@@ -735,7 +735,7 @@ export const DEFAULT_LAYOUT: string[] = [
   'audiencias-proximas',
   'audiencias-preparacao',
 
-  // Row 5: Expedientes (md + sm)
+  // Row 5: Expedientes (half + half)
   'expedientes-urgency-list',
   'expedientes-aging-funnel',
 

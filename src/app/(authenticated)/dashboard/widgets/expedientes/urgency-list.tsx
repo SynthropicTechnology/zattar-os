@@ -32,16 +32,6 @@ function getDiasLabel(dias: number): string {
   return `${dias} dias restantes`;
 }
 
-const ORIGEM_BADGE_STYLES: Record<string, string> = {
-  expedientes: 'bg-primary/10 text-primary/70',
-  expedientes_manuais: 'bg-muted/30 text-muted-foreground/50',
-};
-
-const ORIGEM_LABELS: Record<string, string> = {
-  expedientes: 'PJE/CNJ',
-  expedientes_manuais: 'Manual',
-};
-
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 function EmptyState() {
@@ -61,8 +51,6 @@ function ExpedienteItem({ item }: { item: ExpedienteUrgente }) {
   const level = getUrgencyLevel(item.dias_restantes);
   const partes = formatarPartes(item.nome_parte_autora, item.nome_parte_re);
   const contextoProcesso = obterContextoProcesso(item);
-  const origemStyle = ORIGEM_BADGE_STYLES[item.origem] ?? 'bg-muted/30 text-muted-foreground/50';
-  const origemLabel = ORIGEM_LABELS[item.origem] ?? item.origem;
 
   return (
     <ListItem className="items-start">
@@ -86,11 +74,6 @@ function ExpedienteItem({ item }: { item: ExpedienteUrgente }) {
           {URGENCY_LABELS[level]} · {fmtData(item.prazo_fatal)} · {getDiasLabel(item.dias_restantes)}
         </p>
       </div>
-      <span
-        className={`shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md ${origemStyle}`}
-      >
-        {origemLabel}
-      </span>
     </ListItem>
   );
 }
@@ -101,7 +84,7 @@ export function UrgencyList() {
   const { data, isLoading, error } = useDashboard();
 
   if (isLoading) {
-    return <WidgetSkeleton size="md" />;
+    return <WidgetSkeleton size="sm" />;
   }
 
   if (error || !data) {
@@ -111,7 +94,6 @@ export function UrgencyList() {
         icon={AlertTriangle}
         subtitle="Por urgência de prazo"
         depth={1}
-        className="md:col-span-2"
       >
         <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
           Não foi possível carregar os expedientes.
@@ -130,7 +112,6 @@ export function UrgencyList() {
       icon={AlertTriangle}
       subtitle="Por urgência de prazo"
       depth={1}
-      className="md:col-span-2"
     >
       {expedientes.length === 0 ? (
         <EmptyState />

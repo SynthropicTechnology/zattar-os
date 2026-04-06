@@ -215,7 +215,7 @@ export function ExpedienteControlDetailSheet({
             <Button
               onClick={() => {
                 if (!expediente.processoId) return;
-                router.push(`/processos/${expediente.processoId}`);
+                router.push(`/app/processos/${expediente.processoId}`);
               }}
               disabled={!expediente.processoId}
             >

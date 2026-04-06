@@ -94,17 +94,18 @@ export function AgingFunnel() {
       icon={Clock}
       subtitle="Distribuição por janela de prazo"
       depth={1}
+      className="h-auto! self-start p-4!"
     >
-      <div className="space-y-3 mt-1">
+      <div className="mt-1 space-y-2">
         {faixas.map((row) => (
-          <div key={row.label} className="flex items-center gap-3">
+          <div key={row.label} className="flex items-center gap-2.5">
             <UrgencyDot level={row.level} />
-            <div className="w-28 shrink-0">
-              <span className="text-[11px] text-muted-foreground/60">
+            <div className="w-24 shrink-0">
+              <span className="text-[10px] text-muted-foreground/60">
                 {row.label}
               </span>
             </div>
-            <div className="flex-1 h-5 flex items-center gap-2">
+            <div className="flex h-4.5 flex-1 items-center gap-2">
               <div
                 className="h-full rounded-sm transition-all duration-500"
                 style={{
@@ -115,7 +116,7 @@ export function AgingFunnel() {
                 }}
               />
               <span
-                className="text-[12px] font-bold tabular-nums shrink-0"
+                className="shrink-0 text-[11px] font-bold tabular-nums"
                 style={{ color: row.color }}
               >
                 {row.count}
@@ -125,11 +126,11 @@ export function AgingFunnel() {
         ))}
       </div>
 
-      <div className="mt-4 pt-3 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">
+      <div className="mt-3 flex items-center justify-between border-t border-border/10 pt-2.5">
+        <span className="text-[9px] uppercase tracking-wide text-muted-foreground/60">
           Total
         </span>
-        <span className="text-sm font-bold">{fmtNum(totalExibido)}</span>
+        <span className="text-[13px] font-bold">{fmtNum(totalExibido)}</span>
       </div>
     </WidgetContainer>
   );
