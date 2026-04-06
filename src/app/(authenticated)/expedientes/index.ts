@@ -13,6 +13,8 @@ export { ExpedientesTableWrapper } from './components/expedientes-table-wrapper'
 export { ExpedientesMonthWrapper } from './components/expedientes-month-wrapper';
 export { ExpedientesYearWrapper } from './components/expedientes-year-wrapper';
 export { ExpedientesControlView } from './components/expedientes-control-view';
+export { ExpedientesPulseStrip } from './components/expedientes-pulse-strip';
+export { RiskScoreGauge, AgingFunnel, ActivityHeatmap } from './components/expedientes-sidebar-widgets';
 export { ExpedientesListFilters } from './components/expedientes-list-filters';
 export { ExpedientesCalendar } from './components/expedientes-calendar';
 export { ExpedientesCalendarMonth } from './components/expedientes-calendar-month';
