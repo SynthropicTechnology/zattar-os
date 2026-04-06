@@ -35,6 +35,7 @@ import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 import { ExpedientesBulkActions } from './expedientes-bulk-actions';
+import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
 import {
   ExpedientesListFilters,
   type StatusFilterType,
@@ -217,6 +218,31 @@ export function ExpedientesListWrapper({
   const total = paginacao?.total ?? 0;
   const totalPages = paginacao?.totalPaginas ?? 0;
 
+  // ---------- PulseStrip stats ----------
+  const pulseStats = React.useMemo(() => {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const tresDias = new Date(hoje);
+    tresDias.setDate(tresDias.getDate() + 3);
+
+    const vencidos = expedientes.filter((e) => !e.baixadoEm && e.prazoVencido === true).length;
+    const hojeCount = expedientes.filter((e) => {
+      if (!e.dataPrazoLegalParte || e.baixadoEm) return false;
+      const d = new Date(e.dataPrazoLegalParte);
+      d.setHours(0, 0, 0, 0);
+      return d.getTime() === hoje.getTime();
+    }).length;
+    const proximos = expedientes.filter((e) => {
+      if (!e.dataPrazoLegalParte || e.baixadoEm) return false;
+      const d = new Date(e.dataPrazoLegalParte);
+      d.setHours(0, 0, 0, 0);
+      return d > hoje && d <= tresDias;
+    }).length;
+    const semDono = expedientes.filter((e) => !e.baixadoEm && !e.responsavelId).length;
+
+    return { vencidos, hoje: hojeCount, proximos, semDono, total: expedientes.length };
+  }, [expedientes]);
+
   // ---------- Handlers ----------
   const handleSucessoOperacao = React.useCallback(() => {
     setRowSelection((currentSelection) => {
@@ -341,6 +367,17 @@ export function ExpedientesListWrapper({
   return (
     <>
       <DataShell
+        subHeader={
+          !isLoading && expedientes.length > 0 ? (
+            <ExpedientesPulseStrip
+              vencidos={pulseStats.vencidos}
+              hoje={pulseStats.hoje}
+              proximos={pulseStats.proximos}
+              semDono={pulseStats.semDono}
+              total={pulseStats.total}
+            />
+          ) : undefined
+        }
         header={
           table ? (
             <>

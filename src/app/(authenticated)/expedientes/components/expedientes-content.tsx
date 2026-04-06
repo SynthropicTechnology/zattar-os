@@ -40,6 +40,7 @@ import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
 import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
 import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
 import { ExpedientesControlView } from './expedientes-control-view';
+import { ExpedientesWeekMission } from './expedientes-week-mission';
 
 // =============================================================================
 // MAPEAMENTO URL -> VIEW
@@ -194,10 +195,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
 
       case 'semana':
         return (
-          <ExpedientesTableWrapper
-            fixedDate={weekNav.selectedDate}
-            hideDateFilters={true}
+          <ExpedientesWeekMission
             viewModeSlot={viewModePopover}
+            settingsSlot={settingsButton}
             weekNavigatorProps={{
               weekDays: weekNav.weekDays,
               selectedDate: weekNav.selectedDate,

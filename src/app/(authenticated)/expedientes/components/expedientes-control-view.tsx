@@ -2,10 +2,14 @@
 
 import * as React from 'react';
 import {
+  AlertTriangle,
+  Clock,
   FileText,
   SearchX,
   Users,
+  UserX,
   Layers3,
+  FolderOpen,
 } from 'lucide-react';
 import { AppBadge } from '@/components/ui/app-badge';
 import { TemporalViewError, TemporalViewLoading } from '@/components/shared';
@@ -18,13 +22,11 @@ import {
   UrgencyDot,
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { cn } from '@/lib/utils';
-import { GRAU_TRIBUNAL_LABELS, type Expediente } from '../domain';
+import { GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS, type Expediente } from '../domain';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import { ExpedienteControlDetailSheet } from './expediente-control-detail-sheet';
-import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
-import { RiskScoreGauge, AgingFunnel, ActivityHeatmap } from './expedientes-sidebar-widgets';
 
 interface UsuarioData {
   id: number;
@@ -120,9 +122,50 @@ const URGENCY_BADGE_VARIANT: Record<UrgencyLevel, 'destructive' | 'default' | 's
   ok: 'secondary',
 };
 
+// ─── Metric Card ──────────────────────────────────────────────────────────────
+
+function ControlMetricCard({
+  title,
+  value,
+  subtitle,
+  icon: Icon,
+  iconClassName,
+  highlight,
+}: {
+  title: string;
+  value: number;
+  subtitle: string;
+  icon: React.ComponentType<{ className?: string }>;
+  iconClassName?: string;
+  highlight?: boolean;
+}) {
+  return (
+    <GlassPanel
+      depth={value > 0 && highlight ? 2 : 1}
+      className={cn('p-4 gap-1.5', value > 0 && highlight && 'border-destructive/15')}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">{title}</p>
+          <p className={cn(
+            'mt-1 text-2xl font-bold tabular-nums tracking-tight',
+            value > 0 && highlight && 'text-destructive/80',
+          )}>
+            {value}
+          </p>
+        </div>
+        <div className={cn('rounded-xl border border-border/20 p-2 shrink-0 mt-0.5', value > 0 && highlight ? 'border-destructive/20 bg-destructive/6' : 'bg-white/2')}>
+          <Icon className={cn('size-4', iconClassName ?? 'text-muted-foreground/50')} />
+        </div>
+      </div>
+      <p className="text-[11px] text-muted-foreground/50 leading-snug">{subtitle}</p>
+    </GlassPanel>
+  );
+}
+
 function EmptyQueue({ search }: { search: string }) {
   return (
-    <GlassPanel depth={1} className="flex min-h-45 flex-col items-center justify-center p-8 text-center">
+    <GlassPanel depth={1} className="flex min-h-[180px] flex-col items-center justify-center p-8 text-center">
       <SearchX className="size-10 text-muted-foreground/20" />
       <h3 className="mt-4 text-sm font-semibold">Nenhum expediente nesta fila</h3>
       <p className="mt-1.5 max-w-sm text-sm text-muted-foreground/55">
@@ -159,9 +202,9 @@ function QueueCard({
       <GlassPanel
         depth={selected ? 2 : 1}
         className={cn(
-          'gap-0 overflow-hidden p-0 hover:border-primary/20 hover:bg-primary/2.5',
+          'gap-0 overflow-hidden p-0 hover:border-primary/20 hover:bg-primary/[0.025]',
           URGENCY_BORDER[urgencyLevel],
-          selected && 'border-primary/20 bg-primary/2.5',
+          selected && 'border-primary/20 bg-primary/[0.025]',
         )}
       >
         <div className="flex flex-col gap-3 p-4">
@@ -240,8 +283,8 @@ function QueueListRow({
         'flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all duration-150',
         URGENCY_BORDER[urgencyLevel],
         selected
-          ? 'border-primary/15 bg-primary/5'
-          : 'border-border/15 hover:border-border/25 hover:bg-white/2.5',
+          ? 'border-primary/15 bg-primary/[0.05]'
+          : 'border-border/15 hover:border-border/25 hover:bg-white/[0.025]',
       )}
     >
       <UrgencyDot level={urgencyLevel} />
@@ -251,7 +294,7 @@ function QueueListRow({
           <p className="truncate font-mono text-[11px] text-muted-foreground/55">{expediente.numeroProcesso}</p>
         </div>
         {responsavelNome && (
-          <p className="hidden max-w-36 truncate text-[11px] text-muted-foreground/45 sm:block lg:max-w-48">{responsavelNome}</p>
+          <p className="hidden max-w-[100px] truncate text-[11px] text-muted-foreground/45 sm:block">{responsavelNome}</p>
         )}
         <div className="shrink-0 text-right">
           {expediente.dataPrazoLegalParte ? (
@@ -302,13 +345,6 @@ export function ExpedientesControlView({
     busca: search || undefined,
   });
 
-  // Baixados para o heatmap de atividade (últimos 35 dias)
-  const { expedientes: baixados } = useExpedientes({
-    pagina: 1,
-    limite: 200,
-    baixado: true,
-  });
-
   const usuariosMap = React.useMemo(() => {
     const map = new Map<number, string>();
     usuarios.forEach((usuario) => map.set(usuario.id, getUsuarioNome(usuario)));
@@ -337,21 +373,8 @@ export function ExpedientesControlView({
     });
     const semResponsavel = pendentes.filter((item) => !item.responsavelId);
     const semTipo = pendentes.filter((item) => !item.tipoExpedienteId);
-    const comTipo = pendentes.filter((item) => !!item.tipoExpedienteId);
-    const comResponsavel = pendentes.filter((item) => !!item.responsavelId);
     const manuais = pendentes.filter((item) => item.origem === 'manual');
     const capturados = pendentes.filter((item) => item.origem !== 'manual');
-
-    // Aging funnel — faixas de prazo
-    const seteDias = pendentes.filter((item) => {
-      const dias = calcularDiasRestantes(item);
-      return dias !== null && dias >= 4 && dias <= 7;
-    });
-    const quinzeMais = pendentes.filter((item) => {
-      const dias = calcularDiasRestantes(item);
-      return dias !== null && dias > 7;
-    });
-    const semPrazo = pendentes.filter((item) => calcularDiasRestantes(item) === null);
 
     const rankingResponsaveis = Array.from(
       pendentes.reduce((acc, item) => {
@@ -395,11 +418,6 @@ export function ExpedientesControlView({
       proximos,
       semResponsavel,
       semTipo,
-      comTipo,
-      comResponsavel,
-      seteDias,
-      quinzeMais,
-      semPrazo,
       manuais,
       capturados,
       rankingResponsaveis,
@@ -416,18 +434,6 @@ export function ExpedientesControlView({
     { id: 'sem_responsavel', label: 'Sem dono', count: dadosDerivados.semResponsavel.length },
     { id: 'sem_tipo', label: 'Sem tipo', count: dadosDerivados.semTipo.length },
   ], [dadosDerivados]);
-
-  // Heatmap: baixas por dia (últimos 35 dias)
-  const baixasPorDia = React.useMemo(() => {
-    const mapa = new Map<string, number>();
-    baixados.forEach((exp) => {
-      if (exp.baixadoEm) {
-        const dia = exp.baixadoEm.slice(0, 10);
-        mapa.set(dia, (mapa.get(dia) ?? 0) + 1);
-      }
-    });
-    return mapa;
-  }, [baixados]);
 
   const contentOptions = React.useMemo<ViewToggleOption[]>(() => [
     { id: 'cards', label: 'Cards', icon: Layers3 },
@@ -474,9 +480,9 @@ export function ExpedientesControlView({
       <div className="mx-auto flex max-w-350 flex-col gap-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="font-heading text-2xl font-semibold tracking-tight">Sala de Situacao</h1>
+            <h1 className="font-heading text-2xl font-semibold tracking-tight">Controle de Expedientes</h1>
             <p className="mt-1 text-sm text-muted-foreground/50">
-              Estado operacional do acervo em tempo real — triagem, risco e distribuicao.
+              Triagem central de risco, classificacao e distribuicao operacional do escritorio.
             </p>
           </div>
 
@@ -486,65 +492,55 @@ export function ExpedientesControlView({
           </div>
         </div>
 
-        {/* ── PulseStrip KPIs ── */}
-        <ExpedientesPulseStrip
-          vencidos={dadosDerivados.vencidos.length}
-          hoje={dadosDerivados.hoje.length}
-          proximos={dadosDerivados.proximos.length}
-          semDono={dadosDerivados.semResponsavel.length}
-          total={dadosDerivados.pendentes.length}
-        />
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+          <ControlMetricCard
+            title="Vencidos"
+            value={dadosDerivados.vencidos.length}
+            subtitle="Pedem intervencao imediata"
+            icon={AlertTriangle}
+            iconClassName="text-destructive/60"
+            highlight
+          />
+          <ControlMetricCard
+            title="Hoje"
+            value={dadosDerivados.hoje.length}
+            subtitle="Fechamento do dia"
+            icon={Clock}
+            iconClassName="text-amber-500/70"
+          />
+          <ControlMetricCard
+            title="3 dias"
+            value={dadosDerivados.proximos.length}
+            subtitle="Janela curta de resposta"
+            icon={FileText}
+            iconClassName="text-primary/60"
+          />
+          <ControlMetricCard
+            title="Sem dono"
+            value={dadosDerivados.semResponsavel.length}
+            subtitle="Sem responsavel definido"
+            icon={UserX}
+            iconClassName="text-amber-500/60"
+          />
+          <ControlMetricCard
+            title="Sem tipo"
+            value={dadosDerivados.semTipo.length}
+            subtitle="Classificacao incompleta"
+            icon={Layers3}
+            iconClassName="text-muted-foreground/50"
+          />
+        </div>
 
-        {/* ── InsightBanners contextuais (max 2) ── */}
-        {(() => {
-          const banners: React.ReactNode[] = [];
-          const topResponsavel = dadosDerivados.rankingResponsaveis[0];
-          const concentracao = topResponsavel && dadosDerivados.pendentes.length > 0
-            ? Math.round((topResponsavel.total / dadosDerivados.pendentes.length) * 100)
-            : 0;
-
-          if (dadosDerivados.vencidos.length > 0) {
-            banners.push(
-              <InsightBanner key="vencidos" type="alert">
-                <strong>{dadosDerivados.vencidos.length} expediente(s) com prazo vencido</strong> — Esses itens requerem intervencao imediata. Use a fila Criticos para triagem prioritaria.
-              </InsightBanner>
-            );
-          }
-
-          if (concentracao >= 40 && topResponsavel && banners.length < 2) {
-            banners.push(
-              <InsightBanner key="concentracao" type="warning">
-                <strong>{topResponsavel.nome} concentra {concentracao}% da carga</strong> — Considere redistribuir para equilibrar o time.
-              </InsightBanner>
-            );
-          }
-
-          if (dadosDerivados.semTipo.length > 3 && banners.length < 2) {
-            banners.push(
-              <InsightBanner key="semtipo" type="info">
-                <strong>{dadosDerivados.semTipo.length} expedientes sem classificacao</strong> — Categorize-os para melhorar metricas e filtros.
-              </InsightBanner>
-            );
-          }
-
-          if (dadosDerivados.semResponsavel.length > 3 && dadosDerivados.vencidos.length === 0 && banners.length < 2) {
-            banners.push(
-              <InsightBanner key="semdono" type="warning">
-                <strong>{dadosDerivados.semResponsavel.length} expedientes sem responsavel</strong> — Distribua esses itens para evitar filas cegas e perda de prazo.
-              </InsightBanner>
-            );
-          }
-
-          if (banners.length === 0 && dadosDerivados.vencidos.length === 0 && dadosDerivados.hoje.length === 0) {
-            banners.push(
-              <InsightBanner key="sucesso" type="success">
-                <strong>Nenhum vencimento pendente</strong> — Parabens! Todos os prazos estao em dia.
-              </InsightBanner>
-            );
-          }
-
-          return banners.slice(0, 2);
-        })()}
+        {dadosDerivados.vencidos.length > 0 && (
+          <InsightBanner type="alert">
+            <strong>{dadosDerivados.vencidos.length} expediente(s) com prazo vencido</strong> — Esses itens requerem intervencao imediata. Use a fila Criticos para triagem prioritaria.
+          </InsightBanner>
+        )}
+        {dadosDerivados.vencidos.length === 0 && dadosDerivados.semResponsavel.length > 3 && (
+          <InsightBanner type="warning">
+            <strong>{dadosDerivados.semResponsavel.length} expedientes sem responsavel</strong> — Distribua esses itens para evitar filas cegas e perda de prazo.
+          </InsightBanner>
+        )}
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.8fr)]">
           <div className="flex min-w-0 flex-col gap-4">
@@ -595,33 +591,6 @@ export function ExpedientesControlView({
           </div>
 
           <div className="flex min-w-0 flex-col gap-4">
-            {/* ── Risk Score ── */}
-            <RiskScoreGauge
-              totalPendentes={dadosDerivados.pendentes.length}
-              vencidos={dadosDerivados.vencidos.length}
-              comResponsavel={dadosDerivados.comResponsavel.length}
-              comTipo={dadosDerivados.comTipo.length}
-            />
-
-            {/* ── Aging Funnel ── */}
-            <AgingFunnel
-              vencidos={dadosDerivados.vencidos.length}
-              hoje={dadosDerivados.hoje.length}
-              tresDias={dadosDerivados.proximos.length}
-              seteDias={dadosDerivados.seteDias.length}
-              quinzeMais={dadosDerivados.quinzeMais.length}
-              onFaixaClick={(faixa) => {
-                const mapa: Record<string, QueueMode> = {
-                  vencidos: 'criticos',
-                  hoje: 'hoje',
-                  tresDias: 'proximos',
-                };
-                if (mapa[faixa]) setQueueMode(mapa[faixa]);
-                else setQueueMode('todos');
-              }}
-            />
-
-            {/* ── Workload por responsável ── */}
             <GlassPanel depth={1} className="p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
@@ -655,8 +624,43 @@ export function ExpedientesControlView({
               </div>
             </GlassPanel>
 
-            {/* ── Activity Heatmap ── */}
-            <ActivityHeatmap baixasPorDia={baixasPorDia} />
+            <GlassPanel depth={1} className="p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Radar</p>
+                  <h2 className="mt-1 text-sm font-semibold">Sinais do acervo</h2>
+                </div>
+                <FolderOpen className="size-4 text-muted-foreground/45" />
+              </div>
+
+              <div className="mt-4 space-y-2">
+                <div className="flex items-center justify-between rounded-xl border border-border/15 px-3 py-2.5">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Sem responsavel</p>
+                    <p className="mt-0.5 text-base font-bold tabular-nums tracking-tight">{dadosDerivados.semResponsavel.length}</p>
+                  </div>
+                  <UserX className="size-4 text-muted-foreground/30" />
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-border/15 px-3 py-2.5">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Sem classificacao</p>
+                    <p className="mt-0.5 text-base font-bold tabular-nums tracking-tight">{dadosDerivados.semTipo.length}</p>
+                  </div>
+                  <Layers3 className="size-4 text-muted-foreground/30" />
+                </div>
+              </div>
+
+              <div className="mt-3 space-y-1.5">
+                {dadosDerivados.origemDistribuicao.map((item) => (
+                  <div key={item.origem} className="flex items-center justify-between gap-3 rounded-xl border border-border/10 px-3 py-2">
+                    <p className="text-[11px] text-muted-foreground/70">
+                      {ORIGEM_EXPEDIENTE_LABELS[item.origem as keyof typeof ORIGEM_EXPEDIENTE_LABELS]}
+                    </p>
+                    <AppBadge variant="outline">{item.total}</AppBadge>
+                  </div>
+                ))}
+              </div>
+            </GlassPanel>
           </div>
         </div>
       </div>

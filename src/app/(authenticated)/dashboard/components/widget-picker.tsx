@@ -46,32 +46,6 @@ interface WidgetPickerProps {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function getModuleLabel(module: string): string {
-  const labels: Record<string, string> = {
-    processos: 'Processos',
-    audiencias: 'Audiencias',
-    expedientes: 'Expedientes',
-    financeiro: 'Financeiro',
-    rh: 'Pessoal',
-    captura: 'Captura',
-    geral: 'Geral',
-  };
-  return labels[module] ?? module;
-}
-
-function getModuleIcon(module: string): React.ReactNode {
-  const icons: Record<string, React.ReactNode> = {
-    processos: <Scale className="size-3.5" />,
-    audiencias: <Calendar className="size-3.5" />,
-    expedientes: <FileText className="size-3.5" />,
-    financeiro: <Wallet className="size-3.5" />,
-    rh: <Users className="size-3.5" />,
-    captura: <CheckSquare className="size-3.5" />,
-    geral: <LayoutGrid className="size-3.5" />,
-  };
-  return icons[module] ?? <LayoutGrid className="size-3.5" />;
-}
-
 // ─── Componente ──────────────────────────────────────────────────────────────
 
 export function WidgetPicker({
@@ -140,50 +114,36 @@ export function WidgetPicker({
           </Button>
         </div>
 
-        {/* Lista de widgets agrupada por módulo */}
-        <div className="flex-1 overflow-y-auto">
-          {Array.from(groupedWidgets.entries()).map(([module, widgets]) => (
-            <div key={module} className="border-b border-border/10 last:border-0">
-              {/* Cabeçalho do grupo */}
-              <div className="flex items-center gap-2 px-5 py-3 bg-muted/5">
-                <span className="text-muted-foreground/50">
-                  {getModuleIcon(module)}
-                </span>
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/50">
-                  {getModuleLabel(module)}
-                </span>
-              </div>
-
-              {/* Widgets do grupo */}
-              <div className="divide-y divide-border/5">
-                {widgets.map((widget) => {
-                  const isEnabled = enabledWidgets.includes(widget.id);
-                  return (
-                    <label
-                      key={widget.id}
-                      htmlFor={`widget-toggle-${widget.id}`}
-                      className="flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-white/3 transition-colors duration-150"
-                    >
-                      <Switch
-                        id={`widget-toggle-${widget.id}`}
-                        checked={isEnabled}
-                        onCheckedChange={() => onToggle(widget.id)}
-                        aria-label={`${isEnabled ? 'Desativar' : 'Ativar'} widget ${widget.title}`}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium leading-tight truncate">
-                          {widget.title}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground/50 mt-0.5 truncate">
-                          {widget.description}
-                        </p>
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+        {/* Lista de widgets ordenada por módulo conceitualmente */}
+        <div className="flex-1 overflow-y-auto divide-y divide-border/5">
+          {Array.from(groupedWidgets.entries()).flatMap(([_module, widgets]) =>
+            widgets.map((widget) => {
+              const isEnabled = enabledWidgets.includes(widget.id);
+              return (
+                <label
+                  key={widget.id}
+                  htmlFor={`widget-toggle-${widget.id}`}
+                  className="flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-white/3 transition-colors duration-150"
+                >
+                  <Switch
+                    id={`widget-toggle-${widget.id}`}
+                    checked={isEnabled}
+                    onCheckedChange={() => onToggle(widget.id)}
+                    aria-label={`${isEnabled ? 'Desativar' : 'Ativar'} widget ${widget.title}`}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium leading-tight truncate flex items-center gap-2">
+                       {/* Opcional: mostrar um ícone bem sutil do módulo se quiser, mas o usuário pediu para não separar */}
+                      {widget.title}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground/50 mt-0.5 truncate">
+                      {widget.description}
+                    </p>
+                  </div>
+                </label>
+              );
+            })
+          )}
 
           {availableWidgets.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 px-5 text-center">

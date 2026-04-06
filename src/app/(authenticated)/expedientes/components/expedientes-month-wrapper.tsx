@@ -21,6 +21,10 @@ import {
   TemporalViewLoading,
   TemporalViewError,
 } from '@/components/shared';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import {
+  AnimatedNumber,
+} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
@@ -127,6 +131,30 @@ export function ExpedientesMonthWrapper({
   // ---------- Data Fetching ----------
   const { expedientes, isLoading, error, refetch } = useExpedientes(hookParams);
 
+  // ---------- Month Summary ----------
+  const monthSummary = React.useMemo(() => {
+    const pendentes = expedientes.filter((e) => !e.baixadoEm);
+    const baixados = expedientes.filter((e) => !!e.baixadoEm);
+    const vencidos = pendentes.filter((e) => e.prazoVencido);
+    const total = expedientes.length;
+    const pctConclusao = total > 0 ? Math.round((baixados.length / total) * 100) : 0;
+
+    // Dias com vencimentos
+    const diasComVencimento = new Set<string>();
+    vencidos.forEach((e) => {
+      if (e.dataPrazoLegalParte) diasComVencimento.add(e.dataPrazoLegalParte.slice(0, 10));
+    });
+
+    return {
+      total,
+      pendentes: pendentes.length,
+      baixados: baixados.length,
+      vencidos: vencidos.length,
+      pctConclusao,
+      diasComVencimento: diasComVencimento.size,
+    };
+  }, [expedientes]);
+
   // ---------- Handlers ----------
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
@@ -180,26 +208,48 @@ export function ExpedientesMonthWrapper({
         ) : error ? (
           <TemporalViewError message={`Erro ao carregar expedientes: ${error}`} onRetry={refetch} />
         ) : (
-          <div className="bg-card border rounded-md overflow-hidden flex-1 min-h-0">
-            <div className="flex h-full">
-              {/* Calendário compacto — largura fixa */}
-              <div className="w-120 shrink-0 border-r p-6 overflow-auto">
-                <ExpedientesCalendarCompact
-                  selectedDate={selectedDate}
-                  onDateSelect={setSelectedDate}
-                  expedientes={expedientes}
-                  currentMonth={currentMonth}
-                  onMonthChange={setCurrentMonth}
-                />
-              </div>
+          <div className="flex flex-col gap-4 p-4">
+            {/* Month Summary Strip */}
+            <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+              {[
+                { label: 'Total', value: monthSummary.total },
+                { label: 'Pendentes', value: monthSummary.pendentes },
+                { label: 'Baixados', value: monthSummary.baixados },
+                { label: 'Vencidos', value: monthSummary.vencidos, highlight: monthSummary.vencidos > 0 },
+                { label: 'Conclusao', value: monthSummary.pctConclusao, suffix: '%' },
+                { label: 'Dias risco', value: monthSummary.diasComVencimento, highlight: monthSummary.diasComVencimento > 0 },
+              ].map((item) => (
+                <GlassPanel key={item.label} depth={1} className="px-3 py-2.5">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">{item.label}</p>
+                  <p className={`mt-0.5 text-lg font-bold tabular-nums tracking-tight ${item.highlight ? 'text-destructive/80' : ''}`}>
+                    <AnimatedNumber value={item.value} />{item.suffix || ''}
+                  </p>
+                </GlassPanel>
+              ))}
+            </div>
 
-              {/* Lista do dia — ocupa todo o espaço restante */}
-              <div className="flex-1 min-w-0">
-                <ExpedientesDayList
-                  selectedDate={selectedDate}
-                  expedientes={expedientes}
-                  onAddExpediente={() => setIsCreateDialogOpen(true)}
-                />
+            {/* Calendar + Day List */}
+            <div className="bg-card border rounded-md overflow-hidden flex-1 min-h-0">
+              <div className="flex h-full">
+                {/* Calendário compacto — largura fixa */}
+                <div className="w-120 shrink-0 border-r p-6 overflow-auto">
+                  <ExpedientesCalendarCompact
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                    expedientes={expedientes}
+                    currentMonth={currentMonth}
+                    onMonthChange={setCurrentMonth}
+                  />
+                </div>
+
+                {/* Lista do dia — ocupa todo o espaço restante */}
+                <div className="flex-1 min-w-0">
+                  <ExpedientesDayList
+                    selectedDate={selectedDate}
+                    expedientes={expedientes}
+                    onAddExpediente={() => setIsCreateDialogOpen(true)}
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -82,7 +82,8 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
   // Determinar quais widgets renderizar e em qual ORDEM.
   // - Sem customização: usar DEFAULT_LAYOUT (ordenado para grid perfeito)
-  // - Com customização: usar enabledWidgets na ordem salva
+  // - Com customização: usar enabledWidgets, mas ORDENAR de acordo com o WIDGET_REGISTRY original
+  //   para manter o agrupamento conceitual (todos os financeiros juntos, processos juntos, etc.)
   // Em ambos os casos, filtrar por availableWidgets (permissão).
   const visibleWidgets = useMemo<WidgetDefinition[]>(() => {
     const availableIds = new Set(availableWidgets.map((w) => w.id));
@@ -90,10 +91,22 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
     const orderedIds = hasCustomized ? enabledWidgets : DEFAULT_LAYOUT;
 
-    return orderedIds
+    const filtered = orderedIds
       .filter((id) => availableIds.has(id))
       .map((id) => widgetMap.get(id)!)
       .filter(Boolean);
+
+    // Se personalizado, ordenar usando o índice original no WIDGET_REGISTRY
+    // Isso garante o agrupamento conceitual solicitado (todos os módulos juntos)
+    if (hasCustomized) {
+      return filtered.sort(
+        (a, b) =>
+          WIDGET_REGISTRY.findIndex((w) => w.id === a.id) -
+          WIDGET_REGISTRY.findIndex((w) => w.id === b.id)
+      );
+    }
+
+    return filtered;
   }, [availableWidgets, enabledWidgets, hasCustomized]);
 
   // IDs efetivos para o picker (considera defaults quando não personalizado)

@@ -193,8 +193,9 @@ export function ExpedientesCalendarCompact({
             // Determinar cor do indicador baseado na prioridade:
             // Vencido > Pendente > Baixado
             let indicatorColor = 'bg-primary';
+            let hasVencido = false;
             if (hasExpedientes) {
-              const hasVencido = dayExpedientes.some(
+              hasVencido = dayExpedientes.some(
                 (e) => e.prazoVencido === true && e.baixadoEm === null
               );
               const hasPendente = dayExpedientes.some(
@@ -214,6 +215,19 @@ export function ExpedientesCalendarCompact({
               }
             }
 
+            // Heatmap: intensidade baseada na quantidade
+            const count = dayExpedientes.length;
+            const heatBg =
+              count === 0 ? '' :
+              count <= 2 ? 'bg-primary/8' :
+              count <= 5 ? 'bg-primary/18' :
+              count <= 10 ? 'bg-primary/30' :
+              'bg-primary/45';
+
+            const vencidosCount = hasExpedientes
+              ? dayExpedientes.filter((e) => e.prazoVencido === true && e.baixadoEm === null).length
+              : 0;
+
             return (
               <button
                 key={index}
@@ -225,6 +239,10 @@ export function ExpedientesCalendarCompact({
                   // Bordas
                   index % 7 !== 6 && 'border-r',
                   index < cells.length - 7 && 'border-b',
+                  // Heatmap background
+                  cell.currentMonth && heatBg,
+                  // Danger overlay for vencidos
+                  hasVencido && cell.currentMonth && !isSelected && 'ring-1 ring-inset ring-destructive/30',
                   // Estados
                   !cell.currentMonth && 'text-muted-foreground/50 bg-muted/20',
                   cell.currentMonth && !isSelected && !isTodayDate && 'text-foreground',
@@ -242,25 +260,20 @@ export function ExpedientesCalendarCompact({
                   {cell.day}
                 </span>
 
-                {/* Indicador de expedientes */}
-                {hasExpedientes && (
+                {/* Micro stats: vencidos + total */}
+                {hasExpedientes && cell.currentMonth && (
                   <div className="flex items-center gap-0.5 mt-1">
+                    {vencidosCount > 0 && !isSelected && (
+                      <span className="text-[9px] font-bold tabular-nums text-destructive/70">{vencidosCount}</span>
+                    )}
                     <span
                       className={cn(
-                        'w-1.5 h-1.5 rounded-full',
-                        isSelected ? 'bg-primary-foreground' : indicatorColor
+                        'text-[9px] tabular-nums leading-none',
+                        isSelected ? 'text-primary-foreground' : 'text-muted-foreground/60'
                       )}
-                    />
-                    {dayExpedientes.length > 1 && (
-                      <span
-                        className={cn(
-                          'text-[10px] leading-none',
-                          isSelected ? 'text-primary-foreground' : 'text-muted-foreground'
-                        )}
-                      >
-                        {dayExpedientes.length}
-                      </span>
-                    )}
+                    >
+                      {vencidosCount > 0 && !isSelected ? `/${count}` : count}
+                    </span>
                   </div>
                 )}
               </button>
@@ -269,19 +282,19 @@ export function ExpedientesCalendarCompact({
         </div>
       </div>
 
-      {/* Legenda */}
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-primary" />
-          <span>Pendente</span>
+      {/* Legenda do heatmap */}
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px]">Menos</span>
+          <span className="w-3 h-3 rounded-sm bg-primary/8 border border-border/10" />
+          <span className="w-3 h-3 rounded-sm bg-primary/18" />
+          <span className="w-3 h-3 rounded-sm bg-primary/30" />
+          <span className="w-3 h-3 rounded-sm bg-primary/45" />
+          <span className="text-[10px]">Mais</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-destructive" />
-          <span>Vencido</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-success" />
-          <span>Baixado</span>
+          <span className="w-2.5 h-2.5 rounded-sm ring-1 ring-inset ring-destructive/30" />
+          <span className="text-[10px]">Vencido</span>
         </div>
       </div>
     </div>
