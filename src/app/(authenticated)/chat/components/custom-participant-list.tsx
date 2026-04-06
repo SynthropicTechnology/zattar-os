@@ -7,8 +7,9 @@
  */
 import { useDyteSelector } from "@dytesdk/react-web-core";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
-import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { Mic, MicOff, Users, Video, VideoOff } from "lucide-react";
 import { memo, useMemo } from "react";
 
 interface DyteParticipant {
@@ -46,6 +47,14 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
       </div>
 
       <ScrollArea className="flex-1 p-2">
+        {allParticipants.length === 0 ? (
+          <EmptyState
+            icon={Users}
+            title="Sem participantes"
+            description="Aguardando participantes entrarem na chamada."
+            className="py-6 [&_h3]:text-sm [&_h3]:text-white [&_p]:text-xs [&_p]:text-gray-400 [&>div:first-child]:mb-2 [&>div:first-child]:h-12 [&>div:first-child]:w-12 [&_svg]:h-6 [&_svg]:w-6 [&>div:first-child]:bg-gray-800"
+          />
+        ) : (
         <div className="space-y-1">
           {allParticipants.map((p: DyteParticipant) => (
             <div key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-800/50 transition-colors rounded-lg group">
@@ -89,6 +98,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
             </div>
           ))}
         </div>
+        )}
       </ScrollArea>
     </div>
   );

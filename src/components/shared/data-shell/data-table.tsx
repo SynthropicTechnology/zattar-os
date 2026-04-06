@@ -87,7 +87,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Loader2 } from 'lucide-react';
+import { Loader2, SearchX } from 'lucide-react';
 
 import {
   Table,
@@ -650,12 +650,20 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow className="hover:bg-transparent">
                 <TableCell
                   colSpan={tableColumns.length}
-                  className="h-24 px-3 text-center"
+                  className="h-48 px-3 text-center"
                 >
-                  {emptyComponent ?? emptyMessage}
+                  {emptyComponent ?? (
+                    <div className="flex flex-col items-center justify-center py-8 animate-in fade-in-50 duration-300">
+                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted/30">
+                        <SearchX className="h-6 w-6 text-muted-foreground/40" aria-hidden="true" />
+                      </div>
+                      <p className="text-sm font-medium text-muted-foreground/60">{emptyMessage}</p>
+                      <p className="mt-1 text-xs text-muted-foreground/40">Tente ajustar os filtros ou a busca.</p>
+                    </div>
+                  )}
                 </TableCell>
               </TableRow>
             )}

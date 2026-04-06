@@ -7,8 +7,9 @@
  */
 import { useDyteSelector, useDyteMeeting } from "@dytesdk/react-web-core";
 import { DyteParticipantTile } from "@dytesdk/react-ui-kit";
+import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
-import { Mic, MicOff } from "lucide-react";
+import { Mic, MicOff, Users } from "lucide-react";
 
 interface DyteParticipant {
   id: string;
@@ -29,6 +30,17 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
   const self = useDyteSelector((m) => m.self);
 
   const allParticipants = [self, ...participants].filter(Boolean);
+
+  if (allParticipants.length === 0) {
+    return (
+      <EmptyState
+        icon={Users}
+        title="Sem participantes"
+        description="Aguardando participantes entrarem na chamada."
+        className="h-full [&_h3]:text-white [&_p]:text-gray-400 [&>div:first-child]:bg-gray-800"
+      />
+    );
+  }
 
   return (
     <div className={cn("flex flex-wrap items-center justify-center gap-8 p-8 h-full relative", className)}>

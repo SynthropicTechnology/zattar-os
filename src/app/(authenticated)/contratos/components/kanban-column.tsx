@@ -13,6 +13,8 @@
  *   />
  */
 
+import { FileText } from 'lucide-react';
+import { EmptyState } from '@/components/shared/empty-state';
 import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { ContratoCard } from './contrato-card';
 import type { ContratoCardData } from './contrato-card';
@@ -59,9 +61,12 @@ export function KanbanColumn({ stage, contratos, onCardClick }: KanbanColumnProp
           />
         ))}
         {contratos.length === 0 && (
-          <div className="py-8 text-center text-[10px] text-muted-foreground/50">
-            Nenhum contrato
-          </div>
+          <EmptyState
+            icon={FileText}
+            title="Nenhum contrato"
+            description="Nenhum contrato nesta etapa."
+            className="py-6 [&_h3]:text-sm [&_p]:text-xs [&>div:first-child]:mb-2 [&>div:first-child]:h-12 [&>div:first-child]:w-12 [&_svg]:h-6 [&_svg]:w-6"
+          />
         )}
       </div>
     </div>

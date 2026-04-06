@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   Loader2,
 } from 'lucide-react';
+import { EmptyState } from '@/components/shared/empty-state';
 import { Button } from '@/components/ui/button';
 import {
   Card,

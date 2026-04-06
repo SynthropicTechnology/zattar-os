@@ -8,7 +8,9 @@
 import { memo, useMemo } from "react";
 import { DyteParticipantTile } from "@dytesdk/react-ui-kit";
 import { useDyteSelector, useDyteMeeting } from "@dytesdk/react-web-core";
+import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
+import { Users } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface CustomVideoGridProps {
@@ -62,9 +64,12 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
            {spotlightParticipant ? (
              <DyteParticipantTile participant={spotlightParticipant} meeting={meeting} className="w-full h-full object-cover" />
            ) : (
-             <div className="flex items-center justify-center h-full text-gray-500">
-               Aguardando participantes...
-             </div>
+             <EmptyState
+               icon={Users}
+               title="Aguardando participantes"
+               description="Nenhum participante na chamada ainda."
+               className="h-full [&_h3]:text-white [&_p]:text-gray-400 [&>div:first-child]:bg-gray-800"
+             />
            )}
         </div>
         
@@ -107,11 +112,13 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
       </AnimatePresence>
       
       {participants.length === 0 && (
-        <div className="flex items-center justify-center h-full w-full text-gray-500 col-span-full">
-            <div className="text-center">
-              <p>Você é o único na chamada</p>
-              <p className="text-sm">Aguardando outros entrarem...</p>
-            </div>
+        <div className="col-span-full">
+          <EmptyState
+            icon={Users}
+            title="Você é o único na chamada"
+            description="Aguardando outros participantes entrarem..."
+            className="[&_h3]:text-white [&_p]:text-gray-400 [&>div:first-child]:bg-gray-800"
+          />
         </div>
       )}
     </div>

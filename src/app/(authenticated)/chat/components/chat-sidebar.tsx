@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Search } from "lucide-react";
+import { MessageCircle, Search } from "lucide-react";
+import { EmptyState } from "@/components/shared/empty-state";
 import { ChatItem } from "../domain";
 
 import { Input } from "@/components/ui/input";
@@ -72,7 +73,12 @@ export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarP
               />
             ))
           ) : (
-            <div className="text-muted-foreground mt-4 text-center text-sm">Nenhuma conversa encontrada</div>
+            <EmptyState
+              icon={MessageCircle}
+              title="Nenhuma conversa"
+              description="Nenhuma conversa encontrada. Inicie uma nova conversa."
+              className="py-8"
+            />
           )}
         </div>
       </CardContent>
