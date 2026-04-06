@@ -278,9 +278,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted || logoutInProgressRef.current) return;
 
-      if (session?.user) {
+      if (session?.access_token) {
         setSessionToken(session.access_token);
-        if (!userRef.current || userRef.current.authUserId !== session.user.id) {
+
+        // Supabase recomenda não confiar em session.user de onAuthStateChange,
+        // pois esse objeto vem do storage local; validar via getUser().
+        const { data: verifiedUserData, error: verifiedUserError } = await supabase.auth.getUser();
+        if (verifiedUserError || !verifiedUserData.user) {
+          hasFetchedRef.current = false;
+          await invalidateSession();
+          return;
+        }
+
+        if (!userRef.current || userRef.current.authUserId !== verifiedUserData.user.id) {
           hasFetchedRef.current = false;
           await fetchUserData(controller.signal);
         }

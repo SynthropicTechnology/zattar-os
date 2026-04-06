@@ -3,60 +3,9 @@
 import { use, Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  Scale,
-  Calendar,
-  FolderOpen,
-  Microscope,
-  Handshake,
-  CalendarCheck,
-  FileEdit,
-  PenTool,
-  Briefcase,
-  UserCog,
-  Database,
-  Settings,
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { resolveSlug } from '../docs-registry';
-
-const categories = [
-  {
-    label: 'Navegação Principal',
-    items: [
-      { title: 'Dashboard', desc: 'Visão geral e métricas do escritório', icon: LayoutDashboard, href: '/app/ajuda/dashboard' },
-      { title: 'Partes', desc: 'Clientes, partes contrárias, terceiros e representantes', icon: Users, href: '/app/ajuda/partes/clientes' },
-      { title: 'Contratos', desc: 'Gestão de contratos de honorários', icon: FileText, href: '/app/ajuda/contratos' },
-      { title: 'Processos', desc: 'Processos judiciais e timeline', icon: Scale, href: '/app/ajuda/processos' },
-      { title: 'Audiências', desc: 'Agenda de audiências e pautas', icon: Calendar, href: '/app/ajuda/audiencias' },
-      { title: 'Expedientes', desc: 'Intimações e prazos do tribunal', icon: FolderOpen, href: '/app/ajuda/expedientes' },
-      { title: 'Perícias', desc: 'Perícias judiciais e laudos', icon: Microscope, href: '/app/ajuda/pericias' },
-      { title: 'Obrigações', desc: 'Acordos, condenações e parcelas', icon: Handshake, href: '/app/ajuda/obrigacoes' },
-    ],
-  },
-  {
-    label: 'Serviços',
-    items: [
-      { title: 'Planner', desc: 'Agenda, tarefas e notas', icon: CalendarCheck, href: '/app/ajuda/planner/agenda' },
-      { title: 'Documentos', desc: 'Editor de documentos com IA', icon: FileEdit, href: '/app/ajuda/documentos' },
-      { title: 'Assinatura Digital', desc: 'Documentos, templates e formulários', icon: PenTool, href: '/app/ajuda/assinatura-digital/documentos' },
-    ],
-  },
-  {
-    label: 'Gestão',
-    items: [
-      { title: 'Financeiro', desc: 'Contas, orçamentos, DRE e conciliação', icon: Briefcase, href: '/app/ajuda/financeiro/visao-geral' },
-      { title: 'Recursos Humanos', desc: 'Equipe, salários e folha de pagamento', icon: UserCog, href: '/app/ajuda/rh/equipe' },
-      { title: 'Captura', desc: 'Captura automática de dados do PJE', icon: Database, href: '/app/ajuda/captura/historico' },
-      { title: 'Configurações', desc: 'Perfil, integrações e preferências', icon: Settings, href: '/app/ajuda/configuracoes/perfil' },
-    ],
-  },
-];
 
 function DocLoading() {
   return (
