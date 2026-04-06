@@ -107,7 +107,7 @@ export function DialogFormShell({
         showCloseButton={false} // Removemos o botão X padrão
         className={cn(
           maxWidthClass,
-          "overflow-hidden",
+          "bg-card overflow-hidden",
           "p-0 gap-0", // Removemos padding padrão para controlar layout
           "transition-[max-width] duration-300 ease-in-out", // Transição suave ao mudar largura
           className

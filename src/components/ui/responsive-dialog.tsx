@@ -102,6 +102,7 @@ function ResponsiveDialogContent({
         return (
             <SheetContent
                 side="bottom"
+                showCloseButton={showCloseButton}
                 className={cn(
                     // Full-screen em mobile
                     "h-[95vh] flex flex-col",
@@ -119,7 +120,7 @@ function ResponsiveDialogContent({
 
     return (
         <DialogContent
-            showCloseIcon={showCloseButton}
+            showCloseButton={showCloseButton}
             className={cn(
                 // Garantir responsividade em desktop
                 "max-h-[90vh] flex flex-col",

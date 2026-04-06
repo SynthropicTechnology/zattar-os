@@ -256,6 +256,17 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      // Strapi Media Library (produção)
+      {
+        protocol: "https",
+        hostname: "*.zattaradvogados.com.br",
+      },
+      // Strapi local dev
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1337",
+      },
     ],
   },
   async redirects() {
@@ -294,6 +305,11 @@ const nextConfig: NextConfig = {
       {
         source: "/insights/tendencias",
         destination: "/website/insights/tendencias",
+      },
+      // Artigos dinâmicos do Strapi — deve ficar APÓS /tendencias
+      {
+        source: "/insights/:slug",
+        destination: "/website/insights/:slug",
       },
       {
         source: "/servicos",

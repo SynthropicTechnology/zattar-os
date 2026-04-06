@@ -1,0 +1,87 @@
+
+Running 3 tests using 3 workers
+
+  ✘  3 [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:78:7 › Assinatura Digital - Logged Flows › deve gerenciar formulários (16.2s)
+  ✘  2 [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:64:7 › Assinatura Digital - Logged Flows › deve gerenciar templates (16.2s)
+  ✘  1 [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:50:7 › Assinatura Digital - Logged Flows › deve acessar a gestão de documentos e visualizar os detalhes (16.2s)
+
+
+  1) [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:50:7 › Assinatura Digital - Logged Flows › deve acessar a gestão de documentos e visualizar os detalhes 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /documentos|assinaturas/i })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /documentos|assinaturas/i })[22m
+
+
+      52 |
+      53 |     // Mudar regex para ignorar case e tolerar pequenas diferenças de string.
+    > 54 |     await expect(page.getByRole('heading', { name: /documentos|assinaturas/i })).toBeVisible({ timeout: 15000 });
+         |                                                                                  ^
+      55 |
+      56 |     const newDocBtn = page.getByRole('button', { name: /novo documento/i });
+      57 |     if (await newDocBtn.isVisible()) {
+        at /Users/jordanmedeiros/Projetos/zattar-os/src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:54:82
+
+    Error Context: test-results/app-(authenticated)-assina-b8a74-os-e-visualizar-os-detalhes-chromium/error-context.md
+
+  2) [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:64:7 › Assinatura Digital - Logged Flows › deve gerenciar templates 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /templates/i })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /templates/i })[22m
+
+
+      65 |     await page.goto('/app/assinatura-digital/templates');
+      66 |
+    > 67 |     await expect(page.getByRole('heading', { name: /templates/i })).toBeVisible({ timeout: 15000 });
+         |                                                                     ^
+      68 |
+      69 |     const novoBtn = page.getByRole('button', { name: /novo template/i });
+      70 |     if (await novoBtn.isVisible()) {
+        at /Users/jordanmedeiros/Projetos/zattar-os/src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:67:69
+
+    Error Context: test-results/app-(authenticated)-assina-4605d-ws-deve-gerenciar-templates-chromium/error-context.md
+
+  3) [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:78:7 › Assinatura Digital - Logged Flows › deve gerenciar formulários 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /formul[áa]rios/i })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /formul[áa]rios/i })[22m
+
+
+      79 |     await page.goto('/app/assinatura-digital/formularios');
+      80 |
+    > 81 |     await expect(page.getByRole('heading', { name: /formul[áa]rios/i })).toBeVisible({ timeout: 15000 });
+         |                                                                          ^
+      82 |
+      83 |     const novoBtn = page.getByRole('button', { name: /novo formul[áa]rio/i });
+      84 |     if (await novoBtn.isVisible()) {
+        at /Users/jordanmedeiros/Projetos/zattar-os/src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:81:74
+
+    Error Context: test-results/app-(authenticated)-assina-ec9bb--deve-gerenciar-formulários-chromium/error-context.md
+
+  3 failed
+    [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:50:7 › Assinatura Digital - Logged Flows › deve acessar a gestão de documentos e visualizar os detalhes 
+    [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:64:7 › Assinatura Digital - Logged Flows › deve gerenciar templates 
+    [chromium] › src/app/(authenticated)/assinatura-digital/__tests__/e2e/logged-flows.spec.ts:78:7 › Assinatura Digital - Logged Flows › deve gerenciar formulários 
