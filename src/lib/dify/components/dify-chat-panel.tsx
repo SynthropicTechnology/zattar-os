@@ -56,7 +56,7 @@ export function DifyChatPanel({
     return (
         <div className={cn("flex flex-col h-full border rounded-lg bg-background", className)}>
             <div className="flex items-center p-4 border-b">
-                <Avatar className="h-8 w-8 mr-2">
+                <Avatar className="mr-2">
                     <AvatarImage src={assistantAvatar} />
                     <AvatarFallback><Bot className="h-4 w-4" /></AvatarFallback>
                 </Avatar>
@@ -83,7 +83,7 @@ export function DifyChatPanel({
                             )}
                         >
                             {msg.role === 'assistant' && (
-                                <Avatar className="h-8 w-8 mt-1 border">
+                                <Avatar className="mt-1 border">
                                     <AvatarImage src={assistantAvatar} />
                                     <AvatarFallback><Bot className="h-4 w-4" /></AvatarFallback>
                                 </Avatar>
@@ -112,7 +112,7 @@ export function DifyChatPanel({
                             </div>
 
                             {msg.role === 'user' && (
-                                <Avatar className="h-8 w-8 mt-1 border">
+                                <Avatar className="mt-1 border">
                                     <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
                                 </Avatar>
                             )}

@@ -9,6 +9,7 @@
  */
 
 import Image from 'next/image'
+import { GlassPanel } from '@/components/shared/glass-panel'
 
 export function AuthLayoutV2({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +26,7 @@ export function AuthLayoutV2({ children }: { children: React.ReactNode }) {
 
       <div className="relative z-10 w-full max-w-100 mx-4">
         {/* Glass card — matches glass-widget from dashboard */}
-        <div className="w-full glass-widget rounded-2xl border border-border/20 px-8 py-10 sm:px-10 sm:py-12">
+        <GlassPanel className="px-8 py-10 sm:px-10 sm:py-12 w-full">
           {/* Logo — dentro do card */}
           <div className="flex justify-center mb-8">
             <div className="relative h-16 w-72">
@@ -46,7 +47,7 @@ export function AuthLayoutV2({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           {children}
-        </div>
+        </GlassPanel>
       </div>
     </div>
   )

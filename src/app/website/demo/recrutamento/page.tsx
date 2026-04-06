@@ -518,7 +518,7 @@ export default function RecrutamentoScorecardPage() {
 
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8">
+                            <Avatar>
                               <AvatarFallback
                                 className={`${candidate.avatarColor} text-on-surface text-xs font-medium`}
                               >

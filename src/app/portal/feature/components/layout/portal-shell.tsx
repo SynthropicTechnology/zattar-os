@@ -105,7 +105,7 @@ export function PortalShell({ children, clientName = "Cliente" }: PortalShellPro
               <span className="text-sm text-portal-text-muted hidden sm:inline mr-1">
                 {clientName.split(" ")[0]}
               </span>
-              <Avatar className="h-8 w-8">
+              <Avatar>
                 <AvatarFallback className="text-xs">{initials}</AvatarFallback>
               </Avatar>
             </button>

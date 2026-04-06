@@ -927,6 +927,27 @@ Nunca hardcodar cores de badges. Usar `getSemanticBadgeVariant(category, value)`
 
 ---
 
+## 17. Componentes Tipados — Resumo de Enforcement
+
+Todos os tokens visuais criticos sao enforced por componentes React tipados:
+
+| Componente | Import | Props Tipadas | Cobertura |
+|-----------|--------|---------------|-----------|
+| `<Heading>` | `@/components/ui/typography` | `level`: page, section, card, subsection, widget | Titulos |
+| `<Text>` | `@/components/ui/typography` | `variant`: kpi-value, meta-label, caption, widget-sub, label, micro-badge, micro-caption, overline | Micro-tipografia |
+| `<Avatar>` | `@/components/ui/avatar` | `size`: xs, sm, md, lg, xl, 2xl, 3xl | Avatares |
+| `<IconContainer>` | `@/components/ui/icon-container` | `size`: xs, sm, md, lg | Icones com background |
+| `<GlassPanel>` | `@/components/shared/glass-panel` | `depth`: 1, 2, 3 | Containers glass |
+| `<SemanticBadge>` | `@/components/ui/semantic-badge` | `category` + `value` (27 categorias) | Badges coloridos |
+| `<EmptyState>` | `@/components/shared/empty-state` | `icon`, `title`, `description`, `action` | Estados vazios |
+| `<PageShell>` | `@/components/shared/page-shell` | `title`, `actions`, `badge` | Layout de pagina |
+| `<DataShell>` | `@/components/shared/data-shell` | `header`, `footer` | Layout de tabela |
+
+> **Regra**: Usar SEMPRE o componente tipado. Compor classes CSS manualmente e proibido
+> para titulos, badges, avatares, icon containers e glass panels.
+
+---
+
 ## Apendice: Mapa de Arquivos
 
 ```

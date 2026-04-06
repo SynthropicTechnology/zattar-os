@@ -32,7 +32,7 @@ export function PortalHeader({ clientName }: { clientName: string }) {
           </p>
           <p className="text-xs text-portal-text-muted">Portal do Cliente</p>
         </div>
-        <Avatar className="h-8 w-8">
+        <Avatar>
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </div>

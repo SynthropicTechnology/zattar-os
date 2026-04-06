@@ -172,7 +172,7 @@ export function TwoFAuthConfigContent() {
       : "2F";
 
     return (
-      <Avatar className="h-10 w-10 bg-primary/10">
+      <Avatar size="lg" className="bg-primary/10">
         {hasValidIcon ? (
           <AvatarImage src={account.icon!} alt={account.service || "2FA"} className="object-cover" />
         ) : null}
