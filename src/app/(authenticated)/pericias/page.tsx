@@ -1,16 +1,16 @@
-import { PericiasMockClient } from '@/app/(authenticated)/pericias/components/pericias-mock-client';
+import { PericiasClient } from '@/app/(authenticated)/pericias/components/pericias-client';
 import { PageShell } from '@/components/shared';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * Página raiz de Perícias
- * Renderiza visualização unificada com alternância entre semana, mês, ano e lista
+ * Renderiza visualização unificada baseada no Neon Magistrate.
  */
 export default function PericiasPage() {
   return (
     <PageShell>
-      <PericiasMockClient />
+      <PericiasClient />
     </PageShell>
   );
 }

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sheet";
 
 const navLinks = [
-  { href: "#solucoes", label: "Soluções" },
+  { href: "/servicos", label: "Serviços" },
   { href: "/expertise", label: "Especialidades" },
   { href: "/insights", label: "Insights" },
   { href: "/contato", label: "Contato" },
@@ -84,11 +84,7 @@ export function Header() {
           <Link
             key={link.href}
             href={link.href}
-            className={`transition-colors duration-300 font-headline tracking-tight hover:text-primary-dim ${
-              link.href === "#solucoes"
-                ? "text-primary font-bold"
-                : "text-on-surface-variant"
-            }`}
+            className={`transition-colors duration-300 font-headline tracking-tight hover:text-primary-dim text-on-surface-variant`}
           >
             {link.label}
           </Link>

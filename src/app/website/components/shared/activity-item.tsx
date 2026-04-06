@@ -36,7 +36,7 @@ export function ActivityItem({
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-white">{title}</p>
+        <p className="text-sm text-on-surface">{title}</p>
         <span className="text-[10px] font-bold text-outline uppercase">
           {timestamp}
         </span>

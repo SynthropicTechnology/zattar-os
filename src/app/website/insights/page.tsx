@@ -5,17 +5,17 @@ import { ArrowRight, Bookmark, ExternalLink } from "lucide-react";
 export default function InsightsPage() {
   return (
     <WebsiteShell>
-      <div className="pt-28">
+      <div className="pt-32">
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto mt-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-end">
           <div className="md:col-span-8 relative z-10">
-            <span className="text-primary font-bold tracking-widest text-sm uppercase mb-6 block drop-shadow-[0_0_10px_rgba(204,151,255,0.5)]">
+            <span className="text-primary font-bold tracking-widest text-sm uppercase mb-6 block drop-shadow-[0_0_10px_rgb(var(--color-primary)/0.5)]">
               Inteligência Editorial
             </span>
-            <h1 className="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] mb-8 text-white">
-              Insights e Tendências do <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim drop-shadow-[0_0_15px_rgba(204,151,255,0.4)]">Direito do Amanhã.</span>
+            <h1 className="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] mb-8 text-on-surface">
+              Insights e Tendências do <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim drop-shadow-[0_0_15px_rgb(var(--color-primary)/0.4)]">Direito do Amanhã.</span>
             </h1>
             <p className="font-body text-xl text-on-surface-variant max-w-2xl leading-relaxed">
               Navegando na interseção entre tecnologia disruptiva e segurança jurídica para as equipes de alta performance da próxima década.
@@ -31,7 +31,7 @@ export default function InsightsPage() {
       <section className="max-w-7xl mx-auto px-6 mb-16">
         <div className="flex flex-wrap gap-4 items-center">
           <span className="text-on-surface-variant font-medium mr-4">Filtrar por:</span>
-          <button className="bg-primary text-on-primary-fixed px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:bg-primary-container shadow-[0_0_15px_rgba(204,151,255,0.2)]">
+          <button className="bg-primary text-on-primary-fixed px-6 py-2.5 rounded-full text-sm font-semibold transition-all hover:bg-primary-container shadow-[0_0_15px_rgb(var(--color-primary)/0.2)]">
             Todos os Recursos
           </button>
           <button className="bg-surface-container-highest text-primary px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white/10 transition-all border border-white/5">
@@ -64,25 +64,25 @@ export default function InsightsPage() {
                 </span>
                 <span className="text-on-surface-variant text-sm font-medium">Leitura de 12 Min</span>
               </div>
-              <h2 className="font-headline text-3xl md:text-5xl font-extrabold text-white mb-4 group-hover:text-primary transition-colors leading-[1.1]">
+              <h2 className="font-headline text-3xl md:text-5xl font-extrabold text-on-surface mb-4 group-hover:text-primary transition-colors leading-[1.1]">
                 O Impacto da IA Generativa em Processos Trabalhistas
               </h2>
               <p className="text-on-surface mb-8 line-clamp-2 max-w-xl text-lg leading-relaxed">
                 Uma análise profunda sobre como algoritmos estão moldando novas jurisprudências e o que isso significa para o futuro das relações de trabalho virtuais.
               </p>
-              <button className="flex items-center gap-3 text-white font-bold group/btn hover:text-primary transition-colors text-lg">
+              <Link href="/insights/tendencias" className="flex items-center gap-3 text-on-surface font-bold group/btn hover:text-primary transition-colors text-lg">
                 Ler Artigo Completo
                 <ArrowRight className="group-hover/btn:translate-x-2 transition-transform w-5 h-5" />
-              </button>
+              </Link>
             </div>
           </div>
 
           {/* Secondary Featured */}
           <div className="flex flex-col gap-6">
             {/* Card 2 */}
-            <Link href="#" className="bg-surface-container border border-white/5 p-8 rounded-3xl group hover:border-primary/30 transition-all flex flex-col h-full shadow-lg hover:shadow-[0_0_20px_rgba(204,151,255,0.05)]">
+            <Link href="/insights/tendencias" className="bg-surface-container border border-white/5 p-8 rounded-3xl group hover:border-primary/30 transition-all flex flex-col h-full shadow-lg hover:shadow-[0_0_20px_rgb(var(--color-primary)/0.05)]">
               <span className="text-primary font-bold text-xs uppercase mb-4 block tracking-wider">Tecnologia</span>
-              <h3 className="font-headline text-2xl font-bold text-white mb-4 group-hover:text-primary transition-colors leading-tight">
+              <h3 className="font-headline text-2xl font-bold text-on-surface mb-4 group-hover:text-primary transition-colors leading-tight">
                 Blockchain e a Prova Digital: O Fim da Contestação?
               </h3>
               <p className="text-on-surface-variant text-sm mb-6 leading-relaxed grow">
@@ -95,9 +95,9 @@ export default function InsightsPage() {
             </Link>
 
             {/* Card 3 */}
-            <Link href="#" className="bg-surface-container border border-white/5 p-8 rounded-3xl group hover:border-primary/30 transition-all flex flex-col h-full shadow-lg hover:shadow-[0_0_20px_rgba(204,151,255,0.05)]">
+            <Link href="/insights/tendencias" className="bg-surface-container border border-white/5 p-8 rounded-3xl group hover:border-primary/30 transition-all flex flex-col h-full shadow-lg hover:shadow-[0_0_20px_rgb(var(--color-primary)/0.05)]">
               <span className="text-primary font-bold text-xs uppercase mb-4 block tracking-wider">Novas Leis</span>
-              <h3 className="font-headline text-2xl font-bold text-white mb-4 group-hover:text-primary transition-colors leading-tight">
+              <h3 className="font-headline text-2xl font-bold text-on-surface mb-4 group-hover:text-primary transition-colors leading-tight">
                 A Regulamentação do Trabalho Híbrido Transfronteiriço
               </h3>
               <p className="text-on-surface-variant text-sm mb-6 leading-relaxed grow">
@@ -118,9 +118,9 @@ export default function InsightsPage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
             <div>
               <span className="text-primary font-bold tracking-widest text-xs uppercase mb-3 block">Análises Profundas</span>
-              <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-white">Arquivos da Zattar</h2>
+              <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-on-surface">Arquivos da Zattar</h2>
             </div>
-            <Link href="#" className="text-on-surface-variant hover:text-white transition-colors border-b border-on-surface-variant/30 hover:border-white pb-1 flex items-center gap-2 font-medium">
+            <Link href="/insights/tendencias" className="text-on-surface-variant hover:text-on-surface transition-colors border-b border-on-surface-variant/30 hover:border-white pb-1 flex items-center gap-2 font-medium">
               Ver Todos os Arquivos
               <ExternalLink className="w-4 h-4 border border-x-indigo-50" />
             </Link>
@@ -128,7 +128,7 @@ export default function InsightsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
             {/* List Item 1 */}
-            <Link href="#" className="flex flex-col sm:flex-row gap-6 group">
+            <Link href="/insights/tendencias" className="flex flex-col sm:flex-row gap-6 group">
               <div className="shrink-0 w-full sm:w-40 h-40 rounded-2xl bg-surface-container-highest overflow-hidden relative">
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
@@ -139,7 +139,7 @@ export default function InsightsPage() {
               </div>
               <div className="flex flex-col justify-center">
                 <span className="text-primary text-xs font-bold uppercase mb-2 block tracking-wider">Policy Review</span>
-                <h4 className="font-headline text-xl lg:text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors leading-tight">
+                <h4 className="font-headline text-xl lg:text-2xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors leading-tight">
                   Privacidade de Dados no Ambiente Corporativo
                 </h4>
                 <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2">
@@ -149,7 +149,7 @@ export default function InsightsPage() {
             </Link>
 
             {/* List Item 2 */}
-            <Link href="#" className="flex flex-col sm:flex-row gap-6 group">
+            <Link href="/insights/tendencias" className="flex flex-col sm:flex-row gap-6 group">
               <div className="shrink-0 w-full sm:w-40 h-40 rounded-2xl bg-surface-container-highest overflow-hidden relative">
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
@@ -160,7 +160,7 @@ export default function InsightsPage() {
               </div>
               <div className="flex flex-col justify-center">
                 <span className="text-primary text-xs font-bold uppercase mb-2 block tracking-wider">Contract Law</span>
-                <h4 className="font-headline text-xl lg:text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors leading-tight">
+                <h4 className="font-headline text-xl lg:text-2xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors leading-tight">
                   Smart Contracts: Automação de Acordos
                 </h4>
                 <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2">
@@ -170,7 +170,7 @@ export default function InsightsPage() {
             </Link>
 
             {/* List Item 3 */}
-            <Link href="#" className="flex flex-col sm:flex-row gap-6 group">
+            <Link href="/insights/tendencias" className="flex flex-col sm:flex-row gap-6 group">
               <div className="shrink-0 w-full sm:w-40 h-40 rounded-2xl bg-surface-container-highest overflow-hidden relative">
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
@@ -181,7 +181,7 @@ export default function InsightsPage() {
               </div>
               <div className="flex flex-col justify-center">
                 <span className="text-primary text-xs font-bold uppercase mb-2 block tracking-wider">Cybersecurity</span>
-                <h4 className="font-headline text-xl lg:text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors leading-tight">
+                <h4 className="font-headline text-xl lg:text-2xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors leading-tight">
                   Responsabilidade Civil em Vazamentos de Dados
                 </h4>
                 <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2">
@@ -191,7 +191,7 @@ export default function InsightsPage() {
             </Link>
 
             {/* List Item 4 */}
-            <Link href="#" className="flex flex-col sm:flex-row gap-6 group">
+            <Link href="/insights/tendencias" className="flex flex-col sm:flex-row gap-6 group">
               <div className="shrink-0 w-full sm:w-40 h-40 rounded-2xl bg-surface-container-highest overflow-hidden relative">
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
@@ -202,7 +202,7 @@ export default function InsightsPage() {
               </div>
               <div className="flex flex-col justify-center">
                 <span className="text-primary text-xs font-bold uppercase mb-2 block tracking-wider">Investimentos</span>
-                <h4 className="font-headline text-xl lg:text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors leading-tight">
+                <h4 className="font-headline text-xl lg:text-2xl font-bold text-on-surface mb-3 group-hover:text-primary transition-colors leading-tight">
                   O Jurídico como Centro de Inteligência
                 </h4>
                 <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2">
@@ -222,7 +222,7 @@ export default function InsightsPage() {
           
           <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 p-12 md:p-20 items-center">
             <div>
-              <h2 className="font-headline text-4xl md:text-5xl font-extrabold mb-6 text-white tracking-tight leading-tight">
+              <h2 className="font-headline text-4xl md:text-5xl font-extrabold mb-6 text-on-surface tracking-tight leading-tight">
                 Fique por dentro das <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim">atualizações jurídicas.</span>
               </h2>
               <p className="text-on-surface-variant text-lg leading-relaxed max-w-lg">
@@ -233,7 +233,7 @@ export default function InsightsPage() {
             <div className="space-y-4 max-w-xl lg:ml-auto w-full">
               <div className="flex flex-col sm:flex-row gap-4">
                 <input 
-                  className="grow bg-surface-container-high border border-white/5 focus:border-primary/50 rounded-xl px-6 py-5 text-white placeholder:text-on-surface-variant focus:ring-1 focus:ring-primary/50 outline-none transition-all shadow-inner" 
+                  className="grow bg-surface-container-high border border-white/5 focus:border-primary/50 rounded-xl px-6 py-5 text-on-surface placeholder:text-on-surface-variant focus:ring-1 focus:ring-primary/50 outline-none transition-all shadow-inner" 
                   placeholder="Seu melhor e-mail" 
                   type="email"
                 />

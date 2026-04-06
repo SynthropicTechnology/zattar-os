@@ -273,10 +273,10 @@ function calculateWeightedTotal(scores: Record<string, number>): number {
 
 
 function getTotalScoreColorClass(score: number): string {
-  if (score >= 85) return 'bg-emerald-600 text-white'
-  if (score >= 75) return 'bg-sky-600 text-white'
-  if (score >= 65) return 'bg-amber-600 text-white'
-  return 'bg-rose-600 text-white'
+  if (score >= 85) return 'bg-emerald-600 text-on-surface'
+  if (score >= 75) return 'bg-sky-600 text-on-surface'
+  if (score >= 65) return 'bg-amber-600 text-on-surface'
+  return 'bg-rose-600 text-on-surface'
 }
 
 const statusConfig = {
@@ -520,7 +520,7 @@ export default function RecrutamentoScorecardPage() {
                           <div className="flex items-center gap-3">
                             <Avatar className="h-8 w-8">
                               <AvatarFallback
-                                className={`${candidate.avatarColor} text-white text-xs font-medium`}
+                                className={`${candidate.avatarColor} text-on-surface text-xs font-medium`}
                               >
                                 {candidate.initials}
                               </AvatarFallback>

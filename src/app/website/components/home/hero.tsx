@@ -23,16 +23,16 @@ export function Hero() {
 
       {/* Content */}
       <div className="container mx-auto px-5 sm:px-6 md:px-8 z-10 text-center relative pt-20 md:pt-0">
-        <span className="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white font-label text-xs font-bold uppercase tracking-widest mb-4 md:mb-6">
+        <span className="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm text-on-surface font-label text-xs font-bold uppercase tracking-widest mb-4 md:mb-6">
           A Nova Era da Advocacia Trabalhista
         </span>
-        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold font-headline leading-[0.95] tracking-tighter mb-6 md:mb-8 text-white">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold font-headline leading-[0.95] tracking-tighter mb-6 md:mb-8 text-on-surface">
           Justiça para <br />
           <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
             quem trabalha.
           </span>
         </h1>
-        <p className="text-base sm:text-lg md:text-2xl text-white/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed">
+        <p className="text-base sm:text-lg md:text-2xl text-on-surface/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed">
           Unimos tecnologia de ponta e expertise jurídica para garantir que seus
           direitos sejam respeitados com a velocidade que o mundo moderno exige.
         </p>
@@ -46,7 +46,7 @@ export function Hero() {
           </Link>
           <Link
             href="#solucoes"
-            className="border border-white/50 bg-white/5 backdrop-blur-sm text-white px-8 py-4 sm:px-10 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:bg-white/15 hover:border-white/70 transition-all flex items-center justify-center"
+            className="border border-white/50 bg-white/5 backdrop-blur-sm text-on-surface px-8 py-4 sm:px-10 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:bg-white/15 hover:border-white/70 transition-all flex items-center justify-center"
           >
             Nossas Soluções
           </Link>

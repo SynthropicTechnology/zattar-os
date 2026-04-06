@@ -36,7 +36,7 @@ export function TimelineEntry({
       <div className="flex items-center gap-4">
         <div className={cn("w-3 h-3 rounded-full shrink-0", dotColor)} />
         <div>
-          <p className="font-bold text-white">{title}</p>
+          <p className="font-bold text-on-surface">{title}</p>
           {subtitle && (
             <p className="text-xs text-on-surface-variant">{subtitle}</p>
           )}

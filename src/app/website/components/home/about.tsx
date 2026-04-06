@@ -54,9 +54,12 @@ export function About() {
               >
                 Fale com um Especialista
               </a>
-              <button className="bg-on-surface text-surface-container-lowest px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:bg-primary hover:text-on-primary transition-all text-center">
+              <a
+                href="/expertise"
+                className="bg-on-surface text-surface-container-lowest px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:bg-primary hover:text-on-primary transition-all text-center"
+              >
                 Conheça nossa Metodologia
-              </button>
+              </a>
             </div>
           </div>
         </div>

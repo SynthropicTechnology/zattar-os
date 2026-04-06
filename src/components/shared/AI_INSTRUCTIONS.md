@@ -7,6 +7,24 @@ Agentes de IA **DEVEM** seguir estes padrões exatamente.
 
 ---
 
+## 🚨 SYSTEM DESIGN MANDATÓRIO: "NEON MAGISTRATE" (Glass Briefing)
+
+**O Zattar OS (Sinesys) evoluiu seu padrão arquitetural para o "Neon Magistrate". O uso isolado e simplório das classes nativas do Shadcn (ex: `bg-card border-border/20`) em Dashboards, Painéis Hero ou Módulos Principais ESTÁ DEPRECADO.**
+
+Você **SEMPRE** deve priorizar a injeção do pacote de primitivas avançadas (Glass Effects, Micro-tipografia) implementadas atualmente nos módulos mais densos.
+
+### Regras do Neon Magistrate
+1. **Painéis Principais e Cards (Glass Effects):** Não utilize `<div className="bg-card">`. Utilize o componente central `<GlassPanel depth={1 | 2 | 3}>` de `@/components/shared/glass-panel`.
+2. **Ambiente Glow / Blur:** Para componentes Hero, injetar luzes de fundo atmosféricas atrás do conteúdo: `<div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none" />`
+3. **Indicadores Numéricos Dinâmicos:** Ao exibir números chave ou estatísticas numéricas principais, **NÃO** exiba plain text estático. Encape-os dentro de `<AnimatedNumber value={value} />` (originário de `@/app/(authenticated)/dashboard/mock/widgets/primitives`).
+4. **Resumos Analíticos (Tendências):** Qualquer métrica de dashboard orientada a variação ou tempo requer o componente de suporte `<Sparkline data={trendArray} />`.
+5. **Micro-Tipografia de Alta Definição:** Use fontes customizadas `font-display` para manchetes e números. Para legendas diminutas e sub-itens não adote `text-xs`. Utilize micro-tipografias manuais tailwind: `text-[9px]`, `text-[10px]` com `font-medium uppercase tracking-wider text-muted-foreground/60`.
+6. **Tokens Geométricos Uniformes:** Troque utilitários tailwind antigos como `w-4 h-4` pela sintaxe moderna aglutinada `size-4`, e para ícones encapsulados utilize `size-8 rounded-lg bg-primary/8 text-primary flex items-center justify-center`.
+
+Qualquer refatoração requer obrigatoriamente a atualização dos componentes para esta diretriz de estado da arte.
+
+---
+
 ## Referência Rápida: Qual Componente Usar
 
 | Caso de Uso | Componente | Import |

@@ -41,7 +41,7 @@ export function FeatureCard({
 
         <h3
           className={cn(
-            "font-headline font-bold text-white mb-4",
+            "font-headline font-bold text-on-surface mb-4",
             wide ? "text-3xl" : "text-2xl"
           )}
         >

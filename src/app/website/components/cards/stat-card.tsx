@@ -42,7 +42,7 @@ export function StatCard({
         </div>
       </div>
       <div>
-        <h3 className="text-3xl font-black font-headline tracking-tighter text-white">
+        <h3 className="text-3xl font-black font-headline tracking-tighter text-on-surface">
           {value}
         </h3>
         {change !== undefined && (

@@ -282,6 +282,43 @@ const nextConfig: NextConfig = {
         source: "/app/:path*",
         destination: "/:path*",
       },
+      // Website public pages — expose without /website/ prefix
+      {
+        source: "/expertise",
+        destination: "/website/expertise",
+      },
+      {
+        source: "/insights",
+        destination: "/website/insights",
+      },
+      {
+        source: "/insights/tendencias",
+        destination: "/website/insights/tendencias",
+      },
+      {
+        source: "/servicos",
+        destination: "/website/servicos",
+      },
+      {
+        source: "/solucoes",
+        destination: "/website/solucoes",
+      },
+      {
+        source: "/contato",
+        destination: "/website/contato",
+      },
+      {
+        source: "/faq",
+        destination: "/website/faq",
+      },
+      {
+        source: "/politica-de-privacidade",
+        destination: "/website/politica-de-privacidade",
+      },
+      {
+        source: "/termos-de-uso",
+        destination: "/website/termos-de-uso",
+      },
     ];
   },
   async headers() {

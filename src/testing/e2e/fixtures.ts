@@ -54,6 +54,70 @@ export const test = base.extend<CustomFixtures>({
       })
     );
 
+    // Add Supabase Cookies to prevent Server Components from throwing AuthSessionMissingError
+    await page.context().addCookies([
+      { name: 'sb-mocked-auth-token', value: 'mock-token', domain: 'localhost', path: '/' },
+      { name: 'sb-ec9bb-auth-token', value: 'mock-token', domain: 'localhost', path: '/' },
+      { name: 'sb-127.0.0.1-auth-token', value: 'mock-token', domain: 'localhost', path: '/' },
+      { name: 'sb-localhost-auth-token', value: 'mock-token', domain: 'localhost', path: '/' }
+    ]);
+    
+    // Add Supabase LocalStorage mock to prevent Supabase Auth client from throwing AuthSessionMissingError
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'sb-mocked-auth-token',
+        JSON.stringify({
+          access_token: 'mock-token',
+          refresh_token: 'mock-token',
+          expires_in: 3600,
+          expires_at: Math.floor(Date.now() / 1000) + 3600,
+          token_type: 'bearer',
+          user: {
+            id: 'mock-auth',
+            aud: 'authenticated',
+            role: 'authenticated',
+            email: 'admin@zattar.com',
+            app_metadata: {},
+            user_metadata: {},
+          },
+        })
+      );
+      // Try multiple possible Supabase refs
+      window.localStorage.setItem('sb-ec9bb-auth-token', window.localStorage.getItem('sb-mocked-auth-token')!);
+      window.localStorage.setItem('sb-127.0.0.1-auth-token', window.localStorage.getItem('sb-mocked-auth-token')!);
+      window.localStorage.setItem('sb-localhost-auth-token', window.localStorage.getItem('sb-mocked-auth-token')!);
+    });
+
+    // Mock network call for getUser()
+    await page.route('**/auth/v1/user', async (route) => {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: 'mock-auth',
+          aud: 'authenticated',
+          role: 'authenticated',
+          email: 'admin@zattar.com',
+          app_metadata: {},
+          user_metadata: {},
+          created_at: '2025-01-01T00:00:00Z',
+          updated_at: '2025-01-01T00:00:00Z'
+        }),
+      });
+    });
+
+    // Mock network call for /api/auth/me
+    await page.route('**/api/auth/me', async (route) => {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          data: { id: 1, authUserId: 'mock-auth', nomeCompleto: 'Admin', isSuperAdmin: true, permissoes: [] }
+        }),
+      });
+    });
+
     // Setup de mocks globais para todas as features
     await mockCommonAPIs(page);
     await mockProcessosAPI(page);

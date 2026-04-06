@@ -61,7 +61,7 @@ export function ArticleCard({
               </span>
             )}
           </div>
-          <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-white mb-4 group-hover:text-primary transition-colors">
+          <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-on-surface mb-4 group-hover:text-primary transition-colors">
             {title}
           </h2>
           {description && (
@@ -69,7 +69,7 @@ export function ArticleCard({
               {description}
             </p>
           )}
-          <span className="flex items-center gap-2 text-white font-bold">
+          <span className="flex items-center gap-2 text-on-surface font-bold">
             Ler Artigo Completo
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </span>

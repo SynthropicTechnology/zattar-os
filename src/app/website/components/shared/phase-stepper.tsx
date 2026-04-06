@@ -29,9 +29,9 @@ export function PhaseStepper({ steps, className }: PhaseStepperProps) {
                 className={cn(
                   "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all",
                   step.status === "completed" &&
-                    "bg-primary text-on-primary-fixed shadow-[0_0_10px_rgba(204,151,255,0.4)]",
+                    "bg-primary text-on-primary-fixed shadow-[0_0_10px_rgb(var(--color-primary)/0.4)]",
                   step.status === "current" &&
-                    "bg-primary/20 text-primary ring-2 ring-primary/40 shadow-[0_0_10px_rgba(204,151,255,0.3)]",
+                    "bg-primary/20 text-primary ring-2 ring-primary/40 shadow-[0_0_10px_rgb(var(--color-primary)/0.3)]",
                   step.status === "pending" &&
                     "bg-surface-container-highest text-on-surface-variant"
                 )}

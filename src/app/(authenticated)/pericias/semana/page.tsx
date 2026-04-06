@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PericiasContent } from '@/app/(authenticated)/pericias';
+import { PericiasClient } from '@/app/(authenticated)/pericias/components/pericias-client';
 import { PageShell } from '@/components/shared';
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export default function PericiasSemanaPage() {
   return (
     <PageShell>
-      <PericiasContent visualizacao="semana" />
+      <PericiasClient initialView="semana" />
     </PageShell>
   );
 }

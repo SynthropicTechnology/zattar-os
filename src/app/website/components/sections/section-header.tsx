@@ -35,7 +35,7 @@ export function SectionHeader({
         {kicker && (
           <span className="label-md mb-4 block">{kicker}</span>
         )}
-        <h2 className="headline-lg text-white">{title}</h2>
+        <h2 className="headline-lg text-on-surface">{title}</h2>
         {description && (
           <p className="body-editorial mt-4 max-w-lg">{description}</p>
         )}

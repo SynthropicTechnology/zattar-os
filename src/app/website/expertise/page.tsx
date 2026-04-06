@@ -1,5 +1,7 @@
 import { WebsiteShell } from "@/app/website";
+import Link from "next/link";
 import { Shield, Users, Search, ArrowRight, Atom, Scale } from "lucide-react";
+
 
 export default function ExpertisePage() {
   return (
@@ -23,7 +25,7 @@ export default function ExpertisePage() {
             </p>
           </div>
           <div className="md:col-span-5 relative mt-12 md:mt-0">
-            <div className="aspect-square rounded-full border border-primary/20 absolute -top-12 -right-12 w-full animate-pulse"></div>
+            <div className="aspect-square rounded-full border border-primary/20 absolute -top-12 -right-12 w-full"></div>
             <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl relative z-10 border border-white/5 bg-surface-container">
               <img
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 opacity-60"
@@ -93,9 +95,9 @@ export default function ExpertisePage() {
               <p className="text-on-primary-fixed/80 leading-relaxed mb-8">
                 Inteligência antecipatória para evitar o contencioso. Auditamos processos internos com precisão cirúrgica antes que se tornem passivos.
               </p>
-              <button className="mt-auto flex items-center gap-2 font-bold uppercase text-xs tracking-widest hover:pl-2 transition-all">
+              <Link href="/contato" className="mt-auto flex items-center gap-2 font-bold uppercase text-xs tracking-widest hover:pl-2 transition-all">
                 Saiba Mais <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
 
             {/* Expertise Adicional / Visual */}
@@ -107,9 +109,9 @@ export default function ExpertisePage() {
                     Due diligence automatizada e estruturação societária para startups em rodadas de investimento (Series A-E).
                   </p>
                   <div className="flex -space-x-3">
-                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-white shadow-md">M&A</div>
-                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-white shadow-md">EXIT</div>
-                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-white shadow-md">IPO</div>
+                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface shadow-md">M&A</div>
+                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface shadow-md">EXIT</div>
+                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface shadow-md">IPO</div>
                   </div>
                 </div>
                 <div className="relative hidden sm:block h-full min-h-50">
@@ -141,7 +143,7 @@ export default function ExpertisePage() {
                     <Atom className="text-primary w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold mb-1 text-white">Célula de Engenharia Legal</h4>
+                    <h4 className="font-bold mb-1 text-on-surface">Célula de Engenharia Legal</h4>
                     <p className="text-sm text-on-surface-variant">Desenvolvimento de automações customizadas para fluxos de compliance.</p>
                   </div>
                 </div>
@@ -151,7 +153,7 @@ export default function ExpertisePage() {
                     <Scale className="text-primary w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold mb-1 text-white">Conselho Consultivo Sênior</h4>
+                    <h4 className="font-bold mb-1 text-on-surface">Conselho Consultivo Sênior</h4>
                     <p className="text-sm text-on-surface-variant">Doutores em Direito focados em estratégias de alto impacto jurídico.</p>
                   </div>
                 </div>
@@ -189,12 +191,12 @@ export default function ExpertisePage() {
                 Seu time merece a segurança de um magistrado com a velocidade de um processador.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-6 w-full max-w-md mx-auto">
-                <button className="bg-primary text-on-primary-fixed px-10 py-4 rounded-xl font-bold text-lg hover:bg-primary-container transition-all shadow-lg shadow-primary/20 active:scale-95 w-full sm:w-auto text-center">
+                <Link href="/contato" className="bg-primary text-on-primary-fixed px-10 py-4 rounded-xl font-bold text-lg hover:bg-primary-container transition-all shadow-lg shadow-primary/20 active:scale-95 w-full sm:w-auto text-center">
                   Agendar Consultoria
-                </button>
-                <button className="border border-outline-variant/30 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/5 transition-all w-full sm:w-auto text-center">
+                </Link>
+                <Link href="/contato" className="border border-outline-variant/30 text-on-surface px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/5 transition-all w-full sm:w-auto text-center">
                   Falar com Especialista
-                </button>
+                </Link>
               </div>
             </div>
           </div>
