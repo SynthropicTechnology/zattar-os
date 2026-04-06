@@ -347,6 +347,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
               onToday: weekNav.goToToday,
               isCurrentWeek: weekNav.isCurrentWeek,
             }}
+            expedientes={filteredExpedientes}
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
           />
@@ -354,15 +355,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
         {!isLoading && viewMode === 'mes' && (
           <ExpedientesMonthWrapper
-            usuariosData={usuarios}
-            tiposExpedientesData={tiposExpedientes}
+            expedientes={filteredExpedientes}
+            onViewDetail={handleViewDetail}
           />
         )}
 
         {!isLoading && viewMode === 'ano' && (
           <ExpedientesYearWrapper
-            usuariosData={usuarios}
-            tiposExpedientesData={tiposExpedientes}
+            expedientes={filteredExpedientes}
           />
         )}
       </main>

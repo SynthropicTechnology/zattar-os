@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { format, isSameDay, parseISO } from 'date-fns';
+import { format, isSameDay, parseISO, startOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
   AlertTriangle,
@@ -24,7 +24,6 @@ import {
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
-import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
 import {
   AnimatedNumber,
   UrgencyDot,
@@ -35,7 +34,6 @@ import { cn } from '@/lib/utils';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 
 import { GRAU_TRIBUNAL_LABELS, type Expediente } from '../domain';
-import { useExpedientes } from '../hooks/use-expedientes';
 
 // =============================================================================
 // TIPOS
@@ -57,10 +55,11 @@ interface TipoExpedienteData {
 
 export interface ExpedientesWeekMissionProps {
   weekNavigatorProps: Omit<WeekNavigatorProps, 'className' | 'variant'>;
-  viewModeSlot?: React.ReactNode;
-  settingsSlot?: React.ReactNode;
+  expedientes: Expediente[];
   usuariosData?: UsuarioData[];
   tiposExpedientesData?: TipoExpedienteData[];
+  onBaixar?: (expediente: Expediente) => void;
+  onViewDetail?: (expediente: Expediente) => void;
 }
 
 // =============================================================================
@@ -235,33 +234,28 @@ function MissionItem({
 
 export function ExpedientesWeekMission({
   weekNavigatorProps,
-  viewModeSlot,
-  settingsSlot,
+  expedientes,
   usuariosData,
   tiposExpedientesData,
 }: ExpedientesWeekMissionProps) {
   const selectedDate = weekNavigatorProps.selectedDate;
 
-  // Fetch todos os expedientes da semana (pendentes + baixados)
-  const { expedientes: pendentes, isLoading: loadingPendentes, error: errorPendentes, refetch: refetchPendentes } = useExpedientes({
-    pagina: 1,
-    limite: 200,
-    baixado: false,
-    incluirSemPrazo: true,
-    dataPrazoLegalInicio: format(weekNavigatorProps.weekDays[0]?.date ?? selectedDate, 'yyyy-MM-dd'),
-    dataPrazoLegalFim: format(weekNavigatorProps.weekDays[weekNavigatorProps.weekDays.length - 1]?.date ?? selectedDate, 'yyyy-MM-dd'),
-  });
+  // Filter received expedientes to the current week's date range
+  const weekExpedientes = React.useMemo(() => {
+    const weekStart = weekNavigatorProps.weekDays[0]?.date;
+    const weekEnd = weekNavigatorProps.weekDays[weekNavigatorProps.weekDays.length - 1]?.date;
+    if (!weekStart || !weekEnd) return expedientes;
 
-  const { expedientes: baixados, isLoading: loadingBaixados } = useExpedientes({
-    pagina: 1,
-    limite: 200,
-    baixado: true,
-    dataPrazoLegalInicio: format(weekNavigatorProps.weekDays[0]?.date ?? selectedDate, 'yyyy-MM-dd'),
-    dataPrazoLegalFim: format(weekNavigatorProps.weekDays[weekNavigatorProps.weekDays.length - 1]?.date ?? selectedDate, 'yyyy-MM-dd'),
-  });
+    return expedientes.filter((e) => {
+      const prazo = e.dataPrazoLegalParte ? new Date(e.dataPrazoLegalParte) : null;
+      if (!prazo) return false;
+      const prazoDay = startOfDay(prazo);
+      return prazoDay >= startOfDay(weekStart) && prazoDay <= startOfDay(weekEnd);
+    });
+  }, [expedientes, weekNavigatorProps.weekDays]);
 
-  const isLoading = loadingPendentes || loadingBaixados;
-  const error = errorPendentes;
+  const pendentes = React.useMemo(() => weekExpedientes.filter((e) => !e.baixadoEm), [weekExpedientes]);
+  const baixados = React.useMemo(() => weekExpedientes.filter((e) => !!e.baixadoEm), [weekExpedientes]);
 
   // Lookup maps
   const usuariosMap = React.useMemo(() => {
@@ -366,14 +360,6 @@ export function ExpedientesWeekMission({
   const dateLabel = React.useMemo(() => {
     return format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR });
   }, [selectedDate]);
-
-  if (isLoading) {
-    return <TemporalViewLoading message="Carregando briefing diario..." />;
-  }
-
-  if (error) {
-    return <TemporalViewError message={`Erro ao carregar expedientes: ${error}`} onRetry={refetchPendentes} />;
-  }
 
   return (
     <div className="mx-auto flex max-w-350 flex-col gap-5">
@@ -510,7 +496,7 @@ export function ExpedientesWeekMission({
         )}
             </div>
       <ExpedienteVisualizarDialog
-        expediente={selectedExpediente as any}
+        expediente={selectedExpediente}
         open={detailOpen}
         onOpenChange={setDetailOpen}
       />

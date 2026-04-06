@@ -1,55 +1,23 @@
 'use client';
 
 import * as React from 'react';
-import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
-import { useExpedientes } from '../hooks/use-expedientes';
 import { ExpedientesCalendarCompact } from './expedientes-calendar-compact';
 import { ExpedientesDayList } from './expedientes-day-list';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
-
-interface UsuarioData {
-  id: number;
-  nomeExibicao?: string;
-  nome_exibicao?: string;
-  nomeCompleto?: string;
-  nome?: string;
-}
-
-interface TipoExpedienteData {
-  id: number;
-  tipoExpediente?: string;
-  tipo_expediente?: string;
-}
+import type { Expediente } from '../domain';
 
 export interface ExpedientesMonthWrapperProps {
-  usuariosData?: UsuarioData[];
-  tiposExpedientesData?: TipoExpedienteData[];
+  expedientes: Expediente[];
+  onViewDetail?: (expediente: Expediente) => void;
 }
 
 export function ExpedientesMonthWrapper({
-  usuariosData = [],
-  tiposExpedientesData = [],
+  expedientes,
+  onViewDetail,
 }: ExpedientesMonthWrapperProps) {
-  const {
-    expedientes,
-    isLoading,
-    error,
-    refetch,
-    } = useExpedientes();
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
-
-  const [selectedBaixarId, setSelectedBaixarId] = React.useState<number | null>(null);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
   const [selectedExpedienteId, setSelectedExpedienteId] = React.useState<number | null>(null);
-
-  if (isLoading) {
-    return <TemporalViewLoading message="Carregando calendário..." />;
-  }
-
-  if (error) {
-    return <TemporalViewError message="Erro ao carregar calendário" onRetry={refetch} />;
-  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -67,15 +35,14 @@ export function ExpedientesMonthWrapper({
 
         <div className="flex flex-col h-175 overflow-hidden">
           <ExpedientesDayList
-            selectedDate={selectedDate!}
+            selectedDate={selectedDate}
             expedientes={expedientes}
-                                    
           />
         </div>
       </div>
 
       <ExpedienteVisualizarDialog
-        expediente={expedientes.find(e => e.id === selectedExpedienteId) as any}
+        expediente={expedientes.find(e => e.id === selectedExpedienteId) ?? null}
         open={!!selectedExpedienteId}
         onOpenChange={(open) => {
           if (!open) setSelectedExpedienteId(null);
