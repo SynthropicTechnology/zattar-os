@@ -110,7 +110,7 @@ export function CompletionPanel({
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
-                size="icon" aria-label="Documento"
+                size="icon" aria-label="Salvar como documento"
                 onClick={() => setSaveDialogOpen(true)}
                 title="Salvar como Documento"
               >

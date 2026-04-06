@@ -47,7 +47,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            size="icon" aria-label="Primeira página"
+            size="icon" aria-label="Ir para a primeira página"
             className="hidden size-8 bg-card lg:flex"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}>
@@ -56,7 +56,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           </Button>
           <Button
             variant="outline"
-            size="icon" aria-label="Voltar"
+            size="icon" aria-label="Ir para a página anterior"
             className="size-8 bg-card"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}>
@@ -65,7 +65,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           </Button>
           <Button
             variant="outline"
-            size="icon" aria-label="Avançar"
+            size="icon" aria-label="Ir para a próxima página"
             className="size-8 bg-card"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}>
@@ -74,7 +74,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           </Button>
           <Button
             variant="outline"
-            size="icon" aria-label="Última página"
+            size="icon" aria-label="Ir para a última página"
             className="hidden size-8 bg-card lg:flex"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}>

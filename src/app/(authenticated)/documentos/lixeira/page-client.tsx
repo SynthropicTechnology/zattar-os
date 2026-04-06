@@ -349,7 +349,7 @@ export default function LixeiraClient() {
       <div className="flex items-center gap-2 mb-4">
         <Button
           variant="ghost"
-          size="icon" aria-label="Voltar"
+          size="icon"
           onClick={() => router.push('/app/documentos')}
           aria-label="Voltar para documentos"
         >

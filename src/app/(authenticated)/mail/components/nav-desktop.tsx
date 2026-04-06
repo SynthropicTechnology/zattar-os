@@ -99,7 +99,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
         {isCollapsed ? (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="default" size="icon" aria-label="Editar" className="w-full" onClick={() => setIsComposing(true)}>
+              <Button variant="default" size="icon" aria-label="Novo E-mail" className="w-full" onClick={() => setIsComposing(true)}>
                 <Pencil className="h-4 w-4" />
                 <span className="sr-only">Novo E-mail</span>
               </Button>

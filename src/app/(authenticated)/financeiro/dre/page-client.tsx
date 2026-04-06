@@ -822,7 +822,7 @@ export default function DREClient() {
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label="Baixar arquivo" className="h-8 w-8" disabled={isExporting || !dre}>
+                    <Button variant="ghost" size="icon" aria-label="Exportar" className="h-8 w-8" disabled={isExporting || !dre}>
                       <FileDown className="h-4 w-4" />
                       <span className="sr-only">Exportar</span>
                     </Button>

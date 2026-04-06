@@ -164,7 +164,7 @@ function RepresentanteActions({
 }: RepresentanteActionsProps) {
   return (
     <ButtonGroup>
-      <Button variant="ghost" size="icon" aria-label="Visualizar" className="h-8 w-8" asChild>
+      <Button variant="ghost" size="icon" aria-label="Visualizar representante" className="h-8 w-8" asChild>
         <Link href={`/app/partes/representantes/${representante.id}`}>
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar representante</span>
@@ -172,7 +172,7 @@ function RepresentanteActions({
       </Button>
       <Button
         variant="ghost"
-        size="icon" aria-label="Editar"
+        size="icon" aria-label="Editar representante"
         className="h-8 w-8"
         onClick={() => onEdit(representante)}
       >

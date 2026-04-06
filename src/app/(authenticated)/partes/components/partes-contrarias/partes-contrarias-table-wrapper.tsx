@@ -92,7 +92,7 @@ interface ParteContrariaActionsProps {
 function ParteContrariaActions({ parte, onEdit }: ParteContrariaActionsProps) {
   return (
     <ButtonGroup>
-      <Button variant="ghost" size="icon" aria-label="Visualizar" className="h-8 w-8" asChild>
+      <Button variant="ghost" size="icon" aria-label="Visualizar parte contrária" className="h-8 w-8" asChild>
         <Link href={`/app/partes/partes-contrarias/${parte.id}`}>
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar parte contrária</span>
@@ -100,7 +100,7 @@ function ParteContrariaActions({ parte, onEdit }: ParteContrariaActionsProps) {
       </Button>
       <Button
         variant="ghost"
-        size="icon" aria-label="Editar"
+        size="icon" aria-label="Editar parte contrária"
         className="h-8 w-8"
         onClick={() => onEdit(parte)}
       >

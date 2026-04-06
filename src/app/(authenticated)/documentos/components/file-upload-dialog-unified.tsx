@@ -193,7 +193,7 @@ export function FileUploadDialogUnified({
                                     <div className="shrink-0">
                                         <Button
                                             variant="ghost"
-                                            size="icon" aria-label="Fechar"
+                                            size="icon" aria-label="Remover arquivo"
                                             onClick={() => removeFile(index)}
                                             disabled={uploading}
                                         >

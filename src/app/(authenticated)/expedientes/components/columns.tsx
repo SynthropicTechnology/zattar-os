@@ -459,7 +459,7 @@ export function ExpedienteActions({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon" aria-label="Confirmar"
+                size="icon" aria-label="Baixar Expediente"
                 className="h-8 w-8 text-success hover:text-success"
                 onClick={() => setShowBaixar(true)}
               >
@@ -477,7 +477,7 @@ export function ExpedienteActions({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon" aria-label="Desfazer"
+                size="icon" aria-label="Reverter Baixa"
                 className="h-8 w-8 text-warning hover:text-warning"
                 onClick={() => setShowReverter(true)}
               >

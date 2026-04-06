@@ -262,7 +262,7 @@ export function CustomCallControls({
             <TooltipTrigger asChild>
               <Button
                 variant={showTranscript ? "default" : "secondary"}
-                size="icon" aria-label="Documento"
+                size="icon" aria-label="Transcrição"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
                   showTranscript ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"

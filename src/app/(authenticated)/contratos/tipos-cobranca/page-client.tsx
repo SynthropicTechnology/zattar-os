@@ -369,7 +369,7 @@ export function TiposCobrancaPageClient() {
                       <div className="flex items-center justify-end gap-2">
                         <Button
                           variant="ghost"
-                          size="icon" aria-label="Editar"
+                          size="icon"
                           className="h-8 w-8"
                           onClick={() => handleEditar(tipo)}
                           aria-label={`Editar ${tipo.nome}`}

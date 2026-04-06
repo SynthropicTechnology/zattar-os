@@ -102,7 +102,7 @@ const SignerCard = memo(function SignerCard({
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             variant="ghost"
-            size="icon" aria-label="Editar"
+            size="icon"
             className="size-7"
             onClick={(e) => {
               e.stopPropagation();
@@ -115,7 +115,7 @@ const SignerCard = memo(function SignerCard({
           {!isCurrentUser && (
             <Button
               variant="ghost"
-              size="icon" aria-label="Excluir"
+              size="icon"
               className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
               onClick={(e) => {
                 e.stopPropagation();

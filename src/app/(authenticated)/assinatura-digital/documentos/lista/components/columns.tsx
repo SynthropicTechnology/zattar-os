@@ -226,7 +226,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon" aria-label="Visualizar"
+                  size="icon" aria-label="Ver detalhes"
                   className="h-8 w-8"
                   onClick={() => actions.onView(doc.documento_uuid)}
                 >
@@ -258,7 +258,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon" aria-label="Baixar"
+                  size="icon" aria-label="Download PDF"
                   className="h-8 w-8"
                   onClick={() =>
                     actions.onDownload(pdfUrl, doc.titulo || "documento")
@@ -276,7 +276,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="icon" aria-label="Excluir"
+                    size="icon" aria-label="Deletar"
                     className="h-8 w-8 text-destructive hover:text-destructive"
                     onClick={() => actions.onDelete(doc)}
                   >

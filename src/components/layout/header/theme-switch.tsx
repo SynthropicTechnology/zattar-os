@@ -25,7 +25,7 @@ export default function ThemeSwitch() {
 
   return (
     <Button
-      size="icon" aria-label="Alternar tema"
+      size="icon" aria-label="Toggle theme"
       variant="ghost"
       className="relative"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}>

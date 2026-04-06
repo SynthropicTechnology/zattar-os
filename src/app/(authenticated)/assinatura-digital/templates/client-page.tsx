@@ -285,7 +285,7 @@ function TemplateActions({
       {canEdit && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Editar" className="h-8 w-8" onClick={() => onEdit(template)}>
+            <Button variant="ghost" size="icon" aria-label="Editar template" className="h-8 w-8" onClick={() => onEdit(template)}>
               <Pencil className="h-4 w-4" />
               <span className="sr-only">Editar template</span>
             </Button>
@@ -296,7 +296,7 @@ function TemplateActions({
       {canCreate && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Copiar" className="h-8 w-8" onClick={() => onDuplicate(template)}>
+            <Button variant="ghost" size="icon" aria-label="Duplicar template" className="h-8 w-8" onClick={() => onDuplicate(template)}>
               <Copy className="h-4 w-4" />
               <span className="sr-only">Duplicar template</span>
             </Button>
@@ -307,7 +307,7 @@ function TemplateActions({
       {canDelete && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Excluir" className="h-8 w-8" onClick={() => onDelete(template)}>
+            <Button variant="ghost" size="icon" aria-label="Deletar template" className="h-8 w-8" onClick={() => onDelete(template)}>
               <Trash2 className="h-4 w-4" />
               <span className="sr-only">Deletar template</span>
             </Button>

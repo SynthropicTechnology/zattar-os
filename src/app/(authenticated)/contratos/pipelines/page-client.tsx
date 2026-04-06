@@ -699,7 +699,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                     <div className="flex items-center gap-1 shrink-0">
                       <Button
                         variant="ghost"
-                        size="icon" aria-label="Editar"
+                        size="icon"
                         className="h-7 w-7"
                         onClick={() => {
                           setEditingEstagio(estagio);
@@ -711,7 +711,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon" aria-label="Excluir"
+                        size="icon"
                         className="h-7 w-7 text-destructive hover:text-destructive"
                         onClick={() => setDeleteConfirm({ open: true, estagio, isDeleting: false })}
                         aria-label={`Excluir ${estagio.nome}`}
@@ -965,7 +965,7 @@ export function PipelinesPageClient() {
                         </Button>
                         <Button
                           variant="ghost"
-                          size="icon" aria-label="Editar"
+                          size="icon"
                           className="h-8 w-8"
                           onClick={() => handleEditarPipeline(pipeline)}
                           aria-label={`Editar ${pipeline.nome}`}

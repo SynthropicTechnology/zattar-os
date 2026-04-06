@@ -244,7 +244,7 @@ export function CargosManagementDialog({
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon" aria-label="Editar"
+                          size="icon"
                           className="h-8 w-8"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -258,7 +258,7 @@ export function CargosManagementDialog({
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon" aria-label="Excluir"
+                          size="icon"
                           className="h-8 w-8"
                           onClick={(e) => {
                             e.stopPropagation();

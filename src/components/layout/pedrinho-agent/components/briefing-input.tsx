@@ -153,7 +153,7 @@ export function BriefingInput({
             <div className="flex items-center gap-1 px-2 pb-2 pt-1">
               <Button
                 variant="ghost"
-                size="icon" aria-label="Anexar"
+                size="icon"
                 onClick={() => openFilePicker('document')}
                 disabled={isAgentRunning}
                 aria-label="Anexar arquivo"

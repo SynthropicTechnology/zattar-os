@@ -374,7 +374,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           <Popover>
             <PopoverTrigger asChild>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Horário" disabled={!mail}>
+                <Button variant="ghost" size="icon" aria-label="Adiar" disabled={!mail}>
                   <Clock />
                   <span className="sr-only">Adiar</span>
                 </Button>
@@ -508,7 +508,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Mais opções" disabled={!mail}>
+            <Button variant="ghost" size="icon" aria-label="Mais" disabled={!mail}>
               <MoreVertical />
               <span className="sr-only">Mais</span>
             </Button>

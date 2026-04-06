@@ -58,7 +58,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon" aria-label="Adicionar"
+                        size="icon"
                         className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100 hover:opacity-100 focus-visible:opacity-100"
                         onClick={() => {
                           const startTime = new Date(day);

@@ -245,7 +245,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
             <TooltipTrigger asChild>
               <Button
                 variant="outline"
-                size="icon" aria-label="Configurações"
+                size="icon"
                 className="h-9 w-9 bg-card"
                 onClick={() => setIsSettingsOpen(true)}
                 aria-label="Configurações de tipos de expediente"

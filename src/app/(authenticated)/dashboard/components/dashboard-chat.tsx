@@ -153,7 +153,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
           </CardTitle>
           <CardAction>
             <Link href="/app/chat">
-              <Button size="icon" aria-label="Adicionar" variant="ghost" className="size-8 text-muted-foreground hover:text-foreground">
+              <Button size="icon" aria-label="Nova conversa" variant="ghost" className="size-8 text-muted-foreground hover:text-foreground">
                 <PlusCircle className="size-5" />
                 <span className="sr-only">Nova conversa</span>
               </Button>

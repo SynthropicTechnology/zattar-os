@@ -104,7 +104,7 @@ export function YearFilterPopover({
         <div className="flex items-center justify-between mb-2">
           <Button
             variant="ghost"
-            size="icon" aria-label="Voltar"
+            size="icon" aria-label="Período anterior"
             className="h-7 w-7"
             onClick={handlePrevPage}
           >
@@ -116,7 +116,7 @@ export function YearFilterPopover({
           </span>
           <Button
             variant="ghost"
-            size="icon" aria-label="Avançar"
+            size="icon" aria-label="Próximo período"
             className="h-7 w-7"
             onClick={handleNextPage}
           >

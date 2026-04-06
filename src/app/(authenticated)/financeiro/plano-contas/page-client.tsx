@@ -211,7 +211,7 @@ function PlanoContaActions({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Mais opções" className="h-8 w-8">
+        <Button variant="ghost" size="icon" aria-label="Ações da conta" className="h-8 w-8">
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Ações da conta</span>
         </Button>

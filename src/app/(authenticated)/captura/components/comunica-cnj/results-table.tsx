@@ -116,7 +116,7 @@ function ResultActionButtons({ comunicacao, onViewDetails, onViewPdf }: ResultAc
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon" aria-label="Visualizar"
+              size="icon"
               className="h-8 w-8"
               onClick={() => onViewDetails(comunicacao)}
               aria-label="Ver detalhes"

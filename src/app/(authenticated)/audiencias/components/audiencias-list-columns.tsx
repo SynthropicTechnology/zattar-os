@@ -55,11 +55,10 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
-              size="icon" aria-label="Documento"
+              size="icon" aria-label="Ver ata de audiência"
               className="h-6 w-6 text-success hover:text-success hover:bg-success/15"
             >
               <FileText className="h-4 w-4" />
-              <span className="sr-only">Ver ata de audiência</span>
             </Button>
           </PopoverTrigger>
         </TooltipTrigger>
@@ -513,7 +512,7 @@ function AudienciaActions({
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon" aria-label="Visualizar"
+            size="icon" aria-label="Visualizar audiência"
             className="h-8 w-8"
             onClick={() => onView(audiencia)}
           >
@@ -527,7 +526,7 @@ function AudienciaActions({
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon" aria-label="Editar"
+            size="icon" aria-label="Editar audiência"
             className="h-8 w-8"
             onClick={() => onEdit(audiencia)}
           >

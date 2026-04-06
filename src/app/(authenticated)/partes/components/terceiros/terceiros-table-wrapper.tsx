@@ -83,7 +83,7 @@ interface TerceiroActionsProps {
 function TerceiroActions({ terceiro, onEdit }: TerceiroActionsProps) {
   return (
     <ButtonGroup>
-      <Button variant="ghost" size="icon" aria-label="Visualizar" className="h-8 w-8" asChild>
+      <Button variant="ghost" size="icon" aria-label="Visualizar terceiro" className="h-8 w-8" asChild>
         <Link href={`/app/partes/terceiros/${terceiro.id}`}>
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar terceiro</span>
@@ -91,7 +91,7 @@ function TerceiroActions({ terceiro, onEdit }: TerceiroActionsProps) {
       </Button>
       <Button
         variant="ghost"
-        size="icon" aria-label="Editar"
+        size="icon" aria-label="Editar terceiro"
         className="h-8 w-8"
         onClick={() => onEdit(terceiro)}
       >

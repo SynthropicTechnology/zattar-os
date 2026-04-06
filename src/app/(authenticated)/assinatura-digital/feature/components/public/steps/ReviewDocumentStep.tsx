@@ -80,7 +80,7 @@ export function ReviewDocumentStep({
             </span>
             <Button
               variant="ghost"
-              size="icon" aria-label="Adicionar"
+              size="icon"
               onClick={handleZoomIn}
               disabled={zoom >= 200}
               className="h-9 w-9 rounded-full"

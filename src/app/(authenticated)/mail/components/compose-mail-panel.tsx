@@ -99,7 +99,7 @@ export function ComposeMailPanel() {
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon" aria-label="Fechar"
+              size="icon" aria-label="Descartar"
               className="h-7 w-7"
               onClick={handleDiscard}>
               <X className="h-4 w-4" />

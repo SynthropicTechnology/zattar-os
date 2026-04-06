@@ -80,7 +80,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Mais opções" className="data-[state=open]:bg-muted size-8">
+        <Button variant="ghost" size="icon" aria-label="Abrir menu" className="data-[state=open]:bg-muted size-8">
           <MoreHorizontal />
           <span className="sr-only">Abrir menu</span>
         </Button>

@@ -164,7 +164,7 @@ function ActionsCell({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon" aria-label="Visualizar"
+              size="icon" aria-label="Ver detalhes"
               className="h-8 w-8"
               onClick={() => setShowDetalhes(true)}
             >
@@ -180,7 +180,7 @@ function ActionsCell({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon" aria-label="Mensagem"
+              size="icon" aria-label="Observações"
               className="h-8 w-8"
               onClick={() => setShowObs(true)}
             >

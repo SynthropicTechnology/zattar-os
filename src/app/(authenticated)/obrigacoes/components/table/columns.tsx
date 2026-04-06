@@ -284,7 +284,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon" aria-label="Visualizar"
+                  size="icon" aria-label="Ver detalhes"
                   className="h-8 w-8"
                   onClick={() => meta?.onVerDetalhes?.(acordo)}
                 >
@@ -299,7 +299,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="icon" aria-label="Valor"
+                    size="icon" aria-label="Registrar pagamento"
                     className="h-8 w-8"
                     onClick={() => meta?.onRegistrarPagamento?.(acordo)}
                   >

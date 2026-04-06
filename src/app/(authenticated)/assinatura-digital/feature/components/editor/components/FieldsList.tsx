@@ -110,7 +110,7 @@ const FieldsListItem = memo(function FieldsListItem({
         {!isOnCurrentPage && (
           <Button
             variant="ghost"
-            size="icon" aria-label="Visualizar"
+            size="icon"
             className="h-6 w-6"
             onClick={(e) => {
               e.stopPropagation();
@@ -123,7 +123,7 @@ const FieldsListItem = memo(function FieldsListItem({
         )}
         <Button
           variant="ghost"
-          size="icon" aria-label="Excluir"
+          size="icon"
           className="h-6 w-6 text-destructive hover:text-destructive"
           onClick={(e) => {
             e.stopPropagation();
