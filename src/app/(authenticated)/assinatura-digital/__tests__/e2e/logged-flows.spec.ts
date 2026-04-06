@@ -48,7 +48,7 @@ test.describe('Assinatura Digital - Logged Flows', () => {
   });
 
   test('deve acessar a gestão de documentos e visualizar os detalhes', async ({ authenticatedPage: page }) => {
-    await page.goto('/assinatura-digital/documentos/lista');
+    await page.goto('/app/assinatura-digital/documentos/lista');
 
     // Mudar regex para ignorar case e tolerar pequenas diferenças de string.
     await expect(page.getByRole('heading', { name: /documentos|assinaturas/i })).toBeVisible({ timeout: 15000 });
@@ -56,13 +56,13 @@ test.describe('Assinatura Digital - Logged Flows', () => {
     const newDocBtn = page.getByRole('button', { name: /novo documento/i });
     if (await newDocBtn.isVisible()) {
       await newDocBtn.click();
-      await page.waitForURL('**/assinatura-digital/documentos/novo');
+      await page.waitForURL('**/app/assinatura-digital/documentos/novo');
       await expect(page.getByRole('heading', { name: /enviar|documento/i })).toBeVisible({ timeout: 10000 });
     }
   });
 
   test('deve gerenciar templates', async ({ authenticatedPage: page }) => {
-    await page.goto('/assinatura-digital/templates');
+    await page.goto('/app/assinatura-digital/templates');
 
     await expect(page.getByRole('heading', { name: /templates/i })).toBeVisible({ timeout: 15000 });
 
@@ -76,7 +76,7 @@ test.describe('Assinatura Digital - Logged Flows', () => {
   });
 
   test('deve gerenciar formulários', async ({ authenticatedPage: page }) => {
-    await page.goto('/assinatura-digital/formularios');
+    await page.goto('/app/assinatura-digital/formularios');
 
     await expect(page.getByRole('heading', { name: /formul[áa]rios/i })).toBeVisible({ timeout: 15000 });
 

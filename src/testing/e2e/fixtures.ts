@@ -54,18 +54,20 @@ export const test = base.extend<CustomFixtures>({
       })
     );
 
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co';
+    const projectId = new URL(supabaseUrl).hostname.split('.')[0];
+    const storageKey = `sb-${projectId}-auth-token`;
+
     // Add Supabase Cookies to prevent Server Components from throwing AuthSessionMissingError
     await page.context().addCookies([
-      { name: 'sb-mocked-auth-token', value: 'mock-token', domain: 'localhost', path: '/' },
-      { name: 'sb-ec9bb-auth-token', value: 'mock-token', domain: 'localhost', path: '/' },
-      { name: 'sb-127.0.0.1-auth-token', value: 'mock-token', domain: 'localhost', path: '/' },
-      { name: 'sb-localhost-auth-token', value: 'mock-token', domain: 'localhost', path: '/' }
+      { name: storageKey, value: 'mock-token', domain: 'localhost', path: '/' },
+      { name: 'sb-mocked-auth-token', value: 'mock-token', domain: 'localhost', path: '/' }
     ]);
     
     // Add Supabase LocalStorage mock to prevent Supabase Auth client from throwing AuthSessionMissingError
-    await page.addInitScript(() => {
+    await page.addInitScript((key: string) => {
       window.localStorage.setItem(
-        'sb-mocked-auth-token',
+        key,
         JSON.stringify({
           access_token: 'mock-token',
           refresh_token: 'mock-token',
@@ -83,10 +85,10 @@ export const test = base.extend<CustomFixtures>({
         })
       );
       // Try multiple possible Supabase refs
-      window.localStorage.setItem('sb-ec9bb-auth-token', window.localStorage.getItem('sb-mocked-auth-token')!);
-      window.localStorage.setItem('sb-127.0.0.1-auth-token', window.localStorage.getItem('sb-mocked-auth-token')!);
-      window.localStorage.setItem('sb-localhost-auth-token', window.localStorage.getItem('sb-mocked-auth-token')!);
-    });
+      window.localStorage.setItem('sb-ec9bb-auth-token', window.localStorage.getItem(key)!);
+      window.localStorage.setItem('sb-127.0.0.1-auth-token', window.localStorage.getItem(key)!);
+      window.localStorage.setItem('sb-localhost-auth-token', window.localStorage.getItem(key)!);
+    }, storageKey);
 
     // Mock network call for getUser()
     await page.route('**/auth/v1/user', async (route) => {
