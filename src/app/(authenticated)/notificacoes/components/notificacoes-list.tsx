@@ -75,7 +75,7 @@ const getEntityLink = (entidadeTipo: string, entidadeId: number): string => {
     case "audiencia":
       return `/audiencias/${entidadeId}`;
     case "expediente":
-      return `/expedientes/lista`;
+      return `/app/expedientes/lista`;
     case "pericia":
       return `/pericias/${entidadeId}`;
     default:

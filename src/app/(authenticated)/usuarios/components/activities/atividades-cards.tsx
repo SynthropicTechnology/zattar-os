@@ -106,7 +106,7 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
         title="Pendentes"
         value={stats.pendentes}
         icon={<FileText className="h-4 w-4 text-orange-700 dark:text-orange-400" />}
-        href={`/expedientes?responsavel=${usuarioId}`}
+        href={`/app/expedientes/lista?responsavel=${usuarioId}`}
         color="bg-orange-500/15"
       />
       <StatCard

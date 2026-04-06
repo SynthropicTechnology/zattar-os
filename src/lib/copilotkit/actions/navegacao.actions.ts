@@ -24,7 +24,7 @@ export function useNavegacaoActions() {
     dashboard: '/dashboard',
     processos: '/processos',
     audiencias: '/audiencias/semana',
-    expedientes: '/expedientes/lista',
+    expedientes: '/app/expedientes',
     'acordos-condenacoes': '/acordos-condenacoes/lista',
     contratos: '/contratos',
     assistentes: '/assistentes',
@@ -85,7 +85,11 @@ export function useNavegacaoActions() {
         return `Visualização "${visualizacao}" inválida. Use: ${visualizacoesPermitidas.join(', ')}`;
       }
 
-      router.push(`/${modulo}/${visualizacao}`);
+      const rotaVisualizacao = modulo === 'expedientes'
+        ? `/app/expedientes/${visualizacao}`
+        : `/${modulo}/${visualizacao}`;
+
+      router.push(rotaVisualizacao);
       return `Alterando visualização de ${modulo} para ${visualizacao}`;
     },
   });

@@ -329,7 +329,7 @@ export function ComunicaCNJCapturadas() {
         const id = row.original.expedienteId;
         return id ? (
           <a
-            href={`/expedientes/lista?id=${id}`}
+            href={`/app/expedientes/lista?id=${id}`}
             className="flex items-center gap-1 text-xs text-primary hover:underline"
           >
             <Link2 className="h-3 w-3" />

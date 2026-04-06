@@ -196,12 +196,12 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
               <MetricCard
                 title="Expedientes Pendentes"
                 value={data.expedientes.total.toLocaleString('pt-BR')}
-                href="/expedientes"
+                href="/app/expedientes"
               />
               <MetricCard
                 title="Expedientes Vencidos"
                 value={data.expedientes.vencidos.toLocaleString('pt-BR')}
-                href="/expedientes"
+                href="/app/expedientes"
               />
             </>
           )}
@@ -319,12 +319,12 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
           <MetricCard
             title="Expedientes Pendentes"
             value={data.metricas.expedientesPendentes.toLocaleString('pt-BR')}
-            href="/expedientes"
+            href="/app/expedientes"
           />
           <MetricCard
             title="Expedientes Vencidos"
             value={data.metricas.expedientesVencidos.toLocaleString('pt-BR')}
-            href="/expedientes"
+            href="/app/expedientes"
           />
           <FinancialMetricCards dadosFinanceiros={data.dadosFinanceiros} />
         </div>
