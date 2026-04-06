@@ -36,6 +36,7 @@ import {
   ArrowRight,
   Zap,
   Target,
+  ShieldCheck,
 } from 'lucide-react';
 import {
   GlassPanel,
@@ -497,92 +498,124 @@ function MissionKpiStrip({
 }) {
   const taxaRealizacao = totalMes > 0 ? Math.round((realizadasMes / totalMes) * 100) : 0;
   const timeUntil = nextAudiencia ? getTimeUntil(nextAudiencia.dataInicio) : null;
+  const prepColor = PREP_COLORS[getPrepStatus(avgPrep)];
 
   return (
-    <GlassPanel depth={2} className="px-5 py-3">
-      <div className="flex items-center gap-6 overflow-x-auto">
-        {/* Esta Semana */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <CalendarDays className="size-4 text-primary/30" />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Semana</span>
-            <div className="flex items-baseline gap-1">
-              <span className="font-display text-lg font-bold tabular-nums">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* ── Semana ─────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Semana
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
                 <AnimatedNumber value={totalSemana} />
-              </span>
-              <span className="text-[9px] text-muted-foreground/40">audiências</span>
+              </p>
+              <span className="text-[10px] text-muted-foreground/40">audiências</span>
             </div>
           </div>
+          <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+            <CalendarDays className="size-4 text-primary/50" />
+          </div>
         </div>
+        <div className="mt-2.5 flex items-center gap-2">
+          <Sparkline data={trend} width={80} height={16} />
+          <span className="text-[9px] text-success/60 font-medium">+18%</span>
+        </div>
+      </GlassPanel>
 
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Próxima */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <Clock className="size-4 text-warning/30" />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Próxima</span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-display text-lg font-bold tabular-nums">
+      {/* ── Próxima ────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Próxima
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
                 {timeUntil?.label ?? '—'}
-              </span>
-              {nextAudiencia && (
-                <span className="text-[9px] text-muted-foreground/40">
-                  {nextAudiencia.trt} · {MODALIDADE_LABEL[nextAudiencia.modalidade]}
-                </span>
-              )}
+              </p>
             </div>
           </div>
+          <div className="size-8 rounded-lg bg-warning/8 flex items-center justify-center shrink-0">
+            <Clock className="size-4 text-warning/50" />
+          </div>
         </div>
+        <div className="mt-2.5">
+          {nextAudiencia ? (
+            <span className="text-[9px] text-muted-foreground/50 truncate block">
+              {nextAudiencia.trt} · {MODALIDADE_LABEL[nextAudiencia.modalidade]}
+            </span>
+          ) : (
+            <span className="text-[9px] text-muted-foreground/30">Nenhuma agendada</span>
+          )}
+        </div>
+      </GlassPanel>
 
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Realizadas Mês */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <ProgressRing percent={taxaRealizacao} size={32} color="hsl(var(--success))" />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Realizadas</span>
-            <div className="flex items-baseline gap-1">
-              <span className="font-display text-lg font-bold tabular-nums">
+      {/* ── Realizadas ─────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Realizadas
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
                 <AnimatedNumber value={realizadasMes} />
-              </span>
-              <span className="text-[9px] text-muted-foreground/40">/ {totalMes} mês</span>
+              </p>
+              <span className="text-[10px] text-muted-foreground/40">/ {totalMes} mês</span>
             </div>
           </div>
-        </div>
-
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Preparo Médio */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <ProgressRing
-            percent={avgPrep}
-            size={32}
-            color={PREP_COLORS[getPrepStatus(avgPrep)]}
-          />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Preparo</span>
-            <div className="flex items-baseline gap-1">
-              <span className="font-display text-lg font-bold tabular-nums">{avgPrep}%</span>
-              <span className="text-[9px] text-muted-foreground/40">média</span>
-            </div>
+          <div className="size-8 rounded-lg bg-success/8 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="size-4 text-success/50" />
           </div>
         </div>
+        <div className="mt-2.5 flex items-center gap-2">
+          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-success/25 transition-all duration-500"
+              style={{ width: `${taxaRealizacao}%` }}
+            />
+          </div>
+          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+            {taxaRealizacao}%
+          </span>
+        </div>
+      </GlassPanel>
 
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Tendência */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Tendência 12m</span>
-            <div className="flex items-center gap-2 mt-0.5">
-              <Sparkline data={trend} width={60} height={20} />
-              <span className="text-[9px] text-success/60 font-medium">+18%</span>
+      {/* ── Preparo ────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Preparo
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
+                {avgPrep}%
+              </p>
+              <span className="text-[10px] text-muted-foreground/40">média</span>
             </div>
           </div>
+          <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+            <ShieldCheck className="size-4 text-primary/50" />
+          </div>
         </div>
-      </div>
-    </GlassPanel>
+        <div className="mt-2.5 flex items-center gap-2">
+          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${avgPrep}%`, backgroundColor: prepColor, opacity: 0.3 }}
+            />
+          </div>
+          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+            {avgPrep}%
+          </span>
+        </div>
+      </GlassPanel>
+    </div>
   );
 }
 

@@ -1,21 +1,21 @@
 /**
- * MissionKpiStrip — Faixa de KPIs para o módulo de audiências
+ * MissionKpiStrip — Cards de KPIs para o módulo de audiências
  * ============================================================================
- * Segue o padrão FinancialStrip de contratos: GlassPanel depth=2,
- * flex horizontal com dividers, AnimatedNumber, ProgressRing, Sparkline.
+ * Segue o padrão PulseStrip de processos: grid de cards individuais com
+ * GlassPanel, ícone no canto e visual secundário por card.
  *
- * Calcula stats a partir do array de audiências real.
+ * 4 cards: Semana | Próxima | Realizadas | Preparo
  * ============================================================================
  */
 
 'use client';
 
 import { useMemo } from 'react';
-import { CalendarDays, Clock } from 'lucide-react';
+import { CalendarDays, Clock, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { parseISO, isSameWeek, isSameMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import {
-  GlassPanel,
   Sparkline,
   AnimatedNumber,
   ProgressRing,
@@ -72,8 +72,10 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
 
     const marcadasSemana = thisWeek.filter((a) => a.status === StatusAudiencia.Marcada);
     const realizadasMes = thisMonth.filter((a) => a.status === StatusAudiencia.Finalizada).length;
-    const totalMes = thisMonth.length;
-    const taxaRealizacao = totalMes > 0 ? Math.round((realizadasMes / totalMes) * 100) : 0;
+    const relevantesMes = thisMonth.filter(
+      (a) => a.status === StatusAudiencia.Marcada || a.status === StatusAudiencia.Finalizada,
+    ).length;
+    const taxaRealizacao = relevantesMes > 0 ? Math.round((realizadasMes / relevantesMes) * 100) : 0;
 
     // Next upcoming
     const upcoming = audiencias
@@ -93,11 +95,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       ? Math.round(marcadas.reduce((acc, a) => acc + calcPrepScore(calcPrepItems(a)), 0) / marcadas.length)
       : 0;
 
-    // Trend: count by last 6 months (simplified)
+    // Trend: count by last 6 months (only marcadas + finalizadas)
+    const relevantes = audiencias.filter(
+      (a) => a.status === StatusAudiencia.Marcada || a.status === StatusAudiencia.Finalizada,
+    );
     const trend: number[] = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const count = audiencias.filter((a) => {
+      const count = relevantes.filter((a) => {
         try {
           const ad = parseISO(a.dataInicio);
           return ad.getMonth() === d.getMonth() && ad.getFullYear() === d.getFullYear();
@@ -114,7 +119,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       nextLabel: next ? getTimeUntilLabel(parseISO(next.dataInicio)) : '—',
       nextDetail: next ? `${next.trt ?? ''} · ${next.modalidade === 'virtual' ? 'Virtual' : next.modalidade === 'presencial' ? 'Presencial' : 'Híbrida'}` : '',
       realizadasMes,
-      totalMes,
+      relevantesMes,
       taxaRealizacao,
       avgPrep,
       trend,
@@ -122,95 +127,134 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
   }, [audiencias, now]);
 
   return (
-    <GlassPanel depth={2} className={`px-5 py-3 ${className ?? ''}`}>
-      <div className="flex items-center gap-6 overflow-x-auto">
-        {/* Esta Semana */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <CalendarDays className="size-4 text-primary/30" />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Semana</span>
-            <div className="flex items-baseline gap-1">
-              <span className="font-display text-lg font-bold tabular-nums">
+    <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
+      {/* ── Semana ─────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Semana
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
                 <AnimatedNumber value={stats.totalSemana} />
-              </span>
-              <span className="text-[9px] text-muted-foreground/40">audiências</span>
+              </p>
+              <span className="text-[10px] text-muted-foreground/40">audiências</span>
             </div>
           </div>
+          <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+            <CalendarDays className="size-4 text-primary/50" />
+          </div>
         </div>
+        {/* Sparkline de tendência 6m */}
+        <div className="mt-2.5 flex items-center gap-2">
+          <Sparkline data={stats.trend.length >= 2 ? stats.trend : [0, 0]} width={80} height={16} />
+          {stats.trend.length >= 2 && stats.trend[0] > 0 && (
+            <span className={`text-[9px] font-medium tabular-nums ${
+              stats.trend[stats.trend.length - 1] >= stats.trend[0] ? 'text-success/60' : 'text-destructive/60'
+            }`}>
+              {`${stats.trend[stats.trend.length - 1] >= stats.trend[0] ? '+' : ''}${Math.round(((stats.trend[stats.trend.length - 1] - stats.trend[0]) / stats.trend[0]) * 100)}%`}
+            </span>
+          )}
+        </div>
+      </GlassPanel>
 
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Próxima */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <Clock className="size-4 text-warning/30" />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Próxima</span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-display text-lg font-bold tabular-nums">
+      {/* ── Próxima ────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Próxima
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
                 {stats.nextLabel}
-              </span>
-              {stats.nextDetail && (
-                <span className="text-[9px] text-muted-foreground/40">{stats.nextDetail}</span>
-              )}
+              </p>
             </div>
           </div>
+          <div className="size-8 rounded-lg bg-warning/8 flex items-center justify-center shrink-0">
+            <Clock className="size-4 text-warning/50" />
+          </div>
         </div>
+        {/* Detalhe do tribunal + modalidade */}
+        <div className="mt-2.5">
+          {stats.nextDetail ? (
+            <span className="text-[9px] text-muted-foreground/50 truncate block">
+              {stats.nextDetail}
+            </span>
+          ) : (
+            <span className="text-[9px] text-muted-foreground/30">Nenhuma agendada</span>
+          )}
+        </div>
+      </GlassPanel>
 
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Realizadas Mês */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <ProgressRing percent={stats.taxaRealizacao} size={32} color="hsl(var(--success))" />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Realizadas</span>
-            <div className="flex items-baseline gap-1">
-              <span className="font-display text-lg font-bold tabular-nums">
+      {/* ── Realizadas ─────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Realizadas
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
                 <AnimatedNumber value={stats.realizadasMes} />
-              </span>
-              <span className="text-[9px] text-muted-foreground/40">/ {stats.totalMes} mês</span>
+              </p>
+              <span className="text-[10px] text-muted-foreground/40">/ {stats.relevantesMes} mês</span>
             </div>
           </div>
-        </div>
-
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Preparo Médio */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <ProgressRing
-            percent={stats.avgPrep}
-            size={32}
-            color={getPrepColor(stats.avgPrep)}
-          />
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Preparo</span>
-            <div className="flex items-baseline gap-1">
-              <span className="font-display text-lg font-bold tabular-nums">{stats.avgPrep}%</span>
-              <span className="text-[9px] text-muted-foreground/40">média</span>
-            </div>
+          <div className="size-8 rounded-lg bg-success/8 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="size-4 text-success/50" />
           </div>
         </div>
+        {/* Barra de taxa de realização */}
+        <div className="mt-2.5 flex items-center gap-2">
+          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-success/25 transition-all duration-500"
+              style={{ width: `${stats.taxaRealizacao}%` }}
+            />
+          </div>
+          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+            {stats.taxaRealizacao}%
+          </span>
+        </div>
+      </GlassPanel>
 
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Tendência */}
-        <div className="flex items-center gap-2.5 min-w-max">
-          <div>
-            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">Tendência 6m</span>
-            <div className="flex items-center gap-2 mt-0.5">
-              <Sparkline data={stats.trend.length >= 2 ? stats.trend : [0, 0]} width={60} height={20} />
-              {stats.trend.length >= 2 && stats.trend[0] > 0 && (
-                <span className={`text-[9px] font-medium ${
-                  stats.trend[stats.trend.length - 1] >= stats.trend[0] ? 'text-success/60' : 'text-destructive/60'
-                }`}>
-                  {stats.trend[0] > 0
-                    ? `${stats.trend[stats.trend.length - 1] >= stats.trend[0] ? '+' : ''}${Math.round(((stats.trend[stats.trend.length - 1] - stats.trend[0]) / stats.trend[0]) * 100)}%`
-                    : '—'}
-                </span>
-              )}
+      {/* ── Preparo ────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Preparo
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
+                {stats.avgPrep}%
+              </p>
+              <span className="text-[10px] text-muted-foreground/40">média</span>
             </div>
           </div>
+          <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
+            <ShieldCheck className="size-4 text-primary/50" />
+          </div>
         </div>
-      </div>
-    </GlassPanel>
+        {/* Barra de preparo com cor dinâmica */}
+        <div className="mt-2.5 flex items-center gap-2">
+          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${stats.avgPrep}%`,
+                backgroundColor: getPrepColor(stats.avgPrep),
+                opacity: 0.3,
+              }}
+            />
+          </div>
+          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+            {stats.avgPrep}%
+          </span>
+        </div>
+      </GlassPanel>
+    </div>
   );
 }

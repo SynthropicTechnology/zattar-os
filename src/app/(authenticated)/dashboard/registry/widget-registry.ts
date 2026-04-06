@@ -421,7 +421,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Hero com gauge de saúde, saldo, a receber, a pagar, resultado do mês e projeção de receita.',
     module: 'financeiro',
     permission: PERM.financeiro,
-    size: 'full',
+    size: 'md',
     defaultEnabled: true,
     component: WidgetSaúdeFinanceira,
   },
@@ -710,7 +710,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
 // Layout visual (admin):
 // ┌─────────────── full ───────────────┐  Row 1: Briefing pessoal
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 2: Meu Dia + Foco
-// ├─────────────── full ───────────────┤  Row 3: Saúde Financeira
+// ├──────── md ────────┤               │  Row 3: Saúde Financeira
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 4: Audiências + Preparação
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 5: Expedientes + Funil
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 6: Processos + Heatmap

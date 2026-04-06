@@ -81,7 +81,7 @@ export function WidgetSaúdeFinanceira() {
         title="Saúde Financeira"
         icon={Activity}
         subtitle="Visão consolidada"
-        className="md:col-span-3"
+        className="md:col-span-2"
         depth={2}
       >
         <InsightBanner type="warning">
@@ -95,7 +95,7 @@ export function WidgetSaúdeFinanceira() {
   const saldo = fin.saldoTotal;
   const receber = fin.contasReceber.valor;
   const pagar = fin.contasPagar.valor;
-  const resultado = saldo - pagar;
+  const resultado = receber - pagar;
   const temTrend = !isFluxoLoading && fluxo.length > 0;
 
   const { score, status } = calcularScoreSaude(saldo, receber, pagar);
@@ -106,7 +106,7 @@ export function WidgetSaúdeFinanceira() {
       title="Saúde Financeira"
       icon={Activity}
       subtitle="Visão consolidada"
-      className="md:col-span-3"
+      className="md:col-span-2"
       depth={2}
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -135,11 +135,11 @@ export function WidgetSaúdeFinanceira() {
             <p className={`font-display text-base font-bold tabular-nums ${saldo < 0 ? 'text-destructive/80' : ''}`}>
               <AnimatedNumber
                 value={saldo}
-                prefix="R$\u00a0"
+                prefix={"R$\u00a0"}
                 duration={1200}
               />
             </p>
-            <p className="text-[10px] text-muted-foreground/55">caixa consolidado</p>
+            <p className="text-[10px] text-muted-foreground/55">saldo do mês</p>
           </div>
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
@@ -151,7 +151,7 @@ export function WidgetSaúdeFinanceira() {
             <p className="font-display text-base font-bold tabular-nums text-success/80">
               <AnimatedNumber
                 value={receber}
-                prefix="R$\u00a0"
+                prefix={"R$\u00a0"}
                 duration={1400}
               />
             </p>
@@ -169,12 +169,12 @@ export function WidgetSaúdeFinanceira() {
             <p className="font-display text-base font-bold tabular-nums text-destructive/70">
               <AnimatedNumber
                 value={pagar}
-                prefix="R$\u00a0"
+                prefix={"R$\u00a0"}
                 duration={1600}
               />
             </p>
             <p className="text-[10px] text-muted-foreground/55">
-              {fin.contasPagar.quantidade} vencimento{fin.contasPagar.quantidade !== 1 ? 's' : ''}
+              {fin.contasPagar.quantidade} pendente{fin.contasPagar.quantidade !== 1 ? 's' : ''}
             </p>
           </div>
 
@@ -187,11 +187,11 @@ export function WidgetSaúdeFinanceira() {
             <p className={`font-display text-base font-bold tabular-nums ${resultado >= 0 ? 'text-primary/90' : 'text-destructive/80'}`}>
               <AnimatedNumber
                 value={resultado}
-                prefix="R$\u00a0"
+                prefix={"R$\u00a0"}
                 duration={1800}
               />
             </p>
-            <p className="text-[10px] text-muted-foreground/55">saldo menos pagar</p>
+            <p className="text-[10px] text-muted-foreground/55">receber − pagar</p>
           </div>
 
         </div>

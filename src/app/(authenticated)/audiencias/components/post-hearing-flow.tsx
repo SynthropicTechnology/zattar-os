@@ -125,7 +125,7 @@ export function PostHearingFlow({
   return (
     <GlassPanel depth={1} className={cn("relative overflow-hidden", className)}>
       {/* Subtle top accent */}
-      <div className="h-px bg-gradient-to-r from-transparent via-warning/20 to-transparent" />
+      <div className="h-px bg-linear-to-r from-transparent via-warning/20 to-transparent" />
 
       <div className="p-4 sm:p-5">
         {/* Header */}

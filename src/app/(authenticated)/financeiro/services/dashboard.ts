@@ -19,6 +19,7 @@ export interface DashboardFinanceiroData {
   receitasPendentes: number;
   qtdReceitasPendentes: number;
   despesasPendentes: number;
+  qtdDespesasPendentes: number;
   contasVencidas: number;
   valorVencido: number;
   evolucaoMensal: Array<{
@@ -125,8 +126,9 @@ export async function getDashboardFinanceiro(usuarioId: string): Promise<Dashboa
   const receitasPendentes = pendentes
     .filter((l) => l.tipo === 'receita')
     .reduce((acc, l) => acc + clampNumber(l.valor), 0);
-  const despesasPendentes = pendentes
-    .filter((l) => l.tipo === 'despesa')
+  const despesasPendentesList = pendentes.filter((l) => l.tipo === 'despesa');
+  const qtdDespesasPendentes = despesasPendentesList.length;
+  const despesasPendentes = despesasPendentesList
     .reduce((acc, l) => acc + clampNumber(l.valor), 0);
 
   const hojeIso = isoDate(hoje);
@@ -197,6 +199,7 @@ export async function getDashboardFinanceiro(usuarioId: string): Promise<Dashboa
     receitasPendentes,
     qtdReceitasPendentes,
     despesasPendentes,
+    qtdDespesasPendentes,
     contasVencidas,
     valorVencido,
     evolucaoMensal,

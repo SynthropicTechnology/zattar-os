@@ -41,7 +41,7 @@ export async function buscarDadosFinanceirosConsolidados(
     return {
       saldoTotal: dashboardData.saldoMes || 0,
       contasPagar: {
-        quantidade: dashboardData.contasVencidas || 0,
+        quantidade: dashboardData.qtdDespesasPendentes || 0,
         valor: dashboardData.despesasPendentes || 0,
       },
       contasReceber: {

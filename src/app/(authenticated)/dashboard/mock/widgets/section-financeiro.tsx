@@ -119,7 +119,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="flex flex-col gap-0.5">
             <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Saldo</p>
             <p className="font-display text-base font-bold tabular-nums">
-              <AnimatedNumber value={124350} prefix="R$\u00a0" duration={1200} />
+              <AnimatedNumber value={124350} prefix={"R$\u00a0"} duration={1200} />
             </p>
             <p className="text-[10px] text-success/60">+12% mês</p>
           </div>
@@ -129,7 +129,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="flex flex-col gap-0.5">
             <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">A receber</p>
             <p className="font-display text-base font-bold tabular-nums text-success/80">
-              <AnimatedNumber value={67500} prefix="R$\u00a0" duration={1400} />
+              <AnimatedNumber value={67500} prefix={"R$\u00a0"} duration={1400} />
             </p>
             <p className="text-[10px] text-muted-foreground/55">carteira ativa</p>
           </div>
@@ -139,7 +139,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="flex flex-col gap-0.5">
             <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">A pagar</p>
             <p className="font-display text-base font-bold tabular-nums text-destructive/70">
-              <AnimatedNumber value={32100} prefix="R$\u00a0" duration={1600} />
+              <AnimatedNumber value={32100} prefix={"R$\u00a0"} duration={1600} />
             </p>
             <p className="text-[10px] text-muted-foreground/55">vencimentos próx.</p>
           </div>
@@ -149,7 +149,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="flex flex-col gap-0.5">
             <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Resultado mês</p>
             <p className="font-display text-base font-bold tabular-nums text-primary/90">
-              <AnimatedNumber value={35400} prefix="R$\u00a0" duration={1800} />
+              <AnimatedNumber value={35400} prefix={"R$\u00a0"} duration={1800} />
             </p>
             <p className="text-[10px] text-success/60">margem 52,4%</p>
           </div>

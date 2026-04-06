@@ -116,7 +116,7 @@ export function AudienciasClient({
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('todas');
+  const [activeTab, setActiveTab] = useState('marcada');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Dialog state
