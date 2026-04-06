@@ -98,7 +98,7 @@ export function ExpedientesListWrapper({
       {/* Quick Action Dialogs */}
       {selectedBaixarId && (
         <ExpedientesBaixarDialog
-          expediente={expedientes.find(e => e.id === selectedBaixarId) as any}
+          expediente={expedientes.find(e => e.id === selectedBaixarId) ?? null}
           open={true}
           onOpenChange={(open) => !open && setSelectedBaixarId(null)}
           onSuccess={() => {
@@ -110,7 +110,7 @@ export function ExpedientesListWrapper({
 
       {selectedVisualizarId && (
         <ExpedienteVisualizarDialog
-          expediente={expedientes.find(e => e.id === selectedVisualizarId) as any}
+          expediente={expedientes.find(e => e.id === selectedVisualizarId) ?? null}
           open={!!selectedVisualizarId}
           onOpenChange={(open) => !open && setSelectedVisualizarId(null)}
         />

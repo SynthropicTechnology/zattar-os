@@ -10,7 +10,6 @@ import {
   FolderOpen,
 } from 'lucide-react';
 import { AppBadge } from '@/components/ui/app-badge';
-import { TemporalViewError, TemporalViewLoading } from '@/components/shared';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
@@ -21,6 +20,7 @@ import { GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS, type Expediente } from 
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 
 interface UsuarioData {
@@ -38,8 +38,6 @@ interface TipoExpedienteData {
 }
 
 interface ExpedientesControlViewProps {
-  viewModeSlot?: React.ReactNode;
-  settingsSlot?: React.ReactNode;
   usuariosData?: UsuarioData[];
   tiposExpedientesData?: TipoExpedienteData[];
 }
@@ -95,7 +93,7 @@ function getDiasLabel(diasRestantes: number | null, prazoVencido: boolean): stri
 
 const URGENCY_BORDER: Record<UrgencyLevel, string> = {
   critico: 'border-l-[3px] border-l-destructive/70',
-  alto: 'border-l-[3px] border-l-amber-500/70',
+  alto: 'border-l-[3px] border-l-warning/70',
   medio: 'border-l-[3px] border-l-primary/50',
   baixo: 'border-l-[3px] border-l-border/30',
   ok: 'border-l-[3px] border-l-success/40',
@@ -120,12 +118,12 @@ const URGENCY_BADGE_VARIANT: Record<UrgencyLevel, 'destructive' | 'default' | 's
 function EmptyQueue({ search }: { search: string }) {
   return (
     <GlassPanel depth={1} className="flex min-h-45 flex-col items-center justify-center p-8 text-center">
-      <SearchX className="size-10 text-muted-foreground/20" />
-      <h3 className="mt-4 text-sm font-semibold">Nenhum expediente nesta fila</h3>
-      <p className="mt-1.5 max-w-sm text-sm text-muted-foreground/55">
+      <SearchX className="size-8 text-muted-foreground/20" />
+      <h3 className="mt-4 text-sm font-medium text-muted-foreground/50">Nenhum expediente nesta fila</h3>
+      <p className="mt-1.5 max-w-sm text-xs text-muted-foreground/30">
         {search
           ? 'Ajuste a busca para ampliar o recorte operacional.'
-          : 'A fila selecionada nao possui expedientes dentro dos criterios ativos.'}
+          : 'A fila selecionada não possui expedientes dentro dos critérios ativos.'}
       </p>
     </GlassPanel>
   );
@@ -179,9 +177,9 @@ function QueueCard({
               <p className="truncate font-mono text-xs text-muted-foreground/70">{expediente.numeroProcesso}</p>
               <div className="mt-1.5 flex items-center gap-2">
                 {expediente.trt && (
-                  <AppBadge variant="outline" className="px-1.5 text-[10px]">{expediente.trt}</AppBadge>
+                  <SemanticBadge category="tribunal" value={expediente.trt} className="px-1.5 text-[10px]">{expediente.trt}</SemanticBadge>
                 )}
-                <AppBadge variant="outline" className="px-1.5 text-[10px]">{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
+                <SemanticBadge category="grau" value={expediente.grau} className="px-1.5 text-[10px]">{GRAU_TRIBUNAL_LABELS[expediente.grau]}</SemanticBadge>
                 {responsavelNome && (
                   <span className="truncate text-[10px] text-muted-foreground/45">· {responsavelNome}</span>
                 )}
@@ -195,7 +193,7 @@ function QueueCard({
                     <p className={cn(
                       'mt-0.5 text-[10px] tabular-nums',
                       urgencyLevel === 'critico' ? 'text-destructive/70 font-semibold' :
-                      urgencyLevel === 'alto' ? 'text-amber-500/80 font-semibold' :
+                      urgencyLevel === 'alto' ? 'text-warning/80 font-semibold' :
                       'text-muted-foreground/50',
                     )}>
                       {getDiasLabel(diasRestantes, expediente.prazoVencido)}
@@ -258,7 +256,7 @@ function QueueListRow({
                 <p className={cn(
                   'text-[10px] tabular-nums',
                   urgencyLevel === 'critico' ? 'text-destructive/70 font-semibold' :
-                  urgencyLevel === 'alto' ? 'text-amber-500/80' : 'text-muted-foreground/45',
+                  urgencyLevel === 'alto' ? 'text-warning/80' : 'text-muted-foreground/45',
                 )}>
                   {getDiasLabel(diasRestantes, expediente.prazoVencido)}
                 </p>
@@ -278,9 +276,10 @@ export function ExpedientesControlView({
   tiposExpedientesData,
 }: ExpedientesControlViewProps) {
   const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
-  const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100 });
+  const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100, enabled: !tiposExpedientesData });
 
   const usuarios = usuariosData ?? usuariosFetched;
+  const tiposExpedientes = tiposExpedientesData ?? tiposFetched;
 
   const [queueMode, setQueueMode] = React.useState<QueueMode>('todos');
   const [contentMode, setContentMode] = React.useState<ContentMode>('cards');
@@ -302,6 +301,14 @@ export function ExpedientesControlView({
     return map;
   }, [usuarios]);
 
+  const tiposMap = React.useMemo(() => {
+    const map = new Map<number, string>();
+    tiposExpedientes.forEach((tipo) => {
+      const nome = tipo.tipoExpediente || tipo.tipo_expediente || `Tipo ${tipo.id}`;
+      map.set(tipo.id, nome);
+    });
+    return map;
+  }, [tiposExpedientes]);
 
   const dadosDerivados = React.useMemo(() => {
     const pendentes = expedientes.filter((item) => !item.baixadoEm);
@@ -411,16 +418,43 @@ export function ExpedientesControlView({
   }, [dadosDerivados.pendentes, expedientesDaFila, selectedExpediente]);
 
   if (isLoading) {
-    return <TemporalViewLoading message="Carregando centro de comando de expedientes..." />;
+    return (
+      <div className="flex flex-col gap-5">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.8fr)]">
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-24 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
+            ))}
+          </div>
+          <div className="space-y-4">
+            <div className="h-52 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
+            <div className="h-52 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <TemporalViewError message={`Erro ao carregar expedientes: ${error}`} onRetry={refetch} />;
+    return (
+      <GlassPanel depth={1} className="flex min-h-45 flex-col items-center justify-center p-8 text-center">
+        <SearchX className="size-8 text-destructive/30" />
+        <h3 className="mt-4 text-sm font-medium text-muted-foreground/50">Erro ao carregar expedientes</h3>
+        <p className="mt-1.5 text-xs text-muted-foreground/30">{error}</p>
+        <button
+          type="button"
+          onClick={refetch}
+          className="mt-4 text-xs font-medium text-primary hover:text-primary/80 transition-colors cursor-pointer"
+        >
+          Tentar novamente
+        </button>
+      </GlassPanel>
+    );
   }
 
   return (
     <>
-      <div className="mx-auto flex max-w-350 flex-col gap-5">
+      <div className="flex flex-col gap-5">
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.8fr)]">
           <div className="flex min-w-0 flex-col gap-4">
 
@@ -441,8 +475,8 @@ export function ExpedientesControlView({
                     <QueueListRow
                       key={expediente.id}
                       expediente={expediente}
-                      
-                      
+                      responsavelNome={usuariosMap.get(expediente.responsavelId ?? 0) ?? null}
+                      tipoExpedienteNome={tiposMap.get(expediente.tipoExpedienteId ?? 0) ?? null}
                       selected={selectedExpediente?.id === expediente.id}
                       onSelect={() => {
                         setSelectedExpediente(expediente);
@@ -456,8 +490,8 @@ export function ExpedientesControlView({
                   <QueueCard
                     key={expediente.id}
                     expediente={expediente}
-                    
-                    
+                    responsavelNome={usuariosMap.get(expediente.responsavelId ?? 0) ?? null}
+                    tipoExpedienteNome={tiposMap.get(expediente.tipoExpedienteId ?? 0) ?? null}
                     selected={selectedExpediente?.id === expediente.id}
                     onSelect={() => {
                       setSelectedExpediente(expediente);
@@ -545,11 +579,9 @@ export function ExpedientesControlView({
       </div>
 
       <ExpedienteVisualizarDialog
-        expediente={selectedExpediente as any}
+        expediente={selectedExpediente}
         open={detailOpen}
         onOpenChange={setDetailOpen}
-        
-        
       />
     </>
   );
