@@ -25,10 +25,13 @@ const PARCELA_TONES: Record<string, SemanticTone> = {
   'Atrasadas': 'destructive',
 };
 
+// Obrigações por natureza. Condenações em warning (não destructive)
+// porque condenação é resultado processual esperado em parte dos casos —
+// não é "erro/falha". Custas são custos operacionais neutros (chart-3).
 const TREEMAP_TONES: Record<string, SemanticTone> = {
   'Acordos Trabalhistas': 'primary',
-  'Condenações': 'destructive',
-  'Custas Processuais': 'warning',
+  'Condenações': 'warning',
+  'Custas Processuais': 'chart-3',
   'Honorários Periciais': 'chart-1',
 };
 

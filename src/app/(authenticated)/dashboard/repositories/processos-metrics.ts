@@ -38,6 +38,9 @@ const SEGMENTO_TONES: Record<string, SemanticTone> = {
   'Outros': 'neutral',
 };
 
+// Progressão de risco por aging. chart-2 (laranja highlight) fica
+// cromaticamente ENTRE warning (âmbar) e destructive (vermelho), criando
+// gradação visual de 4 degraus: success → warning → chart-2 → destructive.
 const AGING_TONES: Record<string, SemanticTone> = {
   '< 1 ano': 'success',
   '1–2 anos': 'warning',

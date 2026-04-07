@@ -227,10 +227,12 @@ export async function buscarAudienciasDetalhadas(
   const audiencias = data || [];
 
   // --- Distribuição por modalidade ---
+  // Híbrida = accent (tom complementar), não warning. Modalidade híbrida
+  // é escolha válida, não estado de atenção.
   const MODALIDADE_TONES: Record<string, SemanticTone> = {
     'Virtual': 'info',
     'Presencial': 'primary',
-    'Híbrida': 'warning',
+    'Híbrida': 'accent',
   };
   const modalidadeMap = new Map<string, number>();
   audiencias.forEach((a) => {

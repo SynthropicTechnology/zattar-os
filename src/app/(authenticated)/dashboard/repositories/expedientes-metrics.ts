@@ -268,9 +268,11 @@ export async function buscarExpedientesDetalhados(
   const expedientes = data || [];
 
   // --- Distribuição por origem ---
+  // Comunica CNJ é canal oficial válido, não alerta. chart-2 (highlight
+  // alaranjado) dá presença visual sem carga semântica negativa.
   const ORIGEM_TONES: Record<string, SemanticTone> = {
     'Captura PJE': 'info',
-    'Comunica CNJ': 'warning',
+    'Comunica CNJ': 'chart-2',
     'Manual': 'neutral',
   };
   const origemMap = new Map<string, number>();

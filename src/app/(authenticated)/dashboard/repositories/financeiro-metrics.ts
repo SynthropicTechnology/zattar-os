@@ -160,11 +160,13 @@ export async function buscarFinanceiroDetalhado(
   // --- Despesas por categoria (mês atual) ---
   const mesAtual = hoje.getMonth();
   const anoAtual = hoje.getFullYear();
+  // Categorias são neutras — tributário é custo normal, não alerta.
+  // Ver TONE-ACCURACY-REPORT.md para justificativa.
   const CATEGORIA_TONES: Record<string, SemanticTone> = {
     'Pessoal': 'primary',
     'Aluguel': 'chart-2',
     'Serviços': 'chart-3',
-    'Tributário': 'warning',
+    'Tributário': 'chart-4',
     'Outros': 'neutral',
   };
   const despesasMes = data.filter((l) => {

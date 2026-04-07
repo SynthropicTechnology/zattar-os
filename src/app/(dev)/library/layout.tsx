@@ -39,9 +39,10 @@ const NAV: NavSection[] = [
   {
     title: 'Shared',
     items: [
-      { href: '/library/shared/brand-mark', label: 'BrandMark', status: 'new' },
-      { href: '/library/shared/ambient-backdrop', label: 'AmbientBackdrop', status: 'new' },
+      { href: '/library/shared/brand-mark', label: 'BrandMark' },
+      { href: '/library/shared/ambient-backdrop', label: 'AmbientBackdrop' },
       { href: '/library/shared/glass-panel', label: 'GlassPanel' },
+      { href: '/library/shared/tone-dot', label: 'ToneDot', status: 'new' },
       { href: '/library/shared/page-shell', label: 'PageShell' },
       { href: '/library/shared/data-shell', label: 'DataShell' },
       { href: '/library/shared/dialog-form-shell', label: 'DialogFormShell' },
