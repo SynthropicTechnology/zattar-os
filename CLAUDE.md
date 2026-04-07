@@ -46,6 +46,9 @@ src/
 2. **Uso de Action-Wrapper**: Se for criar Server Actions, embrulhe o método sob `authenticatedAction` (`@/lib/safe-action`).
 3. **Padrões de Shell UI**: Use componentes casca obrigatórios: `PageShell`, `DataShell`, `DialogFormShell` exportados em `@/components/shared`.
 
+**Módulos Intencionalmente Minimais**:
+Alguns módulos sob `(authenticated)/` são propositalmente embrionários (proxies, sistemas auto-descritivos, cálculos puros, FSD aninhado em `feature/`). **Não tente "consertá-los" criando arquivos vazios** — eles têm `README.md` próprio explicando o estado intencional. Consulte [docs/architecture/MINIMAL_MODULES.md](docs/architecture/MINIMAL_MODULES.md) para a lista completa e os critérios de promoção.
+
 ## Base de Dados (Supabase)
 
 - Todas as tabelas têm **RLS**. 
