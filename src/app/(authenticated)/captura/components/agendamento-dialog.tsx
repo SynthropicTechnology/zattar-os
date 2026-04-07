@@ -122,7 +122,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           <div className="space-y-2">
             <Label>Periodicidade</Label>
             <Select value={periodicidade} onValueChange={(v) => setPeriodicidade(v as 'diario' | 'a_cada_N_dias')}>
-              <SelectTrigger className="bg-white dark:bg-gray-950">
+              <SelectTrigger className="bg-background">
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent>
@@ -138,7 +138,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
               value={horario}
               onChange={(e) => setHorario(e.target.value)}
               placeholder="07:00"
-              className="bg-white dark:bg-gray-950"
+              className="bg-background"
             />
           </div>
 
@@ -149,7 +149,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
                 value={diasIntervalo}
                 onChange={(e) => setDiasIntervalo(e.target.value)}
                 inputMode="numeric"
-                className="bg-white dark:bg-gray-950"
+                className="bg-background"
               />
             </div>
           )}
@@ -162,7 +162,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           onCredenciaisChange={setCredencialIds}
         />
 
-        <div className="flex items-center justify-between rounded-md border p-3 bg-white dark:bg-gray-950">
+        <div className="flex items-center justify-between rounded-md border p-3 bg-background">
           <div className="space-y-1">
             <Typography.Small className="font-semibold">Ativo</Typography.Small>
             <Typography.Muted className="text-xs">

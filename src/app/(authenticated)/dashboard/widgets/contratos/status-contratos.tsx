@@ -20,6 +20,7 @@ import {
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { ToneDot } from '@/components/ui/tone-dot';
 
 export function WidgetStatusContratos() {
   const { data, isLoading } = useDashboard();
@@ -81,10 +82,7 @@ export function WidgetStatusContratos() {
             const pct = total > 0 ? ((s.count / total) * 100).toFixed(0) : '0';
             return (
               <div key={s.status} className="flex items-center gap-2">
-                <div
-                  className="size-2.5 rounded-[3px] shrink-0"
-                  style={{ backgroundColor: tokenForTone(s.tone) }}
-                />
+                <ToneDot tone={s.tone} shape="square" size="lg" aria-label={s.status} />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {s.status.replace(/_/g, ' ')}
                 </span>

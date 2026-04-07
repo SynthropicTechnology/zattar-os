@@ -20,6 +20,7 @@ import {
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { ToneDot } from '@/components/ui/tone-dot';
 
 export function ModalidadeDistribution() {
   const { data, isLoading, error } = useDashboard();
@@ -87,10 +88,7 @@ export function ModalidadeDistribution() {
                 className="flex items-center justify-between text-[11px]"
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <div
-                    className="size-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: tokenForTone(m.tone) }}
-                  />
+                  <ToneDot tone={m.tone} size="lg" aria-label={m.modalidade} />
                   <span className="text-muted-foreground/70 truncate">
                     {m.modalidade}
                   </span>

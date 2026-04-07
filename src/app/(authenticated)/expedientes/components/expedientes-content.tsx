@@ -16,9 +16,12 @@ import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Skeleton } from '@/components/ui/skeleton';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { EmptyState } from '@/components/shared';
 import { type ViewType, ViewModePopover, type ViewModeOption } from '@/components/shared';
 import { useWeekNavigator } from '@/components/shared';
+import { FileSearch } from 'lucide-react';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes, TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
 import { useExpedientes } from '../hooks/use-expedientes';
@@ -238,7 +241,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           <Heading level="page">
             Expedientes
           </Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
+          <p className="text-sm text-muted-foreground mt-0.5" aria-live="polite">{subtitle}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -279,17 +282,19 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       )}
 
       {/* 3. Insight Banners */}
-      {!isLoading && showVencidosBanner && (
-        <InsightBanner type="alert">
-          {vencidos.length} expediente{vencidos.length !== 1 ? 's' : ''} com prazo vencido —
-          atenção imediata necessária.
-        </InsightBanner>
-      )}
-      {!isLoading && showSemResponsavelBanner && (
-        <InsightBanner type="warning">
-          {semResponsavel.length} expedientes pendentes sem responsável atribuído.
-        </InsightBanner>
-      )}
+      <div role="status" aria-live="polite" aria-atomic="true" className="space-y-2 empty:hidden">
+        {!isLoading && showVencidosBanner && (
+          <InsightBanner type="alert">
+            {vencidos.length} expediente{vencidos.length !== 1 ? 's' : ''} com prazo vencido —
+            atenção imediata necessária.
+          </InsightBanner>
+        )}
+        {!isLoading && showSemResponsavelBanner && (
+          <InsightBanner type="warning">
+            {semResponsavel.length} expedientes pendentes sem responsável atribuído.
+          </InsightBanner>
+        )}
+      </div>
 
       {/* 4. View Controls — lista tem toolbar própria, então esconde TabPills + Search */}
       {viewMode !== 'lista' && (
@@ -314,17 +319,42 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       {/* 5. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
         {isLoading && (
-          <div className="space-y-3">
+          <div className="space-y-3" aria-busy="true" aria-label="Carregando expedientes">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-20 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse"
-              />
+              <Skeleton key={i} className="h-20 rounded-2xl" />
             ))}
           </div>
         )}
 
-        {!isLoading && viewMode === 'quadro' && (
+        {/* Empty state — só para views que renderizam a lista filtrada (quadro/semana/mes/ano).
+            `lista` tem empty state próprio dentro do DataShell/DataTable. */}
+        {!isLoading &&
+          viewMode !== 'lista' &&
+          filteredExpedientes.length === 0 && (
+            <EmptyState
+              icon={FileSearch}
+              title={search.trim() ? 'Nenhum expediente encontrado' : 'Nada por aqui ainda'}
+              description={
+                search.trim()
+                  ? 'Tente ajustar os filtros ou limpar a busca para ver mais resultados.'
+                  : 'Crie o primeiro expediente ou troque de aba para conferir os baixados.'
+              }
+              action={
+                search.trim() ? (
+                  <Button variant="outline" onClick={() => setSearch('')}>
+                    Limpar busca
+                  </Button>
+                ) : (
+                  <Button onClick={() => setIsCreateOpen(true)}>
+                    <Plus className="size-4" />
+                    Novo Expediente
+                  </Button>
+                )
+              }
+            />
+          )}
+
+        {!isLoading && viewMode === 'quadro' && filteredExpedientes.length > 0 && (
           <ExpedientesControlView
             expedientes={filteredExpedientes}
             usuariosData={usuarios}
@@ -338,7 +368,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           <ExpedientesListWrapper viewModeSlot={viewModePopover} />
         )}
 
-        {!isLoading && viewMode === 'semana' && (
+        {!isLoading && viewMode === 'semana' && filteredExpedientes.length > 0 && (
           <ExpedientesWeekMission
             weekNavigatorProps={{
               weekDays: weekNav.weekDays,
@@ -355,14 +385,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           />
         )}
 
-        {!isLoading && viewMode === 'mes' && (
+        {!isLoading && viewMode === 'mes' && filteredExpedientes.length > 0 && (
           <ExpedientesMonthWrapper
             expedientes={filteredExpedientes}
             onViewDetail={handleViewDetail}
           />
         )}
 
-        {!isLoading && viewMode === 'ano' && (
+        {!isLoading && viewMode === 'ano' && filteredExpedientes.length > 0 && (
           <ExpedientesYearWrapper
             expedientes={filteredExpedientes}
           />

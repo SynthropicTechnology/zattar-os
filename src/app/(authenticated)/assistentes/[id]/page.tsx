@@ -63,7 +63,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
     return (
       <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
-        <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0 flex flex-col">
+        <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
           <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
             <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
               <Link href="/assistentes">
@@ -83,7 +83,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   // Renderização iframe (comportamento original)
   return (
     <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
-      <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0 flex flex-col">
+      <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
         <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
           <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
             <Link href="/assistentes">

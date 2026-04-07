@@ -42,7 +42,7 @@ export const dayCellVariants = cva("text-white", {
         "bg-primary dark:bg-primary hover:bg-primary dark:hover:bg-primary",
       orange:
         "bg-warning dark:bg-warning hover:bg-warning dark:hover:bg-warning",
-      gray: "bg-gray-600 dark:bg-gray-500 hover:bg-gray-700 dark:hover:bg-gray-400",
+      gray: "bg-muted-foreground hover:bg-muted-foreground/80",
     },
   },
   defaultVariants: {

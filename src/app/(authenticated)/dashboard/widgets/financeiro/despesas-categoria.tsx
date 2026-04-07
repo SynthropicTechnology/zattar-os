@@ -10,6 +10,7 @@ import { WidgetContainer, MiniDonut, fmtMoeda } from '../../mock/widgets/primiti
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { ToneDot } from '@/components/ui/tone-dot';
 
 export function WidgetDespesasCategoria() {
   const { data, isLoading } = useDashboard();
@@ -55,10 +56,7 @@ export function WidgetDespesasCategoria() {
         <div className="flex-1 flex flex-col gap-1.5 min-w-0">
           {categorias.map((c) => (
             <div key={c.categoria} className="flex items-center gap-2">
-              <div
-                className="size-2 rounded-full shrink-0"
-                style={{ backgroundColor: tokenForTone(c.tone) }}
-              />
+              <ToneDot tone={c.tone} aria-label={c.categoria} />
               <span className="text-[10px] text-muted-foreground/70 truncate flex-1">
                 {c.categoria}
               </span>

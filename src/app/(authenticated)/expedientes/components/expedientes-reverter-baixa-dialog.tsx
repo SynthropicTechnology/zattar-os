@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 import { actionReverterBaixa, type ActionResult } from '../actions';
 import { Expediente } from '../domain';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -48,10 +49,24 @@ export function ExpedientesReverterBaixaDialog({
   // Chamar onSuccess quando a ação for bem-sucedida
   React.useEffect(() => {
     if (formState.success) {
+      toast.success('Baixa revertida', {
+        description: formState.message || 'O expediente voltou para a lista de pendentes.',
+      });
       onSuccess();
       onOpenChange(false);
     }
-  }, [formState.success, onSuccess, onOpenChange]);
+  }, [formState.success, formState.message, onSuccess, onOpenChange]);
+
+  // Toast para erros
+  const lastErrorRef = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    const err = !formState.success ? formState.error : undefined;
+    if (err && err !== lastErrorRef.current) {
+      lastErrorRef.current = err;
+      toast.error('Não foi possível reverter a baixa', { description: err });
+    }
+    if (formState.success) lastErrorRef.current = undefined;
+  }, [formState]);
 
   if (!expediente) {
     return null;
@@ -138,7 +153,7 @@ export function ExpedientesReverterBaixaDialog({
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div className="rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
+          <div role="alert" className="rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
             {generalError}
           </div>
         )}

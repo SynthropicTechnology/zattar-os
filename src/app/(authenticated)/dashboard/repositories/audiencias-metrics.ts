@@ -265,12 +265,15 @@ export async function buscarAudienciasDetalhadas(
   }
 
   // --- Distribuição por tipo ---
+  // Instrução + Julgamento são fases-chave do processo — ambas recebem
+  // destaque (primary/accent). Perícia é técnica, sem carga. UNA é raro.
+  // Ver TONE-ACCURACY-REPORT.md para justificativa editorial.
   const TIPO_TONES: Record<string, SemanticTone> = {
     'Instrução': 'primary',
     'Conciliação': 'info',
-    'Julgamento': 'destructive',
+    'Julgamento': 'accent',
     'UNA': 'neutral',
-    'Perícia': 'warning',
+    'Perícia': 'chart-4',
   };
   const tipoMap = new Map<string, number>();
   audiencias.forEach((a) => {

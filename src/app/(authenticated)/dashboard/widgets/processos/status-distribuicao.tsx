@@ -16,6 +16,7 @@ import {
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { ToneDot } from '@/components/ui/tone-dot';
 
 interface StatusSegment {
   value: number;
@@ -86,10 +87,7 @@ export function WidgetStatusDistribuicao() {
         <div className="flex flex-col justify-center gap-2.5 flex-1 min-w-0">
           {segments.map((seg) => (
             <div key={seg.label} className="flex items-center gap-2">
-              <span
-                className="size-2 rounded-full shrink-0"
-                style={{ backgroundColor: seg.color }}
-              />
+              <ToneDot tone={seg.tone} color={!seg.tone ? seg.color : undefined} aria-label={seg.label} />
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {seg.label}
               </span>

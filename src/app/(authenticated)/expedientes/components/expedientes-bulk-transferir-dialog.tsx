@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionBulkTransferirResponsavel, type ActionResult } from '../actions-bulk';
 
@@ -53,10 +54,25 @@ export function ExpedientesBulkTransferirDialog({
 
   React.useEffect(() => {
     if (formState.success) {
+      toast.success('Responsável transferido', {
+        description:
+          formState.message ||
+          `${expedienteIds.length} ${expedienteIds.length === 1 ? 'expediente foi transferido' : 'expedientes foram transferidos'}.`,
+      });
       onSuccess();
       onOpenChange(false);
     }
-  }, [formState.success, onSuccess, onOpenChange]);
+  }, [formState.success, formState.message, expedienteIds.length, onSuccess, onOpenChange]);
+
+  const lastErrorRef = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    const err = !formState.success ? formState.error : undefined;
+    if (err && err !== lastErrorRef.current) {
+      lastErrorRef.current = err;
+      toast.error('Falha na transferência em lote', { description: err });
+    }
+    if (formState.success) lastErrorRef.current = undefined;
+  }, [formState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -111,7 +127,7 @@ export function ExpedientesBulkTransferirDialog({
             </SelectContent>
           </Select>
           {generalError && (
-            <p className="text-sm font-medium text-destructive">{generalError}</p>
+            <p role="alert" className="text-sm font-medium text-destructive">{generalError}</p>
           )}
         </div>
       </form>

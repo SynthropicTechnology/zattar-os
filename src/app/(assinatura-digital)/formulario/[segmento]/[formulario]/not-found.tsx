@@ -35,12 +35,12 @@ export default function FormularioNotFound() {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
           Formulário Não Encontrado
         </h1>
 
         {/* Description */}
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-muted-foreground text-center mb-8">
           O formulário que você está tentando acessar não foi encontrado ou não está disponível.
         </p>
 
@@ -132,7 +132,7 @@ export default function FormularioNotFound() {
 
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-info transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-border text-base font-medium rounded-lg text-foreground bg-background hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-info transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -142,7 +142,7 @@ export default function FormularioNotFound() {
         </div>
 
         {/* Support Link */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-muted-foreground">
           <p>
             Precisa de ajuda?{' '}
             <a

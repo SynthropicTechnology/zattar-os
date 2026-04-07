@@ -422,7 +422,9 @@ UI (Plate) → POST /api/plate/ai { prompt: "..." }
     - Prefer user-scoped queries (RLS enforces access)
 
 12. **PWA (Progressive Web App)**
-    - Build with Webpack: `npm run build:prod`
+    - Build with Webpack **only when PWA is enabled**: `npm run build:prod`
+    - `@serwist/next` requires the webpack plugin; Turbopack is not yet supported by Serwist
+    - CI/Cloudron build uses Turbopack because it sets `DISABLE_PWA=true`
     - Service worker generated in `public/` (ignored by git)
     - Offline fallback: `/offline` page
 
@@ -879,7 +881,12 @@ function MyComponent() {
 - Run `npm run test:coverage:open` to see uncovered lines
 
 **PWA not working**:
-- Ensure build with Webpack: `npm run build:prod` (not Turbopack)
+- Ensure build with Webpack when PWA is enabled: `npm run build:prod` (not Turbopack)
+  - `@serwist/next@9.5.x` depends on `@serwist/webpack-plugin` to compile the service worker; Turbopack has no equivalent plugin yet
+  - This restriction only applies when the service worker is actually being generated
+- CI/Cloudron build (`npm run build:ci` → `build:caprover`) uses Turbopack since it sets `DISABLE_PWA=true`
+  - Migrated from `--webpack` to `--turbopack` to eliminate `PackFileCacheStrategy` warnings caused by the 280KB `database.types.ts` being serialized across hundreds of chunks
+  - Cold build dropped from ~5min to ~2.3min
 - Check `public/` for generated service worker
 - See README.md section "Progressive Web App (PWA)"
 

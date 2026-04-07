@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionAtualizarExpediente, type ActionResult } from '../actions';
 import { Expediente } from '../domain';
@@ -64,12 +65,26 @@ export function ExpedientesAlterarResponsavelDialog({
     const hasJustSucceeded = formState.success && !wasSuccessRef.current;
 
     if (hasJustSucceeded) {
+      toast.success('Responsável atualizado', {
+        description: formState.message || 'O responsável do expediente foi alterado.',
+      });
       onSuccess();
       onOpenChange(false);
     }
 
     wasSuccessRef.current = formState.success;
-  }, [formState.success, onSuccess, onOpenChange]);
+  }, [formState.success, formState.message, onSuccess, onOpenChange]);
+
+  // Toast para erros
+  const lastErrorRef = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    const err = !formState.success ? formState.error : undefined;
+    if (err && err !== lastErrorRef.current) {
+      lastErrorRef.current = err;
+      toast.error('Não foi possível alterar o responsável', { description: err });
+    }
+    if (formState.success) lastErrorRef.current = undefined;
+  }, [formState]);
 
   if (!expediente) {
     return null;
@@ -122,7 +137,7 @@ export function ExpedientesAlterarResponsavelDialog({
             </SelectContent>
           </Select>
           {generalError && (
-            <p className="text-sm font-medium text-destructive">{generalError}</p>
+            <p role="alert" className="text-sm font-medium text-destructive">{generalError}</p>
           )}
         </div>
       </form>

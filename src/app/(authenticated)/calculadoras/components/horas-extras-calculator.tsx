@@ -41,47 +41,47 @@ export function HorasExtrasCalculator() {
           <div className="bg-surface-container-high/60 backdrop-blur-xl rounded-2xl p-8 border border-white/5 shadow-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Salário Bruto (R$)</label>
+                <label className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Salário Bruto (R$)</label>
                 <input 
                   type="number" 
                   value={salarioBase}
                   onChange={e => setSalarioBase(Number(e.target.value))}
-                  className="w-full bg-surface-container-highest border border-white/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-zinc-700" 
+                  className="w-full bg-surface-container-highest border border-white/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline" 
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Jornada Mensal</label>
+                <label className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Jornada Mensal</label>
                 <input 
                   type="number" 
                   value={horasMensais}
                   onChange={e => setHorasMensais(Number(e.target.value))}
-                  className="w-full bg-surface-container-highest border border-white/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-zinc-700" 
+                  className="w-full bg-surface-container-highest border border-white/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline" 
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Qtd. Horas Extras</label>
+                <label className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Qtd. Horas Extras</label>
                 <input 
                   type="number" 
                   value={horasExtras}
                   onChange={e => setHorasExtras(Number(e.target.value))}
-                  className="w-full bg-surface-container-highest border border-white/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-zinc-700" 
+                  className="w-full bg-surface-container-highest border border-white/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline" 
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Adicional</label>
+                <label className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Adicional</label>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setPercentual(50)}
-                    className={`flex-1 py-4 font-bold text-sm rounded-lg transition-all ${percentual === 50 ? 'bg-primary text-on-primary-fixed' : 'bg-surface-container-highest text-zinc-400 hover:text-on-surface border border-white/5'}`}
+                    className={`flex-1 py-4 font-bold text-sm rounded-lg transition-all ${percentual === 50 ? 'bg-primary text-on-primary-fixed' : 'bg-surface-container-highest text-on-surface-variant hover:text-on-surface border border-white/5'}`}
                   >
                     50%
                   </button>
                   <button 
                     onClick={() => setPercentual(100)}
-                    className={`flex-1 py-4 font-bold text-sm rounded-lg transition-all ${percentual === 100 ? 'bg-primary text-on-primary-fixed' : 'bg-surface-container-highest text-zinc-400 hover:text-on-surface border border-white/5'}`}
+                    className={`flex-1 py-4 font-bold text-sm rounded-lg transition-all ${percentual === 100 ? 'bg-primary text-on-primary-fixed' : 'bg-surface-container-highest text-on-surface-variant hover:text-on-surface border border-white/5'}`}
                   >
                     100%
                   </button>
@@ -115,21 +115,21 @@ export function HorasExtrasCalculator() {
               <span className="text-xs uppercase tracking-widest text-primary font-bold">Resultado da Análise</span>
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="text-5xl font-black font-headline text-on-surface">R$ {totalBruto.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                <span className="text-zinc-500 text-sm font-medium">TOTAL LÍQUIDO</span>
+                <span className="text-on-surface-variant text-sm font-medium">TOTAL LÍQUIDO</span>
               </div>
             </div>
             
             <div className="px-8 space-y-4 mb-8">
               <div className="flex justify-between items-center py-3 border-b border-white/5">
-                <span className="text-zinc-400 text-sm">Valor da Hora Base</span>
+                <span className="text-on-surface-variant text-sm">Valor da Hora Base</span>
                 <span className="text-on-surface font-medium">R$ {valorHora.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
               <div className="flex justify-between items-center py-3 border-b border-white/5">
-                <span className="text-zinc-400 text-sm">Valor da Hora Extra ({percentual}%)</span>
+                <span className="text-on-surface-variant text-sm">Valor da Hora Extra ({percentual}%)</span>
                 <span className="text-on-surface font-medium">R$ {valorHoraExtra.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
               <div className="flex justify-between items-center py-3">
-                <span className="text-zinc-400 text-sm">DSR (Repouso Remunerado)</span>
+                <span className="text-on-surface-variant text-sm">DSR (Repouso Remunerado)</span>
                 <span className="text-primary font-medium">R$ {dsr.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
             </div>

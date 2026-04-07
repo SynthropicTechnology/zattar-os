@@ -130,6 +130,7 @@ export function TipoDescricaoCell({
         throw new Error(result.message || 'Erro ao atualizar tipo');
       }
       setIsTipoPopoverOpen(false);
+      toast.success('Tipo atualizado');
       onSuccessAction();
     } catch (error) {
       console.error('Erro ao atualizar tipo:', error);
@@ -152,6 +153,7 @@ export function TipoDescricaoCell({
         throw new Error(result.message || 'Erro ao atualizar descrição');
       }
       setIsDescricaoDialogOpen(false);
+      toast.success('Descrição atualizada');
       onSuccessAction();
     } catch (error) {
       console.error('Erro ao atualizar descrição:', error);
@@ -177,7 +179,7 @@ export function TipoDescricaoCell({
         <div className="flex items-center gap-1.5">
           <Popover open={isTipoPopoverOpen} onOpenChange={setIsTipoPopoverOpen}>
             <PopoverTrigger asChild>
-              <button type="button" className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded">
+              <button type="button" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded">
                 {badgeVariant === 'outline' ? (
                   <AppBadge
                     variant="outline"
@@ -239,7 +241,7 @@ export function TipoDescricaoCell({
         <button
           type="button"
           onClick={() => setIsDescricaoDialogOpen(true)}
-          className="text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded"
+          className="text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded"
         >
           {descricaoExibicao}
         </button>
@@ -359,7 +361,7 @@ export function ResponsavelCell({ expediente, usuarios = [], onSuccessAction }: 
       <button
         type="button"
         onClick={() => setIsDialogOpen(true)}
-        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
+        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (

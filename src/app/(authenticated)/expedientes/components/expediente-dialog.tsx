@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import { actionCriarExpediente, type ActionResult } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../domain';
 import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
@@ -185,6 +186,7 @@ export function ExpedienteDialog({
         setTiposExpediente(result.data.data || []);
       } catch (err: unknown) {
         console.error('Erro ao buscar tipos de expediente:', err);
+        toast.error('Falha ao carregar tipos de expediente');
       } finally {
         setLoadingTipos(false);
       }
@@ -201,6 +203,7 @@ export function ExpedienteDialog({
         setUsuarios(result.data?.usuarios || []);
       } catch (err: unknown) {
         console.error('Erro ao buscar usuários:', err);
+        toast.error('Falha ao carregar responsáveis');
       } finally {
         setLoadingUsuarios(false);
       }
@@ -233,11 +236,27 @@ export function ExpedienteDialog({
       resetForm();
     }
     if (formState.success) {
+      toast.success('Expediente criado', {
+        description: formState.message || 'O novo expediente foi cadastrado com sucesso.',
+      });
       onSuccess();
       onOpenChange(false);
       resetForm();
     }
-  }, [open, formState.success, onOpenChange, onSuccess, resetForm]);
+  }, [open, formState.success, formState.message, onOpenChange, onSuccess, resetForm]);
+
+  // Toast para erros de submissão (server action retornou erro)
+  const lastErrorRef = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    const err = !formState.success ? formState.error : undefined;
+    if (err && err !== lastErrorRef.current) {
+      lastErrorRef.current = err;
+      toast.error('Não foi possível criar o expediente', { description: err });
+    }
+    if (formState.success) {
+      lastErrorRef.current = undefined;
+    }
+  }, [formState]);
 
   const buscarProcessos = async (trtValue: CodigoTribunal, grauValue: GrauTribunal) => {
     setLoadingProcessos(true);
@@ -270,6 +289,9 @@ export function ExpedienteDialog({
     } catch (err: unknown) {
       console.error('Erro ao buscar processos:', err);
       setProcessos([]);
+      toast.error('Falha ao carregar processos', {
+        description: 'Verifique a conexão e tente novamente.',
+      });
     } finally {
       setLoadingProcessos(false);
     }
@@ -434,7 +456,7 @@ export function ExpedienteDialog({
                     </Select>
                   )}
                   {getErrors()?.tipoExpedienteId && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
                   )}
                 </div>
 
@@ -456,7 +478,7 @@ export function ExpedienteDialog({
                     className="resize-none w-full"
                   />
                   {getErrors()?.descricao && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
                   )}
                 </div>
 
@@ -491,7 +513,7 @@ export function ExpedienteDialog({
                     />
                   </div>
                   {(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo) && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
                   )}
                 </div>
 
@@ -517,7 +539,7 @@ export function ExpedienteDialog({
                     />
                   )}
                   {getErrors()?.responsavelId && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
                   )}
                 </div>
               </div>
@@ -605,7 +627,7 @@ export function ExpedienteDialog({
                   </SelectContent>
                 </Select>
                 {getErrors()?.trt && (
-                  <p className="text-sm font-medium text-destructive">{getErrors()!.trt[0]}</p>
+                  <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.trt[0]}</p>
                 )}
               </div>
 
@@ -628,7 +650,7 @@ export function ExpedienteDialog({
                   </SelectContent>
                 </Select>
                 {getErrors()?.grau && (
-                  <p className="text-sm font-medium text-destructive">{getErrors()!.grau[0]}</p>
+                  <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.grau[0]}</p>
                 )}
               </div>
             </div>
@@ -681,7 +703,7 @@ export function ExpedienteDialog({
                       disabled={isPending}
                     />
                     {getErrors()?.processoId && (
-                      <p className="text-sm font-medium text-destructive">{getErrors()!.processoId[0]}</p>
+                      <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.processoId[0]}</p>
                     )}
                     {processoSelecionado && (
                       <div className="mt-3 p-4 bg-muted/50 rounded-lg border">
@@ -752,7 +774,7 @@ export function ExpedienteDialog({
                     </Select>
                   )}
                   {getErrors()?.tipoExpedienteId && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
                   )}
                 </div>
 
@@ -774,7 +796,7 @@ export function ExpedienteDialog({
                     className="resize-none w-full"
                   />
                   {getErrors()?.descricao && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
                   )}
                 </div>
 
@@ -809,7 +831,7 @@ export function ExpedienteDialog({
                     />
                   </div>
                   {(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo) && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
                   )}
                 </div>
 
@@ -835,7 +857,7 @@ export function ExpedienteDialog({
                     />
                   )}
                   {getErrors()?.responsavelId && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
+                    <p role="alert" className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
                   )}
                 </div>
               </div>

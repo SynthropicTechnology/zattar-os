@@ -13,7 +13,7 @@ const eventBulletVariants = cva("size-2 rounded-full", {
 			yellow: "bg-warning dark:bg-warning",
 			purple: "bg-primary dark:bg-primary",
 			orange: "bg-warning dark:bg-warning",
-			gray: "bg-gray-600 dark:bg-gray-500",
+			gray: "bg-muted-foreground",
 		},
 	},
 	defaultVariants: {

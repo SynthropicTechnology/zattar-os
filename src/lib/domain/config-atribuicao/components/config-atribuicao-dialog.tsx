@@ -159,7 +159,7 @@ export function ConfigAtribuicaoDialog({
       <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
         <ResponsiveDialogContent
           showCloseButton={true}
-          className="sm:max-w-2xl bg-white dark:bg-gray-950 p-0 gap-0"
+          className="sm:max-w-2xl bg-background p-0 gap-0"
         >
           <ResponsiveDialogHeader className="px-6 pt-6 pb-4 border-b shrink-0 space-y-2">
             <ResponsiveDialogTitle className="text-xl">
@@ -170,7 +170,7 @@ export function ConfigAtribuicaoDialog({
             </ResponsiveDialogDescription>
           </ResponsiveDialogHeader>
 
-          <ResponsiveDialogBody className="bg-white dark:bg-gray-950 max-h-[60vh] overflow-y-auto">
+          <ResponsiveDialogBody className="bg-background max-h-[60vh] overflow-y-auto">
             {/* Botão Nova Região */}
             <div className="p-4 border-b">
               <Button onClick={handleNovaRegiao} className="w-full sm:w-auto">
@@ -219,7 +219,7 @@ export function ConfigAtribuicaoDialog({
             )}
           </ResponsiveDialogBody>
 
-          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-gray-50/50 dark:bg-gray-900/50">
+          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-muted/50">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>

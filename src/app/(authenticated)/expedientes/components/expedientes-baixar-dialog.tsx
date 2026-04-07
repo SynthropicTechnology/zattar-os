@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { actionBaixarExpediente, type ActionResult } from '../actions';
 import { Expediente, ResultadoDecisao, RESULTADO_DECISAO_LABELS } from '../domain';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes/hooks/use-tipos-expedientes';
@@ -60,10 +61,24 @@ export function ExpedientesBaixarDialog({
 
   React.useEffect(() => {
     if (formState.success) {
+      toast.success('Expediente baixado', {
+        description: formState.message || 'A baixa foi registrada com sucesso.',
+      });
       onSuccess();
       onOpenChange(false);
     }
-  }, [formState.success, onSuccess, onOpenChange]);
+  }, [formState.success, formState.message, onSuccess, onOpenChange]);
+
+  // Toast para erros do server action (evita duplicar — só anuncia uma vez por mudança)
+  const lastErrorRef = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    const err = !formState.success ? formState.error : undefined;
+    if (err && err !== lastErrorRef.current) {
+      lastErrorRef.current = err;
+      toast.error('Não foi possível baixar o expediente', { description: err });
+    }
+    if (formState.success) lastErrorRef.current = undefined;
+  }, [formState]);
 
   if (!expediente) {
     return null;
@@ -156,7 +171,7 @@ export function ExpedientesBaixarDialog({
               required={modo === 'protocolo'}
             />
             {protocoloIdError && (
-              <p className="text-sm font-medium text-destructive">{protocoloIdError}</p>
+              <p role="alert" className="text-sm font-medium text-destructive">{protocoloIdError}</p>
             )}
             <p className="text-xs text-muted-foreground">
               Informe o ID do protocolo da peça protocolada em resposta ao expediente (pode conter números e letras).
@@ -178,7 +193,7 @@ export function ExpedientesBaixarDialog({
               className="flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
             {justificativaBaixaError && (
-              <p className="text-sm font-medium text-destructive">{justificativaBaixaError}</p>
+              <p role="alert" className="text-sm font-medium text-destructive">{justificativaBaixaError}</p>
             )}
             <p className="text-xs text-muted-foreground">
               Informe o motivo pelo qual o expediente está sendo baixado sem protocolo de peça.
@@ -223,14 +238,14 @@ export function ExpedientesBaixarDialog({
               </label>
             </div>
             {resultadoDecisaoError && (
-              <p className="text-sm font-medium text-destructive">{resultadoDecisaoError}</p>
+              <p role="alert" className="text-sm font-medium text-destructive">{resultadoDecisaoError}</p>
             )}
           </div>
         )}
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div className="rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
+          <div role="alert" className="rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
             {generalError}
           </div>
         )}

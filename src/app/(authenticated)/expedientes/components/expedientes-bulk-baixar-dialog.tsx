@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { actionBulkBaixar, type ActionResult } from '../actions-bulk';
 
 interface ExpedientesBulkBaixarDialogProps {
@@ -46,10 +47,25 @@ export function ExpedientesBulkBaixarDialog({
 
   React.useEffect(() => {
     if (formState.success) {
+      toast.success('Expedientes baixados em lote', {
+        description:
+          formState.message ||
+          `${expedienteIds.length} ${expedienteIds.length === 1 ? 'expediente foi baixado' : 'expedientes foram baixados'} com sucesso.`,
+      });
       onSuccess();
       onOpenChange(false);
     }
-  }, [formState.success, onSuccess, onOpenChange]);
+  }, [formState.success, formState.message, expedienteIds.length, onSuccess, onOpenChange]);
+
+  const lastErrorRef = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    const err = !formState.success ? formState.error : undefined;
+    if (err && err !== lastErrorRef.current) {
+      lastErrorRef.current = err;
+      toast.error('Falha na baixa em lote', { description: err });
+    }
+    if (formState.success) lastErrorRef.current = undefined;
+  }, [formState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -97,7 +113,7 @@ export function ExpedientesBulkBaixarDialog({
             Esta justificativa será aplicada a todos os {expedienteIds.length} expediente(s) selecionado(s).
           </p>
           {generalError && (
-            <p className="text-sm font-medium text-destructive">{generalError}</p>
+            <p role="alert" className="text-sm font-medium text-destructive">{generalError}</p>
           )}
         </div>
       </form>

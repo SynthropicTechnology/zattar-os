@@ -14,6 +14,7 @@ import {
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { ToneDot } from '@/components/ui/tone-dot';
 
 export function WidgetAging() {
   const { data, isLoading } = useDashboard();
@@ -81,10 +82,7 @@ export function WidgetAging() {
           const pct = total > 0 ? Math.round((seg.value / total) * 100) : 0;
           return (
             <div key={seg.label} className="flex items-center gap-2">
-              <span
-                className="size-2 rounded-sm shrink-0"
-                style={{ backgroundColor: tokenForTone(seg.tone) }}
-              />
+              <ToneDot tone={seg.tone} shape="bullet" aria-label={seg.label} />
               <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                 {seg.label}
               </span>

@@ -210,7 +210,7 @@ export async function actionCriarExpediente(
 
     return {
       success: true,
-      data: result.data,
+      data: { id: result.data.id },
       message: "Expediente criado com sucesso",
     };
   } catch (error) {
@@ -311,7 +311,7 @@ export async function actionAtualizarExpediente(
 
     return {
       success: true,
-      data: result.data,
+      data: { id: result.data.id },
       message: "Expediente atualizado com sucesso",
     };
   } catch (error) {
@@ -419,7 +419,7 @@ export async function actionBaixarExpediente(
 
     return {
       success: true,
-      data: result.data,
+      data: { id: result.data.id }, // Simplifica o retorno para evitar erro de Flight no Next.js
       message: "Expediente baixado com sucesso",
     };
   } catch (error) {
@@ -497,7 +497,7 @@ export async function actionReverterBaixa(
 
     return {
       success: true,
-      data: result.data,
+      data: { id: result.data.id },
       message: "Baixa de expediente revertida com sucesso",
     };
   } catch (error) {

@@ -186,7 +186,7 @@ function MissionItem({
         'flex w-full cursor-pointer items-center gap-3 rounded-xl border border-border/15 px-3 py-2.5 text-left transition-all duration-150',
         'border-l-[3px]',
         borderColor,
-        'hover:border-border/25 hover:bg-white/2.5',
+        'hover:border-border/25 hover:bg-foreground/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         isBaixado && 'opacity-60',
       )}
     >

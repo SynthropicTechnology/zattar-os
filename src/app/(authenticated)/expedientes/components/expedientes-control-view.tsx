@@ -303,7 +303,7 @@ function DetailPanel({
           type="button"
           onClick={onClose}
           aria-label="Fechar painel de detalhes"
-          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-white/4"
+          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <X className="size-3.5 text-muted-foreground/50" />
         </button>

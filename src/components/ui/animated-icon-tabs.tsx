@@ -84,8 +84,7 @@ export function AnimatedIconTabs({
     >
       <TabsPrimitive.List
         className={cn(
-          "inline-flex h-auto w-fit items-center justify-start gap-2 rounded-xl border border-border bg-white p-1 shadow-sm",
-          "dark:bg-gray-950",
+          "inline-flex h-auto w-fit items-center justify-start gap-2 rounded-xl border border-border bg-background p-1 shadow-sm",
           listClassName
         )}
       >

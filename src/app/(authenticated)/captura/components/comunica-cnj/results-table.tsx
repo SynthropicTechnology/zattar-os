@@ -67,7 +67,7 @@ const TIPO_COMUNICACAO_CONFIG: Record<string, { color: string; icon: typeof Aler
 
 const TIPO_DOCUMENTO_CONFIG: Record<string, { color: string; icon: typeof FileText }> = {
   Despacho: {
-    color: 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-300',
+    color: 'bg-muted text-muted-foreground border-border',
     icon: FileText
   },
   Sentença: {
@@ -90,14 +90,14 @@ const TIPO_DOCUMENTO_CONFIG: Record<string, { color: string; icon: typeof FileTe
 
 const getTipoComunicacaoConfig = (tipo: string) => {
   return TIPO_COMUNICACAO_CONFIG[tipo] || {
-    color: 'bg-gray-100 text-gray-800 border-gray-300',
+    color: 'bg-muted text-muted-foreground border-border',
     icon: FileText
   };
 };
 
 const getTipoDocumentoConfig = (tipo: string) => {
   return TIPO_DOCUMENTO_CONFIG[tipo] || {
-    color: 'bg-gray-100 text-gray-800 border-gray-300',
+    color: 'bg-muted text-muted-foreground border-border',
     icon: FileText
   };
 };

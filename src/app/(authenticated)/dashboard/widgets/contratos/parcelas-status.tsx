@@ -21,6 +21,7 @@ import {
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { ToneDot } from '@/components/ui/tone-dot';
 
 export function WidgetParcelasStatus() {
   const { data, isLoading } = useDashboard();
@@ -92,10 +93,7 @@ export function WidgetParcelasStatus() {
             const pct = totalCount > 0 ? ((p.count / totalCount) * 100).toFixed(0) : '0';
             return (
               <div key={p.status} className="flex items-center gap-2">
-                <div
-                  className="size-2.5 rounded-[3px] shrink-0"
-                  style={{ backgroundColor: tokenForTone(p.tone) }}
-                />
+                <ToneDot tone={p.tone} shape="square" size="lg" aria-label={p.status} />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {p.status.replace(/_/g, ' ')}
                 </span>

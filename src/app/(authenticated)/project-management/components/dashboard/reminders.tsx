@@ -20,7 +20,7 @@ interface RemindersProps {
 }
 
 const PRIORIDADE_DOT_COLORS: Record<string, string> = {
-  baixa: "bg-gray-400",
+  baixa: "bg-muted-foreground",
   media: "bg-warning",
   alta: "bg-destructive",
   urgente: "bg-destructive",
@@ -49,7 +49,7 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
           <span
             className={cn(
               "me-2 inline-block size-2 rounded-full",
-              PRIORIDADE_DOT_COLORS[lembrete.prioridade] ?? "bg-gray-400"
+              PRIORIDADE_DOT_COLORS[lembrete.prioridade] ?? "bg-muted-foreground"
             )}
           />
           {PRIORIDADE_LABELS[lembrete.prioridade]}
@@ -61,7 +61,7 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
             <CircleCheck
               className={cn(
                 "size-4",
-                lembrete.concluido ? "text-success" : "text-gray-400"
+                lembrete.concluido ? "text-success" : "text-muted-foreground"
               )}
             />
           </button>

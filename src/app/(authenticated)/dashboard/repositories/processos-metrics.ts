@@ -26,13 +26,16 @@ const STATUS_TONES: Record<string, SemanticTone> = {
   'Em Recurso': 'info',
 };
 
+// Segmentos do direito usam tons CATEGÓRICOS (chart-*), não semânticos.
+// Áreas de atuação são neutras — não devem carregar warning/destructive
+// implícitos que sugiram "área de risco". Ver TONE-ACCURACY-REPORT.md.
 const SEGMENTO_TONES: Record<string, SemanticTone> = {
   'Trabalhista': 'chart-1',
   'Cível': 'chart-2',
   'Previdenciário': 'chart-4',
-  'Empresarial': 'warning',
-  'Criminal': 'destructive',
-  'Outros': 'chart-5',
+  'Empresarial': 'chart-3',
+  'Criminal': 'chart-5',
+  'Outros': 'neutral',
 };
 
 const AGING_TONES: Record<string, SemanticTone> = {
