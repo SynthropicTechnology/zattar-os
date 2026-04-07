@@ -307,7 +307,7 @@ const idAdvogado = payload.id;`}
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <h4 className="font-semibold text-green-600">✅ Correto</h4>
+            <h4 className="font-semibold text-success">✅ Correto</h4>
             <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
 {`const response = await fetch(endpoint, {
   method: 'GET',
@@ -321,7 +321,7 @@ const idAdvogado = payload.id;`}
           </div>
 
           <div className="space-y-2">
-            <h4 className="font-semibold text-red-600">❌ Incorreto</h4>
+            <h4 className="font-semibold text-destructive">❌ Incorreto</h4>
             <p className="text-sm text-muted-foreground">
               NÃO use <code className="bg-muted px-1 rounded">Authorization: Bearer {'{token}'}</code> - causa erro 401.
             </p>
@@ -375,8 +375,8 @@ const idAdvogado = payload.id;`}
             </p>
           </div>
 
-          <div className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-            <h4 className="font-semibold text-green-600 mb-2">✅ Recomendação: Use Firefox</h4>
+          <div className="mt-4 p-3 bg-success/10 border border-success/20 rounded-lg">
+            <h4 className="font-semibold text-success mb-2">✅ Recomendação: Use Firefox</h4>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>• Não exibe popovers de gerenciamento de senha</li>
               <li>• Mais estável para automação de login com OTP</li>

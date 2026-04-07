@@ -196,28 +196,28 @@ export default function TroubleshootingPage() {
           <CardTitle>Assinatura Digital</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="border-l-2 border-orange-500 pl-4">
+          <div className="border-l-2 border-warning pl-4">
             <h4 className="font-semibold mb-1">Módulo não aparece</h4>
             <p className="text-sm text-muted-foreground mb-2">
               Verifique permissão <code className="bg-muted px-1 rounded">assinatura_digital.listar</code>.
               Faça logout/login para atualizar cache.
             </p>
           </div>
-          <div className="border-l-2 border-orange-500 pl-4">
+          <div className="border-l-2 border-warning pl-4">
             <h4 className="font-semibold mb-1">Editor de templates não carrega</h4>
             <p className="text-sm text-muted-foreground mb-2">
               PDF muito grande (&gt;10MB), PDF corrompido, ou erro de rede.
               Verifique console (F12).
             </p>
           </div>
-          <div className="border-l-2 border-orange-500 pl-4">
+          <div className="border-l-2 border-warning pl-4">
             <h4 className="font-semibold mb-1">Preview não gera</h4>
             <p className="text-sm text-muted-foreground mb-2">
               Template sem campos, variáveis incorretas, ou PDF inacessível.
               Verifique logs do backend.
             </p>
           </div>
-          <div className="border-l-2 border-orange-500 pl-4">
+          <div className="border-l-2 border-warning pl-4">
             <h4 className="font-semibold mb-1">Câmera não funciona</h4>
             <p className="text-sm text-muted-foreground mb-2">
               Permissão negada, câmera em uso, ou navegador incompatível.

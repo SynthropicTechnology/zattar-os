@@ -46,7 +46,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
       </div>
 
       {error && (
-        <div className="text-sm text-red-500 flex items-center gap-2">
+        <div className="text-sm text-destructive flex items-center gap-2">
           <AlertCircle className="h-4 w-4" />
           {error}
         </div>

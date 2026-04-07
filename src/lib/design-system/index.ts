@@ -85,6 +85,14 @@ export {
   EVENT_TYPE_LABELS,
 } from './event-colors';
 
+// Semantic Tones (domain layer — no color carried)
+export {
+  type SemanticTone,
+  tokenForTone,
+  bgClassForTone,
+  textClassForTone,
+} from './semantic-tones';
+
 // Utilitários
 export {
   cn,

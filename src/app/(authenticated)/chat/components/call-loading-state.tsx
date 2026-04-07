@@ -60,8 +60,8 @@ export function CallLoadingState({
     <div className={cn("flex flex-col items-center justify-center h-full w-full bg-gray-950 text-white p-6", className)}>
       <div className="w-full max-w-sm flex flex-col items-center gap-6">
         <div className="relative">
-          <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
-          <Loader2 className="w-16 h-16 animate-spin text-blue-500 relative z-10" />
+          <div className="absolute inset-0 bg-info/20 blur-xl rounded-full" />
+          <Loader2 className="w-16 h-16 animate-spin text-info relative z-10" />
         </div>
         
         <div className="text-center space-y-2 w-full">

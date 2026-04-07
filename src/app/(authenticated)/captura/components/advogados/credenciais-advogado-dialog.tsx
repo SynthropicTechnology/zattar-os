@@ -452,9 +452,9 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                               <td className="py-2">{d.tribunal}</td>
                               <td className="py-2">{GRAUS_LABELS[d.grau]}</td>
                               <td className="py-2">
-                                <span className={`flex items-center gap-1 ${d.status === 'criada' ? 'text-green-600' :
-                                  d.status === 'atualizada' ? 'text-blue-600' :
-                                    d.status === 'pulada' ? 'text-yellow-600' : 'text-red-600'
+                                <span className={`flex items-center gap-1 ${d.status === 'criada' ? 'text-success' :
+                                  d.status === 'atualizada' ? 'text-info' :
+                                    d.status === 'pulada' ? 'text-warning' : 'text-destructive'
                                   }`}>
                                   {d.status === 'criada' && <CheckCircle className="h-3 w-3" />}
                                   {d.status === 'atualizada' && <CheckCircle className="h-3 w-3" />}

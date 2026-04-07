@@ -274,7 +274,7 @@ curl https://seu-dominio.com.br/api/health`}
         <CardContent>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-start gap-2">
-              <AlertTriangle className="h-4 w-4 text-orange-500 mt-0.5" />
+              <AlertTriangle className="h-4 w-4 text-warning mt-0.5" />
               Nunca exponha <code className="bg-muted px-1 rounded">SUPABASE_SECRET_KEY</code> no frontend
             </li>
             <li>• Use apenas chave pública no frontend</li>

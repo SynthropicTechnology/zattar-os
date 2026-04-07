@@ -14,6 +14,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function WidgetSegmento() {
   const { data, isLoading } = useDashboard();
@@ -35,7 +36,7 @@ export function WidgetSegmento() {
     );
   }
 
-  let porSegmento: { segmento: string; count: number; color: string }[] | undefined;
+  let porSegmento: { segmento: string; count: number; tone: SemanticTone }[] | undefined;
 
   if (isDashboardUsuario(data)) {
     porSegmento = data.processos.porSegmento;
@@ -60,8 +61,9 @@ export function WidgetSegmento() {
 
   const segments = porSegmento.map((s) => ({
     value: s.count,
-    color: s.color,
+    color: tokenForTone(s.tone),
     label: s.segmento,
+    tone: s.tone,
   }));
 
   const total = segments.reduce((s, seg) => s + seg.value, 0);
@@ -88,7 +90,7 @@ export function WidgetSegmento() {
               <div key={seg.label} className="flex items-center gap-2">
                 <span
                   className="size-2 rounded-full shrink-0"
-                  style={{ backgroundColor: seg.color }}
+                  style={{ backgroundColor: tokenForTone(seg.tone) }}
                 />
                 <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                   {seg.label}

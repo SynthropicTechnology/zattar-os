@@ -13,31 +13,33 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import type { SemanticTone } from '@/lib/design-system';
 import type { ProcessoResumo } from '../domain';
 
-// Cores para gráficos — valores oklch alinhados aos tokens do tema (globals.css)
-// Nota: SVG stroke/fill não resolve var(), então usamos valores literais.
-const STATUS_COLORS: Record<string, string> = {
-  'Ativos': 'oklch(0.55 0.18 145)',     /* --success */
-  'Suspensos': 'oklch(0.60 0.18 75)',   /* --warning */
-  'Arquivados': 'oklch(0.42 0.01 281)', /* --muted-foreground */
-  'Em Recurso': 'oklch(0.55 0.18 250)', /* --info */
+// Mapeamentos status/segmento/aging → SemanticTone (sem cor literal).
+// UI layer resolve via tokenForTone() do design system.
+// Esta separação mantém o repository desacoplado do design system.
+const STATUS_TONES: Record<string, SemanticTone> = {
+  'Ativos': 'success',
+  'Suspensos': 'warning',
+  'Arquivados': 'neutral',
+  'Em Recurso': 'info',
 };
 
-const SEGMENTO_COLORS: Record<string, string> = {
-  'Trabalhista': 'oklch(0.48 0.26 281)',  /* --chart-1 (primary) */
-  'Cível': 'oklch(0.60 0.22 45)',         /* --chart-2 */
-  'Previdenciário': 'oklch(0.55 0.18 150)', /* --chart-4 */
-  'Empresarial': 'oklch(0.60 0.18 75)',   /* --warning */
-  'Criminal': 'oklch(0.55 0.22 25)',      /* --destructive */
-  'Outros': 'oklch(0.70 0.01 281)',       /* --chart-5 */
+const SEGMENTO_TONES: Record<string, SemanticTone> = {
+  'Trabalhista': 'chart-1',
+  'Cível': 'chart-2',
+  'Previdenciário': 'chart-4',
+  'Empresarial': 'warning',
+  'Criminal': 'destructive',
+  'Outros': 'chart-5',
 };
 
-const AGING_COLORS: Record<string, string> = {
-  '< 1 ano': 'oklch(0.55 0.18 145)',  /* --success */
-  '1–2 anos': 'oklch(0.60 0.18 75)',  /* --warning */
-  '2–5 anos': 'oklch(0.60 0.22 45)',  /* --chart-2 (highlight/amber) */
-  '> 5 anos': 'oklch(0.55 0.22 25)',  /* --destructive */
+const AGING_TONES: Record<string, SemanticTone> = {
+  '< 1 ano': 'success',
+  '1–2 anos': 'warning',
+  '2–5 anos': 'chart-2',
+  '> 5 anos': 'destructive',
 };
 
 /**
@@ -148,9 +150,9 @@ export async function buscarProcessosResumo(
 export async function buscarProcessosDetalhados(
   responsavelId?: number
 ): Promise<{
-  porStatus: { status: string; count: number; color: string }[];
-  porSegmento: { segmento: string; count: number; color: string }[];
-  aging: { faixa: string; count: number; color: string }[];
+  porStatus: { status: string; count: number; tone: SemanticTone }[];
+  porSegmento: { segmento: string; count: number; tone: SemanticTone }[];
+  aging: { faixa: string; count: number; tone: SemanticTone }[];
   tendenciaMensal: { mes: string; novos: number; resolvidos: number }[];
 }> {
   const supabase = await createClient();
@@ -196,7 +198,7 @@ export async function buscarProcessosDetalhados(
   const porStatus = Array.from(statusMap.entries()).map(([status, count]) => ({
     status,
     count,
-    color: STATUS_COLORS[status] || 'oklch(0.42 0.01 281)' /* --muted-foreground */,
+    tone: STATUS_TONES[status] ?? 'neutral' as SemanticTone,
   }));
 
   // --- Distribuição por segmento (derivada de classe_judicial) ---
@@ -216,7 +218,7 @@ export async function buscarProcessosDetalhados(
     .map(([segmento, count]) => ({
       segmento,
       count,
-      color: SEGMENTO_COLORS[segmento] || 'oklch(0.70 0.01 281)' /* --chart-5 */,
+      tone: SEGMENTO_TONES[segmento] ?? 'chart-5' as SemanticTone,
     }))
     .sort((a, b) => b.count - a.count);
 
@@ -240,7 +242,7 @@ export async function buscarProcessosDetalhados(
     .map((faixa) => ({
       faixa,
       count: agingMap.get(faixa) || 0,
-      color: AGING_COLORS[faixa] || 'oklch(0.70 0.01 281)' /* --chart-5 */,
+      tone: AGING_TONES[faixa] ?? 'chart-5' as SemanticTone,
     }));
 
   // --- Tendência mensal (últimos 8 meses) ---

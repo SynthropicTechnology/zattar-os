@@ -63,7 +63,7 @@ function getPlaceholderCategory(value: string): string {
 const CATEGORY_COLORS: Record<string, string> = {
   autor: 'bg-info/10 text-info',
   reu: 'bg-destructive/10 text-destructive',
-  meta: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  meta: 'bg-primary text-primary dark:bg-primary dark:text-primary',
   contrato: 'bg-success/10 text-success',
   outro: 'bg-muted text-muted-foreground',
 };

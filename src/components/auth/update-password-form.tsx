@@ -31,7 +31,7 @@ function PasswordStrength({ password }: { password: string }) {
                 ? 'bg-destructive'
                 : passed <= 2
                   ? 'bg-warning'
-                  : 'bg-emerald-400'
+                  : 'bg-success'
               : 'bg-on-surface-variant/10'
           )}
         />
@@ -114,8 +114,8 @@ export function UpdatePasswordForm({
             </p>
           </div>
 
-          <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+          <div className="flex items-start gap-2.5 rounded-xl border border-success/15 bg-success/5 p-4">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
             <p className="text-sm leading-relaxed text-on-surface-variant/60">
               Você será redirecionado em instantes.
             </p>

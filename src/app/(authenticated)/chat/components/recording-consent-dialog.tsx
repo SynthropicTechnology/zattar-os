@@ -40,7 +40,7 @@ export function RecordingConsentDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-orange-500" />
+            <AlertCircle className="h-5 w-5 text-warning" />
             Consentimento para Gravação
           </DialogTitle>
           <DialogDescription className="text-left space-y-3 pt-2">

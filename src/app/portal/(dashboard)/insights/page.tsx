@@ -184,7 +184,7 @@ export default function InsightsPage() {
               className="absolute inset-0 pointer-events-none"
               aria-hidden="true"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-violet-500/5" />
+              <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-primary/5" />
             </div>
 
             <div className="relative z-10 p-8 lg:p-12 flex flex-col lg:flex-row gap-8 items-start">

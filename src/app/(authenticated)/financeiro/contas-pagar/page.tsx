@@ -153,7 +153,7 @@ function ContasPagarActions({
               Editar
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onCancelar(conta)} className="text-orange-600">
+            <DropdownMenuItem onClick={() => onCancelar(conta)} className="text-warning">
               <XCircle className="mr-2 h-4 w-4" />
               Cancelar
             </DropdownMenuItem>
@@ -683,7 +683,7 @@ export default function ContasPagarPage() {
                   {selectedConta.descricao} - {formatarValor(selectedConta.valor)}
                 </span>
               )}
-              <span className="block mt-2 text-orange-600">
+              <span className="block mt-2 text-warning">
                 A conta será marcada como cancelada mas permanecerá no histórico.
               </span>
             </AlertDialogDescription>

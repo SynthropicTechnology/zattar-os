@@ -306,7 +306,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <FileText className="w-4 h-4 text-blue-600" />
+                    <FileText className="w-4 h-4 text-info" />
                   </TooltipTrigger>
                   <TooltipContent>Transcrição disponível</TooltipContent>
                 </Tooltip>
@@ -316,7 +316,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <Sparkles className="w-4 h-4 text-purple-600" />
+                    <Sparkles className="w-4 h-4 text-primary" />
                   </TooltipTrigger>
                   <TooltipContent>Resumo IA gerado</TooltipContent>
                 </Tooltip>

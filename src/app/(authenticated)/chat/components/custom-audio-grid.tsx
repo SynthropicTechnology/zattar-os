@@ -56,8 +56,8 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
         <div key={p.id} className="flex flex-col items-center gap-4 group">
           <div className={cn(
             "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg transition-transform",
-            "bg-linear-to-br from-blue-500 to-purple-600",
-            p.audioEnabled && "animate-pulse ring-4 ring-green-500/30",
+            "bg-linear-to-br from-info to-primary",
+            p.audioEnabled && "animate-pulse ring-4 ring-success/30",
             "group-hover:scale-105"
           )}>
             {p.picture ? (
@@ -68,7 +68,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
 
             <div className={cn(
               "absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black",
-              p.audioEnabled ? "bg-green-500" : "bg-red-500"
+              p.audioEnabled ? "bg-success" : "bg-destructive"
             )}>
               {p.audioEnabled ? <Mic className="w-4 h-4 text-white" /> : <MicOff className="w-4 h-4 text-white" />}
             </div>

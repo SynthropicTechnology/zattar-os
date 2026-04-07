@@ -351,7 +351,7 @@ function RegiaoCard({ regiao, onEditar, onExcluir, onAlternarStatus }: RegiaoCar
             {regiao.ativo ? (
               <PowerOff className="h-4 w-4 text-muted-foreground" />
             ) : (
-              <Power className="h-4 w-4 text-green-600" />
+              <Power className="h-4 w-4 text-success" />
             )}
           </Button>
           <Button variant="ghost" size="icon" onClick={onEditar} title="Editar">

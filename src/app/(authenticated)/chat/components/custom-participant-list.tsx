@@ -61,8 +61,8 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
               {/* Avatar */}
               <div className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm",
-                "bg-linear-to-br from-blue-500 to-purple-600",
-                p.audioEnabled && "ring-2 ring-green-500"
+                "bg-linear-to-br from-info to-primary",
+                p.audioEnabled && "ring-2 ring-success"
               )}>
                  {p.picture ? (
                      

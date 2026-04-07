@@ -194,9 +194,9 @@ export default function VariaveisAmbientePage() {
       </div>
 
       {/* Important Note */}
-      <Card className="border-orange-500/50 bg-orange-500/5">
+      <Card className="border-warning/50 bg-warning/5">
         <CardHeader>
-          <CardTitle className="text-orange-600">Diferença entre SUPABASE_URL e DOMAIN</CardTitle>
+          <CardTitle className="text-warning">Diferença entre SUPABASE_URL e DOMAIN</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 text-sm">

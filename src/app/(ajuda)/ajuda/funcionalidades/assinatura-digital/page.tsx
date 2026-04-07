@@ -505,7 +505,7 @@ export default function AssinaturaDigitalPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-success" />
                 <CardTitle>Boas Práticas</CardTitle>
               </div>
             </CardHeader>

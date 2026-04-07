@@ -31,7 +31,7 @@ function TrendIndicator({
   const Icon = isPositive ? ArrowUpRight : ArrowDownRight;
   return (
     <span className="flex items-center gap-1">
-      <Icon className={cn("size-4", isPositive ? "text-green-600" : "text-red-600")} />
+      <Icon className={cn("size-4", isPositive ? "text-success" : "text-destructive")} />
       {value}
     </span>
   );

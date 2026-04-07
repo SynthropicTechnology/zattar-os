@@ -31,7 +31,7 @@ export class MeetingErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="flex flex-col items-center justify-center h-full w-full bg-gray-950 text-white p-6 text-center">
-          <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
+          <AlertCircle className="w-12 h-12 text-destructive mb-4" />
           <h2 className="text-xl font-bold mb-2">Algo deu errado na chamada</h2>
           <p className="text-gray-400 mb-6 max-w-md">
             Ocorreu um erro inesperado ao renderizar a interface da chamada. Tente recarregar.

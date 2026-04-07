@@ -283,7 +283,7 @@ export function TaskDetailSheet() {
                                     <Button
                                         variant="ghost"
                                         size="icon" aria-label="Favoritar"
-                                        className={tarefa.starred ? "text-yellow-500" : "text-muted-foreground"}
+                                        className={tarefa.starred ? "text-warning" : "text-muted-foreground"}
                                         onClick={handleToggleStarred}
                                     >
                                         <Star className="h-5 w-5 fill-current" />

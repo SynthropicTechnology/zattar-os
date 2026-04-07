@@ -4,7 +4,7 @@ import { MediaListItemType } from "./types";
 export function MediaListItem({ type }: MediaListItemType) {
   switch (type) {
     case "image":
-      return <CircleCheck className="h-4 w-4 text-green-500" />;
+      return <CircleCheck className="h-4 w-4 text-success" />;
     case "pdf_file":
       return <CheckCheck className="text-muted-foreground h-4 w-4" />;
     case "text_file":

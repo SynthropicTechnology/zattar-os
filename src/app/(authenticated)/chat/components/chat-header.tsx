@@ -46,7 +46,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
           <span className="text-sm font-semibold">{name}</span>
           {!isGroup && (
             onlineStatus === "online" ? (
-              <span className="text-xs text-green-500">Online</span>
+              <span className="text-xs text-success">Online</span>
             ) : (
               <span className="text-muted-foreground text-xs">
                 {lastSeen ? `Visto por último ${new Date(lastSeen).toLocaleString()}` : 'Offline'}

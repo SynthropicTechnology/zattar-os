@@ -49,7 +49,7 @@ const myWallet = [
     type: "Credit Card",
     number: "5375 **** **** 2368",
     balance: "$5,325.57",
-    gradient: "from-green-400 to-green-600",
+    gradient: "from-success to-success",
     brand: <VisaIcon />
   },
   {
@@ -57,7 +57,7 @@ const myWallet = [
     type: "Digital Card",
     number: "5375 **** **** 1847",
     balance: "$10,892.43",
-    gradient: "from-blue-400 to-blue-600",
+    gradient: "from-info to-info",
     brand: <MasterCardIcon />
   },
   {
@@ -65,7 +65,7 @@ const myWallet = [
     type: "Premium Card",
     number: "4532 **** **** 9876",
     balance: "$2,156.89",
-    gradient: "from-purple-400 to-purple-600",
+    gradient: "from-primary to-primary",
     brand: <VisaIcon />
   },
   {
@@ -73,7 +73,7 @@ const myWallet = [
     type: "Business Card",
     number: "3782 **** **** 5432",
     balance: "$15,743.21",
-    gradient: "from-orange-400 to-orange-600",
+    gradient: "from-warning to-warning",
     brand: <MasterCardIcon />
   }
 ];

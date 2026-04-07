@@ -92,7 +92,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
 
           {/* Starred indicator */}
           {tarefa.starred && (
-            <span className="text-yellow-500">⭐</span>
+            <span className="text-warning">⭐</span>
           )}
         </div>
 

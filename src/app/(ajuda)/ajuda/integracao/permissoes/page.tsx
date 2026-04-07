@@ -106,7 +106,7 @@ export default function PermissoesDocsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
+              <CheckCircle className="h-5 w-5 text-success" />
               <span className="font-medium">Auditoria</span>
             </div>
             <p className="text-sm text-muted-foreground">Logs completos</p>
@@ -482,19 +482,19 @@ console.log(getCacheStats());`}
             <CardContent>
               <ul className="space-y-2 text-muted-foreground">
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-success" />
                   Super admins devem ser usados com moderação
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-success" />
                   Sempre validar permissões no backend (server-side)
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-success" />
                   RLS habilitado em todas as tabelas
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-success" />
                   Logs de auditoria não podem ser deletados
                 </li>
               </ul>

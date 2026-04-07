@@ -34,8 +34,8 @@ export default function Error({
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
         <div className="flex animate-in flex-col items-center gap-4 text-center zoom-in-95 fade-in">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10">
-            <RefreshCw className={`h-10 w-10 text-blue-500 ${isReloading ? 'animate-spin' : ''}`} />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-info/10">
+            <RefreshCw className={`h-10 w-10 text-info ${isReloading ? 'animate-spin' : ''}`} />
           </div>
           <div className="space-y-2">
             <h1 className="font-heading text-3xl font-bold tracking-tight">

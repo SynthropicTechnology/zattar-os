@@ -9,6 +9,7 @@ import { PieChart } from 'lucide-react';
 import { WidgetContainer, MiniDonut, fmtMoeda } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function WidgetDespesasCategoria() {
   const { data, isLoading } = useDashboard();
@@ -36,7 +37,7 @@ export function WidgetDespesasCategoria() {
   const total = categorias.reduce((acc, c) => acc + c.valor, 0);
   const segments = categorias.map((c) => ({
     value: c.valor,
-    color: c.color,
+    color: tokenForTone(c.tone),
     label: c.categoria,
   }));
 
@@ -56,7 +57,7 @@ export function WidgetDespesasCategoria() {
             <div key={c.categoria} className="flex items-center gap-2">
               <div
                 className="size-2 rounded-full shrink-0"
-                style={{ backgroundColor: c.color }}
+                style={{ backgroundColor: tokenForTone(c.tone) }}
               />
               <span className="text-[10px] text-muted-foreground/70 truncate flex-1">
                 {c.categoria}

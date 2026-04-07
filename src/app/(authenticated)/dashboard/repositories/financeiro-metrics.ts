@@ -9,6 +9,7 @@
 import { getDashboardFinanceiro } from '@/app/(authenticated)/financeiro/services/dashboard';
 import { formatarMoeda } from './shared/formatters';
 import { createClient } from '@/lib/supabase/server';
+import type { SemanticTone } from '@/lib/design-system';
 import type { DadosFinanceirosConsolidados } from '../domain';
 
 /**
@@ -71,9 +72,9 @@ export async function buscarFinanceiroDetalhado(
   _usuarioId?: number
 ): Promise<{
   saldoTrend: number[];
-  contasReceberAging: { faixa: string; valor: number; color: string }[];
-  contasPagarAging: { faixa: string; valor: number; color: string }[];
-  despesasPorCategoria: { categoria: string; valor: number; color: string }[];
+  contasReceberAging: { faixa: string; valor: number; tone: SemanticTone }[];
+  contasPagarAging: { faixa: string; valor: number; tone: SemanticTone }[];
+  despesasPorCategoria: { categoria: string; valor: number; tone: SemanticTone }[];
   dreComparativo: { receita: number[]; despesa: number[]; resultado: number[] };
   fluxoCaixaMensal: { mes: string; receita: number; despesa: number }[];
 }> {
@@ -140,31 +141,31 @@ export async function buscarFinanceiroDetalhado(
     return saldoAcumulado;
   });
 
-  // --- Aging de contas a receber ---
-  const AGING_COLORS = {
-    avencer: 'var(--success)',
-    ate30: 'hsl(142 70% 45%)',
-    '30_60': 'var(--warning)',
-    '60_90': 'hsl(30 90% 52%)',
-    '90mais': 'var(--destructive)',
+  // --- Aging: tons semânticos (do menor ao maior risco) ---
+  const AGING_TONES: Record<string, SemanticTone> = {
+    avencer: 'success',
+    ate30: 'chart-4',
+    '30_60': 'warning',
+    '60_90': 'chart-2',
+    '90mais': 'destructive',
   };
 
   const contasReceber = data.filter((l) => l.tipo === 'receita' && l.status !== 'pago');
-  const contasReceberAging = calcularAging(contasReceber, hoje, AGING_COLORS);
+  const contasReceberAging = calcularAging(contasReceber, hoje, AGING_TONES);
 
   // --- Aging de contas a pagar ---
   const contasPagar = data.filter((l) => l.tipo === 'despesa' && l.status !== 'pago');
-  const contasPagarAging = calcularAging(contasPagar, hoje, AGING_COLORS);
+  const contasPagarAging = calcularAging(contasPagar, hoje, AGING_TONES);
 
   // --- Despesas por categoria (mês atual) ---
   const mesAtual = hoje.getMonth();
   const anoAtual = hoje.getFullYear();
-  const CATEGORIA_COLORS: Record<string, string> = {
-    'Pessoal': 'var(--primary)',
-    'Aluguel': 'var(--chart-2)',
-    'Serviços': 'var(--chart-3)',
-    'Tributário': 'var(--warning)',
-    'Outros': 'var(--muted-foreground)',
+  const CATEGORIA_TONES: Record<string, SemanticTone> = {
+    'Pessoal': 'primary',
+    'Aluguel': 'chart-2',
+    'Serviços': 'chart-3',
+    'Tributário': 'warning',
+    'Outros': 'neutral',
   };
   const despesasMes = data.filter((l) => {
     const dv = new Date(l.data_vencimento);
@@ -179,7 +180,7 @@ export async function buscarFinanceiroDetalhado(
     .map(([categoria, valor]) => ({
       categoria,
       valor,
-      color: CATEGORIA_COLORS[categoria] || 'var(--muted-foreground)',
+      tone: CATEGORIA_TONES[categoria] ?? 'neutral' as SemanticTone,
     }))
     .sort((a, b) => b.valor - a.valor);
 
@@ -196,8 +197,8 @@ export async function buscarFinanceiroDetalhado(
 function calcularAging(
   contas: { data_vencimento: string; valor: number | null }[],
   hoje: Date,
-  colors: Record<string, string>
-): { faixa: string; valor: number; color: string }[] {
+  tones: Record<string, SemanticTone>
+): { faixa: string; valor: number; tone: SemanticTone }[] {
   const faixas = { avencer: 0, ate30: 0, '30_60': 0, '60_90': 0, '90mais': 0 };
 
   contas.forEach((c) => {
@@ -213,10 +214,10 @@ function calcularAging(
   });
 
   return [
-    { faixa: 'A vencer', valor: faixas.avencer, color: colors.avencer },
-    { faixa: 'Até 30d', valor: faixas.ate30, color: colors.ate30 },
-    { faixa: '30–60d', valor: faixas['30_60'], color: colors['30_60'] },
-    { faixa: '60–90d', valor: faixas['60_90'], color: colors['60_90'] },
-    { faixa: '90+ dias', valor: faixas['90mais'], color: colors['90mais'] },
+    { faixa: 'A vencer', valor: faixas.avencer, tone: tones.avencer },
+    { faixa: 'Até 30d', valor: faixas.ate30, tone: tones.ate30 },
+    { faixa: '30–60d', valor: faixas['30_60'], tone: tones['30_60'] },
+    { faixa: '60–90d', valor: faixas['60_90'], tone: tones['60_90'] },
+    { faixa: '90+ dias', valor: faixas['90mais'], tone: tones['90mais'] },
   ].filter((f) => f.valor > 0);
 }

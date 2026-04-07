@@ -17,9 +17,9 @@ export default function FormularioNotFound() {
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 md:p-12">
         {/* Error Icon */}
         <div className="flex justify-center mb-6">
-          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center">
+          <div className="w-24 h-24 bg-destructive rounded-full flex items-center justify-center">
             <svg
-              className="w-12 h-12 text-red-600"
+              className="w-12 h-12 text-destructive"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -45,8 +45,8 @@ export default function FormularioNotFound() {
         </p>
 
         {/* Possible Causes */}
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 mb-8">
-          <h2 className="text-lg font-semibold text-orange-900 mb-3 flex items-center">
+        <div className="bg-warning border border-warning rounded-lg p-6 mb-8">
+          <h2 className="text-lg font-semibold text-warning mb-3 flex items-center">
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
@@ -56,7 +56,7 @@ export default function FormularioNotFound() {
             </svg>
             Possíveis causas
           </h2>
-          <ul className="space-y-2 text-sm text-orange-800">
+          <ul className="space-y-2 text-sm text-warning">
             <li className="flex items-start">
               <span className="mr-2">•</span>
               <span>O segmento (organização) não existe ou está inativo</span>
@@ -82,8 +82,8 @@ export default function FormularioNotFound() {
 
         {/* Developer Troubleshooting (only shown in dev) */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <h2 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+          <div className="bg-info border border-info rounded-lg p-6 mb-8">
+            <h2 className="text-lg font-semibold text-info mb-3 flex items-center">
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -93,7 +93,7 @@ export default function FormularioNotFound() {
               </svg>
               Modo Desenvolvedor
             </h2>
-            <ul className="space-y-2 text-sm text-blue-800">
+            <ul className="space-y-2 text-sm text-info">
               <li className="flex items-start">
                 <span className="mr-2">1.</span>
                 <span>
@@ -104,14 +104,14 @@ export default function FormularioNotFound() {
                 <span className="mr-2">2.</span>
                 <span>
                   <strong>Verificar Supabase:</strong> Certifique-se de que o Supabase está configurado e as tabelas{' '}
-                  <code className="bg-blue-100 px-1 rounded text-xs">segmentos</code> e{' '}
-                  <code className="bg-blue-100 px-1 rounded text-xs">assinatura_digital_formularios</code> têm dados
+                  <code className="bg-info px-1 rounded text-xs">segmentos</code> e{' '}
+                  <code className="bg-info px-1 rounded text-xs">assinatura_digital_formularios</code> têm dados
                 </span>
               </li>
               <li className="flex items-start">
                 <span className="mr-2">3.</span>
                 <span>
-                  <strong>Variáveis de ambiente:</strong> Verifique se <code className="bg-blue-100 px-1 rounded text-xs">NEXT_PUBLIC_SUPABASE_URL</code> e outras variáveis estão configuradas corretamente
+                  <strong>Variáveis de ambiente:</strong> Verifique se <code className="bg-info px-1 rounded text-xs">NEXT_PUBLIC_SUPABASE_URL</code> e outras variáveis estão configuradas corretamente
                 </span>
               </li>
             </ul>
@@ -122,7 +122,7 @@ export default function FormularioNotFound() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-info hover:bg-info focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-info transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -132,7 +132,7 @@ export default function FormularioNotFound() {
 
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-info transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -147,7 +147,7 @@ export default function FormularioNotFound() {
             Precisa de ajuda?{' '}
             <a
               href="mailto:suporte@example.com"
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="text-info hover:text-info font-medium"
             >
               Entre em contato com o suporte
             </a>

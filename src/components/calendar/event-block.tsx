@@ -16,28 +16,28 @@ const calendarWeekEventCardVariants = cva(
 		variants: {
 			color: {
 				// Colored variants
-				blue: "border-blue-200 bg-blue-100/50 text-blue-700 hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300 dark:hover:bg-blue-950",
+				blue: "border-info bg-info/50 text-info hover:bg-info dark:border-info dark:bg-info/50 dark:text-info dark:hover:bg-info",
 				green:
-					"border-green-200 bg-green-100/50 text-green-700 hover:bg-green-100 dark:border-green-800 dark:bg-green-950/50 dark:text-green-300 dark:hover:bg-green-950",
-				red: "border-red-200 bg-red-100/50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-950/50 dark:text-red-300 dark:hover:bg-red-950",
+					"border-success bg-success/50 text-success hover:bg-success dark:border-success dark:bg-success/50 dark:text-success dark:hover:bg-success",
+				red: "border-destructive bg-destructive/50 text-destructive hover:bg-destructive dark:border-destructive dark:bg-destructive/50 dark:text-destructive dark:hover:bg-destructive",
 				yellow:
-					"border-orange-200 bg-orange-100/50 text-orange-700 hover:bg-orange-100 dark:border-orange-800 dark:bg-orange-950/50 dark:text-orange-300 dark:hover:bg-orange-950",
+					"border-warning bg-warning/50 text-warning hover:bg-warning dark:border-warning dark:bg-warning/50 dark:text-warning dark:hover:bg-warning",
 				purple:
-					"border-purple-200 bg-purple-100/50 text-purple-700 hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-950/50 dark:text-purple-300 dark:hover:bg-purple-950",
+					"border-primary bg-primary/50 text-primary hover:bg-primary dark:border-primary dark:bg-primary/50 dark:text-primary dark:hover:bg-primary",
 				orange:
-					"border-orange-200 bg-orange-100/50 text-orange-700 hover:bg-orange-100 dark:border-orange-800 dark:bg-orange-950/50 dark:text-orange-300 dark:hover:bg-orange-950",
+					"border-warning bg-warning/50 text-warning hover:bg-warning dark:border-warning dark:bg-warning/50 dark:text-warning dark:hover:bg-warning",
 
 				// Dot variants
 				"blue-dot":
-					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-blue-600 dark:[&_svg]:fill-blue-500",
+					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-info dark:[&_svg]:fill-info",
 				"green-dot":
-					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-green-600 dark:[&_svg]:fill-green-500",
+					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-success dark:[&_svg]:fill-success",
 				"red-dot":
-					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-red-600 dark:[&_svg]:fill-red-500",
+					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-destructive dark:[&_svg]:fill-destructive",
 				"orange-dot":
-					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-orange-600 dark:[&_svg]:fill-orange-500",
+					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-warning dark:[&_svg]:fill-warning",
 				"purple-dot":
-					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-purple-600 dark:[&_svg]:fill-purple-500",
+					"border-border bg-card text-foreground hover:bg-accent [&_svg]:fill-primary dark:[&_svg]:fill-primary",
 			},
 		},
 		defaultVariants: {

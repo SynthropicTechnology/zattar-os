@@ -64,34 +64,34 @@ function getActivityIcon(type: string | undefined) {
     case "criacao":
       return {
         icon: UserPlus,
-        colorClass: "text-green-700 dark:text-green-400",
-        bgClass: "bg-green-500/15",
+        colorClass: "text-success dark:text-success",
+        bgClass: "bg-success/15",
       };
     case "vinculacao_processo":
     case "vinculacao":
       return {
         icon: Link,
-        colorClass: "text-sky-700 dark:text-sky-400",
-        bgClass: "bg-sky-500/15",
+        colorClass: "text-info dark:text-info",
+        bgClass: "bg-info/15",
       };
     case "atualizacao_dados":
     case "atualizacao":
       return {
         icon: RefreshCw,
-        colorClass: "text-green-700 dark:text-green-400",
-        bgClass: "bg-green-500/15",
+        colorClass: "text-success dark:text-success",
+        bgClass: "bg-success/15",
       };
     case "audiencia":
       return {
         icon: Calendar,
-        colorClass: "text-orange-700 dark:text-orange-400",
-        bgClass: "bg-orange-500/15",
+        colorClass: "text-warning dark:text-warning",
+        bgClass: "bg-warning/15",
       };
     case "documento":
       return {
         icon: FileText,
-        colorClass: "text-violet-700 dark:text-violet-400",
-        bgClass: "bg-violet-500/15",
+        colorClass: "text-primary dark:text-primary",
+        bgClass: "bg-primary/15",
       };
     default:
       return {
@@ -258,7 +258,7 @@ export function ActivityTimeline({ data, isLoading, error }: ActivityTimelinePro
                     <TimelineSeparator />
                     <div className="flex items-center gap-2">
                       {isAtualizacao && (
-                        <CheckCircle2 className="size-3.5 text-green-700 dark:text-green-400" />
+                        <CheckCircle2 className="size-3.5 text-success dark:text-success" />
                       )}
                       <TimelineTitle>
                         {activity.title || activity.descricao}

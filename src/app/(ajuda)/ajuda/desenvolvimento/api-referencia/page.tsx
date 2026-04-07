@@ -219,7 +219,7 @@ export default function ApiReferenciaPage() {
                       <td className="py-2">
                         {endpoint.auth === true && <Badge variant="outline" className="text-xs">JWT</Badge>}
                         {endpoint.auth === 'api-key' && <Badge variant="secondary" className="text-xs">API Key</Badge>}
-                        {endpoint.auth === false && <Badge variant="outline" className="text-xs text-green-600">Público</Badge>}
+                        {endpoint.auth === false && <Badge variant="outline" className="text-xs text-success">Público</Badge>}
                       </td>
                     </tr>
                   ))}

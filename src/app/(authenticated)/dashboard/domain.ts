@@ -1,8 +1,13 @@
 /**
  * Domain Layer for Dashboard Feature
+ *
+ * Regra arquitetural: domain/repository NÃO carrega cor, carrega `tone`
+ * (SemanticTone). UI consome via tokenForTone() do design system.
+ * Veja src/lib/design-system/semantic-tones.ts.
  */
 
 import { z } from 'zod';
+import type { SemanticTone } from '@/lib/design-system';
 
 // ============================================================================
 // Tipos Compartilhados
@@ -24,19 +29,19 @@ export interface ProcessoResumo {
   porStatus?: {
     status: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Distribuição por área jurídica */
   porSegmento?: {
     segmento: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Aging por faixas de duração */
   aging?: {
     faixa: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Tendência mensal de novos processos (últimos 8 meses) */
   tendenciaMensal?: {
@@ -56,7 +61,7 @@ export interface AudienciasResumo {
   porModalidade?: {
     modalidade: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Status mensal: marcadas, realizadas, canceladas (últimos 6 meses) */
   statusMensal?: {
@@ -69,7 +74,7 @@ export interface AudienciasResumo {
   porTipo?: {
     tipo: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Trend de audiências por mês (12 meses) */
   trendMensal?: number[];
@@ -95,13 +100,13 @@ export interface ExpedientesResumo {
   porOrigem?: {
     origem: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Resultado das decisões: favorável, parcialmente favorável, desfavorável */
   resultadoDecisao?: {
     resultado: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Volume semanal: recebidos vs baixados por dia */
   volumeSemanal?: {
@@ -159,19 +164,19 @@ export interface DadosFinanceirosConsolidados {
   contasReceberAging?: {
     faixa: string;
     valor: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Aging de contas a pagar por faixa de vencimento */
   contasPagarAging?: {
     faixa: string;
     valor: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Despesas por categoria */
   despesasPorCategoria?: {
     categoria: string;
     valor: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** DRE comparativo (12 meses de receita, despesa e resultado) */
   dreComparativo?: {
@@ -196,7 +201,7 @@ export interface ContratosResumo {
   porStatus: {
     status: string;
     count: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Distribuição por tipo: ajuizamento, defesa, assessoria, etc. */
   porTipo: {
@@ -216,7 +221,7 @@ export interface ContratosResumo {
     status: string;
     count: number;
     valor: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Repasses pendentes */
   repassesPendentes: {
@@ -235,7 +240,7 @@ export interface ContratosResumo {
   treemapObrigacoes: {
     natureza: string;
     valor: number;
-    color: string;
+    tone: SemanticTone;
   }[];
   /** Score contratual (0-100) */
   scoreContratual: number;

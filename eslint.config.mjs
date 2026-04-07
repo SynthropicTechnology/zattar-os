@@ -215,23 +215,29 @@ const eslintConfig = defineConfig([
       "src/app/globals.css",
       "**/mock/**",
       "**/mocks/**",
+      "**/demo/**",
       "**/*.test.{ts,tsx}",
       "**/*.spec.{ts,tsx}",
       "src/app/(dev)/**",
     ],
     rules: {
-      // WARN — apontamentos de débito técnico, não bloqueia build.
-      // A regra hsl(var(--)) foi promovida para custom/no-hsl-var-tokens (error)
-      // pois é bug visual real, não dívida estilística.
+      // ERROR — bloqueia build. Promovido de `warn` após refatoração
+      // completa: todos os repositories agora retornam SemanticTone,
+      // widgets consomem via tokenForTone(), e ~500 classes Tailwind cruas
+      // foram migradas para tokens semânticos. Manter como warn permitiria
+      // regressão silenciosa.
+      //
+      // A regra hsl(var(--)) vive em custom/no-hsl-var-tokens (error) pois
+      // detecta bug visual real (hsl(oklch(...)) é CSS inválido).
       "no-restricted-syntax": [
-        "warn",
+        "error",
         {
           // Cores Tailwind cruas (text-red-500, bg-blue-200, etc.) — use tokens semânticos
           // text-success, text-destructive, text-warning, text-info, text-muted-foreground
           selector:
             "Literal[value=/(?:^|\\s)(?:text|bg|border|ring|fill|stroke|from|to|via)-(?:red|green|blue|yellow|orange|amber|lime|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-\\d/]",
           message:
-            "Não use cores Tailwind cruas (ex: text-red-500). Use tokens semânticos: text-success, text-destructive, text-warning, text-info, text-muted-foreground, text-primary. Para casos decorativos use --chart-1..5 ou --portal-*-soft.",
+            "Não use cores Tailwind cruas (ex: text-red-500). Use tokens semânticos: text-success, text-destructive, text-warning, text-info, text-muted-foreground, text-primary. Para casos decorativos use bg-palette-1..18, bg-chart-1..5, bg-event-*, ou bg-portal-*-soft.",
         },
         {
           // OKLCH literal (sem `from var(--`) — provável valor cru

@@ -231,12 +231,12 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
                 <DropdownMenuItem onClick={() => handleToggleAtivo(row.original)}>
                   {row.original.ativo ? (
                     <>
-                      <Ban className="mr-2 h-4 w-4 text-orange-500" />
+                      <Ban className="mr-2 h-4 w-4 text-warning" />
                       <span>Desativar</span>
                     </>
                   ) : (
                     <>
-                      <Power className="mr-2 h-4 w-4 text-green-500" />
+                      <Power className="mr-2 h-4 w-4 text-success" />
                       <span>Ativar</span>
                     </>
                   )}
@@ -244,7 +244,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => handleDelete(row.original)}
-                  className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                  className="text-destructive focus:text-destructive focus:bg-destructive"
                 >
                   <Trash className="mr-2 h-4 w-4" />
                   <span>Excluir</span>

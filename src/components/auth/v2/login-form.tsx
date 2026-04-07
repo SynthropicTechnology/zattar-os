@@ -170,7 +170,7 @@ export function LoginFormV2({
           disabled={isLoading || success}
           className={cn(
             'w-full mt-1 cursor-pointer',
-            success && 'bg-emerald-500 hover:bg-emerald-500'
+            success && 'bg-success hover:bg-success'
           )}
         >
           {success ? (

@@ -295,7 +295,7 @@ export default function DocumentosPage() {
               <li>Clique em &quot;Restaurar&quot; para recuperar</li>
               <li>&quot;Deletar Permanentemente&quot; remove definitivamente</li>
             </ul>
-            <p className="text-sm text-orange-600 dark:text-orange-500">
+            <p className="text-sm text-warning dark:text-warning">
               Documentos na lixeira são deletados automaticamente após 30 dias.
             </p>
           </CardContent>

@@ -49,7 +49,7 @@ export function DebugPage() {
       <h1 className="text-2xl font-bold">Debug - Lista de Documentos</h1>
       
       {error && (
-        <div className="p-4 bg-red-100 text-red-800 rounded">
+        <div className="p-4 bg-destructive text-destructive rounded">
           <h2 className="font-bold">Erro:</h2>
           <pre className="mt-2 text-sm">{error}</pre>
         </div>
@@ -57,13 +57,13 @@ export function DebugPage() {
       
       {hasResult ? (
         <div className="space-y-4">
-          <div className="p-4 bg-blue-100 rounded">
+          <div className="p-4 bg-info rounded">
             <h2 className="font-bold">Success:</h2>
             <p>{resultObject?.success ? "✅ true" : "❌ false"}</p>
           </div>
 
           {Boolean(resultObject?.data) && (
-            <div className="p-4 bg-green-100 rounded">
+            <div className="p-4 bg-success rounded">
               <h2 className="font-bold">Data:</h2>
               <pre className="mt-2 text-xs overflow-auto max-h-96">
                 {JSON.stringify(resultObject?.data, null, 2)}

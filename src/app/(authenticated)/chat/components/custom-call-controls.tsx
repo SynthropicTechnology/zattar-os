@@ -116,7 +116,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Microfone"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  audioEnabled ? "bg-gray-700 hover:bg-gray-600" : "bg-red-600 hover:bg-red-700"
+                  audioEnabled ? "bg-gray-700 hover:bg-gray-600" : "bg-destructive hover:bg-destructive"
                 )}
                 onClick={toggleAudio}
               >
@@ -134,7 +134,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Câmera"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  videoEnabled ? "bg-gray-700 hover:bg-gray-600" : "bg-red-600 hover:bg-red-700"
+                  videoEnabled ? "bg-gray-700 hover:bg-gray-600" : "bg-destructive hover:bg-destructive"
                 )}
                 onClick={toggleVideo}
               >
@@ -154,7 +154,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Favoritar"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  isScreensharing ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                  isScreensharing ? "bg-info hover:bg-info text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                 )}
                 onClick={isScreensharing ? onStopScreenshare : onStartScreenshare}
               >
@@ -174,7 +174,7 @@ export function CustomCallControls({
                             size="icon" aria-label="IA"
                             className={cn(
                                 "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                                activeEffect !== 'none' ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                                activeEffect !== 'none' ? "bg-primary hover:bg-primary text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                             )}
                         >
                             <Wand2 className="h-5 w-5" />
@@ -197,23 +197,23 @@ export function CustomCallControls({
                         className="grid grid-cols-1 gap-3"
                     >
                         <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('none')}>
-                            <RadioGroupItem value="none" id="effect-none" className="border-gray-600 text-blue-500" />
+                            <RadioGroupItem value="none" id="effect-none" className="border-gray-600 text-info" />
                             <Label htmlFor="effect-none" className="cursor-pointer flex-1">Normal</Label>
                             <div className="w-12 h-8 rounded bg-gray-700 border border-gray-600 flex items-center justify-center text-xs">
                                 <span className="text-gray-400">OFF</span>
                             </div>
                         </div>
                         <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('blur')}>
-                            <RadioGroupItem value="blur" id="effect-blur" className="border-gray-600 text-blue-500" />
+                            <RadioGroupItem value="blur" id="effect-blur" className="border-gray-600 text-info" />
                             <Label htmlFor="effect-blur" className="cursor-pointer flex-1">Desfoque (Blur)</Label>
                             <div className="w-12 h-8 rounded bg-linear-to-br from-gray-400 to-gray-600 border border-gray-500 flex items-center justify-center text-xs blur-sm">
                                 <span className="text-white text-[10px]">BLUR</span>
                             </div>
                         </div>
                         <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors" onClick={() => onApplyEffect?.('image')}>
-                            <RadioGroupItem value="image" id="effect-image" className="border-gray-600 text-blue-500" />
+                            <RadioGroupItem value="image" id="effect-image" className="border-gray-600 text-info" />
                             <Label htmlFor="effect-image" className="flex-1 cursor-pointer">Imagem Virtual</Label>
-                            <div className="w-12 h-8 rounded bg-linear-to-br from-blue-500 to-purple-600 border border-gray-500 flex items-center justify-center text-xs">
+                            <div className="w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-gray-500 flex items-center justify-center text-xs">
                                 <span className="text-white text-[10px]">IMG</span>
                             </div>
                         </div>
@@ -237,7 +237,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Favoritar"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  isRecording ? "bg-red-600 hover:bg-red-700 animate-pulse" : "bg-gray-700 hover:bg-gray-600 text-gray-300",
+                  isRecording ? "bg-destructive hover:bg-destructive animate-pulse" : "bg-gray-700 hover:bg-gray-600 text-gray-300",
                   !canRecord && !isRecording && "opacity-50 cursor-not-allowed"
                 )}
                 onClick={isRecording ? onStopRecording : onStartRecording}
@@ -265,7 +265,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Transcrição"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  showTranscript ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                  showTranscript ? "bg-info hover:bg-info text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                 )}
                 onClick={onToggleTranscript}
               >
@@ -284,7 +284,7 @@ export function CustomCallControls({
                     size="icon" aria-label="Usuário"
                     className={cn(
                     "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all lg:hidden",
-                    showParticipants ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                    showParticipants ? "bg-info hover:bg-info text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                     )}
                     onClick={onToggleParticipants}
                 >
@@ -303,7 +303,7 @@ export function CustomCallControls({
               <Button
                 variant="destructive"
                 size="icon" aria-label="Desligar"
-                className="rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg bg-red-600 hover:bg-red-700 ml-2"
+                className="rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg bg-destructive hover:bg-destructive ml-2"
                 onClick={onLeave}
               >
                 <PhoneOff className="h-5 w-5 md:h-6 md:w-6" />

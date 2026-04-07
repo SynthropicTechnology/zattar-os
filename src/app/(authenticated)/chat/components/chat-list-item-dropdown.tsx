@@ -74,7 +74,7 @@ export function ChatUserDropdown({ children, chat }: ChatUserDropdownProps) {
             <DropdownMenuItem onClick={handleArchive}>Arquivar</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Bloquear</DropdownMenuItem>
-            <DropdownMenuItem onClick={handleDeleteClick} className="text-red-500">Deletar</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDeleteClick} className="text-destructive">Deletar</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -92,7 +92,7 @@ export function ChatUserDropdown({ children, chat }: ChatUserDropdownProps) {
             <AlertDialogAction
               onClick={handleConfirmDelete}
               disabled={isDeleting}
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-destructive hover:bg-destructive"
             >
               {isDeleting ? "Removendo..." : "Remover"}
             </AlertDialogAction>

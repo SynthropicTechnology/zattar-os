@@ -8,7 +8,7 @@ export function MessageStatusIcon({ status }: { status: MessageStatus }) {
     case "failed":
       return <AlertCircle className="h-4 w-4 shrink-0 text-destructive" />;
     case "read":
-      return <CheckCheck className="h-4 w-4 shrink-0 text-green-500" />;
+      return <CheckCheck className="h-4 w-4 shrink-0 text-success" />;
     case "forwarded":
       return <CheckCheck className="text-muted-foreground h-4 w-4 shrink-0" />;
     case "sent":

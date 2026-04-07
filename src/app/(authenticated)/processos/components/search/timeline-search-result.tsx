@@ -51,7 +51,7 @@ function getResultMeta(titulo: string, isDocumento: boolean) {
     return {
       Icon: FileText,
       badgeLabel: 'Petição',
-      badgeClasses: 'bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 border-sky-100 dark:border-sky-800/50',
+      badgeClasses: 'bg-info dark:bg-info/30 text-info dark:text-info border-info dark:border-info/50',
     };
   }
 

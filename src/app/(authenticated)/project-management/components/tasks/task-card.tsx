@@ -82,7 +82,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
                   <span
                     className={`inline-flex items-center gap-1 text-xs ${
                       isPrazoPerto
-                        ? "text-red-500"
+                        ? "text-destructive"
                         : "text-muted-foreground"
                     }`}
                   >

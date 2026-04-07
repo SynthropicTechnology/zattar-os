@@ -15,11 +15,13 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 interface StatusSegment {
   value: number;
   color: string;
   label: string;
+  tone?: SemanticTone;
 }
 
 export function WidgetStatusDistribuicao() {
@@ -48,10 +50,11 @@ export function WidgetStatusDistribuicao() {
     const p = data.processos;
 
     if (p.porStatus && p.porStatus.length > 0) {
-      segments = p.porStatus.map((s: { count: number; color: string; status: string }) => ({
+      segments = p.porStatus.map((s: { count: number; tone: SemanticTone; status: string }) => ({
         value: s.count,
-        color: s.color,
+        color: tokenForTone(s.tone),
         label: s.status,
+        tone: s.tone,
       }));
     } else {
       // Fallback: build from ativos/arquivados

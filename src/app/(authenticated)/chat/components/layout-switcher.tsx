@@ -41,7 +41,7 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
                 <Button
                     variant="ghost"
                     size="icon"
-                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'grid' && "bg-blue-600 text-white hover:bg-blue-700")}
+                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'grid' && "bg-info text-white hover:bg-info")}
                     onClick={() => handleLayoutChange('grid')}
                 >
                     <Grid3x3 className="h-4 w-4" />
@@ -55,7 +55,7 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
                 <Button
                     variant="ghost"
                     size="icon"
-                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'spotlight' && "bg-blue-600 text-white hover:bg-blue-700")}
+                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'spotlight' && "bg-info text-white hover:bg-info")}
                     onClick={() => handleLayoutChange('spotlight')}
                 >
                     <Focus className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
                 <Button
                     variant="ghost"
                     size="icon"
-                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'sidebar' && "bg-blue-600 text-white hover:bg-blue-700")}
+                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'sidebar' && "bg-info text-white hover:bg-info")}
                     onClick={() => handleLayoutChange('sidebar')}
                 >
                     <PanelRight className="h-4 w-4" />

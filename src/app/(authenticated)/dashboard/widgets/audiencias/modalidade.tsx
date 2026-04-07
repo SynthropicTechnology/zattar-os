@@ -19,6 +19,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function ModalidadeDistribution() {
   const { data, isLoading, error } = useDashboard();
@@ -58,7 +59,7 @@ export function ModalidadeDistribution() {
 
   const segments = porModalidade.map((m) => ({
     value: m.count,
-    color: m.color,
+    color: tokenForTone(m.tone),
     label: m.modalidade,
   }));
 
@@ -88,7 +89,7 @@ export function ModalidadeDistribution() {
                 <div className="flex items-center gap-2 min-w-0">
                   <div
                     className="size-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: m.color }}
+                    style={{ backgroundColor: tokenForTone(m.tone) }}
                   />
                   <span className="text-muted-foreground/70 truncate">
                     {m.modalidade}

@@ -12,11 +12,11 @@ import { cn } from '@/lib/utils';
 interface TimelineTypeBadgeProps {
   /** Texto exibido no badge, ex: "Petição", "Decisão" */
   label: string;
-  /** Classe de cor de fundo do badge, ex: "bg-sky-50 dark:bg-sky-900/30" */
+  /** Classe de cor de fundo do badge, ex: "bg-info dark:bg-info/30" */
   bgClass: string;
-  /** Classe de cor de texto do badge, ex: "text-sky-700 dark:text-sky-400" */
+  /** Classe de cor de texto do badge, ex: "text-info dark:text-info" */
   textClass: string;
-  /** Classe de cor de borda do badge, ex: "border-sky-100 dark:border-sky-800/50" */
+  /** Classe de cor de borda do badge, ex: "border-info dark:border-info/50" */
   borderClass: string;
   /** Classes adicionais opcionais */
   className?: string;
@@ -28,9 +28,9 @@ interface TimelineTypeBadgeProps {
  * @example
  * <TimelineTypeBadge
  *   label="Decisão"
- *   bgClass="bg-green-50 dark:bg-green-900/30"
- *   textClass="text-green-700 dark:text-green-400"
- *   borderClass="border-green-100 dark:border-green-800/50"
+ *   bgClass="bg-success dark:bg-success/30"
+ *   textClass="text-success dark:text-success"
+ *   borderClass="border-success dark:border-success/50"
  * />
  */
 export function TimelineTypeBadge({

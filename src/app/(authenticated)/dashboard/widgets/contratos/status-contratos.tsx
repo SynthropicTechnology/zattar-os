@@ -19,6 +19,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function WidgetStatusContratos() {
   const { data, isLoading } = useDashboard();
@@ -56,7 +57,7 @@ export function WidgetStatusContratos() {
 
   const segments = porStatus.map((s) => ({
     value: s.count,
-    color: s.color,
+    color: tokenForTone(s.tone),
     label: s.status,
   }));
 
@@ -82,7 +83,7 @@ export function WidgetStatusContratos() {
               <div key={s.status} className="flex items-center gap-2">
                 <div
                   className="size-2.5 rounded-[3px] shrink-0"
-                  style={{ backgroundColor: s.color }}
+                  style={{ backgroundColor: tokenForTone(s.tone) }}
                 />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {s.status.replace(/_/g, ' ')}

@@ -280,7 +280,7 @@ export function ReceberContaDialog({
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-lg text-green-600">{formatarValor(conta.valor)}</p>
+                  <p className="font-bold text-lg text-success">{formatarValor(conta.valor)}</p>
                   {conta.dataVencimento && (
                     <p className={cn('text-xs', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
                       Venc: {format(new Date(conta.dataVencimento), 'dd/MM/yyyy')}

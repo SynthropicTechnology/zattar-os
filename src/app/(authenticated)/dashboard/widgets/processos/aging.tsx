@@ -13,6 +13,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function WidgetAging() {
   const { data, isLoading } = useDashboard();
@@ -34,7 +35,7 @@ export function WidgetAging() {
     );
   }
 
-  let aging: { faixa: string; count: number; color: string }[] | undefined;
+  let aging: { faixa: string; count: number; tone: SemanticTone }[] | undefined;
 
   if (isDashboardUsuario(data)) {
     aging = data.processos.aging;
@@ -60,8 +61,9 @@ export function WidgetAging() {
 
   const segments = aging.map((a) => ({
     value: a.count,
-    color: a.color,
+    color: tokenForTone(a.tone),
     label: a.faixa,
+    tone: a.tone,
   }));
 
   const total = segments.reduce((s, seg) => s + seg.value, 0);
@@ -81,7 +83,7 @@ export function WidgetAging() {
             <div key={seg.label} className="flex items-center gap-2">
               <span
                 className="size-2 rounded-sm shrink-0"
-                style={{ backgroundColor: seg.color }}
+                style={{ backgroundColor: tokenForTone(seg.tone) }}
               />
               <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                 {seg.label}
@@ -90,7 +92,7 @@ export function WidgetAging() {
                 <div className="w-14 h-1.5 rounded-full bg-border/15 overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${pct}%`, backgroundColor: seg.color }}
+                    style={{ width: `${pct}%`, backgroundColor: tokenForTone(seg.tone) }}
                   />
                 </div>
                 <span className="text-[10px] font-medium tabular-nums w-6 text-right">

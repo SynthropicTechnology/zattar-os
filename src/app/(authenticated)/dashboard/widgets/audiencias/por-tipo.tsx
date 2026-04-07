@@ -18,6 +18,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function AudienciasPorTipo() {
   const { data, isLoading, error } = useDashboard();
@@ -85,7 +86,7 @@ export function AudienciasPorTipo() {
                   className="h-full rounded-full transition-all duration-500"
                   style={{
                     width: `${(item.count / maxCount) * 100}%`,
-                    backgroundColor: item.color,
+                    backgroundColor: tokenForTone(item.tone),
                   }}
                 />
               </div>

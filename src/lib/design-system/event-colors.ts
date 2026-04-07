@@ -18,7 +18,7 @@
  *   <div className={c.bgSoft}>...</div>
  *   <span className={c.text}>...</span>
  *
- * @ai-context NUNCA hardcode `bg-sky-500` ou similar para cores de evento.
+ * @ai-context NUNCA hardcode classes de cor para eventos (ex: bg-sky-500).
  * Use sempre este helper. Se precisar de uma cor nova, adicione um token
  * `--event-{nome}` em globals.css primeiro.
  * ============================================================================
@@ -52,7 +52,7 @@ const LEGACY_TO_TYPE: Record<LegacyEventColor, EventType> = {
 }
 
 export interface EventColorClasses {
-  /** Background com opacidade para cards/cells (substitui bg-sky-200/50) */
+  /** Background com opacidade para cards/cells (substitui bg-sky-200/50 etc.) */
   bgSoft: string
   /** Background sólido para dots/badges */
   bgSolid: string

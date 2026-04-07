@@ -14,7 +14,7 @@ import type { StatusCaptura } from '../../domain';
 
 /** Cores do indicador por status */
 const STATUS_DOT_CLASSES: Record<StatusCaptura['status'], string> = {
-  sucesso: 'bg-emerald-500/70',
+  sucesso: 'bg-success/70',
   erro: 'bg-destructive/80 animate-pulse',
   pendente: 'bg-muted-foreground/40',
   executando: 'bg-warning/70 animate-pulse',
@@ -108,7 +108,7 @@ export function WidgetCapturaStatus() {
       {/* Resumo compacto */}
       <div className="flex items-center gap-3 mb-3 text-[10px] text-muted-foreground/70">
         <span>
-          <span className="inline-block size-2 rounded-full bg-emerald-500/70 mr-1" />
+          <span className="inline-block size-2 rounded-full bg-success/70 mr-1" />
           {totalSucesso} ok
         </span>
         {totalErro > 0 && (
@@ -147,7 +147,7 @@ export function WidgetCapturaStatus() {
                     captura.status === 'erro'
                       ? 'text-destructive/80'
                       : captura.status === 'sucesso'
-                        ? 'text-emerald-600/70 dark:text-emerald-400/70'
+                        ? 'text-success/70 dark:text-success/70'
                         : 'text-muted-foreground/60'
                   }`}
                 >

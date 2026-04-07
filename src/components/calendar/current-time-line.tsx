@@ -25,7 +25,7 @@ export function CurrentTimeLine({ labelWidth = "w-11", className }: CurrentTimeL
       <span className={cn("text-right text-[10px] tabular-nums text-primary font-semibold shrink-0", labelWidth)}>
         {t}
       </span>
-      <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_oklch(0.48_0.26_281/0.35)] animate-pulse shrink-0" />
+      <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_oklch(from_var(--primary)_l_c_h/0.35)] animate-pulse shrink-0" />
       <div className="flex-1 h-px bg-primary/25" />
     </div>
   );

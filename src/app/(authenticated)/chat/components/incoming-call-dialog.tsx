@@ -194,7 +194,7 @@ export function IncomingCallDialog({
             <Button
               variant="default"
               size="icon" aria-label="Câmera"
-              className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-lg"
+              className="h-14 w-14 rounded-full bg-success hover:bg-success transition-all duration-200 shadow-lg hover:shadow-lg"
               onClick={handleAccept}
               disabled={isProcessing}
             >

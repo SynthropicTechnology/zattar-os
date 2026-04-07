@@ -107,13 +107,13 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   const grauColorClasses: Record<GrauTribunal, string> = {
     primeiro_grau: 'bg-success/15 text-success',
     segundo_grau: 'bg-warning/15 text-warning',
-    tribunal_superior: 'bg-violet-500/15 text-violet-700 dark:text-violet-400',
+    tribunal_superior: 'bg-primary/15 text-primary dark:text-primary',
   };
 
   return (
     <div className="inline-flex items-center text-xs font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5 rounded-l-full">
+      <span className="bg-info/15 text-info dark:text-info px-2 py-0.5 rounded-l-full">
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}

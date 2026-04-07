@@ -16,6 +16,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 const TAB_OPTIONS = [
   { id: 'status', label: 'Status' },
@@ -56,18 +57,18 @@ export function WidgetProcessosComTabs() {
     const p = data.processos;
 
     if (p.porStatus && p.porStatus.length > 0) {
-      statusSegments = p.porStatus.map((s: { count: number; status: string; color: string }) => ({
+      statusSegments = p.porStatus.map((s: { count: number; status: string; tone: SemanticTone }) => ({
         value: s.count,
         label: s.status,
-        color: s.color,
+        color: tokenForTone(s.tone),
       }));
     }
 
     if (p.porSegmento && p.porSegmento.length > 0) {
-      segmentoSegments = p.porSegmento.map((s: { count: number; segmento: string; color: string }) => ({
+      segmentoSegments = p.porSegmento.map((s: { count: number; segmento: string; tone: SemanticTone }) => ({
         value: s.count,
         label: s.segmento,
-        color: s.color,
+        color: tokenForTone(s.tone),
       }));
     }
   } else {

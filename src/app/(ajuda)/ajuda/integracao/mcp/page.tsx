@@ -915,7 +915,7 @@ export default function MCPDocsPage() {
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm font-medium text-orange-600">⚠️ Segurança:</p>
+            <p className="text-sm font-medium text-warning">⚠️ Segurança:</p>
             <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>Nunca compartilhe sua API key em repositórios públicos</li>
               <li>Gere uma nova key em Perfil → API Keys</li>

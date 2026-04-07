@@ -221,7 +221,7 @@ export function Footer() {
           <p className="text-on-surface-variant/50 font-sans text-xs text-center md:text-left">
             © {new Date().getFullYear()} Zattar Advogados · OAB/MG 128.404 ·
             Feito com{" "}
-            <Heart className="inline w-3 h-3 text-red-500 fill-red-500 animate-pulse" />{" "}
+            <Heart className="inline w-3 h-3 text-destructive fill-destructive animate-pulse" />{" "}
             pela{" "}
             <a
               href="https://synthropic.com.br"

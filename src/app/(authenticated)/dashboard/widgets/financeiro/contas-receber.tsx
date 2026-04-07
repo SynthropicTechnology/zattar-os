@@ -9,6 +9,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { WidgetContainer, fmtMoeda } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function WidgetContasReceber() {
   const { data, isLoading } = useDashboard();
@@ -60,7 +61,7 @@ export function WidgetContasReceber() {
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: maxVal > 0 ? `${(item.valor / maxVal) * 100}%` : '0%',
-                  backgroundColor: item.color,
+                  backgroundColor: tokenForTone(item.tone),
                 }}
               />
             </div>

@@ -48,7 +48,7 @@ function PasswordStrength({ password }: { password: string }) {
       ? 'bg-destructive'
       : passed <= 2
         ? 'bg-warning'
-        : 'bg-emerald-500'
+        : 'bg-success'
 
   return (
     <div className="space-y-2 pt-1.5">
@@ -70,7 +70,7 @@ function PasswordStrength({ password }: { password: string }) {
               className={cn(
                 'flex h-3.5 w-3.5 items-center justify-center rounded-full transition-all duration-300',
                 c.met
-                  ? 'bg-emerald-500/15 text-emerald-600'
+                  ? 'bg-success/15 text-success'
                   : 'bg-muted text-muted-foreground/20'
               )}
             >
@@ -202,9 +202,9 @@ export function UpdatePasswordFormV2({
               </p>
             </div>
 
-            <div className="flex items-start gap-3 rounded-md border border-emerald-500/15 bg-emerald-50/50 p-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+            <div className="flex items-start gap-3 rounded-md border border-success/15 bg-success/50 p-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-success/10">
+                <CheckCircle2 className="h-4 w-4 text-success" />
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground/80">
@@ -218,7 +218,7 @@ export function UpdatePasswordFormV2({
 
             <div className="h-0.5 w-full rounded-full bg-border overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-emerald-500/50"
+                className="h-full rounded-full bg-success/50"
                 initial={{ width: '0%' }}
                 animate={{ width: '100%' }}
                 transition={{ duration: 2.5, ease: 'linear' }}

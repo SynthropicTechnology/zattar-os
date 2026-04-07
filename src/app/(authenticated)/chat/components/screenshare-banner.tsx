@@ -21,7 +21,7 @@ export function ScreenshareBanner({
   return (
     <div className={cn(
       "absolute top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between text-sm shadow-md transition-transform duration-300 transform",
-      isSelf ? "bg-blue-600 text-white" : "bg-gray-800 text-white"
+      isSelf ? "bg-info text-white" : "bg-gray-800 text-white"
     )}>
       <div className="flex items-center gap-2">
         <Monitor className="w-4 h-4" />

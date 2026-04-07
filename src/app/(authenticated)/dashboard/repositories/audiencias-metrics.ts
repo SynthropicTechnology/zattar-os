@@ -10,6 +10,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { toDateString } from '@/lib/date-utils';
+import type { SemanticTone } from '@/lib/design-system';
 import type { AudienciasResumo, AudienciaProxima } from '../domain';
 
 /**
@@ -181,9 +182,9 @@ export async function buscarProximasAudiencias(
 export async function buscarAudienciasDetalhadas(
   responsavelId?: number
 ): Promise<{
-  porModalidade: { modalidade: string; count: number; color: string }[];
+  porModalidade: { modalidade: string; count: number; tone: SemanticTone }[];
   statusMensal: { mes: string; marcadas: number; realizadas: number; canceladas: number }[];
-  porTipo: { tipo: string; count: number; color: string }[];
+  porTipo: { tipo: string; count: number; tone: SemanticTone }[];
   trendMensal: number[];
   heatmapSemanal: number[];
   duracaoMedia: number;
@@ -226,10 +227,10 @@ export async function buscarAudienciasDetalhadas(
   const audiencias = data || [];
 
   // --- Distribuição por modalidade ---
-  const MODALIDADE_COLORS: Record<string, string> = {
-    'Virtual': 'hsl(220 70% 60%)',
-    'Presencial': 'hsl(262 60% 55%)',
-    'Híbrida': 'hsl(45 93% 47%)',
+  const MODALIDADE_TONES: Record<string, SemanticTone> = {
+    'Virtual': 'info',
+    'Presencial': 'primary',
+    'Híbrida': 'warning',
   };
   const modalidadeMap = new Map<string, number>();
   audiencias.forEach((a) => {
@@ -240,7 +241,7 @@ export async function buscarAudienciasDetalhadas(
   const porModalidade = Array.from(modalidadeMap.entries()).map(([modalidade, count]) => ({
     modalidade,
     count,
-    color: MODALIDADE_COLORS[modalidade] || 'hsl(215 14% 60%)',
+    tone: MODALIDADE_TONES[modalidade] ?? 'neutral' as SemanticTone,
   }));
 
   // --- Status mensal (últimos 6 meses) ---
@@ -264,12 +265,12 @@ export async function buscarAudienciasDetalhadas(
   }
 
   // --- Distribuição por tipo ---
-  const TIPO_COLORS: Record<string, string> = {
-    'Instrução': 'hsl(262 60% 55%)',
-    'Conciliação': 'hsl(220 70% 60%)',
-    'Julgamento': 'hsl(0 72% 51%)',
-    'UNA': 'hsl(215 14% 60%)',
-    'Perícia': 'hsl(45 93% 47%)',
+  const TIPO_TONES: Record<string, SemanticTone> = {
+    'Instrução': 'primary',
+    'Conciliação': 'info',
+    'Julgamento': 'destructive',
+    'UNA': 'neutral',
+    'Perícia': 'warning',
   };
   const tipoMap = new Map<string, number>();
   audiencias.forEach((a) => {
@@ -280,7 +281,7 @@ export async function buscarAudienciasDetalhadas(
     .map(([tipo, count]) => ({
       tipo,
       count,
-      color: TIPO_COLORS[tipo] || 'hsl(215 14% 60%)',
+      tone: TIPO_TONES[tipo] ?? 'neutral' as SemanticTone,
     }))
     .sort((a, b) => b.count - a.count);
 

@@ -90,7 +90,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
             className={
               isOverflow
                 ? 'border-warning/15 bg-warning/10 text-warning [&>svg]:text-warning'
-                : 'border-emerald-500/50 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200 [&>svg]:text-emerald-600 dark:[&>svg]:text-emerald-400'
+                : 'border-success/50 bg-success/10 text-success [&>svg]:text-success'
             }
           >
             {isOverflow ? (

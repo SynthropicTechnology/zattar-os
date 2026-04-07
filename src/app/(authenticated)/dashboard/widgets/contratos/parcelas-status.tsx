@@ -20,6 +20,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 
 export function WidgetParcelasStatus() {
   const { data, isLoading } = useDashboard();
@@ -62,7 +63,7 @@ export function WidgetParcelasStatus() {
 
   const segments = parcelasStatus.map((p) => ({
     value: p.count,
-    color: p.color,
+    color: tokenForTone(p.tone),
     label: p.status,
   }));
 
@@ -93,7 +94,7 @@ export function WidgetParcelasStatus() {
               <div key={p.status} className="flex items-center gap-2">
                 <div
                   className="size-2.5 rounded-[3px] shrink-0"
-                  style={{ backgroundColor: p.color }}
+                  style={{ backgroundColor: tokenForTone(p.tone) }}
                 />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {p.status.replace(/_/g, ' ')}

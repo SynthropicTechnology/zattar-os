@@ -91,7 +91,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
           </p>
           <div className="space-y-1">
             {erros.map((log, i) => (
-              <div key={i} className="flex items-start gap-2 rounded-md border border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/30 p-2 text-xs">
+              <div key={i} className="flex items-start gap-2 rounded-md border border-destructive dark:border-destructive bg-destructive/50 dark:bg-destructive/30 p-2 text-xs">
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <div>
                   <span className="font-medium">{log.entidade}</span>
@@ -225,7 +225,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                 <div className="space-y-3 pb-2">
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
-                    <div className="rounded-md border border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/30 p-3 text-xs text-red-700 dark:text-red-300">
+                    <div className="rounded-md border border-destructive dark:border-destructive bg-destructive/50 dark:bg-destructive/30 p-3 text-xs text-destructive dark:text-destructive">
                       {rawLog.erro}
                     </div>
                   )}

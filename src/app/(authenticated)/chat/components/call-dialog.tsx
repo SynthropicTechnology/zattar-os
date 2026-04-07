@@ -222,7 +222,7 @@ export function CallDialog({
               <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-700 hover:bg-gray-800">
                 Cancelar
               </Button>
-              <Button onClick={() => { setError(null); startCall(); }} className="bg-blue-600 hover:bg-blue-700">
+              <Button onClick={() => { setError(null); startCall(); }} className="bg-info hover:bg-info">
                 Tentar Novamente
               </Button>
             </div>

@@ -616,7 +616,7 @@ export default function OrcamentoDetalhesPage() {
             <AlertDialogTitle>Encerrar Orçamento</AlertDialogTitle>
             <AlertDialogDescription>
               Tem certeza que deseja encerrar este orçamento?
-              <span className="block mt-2 text-orange-600">
+              <span className="block mt-2 text-warning">
                 Após encerrado, o orçamento ficará disponível apenas para consulta.
               </span>
             </AlertDialogDescription>

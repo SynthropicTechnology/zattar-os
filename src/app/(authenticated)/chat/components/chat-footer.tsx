@@ -227,7 +227,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
       {uploadedFile && (
         <div className="mb-2 p-2 bg-muted rounded-md flex items-center justify-between">
           <div className="flex items-center gap-2 overflow-hidden">
-            <FileIcon className="h-5 w-5 text-sky-700 dark:text-sky-400 shrink-0" />
+            <FileIcon className="h-5 w-5 text-info dark:text-info shrink-0" />
             <span className="text-sm truncate max-w-50">{uploadedFile.fileName}</span>
           </div>
           <Button variant="ghost" size="icon" aria-label="Fechar" className="h-6 w-6" onClick={handleRemoveFile}>
@@ -236,25 +236,25 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
         </div>
       )}
 
-      <div className={`relative flex items-center rounded-md border transition-colors duration-300 ${isRecording ? 'bg-red-500/15 border-red-700 dark:border-red-400' : 'bg-muted'}`}>
+      <div className={`relative flex items-center rounded-md border transition-colors duration-300 ${isRecording ? 'bg-destructive/15 border-destructive dark:border-destructive' : 'bg-muted'}`}>
 
         {isRecording ? (
           // Recording UI
           <div className="flex-1 flex items-center justify-between h-14 px-4">
             <div className="flex items-center gap-3">
               <div className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 dark:bg-red-300 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-700 dark:bg-red-400"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive dark:bg-destructive opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive dark:bg-destructive"></span>
               </div>
-              <span className="font-mono text-red-700 dark:text-red-400 font-medium">{formatDuration(recordingDuration)}</span>
-              <span className="text-xs text-red-700 dark:text-red-400 animate-pulse hidden sm:inline-block">Gravando áudio...</span>
+              <span className="font-mono text-destructive dark:text-destructive font-medium">{formatDuration(recordingDuration)}</span>
+              <span className="text-xs text-destructive dark:text-destructive animate-pulse hidden sm:inline-block">Gravando áudio...</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" onClick={cancelRecording} className="text-muted-foreground hover:text-red-700 hover:bg-red-500/15 dark:hover:text-red-400 rounded-full px-4">
+              <Button variant="ghost" size="sm" onClick={cancelRecording} className="text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4">
                 Cancelar
               </Button>
-              <Button size="icon" aria-label="Enviar" onClick={handleSendAudio} className="rounded-full bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 text-white h-9 w-9">
+              <Button size="icon" aria-label="Enviar" onClick={handleSendAudio} className="rounded-full bg-destructive hover:bg-destructive dark:bg-destructive dark:hover:bg-destructive text-white h-9 w-9">
                 <SendIcon className="h-4 w-4" />
               </Button>
             </div>
@@ -329,7 +329,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                       <Button
                         variant="ghost"
                         size="icon" aria-label="Microfone"
-                        className="rounded-full hover:bg-red-500/15 hover:text-red-700 dark:hover:text-red-400 transition-colors"
+                        className="rounded-full hover:bg-destructive/15 hover:text-destructive dark:hover:text-destructive transition-colors"
                         onClick={startRecording}
                       >
                         <Mic />

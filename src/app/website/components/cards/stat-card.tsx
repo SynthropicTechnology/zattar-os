@@ -49,7 +49,7 @@ export function StatCard({
           <p
             className={cn(
               "text-xs flex items-center gap-1 mt-2 font-semibold",
-              isPositive ? "text-emerald-400" : "text-red-400"
+              isPositive ? "text-success" : "text-destructive"
             )}
           >
             {isPositive ? (

@@ -168,8 +168,8 @@ export function ParteBadge({
         className={cn(
           'shrink-0 rounded-full size-3.5',
           ativo
-            ? 'bg-sky-600 dark:bg-sky-500'
-            : 'bg-red-600 dark:bg-red-500'
+            ? 'bg-info dark:bg-info'
+            : 'bg-destructive dark:bg-destructive'
         )}
         aria-label={ativo ? 'Polo ativo' : 'Polo passivo'}
         role="img"

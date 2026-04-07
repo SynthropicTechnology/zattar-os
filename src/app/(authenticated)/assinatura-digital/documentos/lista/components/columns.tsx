@@ -114,8 +114,8 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
               variant="outline"
               className={
                 isFormulario
-                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                  : "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400"
+                  ? "border-success/30 bg-success/10 text-success dark:text-success"
+                  : "border-info/30 bg-info/10 text-info dark:text-info"
               }
             >
               <span className="flex items-center gap-1.5">

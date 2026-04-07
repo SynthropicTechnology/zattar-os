@@ -16,7 +16,7 @@
  * Cores base do sistema usando Tailwind color palette.
  * Estas cores são usadas internamente pelos mapeamentos semânticos.
  */
-// COLORS object removido — cores hardcoded (bg-blue-50, text-red-700 etc.)
+// COLORS object removido — cores hardcoded (bg-blue-50, text-destructive etc.)
 // violam o Design System. Use CSS variables (bg-primary, text-success, etc.)
 // e getSemanticBadgeVariant() de variants.ts para mapeamentos semânticos.
 

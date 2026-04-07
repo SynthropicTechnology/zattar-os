@@ -200,49 +200,20 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
     }
   };
 
-  // Updated color options to match types.ts
+  // Cor de evento usa event-colors do design system (tokens --event-*).
+  // Cada EventColor legacy mapeia para o tipo semântico correspondente via
+  // getEventColorClasses. Fornece cor dinâmica via inline style para o picker.
   const colorOptions: Array<{
     value: EventColor;
     label: string;
-    bgClass: string;
-    borderClass: string;
+    cssVar: string;
   }> = [
-    {
-      value: "sky",
-      label: "Azul",
-      bgClass: "bg-sky-400 data-[state=checked]:bg-sky-400",
-      borderClass: "border-sky-400 data-[state=checked]:border-sky-400"
-    },
-    {
-      value: "amber",
-      label: "Âmbar",
-      bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
-      borderClass: "border-amber-400 data-[state=checked]:border-amber-400"
-    },
-    {
-      value: "violet",
-      label: "Violeta",
-      bgClass: "bg-violet-400 data-[state=checked]:bg-violet-400",
-      borderClass: "border-violet-400 data-[state=checked]:border-violet-400"
-    },
-    {
-      value: "rose",
-      label: "Rosa",
-      bgClass: "bg-rose-400 data-[state=checked]:bg-rose-400",
-      borderClass: "border-rose-400 data-[state=checked]:border-rose-400"
-    },
-    {
-      value: "emerald",
-      label: "Verde",
-      bgClass: "bg-green-400 data-[state=checked]:bg-green-400",
-      borderClass: "border-green-400 data-[state=checked]:border-green-400"
-    },
-    {
-      value: "orange",
-      label: "Laranja",
-      bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400",
-      borderClass: "border-orange-400 data-[state=checked]:border-orange-400"
-    }
+    { value: "sky",     label: "Audiência",  cssVar: "var(--event-audiencia)" },
+    { value: "amber",   label: "Expediente", cssVar: "var(--event-expediente)" },
+    { value: "violet",  label: "Perícia",    cssVar: "var(--event-pericia)" },
+    { value: "rose",    label: "Prazo",      cssVar: "var(--event-prazo)" },
+    { value: "emerald", label: "Agenda",     cssVar: "var(--event-agenda)" },
+    { value: "orange",  label: "Obrigação",  cssVar: "var(--event-obrigacao)" },
   ];
 
   return (
@@ -490,7 +461,8 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                       id={`color-${colorOption.value}`}
                       value={colorOption.value}
                       aria-label={colorOption.label}
-                      className={cn("size-6 shadow-none", colorOption.bgClass, colorOption.borderClass)}
+                      className="size-6 shadow-none border-transparent data-[state=checked]:ring-2 data-[state=checked]:ring-ring data-[state=checked]:ring-offset-1"
+                      style={{ backgroundColor: colorOption.cssVar }}
                     />
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="text-xs">

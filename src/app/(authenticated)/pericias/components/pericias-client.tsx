@@ -290,7 +290,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
                           <p className="text-sm font-medium tracking-tight truncate leading-none mb-1">{pericia.perito?.nome || 'Perito Judicial (A Definir)'}</p>
                           <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                             <span className="flex items-center text-foreground">
-                              <Star className="size-2.5 text-yellow-500 mr-1 fill-yellow-500" /> {insights.rating}
+                              <Star className="size-2.5 text-warning mr-1 fill-warning" /> {insights.rating}
                             </span>
                             <span className="text-muted-foreground/30">•</span>
                             <span className={insights.winRate > 50 ? 'text-success/80' : 'text-warning/80'}>

@@ -15,23 +15,23 @@ const eventBadgeVariants = cva(
 		variants: {
 			color: {
 				// Colored variants
-				blue: "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300",
+				blue: "border-info bg-info text-info dark:border-info dark:bg-info dark:text-info",
 				green:
-					"border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300",
-				red: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300",
+					"border-success bg-success text-success dark:border-success dark:bg-success dark:text-success",
+				red: "border-destructive bg-destructive text-destructive dark:border-destructive dark:bg-destructive dark:text-destructive",
 				yellow:
-					"border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300",
+					"border-warning bg-warning text-warning dark:border-warning dark:bg-warning dark:text-warning",
 				purple:
-					"border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300",
+					"border-primary bg-primary text-primary dark:border-primary dark:bg-primary dark:text-primary",
 				orange:
-					"border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300",
+					"border-warning bg-warning text-warning dark:border-warning dark:bg-warning dark:text-warning",
 
 				// Dot variants
-				"blue-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-blue-600",
-				"green-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-green-600",
-				"red-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-red-600",
-				"orange-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-orange-600",
-				"purple-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-purple-600",
+				"blue-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-info",
+				"green-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-success",
+				"red-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-destructive",
+				"orange-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-warning",
+				"purple-dot": "bg-bg-secondary text-t-primary [&_svg]:fill-primary",
 			},
 			multiDayPosition: {
 				first:

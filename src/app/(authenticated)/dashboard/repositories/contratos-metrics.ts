@@ -6,29 +6,30 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import type { SemanticTone } from '@/lib/design-system';
 import type { ContratosResumo } from '../domain';
 
-// Cores para gráficos — valores oklch alinhados aos tokens do tema (globals.css)
-// Nota: SVG stroke/fill não resolve var(), então usamos valores literais.
-const STATUS_COLORS: Record<string, string> = {
-  'Em Contratação': 'oklch(0.55 0.18 250)',   /* --info */
-  'Contratado': 'oklch(0.48 0.26 281)',        /* --primary */
-  'Distribuído': 'oklch(0.55 0.18 145)',       /* --success */
-  'Desistência': 'oklch(0.55 0.22 25 / 0.7)', /* --destructive @ 70% */
-  'Encerrado': 'oklch(0.42 0.01 281)',         /* --muted-foreground */
+// Mapeamentos status/parcelas/treemap → SemanticTone (sem cor literal).
+// UI layer resolve via tokenForTone() do design system.
+const STATUS_TONES: Record<string, SemanticTone> = {
+  'Em Contratação': 'info',
+  'Contratado': 'primary',
+  'Distribuído': 'success',
+  'Desistência': 'destructive',
+  'Encerrado': 'neutral',
 };
 
-const PARCELA_COLORS: Record<string, string> = {
-  'Pagas': 'oklch(0.55 0.18 145)',       /* --success */
-  'Pendentes': 'oklch(0.60 0.18 75)',    /* --warning */
-  'Atrasadas': 'oklch(0.55 0.22 25)',    /* --destructive */
+const PARCELA_TONES: Record<string, SemanticTone> = {
+  'Pagas': 'success',
+  'Pendentes': 'warning',
+  'Atrasadas': 'destructive',
 };
 
-const TREEMAP_COLORS: Record<string, string> = {
-  'Acordos Trabalhistas': 'oklch(0.48 0.26 281 / 0.70)', /* --primary @ 70% */
-  'Condenações': 'oklch(0.55 0.22 25 / 0.65)',           /* --destructive @ 65% */
-  'Custas Processuais': 'oklch(0.60 0.18 75 / 0.65)',    /* --warning @ 65% */
-  'Honorários Periciais': 'oklch(0.48 0.26 281 / 0.35)', /* --primary @ 35% */
+const TREEMAP_TONES: Record<string, SemanticTone> = {
+  'Acordos Trabalhistas': 'primary',
+  'Condenações': 'destructive',
+  'Custas Processuais': 'warning',
+  'Honorários Periciais': 'chart-1',
 };
 
 /**
@@ -60,7 +61,7 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
     const porStatus = Array.from(statusMap.entries()).map(([status, count]) => ({
       status,
       count,
-      color: STATUS_COLORS[status] || 'oklch(0.42 0.01 281)' /* --muted-foreground */,
+      tone: STATUS_TONES[status] ?? 'neutral' as SemanticTone,
     }));
 
     // --- Distribuição por tipo ---
@@ -92,19 +93,19 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
       porTipo,
       obrigacoesVencer: [], // Requer tabela de obrigações — retorna vazio por enquanto
       parcelasStatus: [
-        { status: 'Pagas', count: 0, valor: 0, color: PARCELA_COLORS['Pagas'] },
-        { status: 'Pendentes', count: 0, valor: 0, color: PARCELA_COLORS['Pendentes'] },
-        { status: 'Atrasadas', count: 0, valor: 0, color: PARCELA_COLORS['Atrasadas'] },
+        { status: 'Pagas', count: 0, valor: 0, tone: PARCELA_TONES['Pagas'] },
+        { status: 'Pendentes', count: 0, valor: 0, tone: PARCELA_TONES['Pendentes'] },
+        { status: 'Atrasadas', count: 0, valor: 0, tone: PARCELA_TONES['Atrasadas'] },
       ],
       repassesPendentes: [],
       modeloCobranca: {
         proLabore: { contratos: proLabore.length, faturado: proLaboreFaturado },
         proExito: { contratos: proExito.length, potencial: proExitoPotencial, taxaRealizacao: 62 },
       },
-      treemapObrigacoes: Object.entries(TREEMAP_COLORS).map(([natureza, color]) => ({
+      treemapObrigacoes: Object.entries(TREEMAP_TONES).map(([natureza, tone]) => ({
         natureza,
         valor: 0,
-        color,
+        tone,
       })),
       scoreContratual,
     };

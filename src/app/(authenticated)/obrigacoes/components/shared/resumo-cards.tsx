@@ -220,7 +220,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(vencendoEm7Dias.valor)}
         subtitle={`${vencendoEm7Dias.quantidade} obrigações`}
         icon={Clock}
-        iconClassName="text-purple-600"
+        iconClassName="text-primary"
       />
 
       {/* Saldo Previsto */}

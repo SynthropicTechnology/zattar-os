@@ -224,9 +224,9 @@ export function TwoFAuthConfigContent() {
           <div className="flex items-center gap-4">
             {status?.connected ? (
               <>
-                <CheckCircleIcon className="h-8 w-8 text-green-500" />
+                <CheckCircleIcon className="h-8 w-8 text-success" />
                 <div>
-                  <div className="font-medium text-green-600">Conectado</div>
+                  <div className="font-medium text-success">Conectado</div>
                   {status.user && (
                     <div className="text-sm text-muted-foreground">
                       Usuário: {status.user.name} ({status.user.email})
@@ -320,7 +320,7 @@ export function TwoFAuthConfigContent() {
                         </div>
                         <Button variant="ghost" size="icon" aria-label="Confirmar" onClick={handleCopyOTP}>
                           {copied ? (
-                            <CheckIcon className="h-4 w-4 text-green-500" />
+                            <CheckIcon className="h-4 w-4 text-success" />
                           ) : (
                             <CopyIcon className="h-4 w-4" />
                           )}

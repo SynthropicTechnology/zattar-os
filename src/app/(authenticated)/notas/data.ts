@@ -63,36 +63,36 @@ export const noteLabels: NoteLabel[] = [
   {
     id: 1,
     title: "Family",
-    color: "bg-pink-500"
+    color: "bg-palette-16"
   },
   {
     id: 2,
     title: "Tasks",
-    color: "bg-purple-500"
+    color: "bg-primary"
   },
   {
     id: 3,
     title: "Personal",
-    color: "bg-green-500"
+    color: "bg-success"
   },
   {
     id: 4,
     title: "Meetings",
-    color: "bg-cyan-500"
+    color: "bg-palette-9"
   },
   {
     id: 5,
     title: "Shopping",
-    color: "bg-teal-500"
+    color: "bg-palette-8"
   },
   {
     id: 6,
     title: "Planning",
-    color: "bg-orange-500"
+    color: "bg-warning"
   },
   {
     id: 7,
     title: "Travel",
-    color: "bg-blue-500"
+    color: "bg-info"
   }
 ];

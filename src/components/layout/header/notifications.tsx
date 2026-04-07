@@ -50,7 +50,7 @@ const TIPO_ICON_MAP: Record<
   audiencia_atribuida: {
     icon: Calendar,
     className:
-      "text-emerald-600 bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-950",
+      "text-success bg-success dark:text-success dark:bg-success",
   },
   audiencia_alterada: {
     icon: Calendar,

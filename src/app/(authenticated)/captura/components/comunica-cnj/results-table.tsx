@@ -40,27 +40,27 @@ import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
  */
 const TIPO_COMUNICACAO_CONFIG: Record<string, { color: string; icon: typeof AlertCircle }> = {
   Intimação: {
-    color: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300',
+    color: 'bg-destructive text-destructive border-destructive dark:bg-destructive/30 dark:text-destructive',
     icon: AlertCircle
   },
   Citação: {
-    color: 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300',
+    color: 'bg-warning text-warning border-warning dark:bg-warning/30 dark:text-warning',
     icon: Mail
   },
   Notificação: {
-    color: 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300',
+    color: 'bg-warning text-warning border-warning dark:bg-warning/30 dark:text-warning',
     icon: Bell
   },
   'Lista de distribuição': {
-    color: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300',
+    color: 'bg-info text-info border-info dark:bg-info/30 dark:text-info',
     icon: ScrollText
   },
   'Carta Precatória': {
-    color: 'bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-900/30 dark:text-purple-300',
+    color: 'bg-primary text-primary border-primary dark:bg-primary/30 dark:text-primary',
     icon: Mail
   },
   Aviso: {
-    color: 'bg-cyan-100 text-cyan-800 border-cyan-300 dark:bg-cyan-900/30 dark:text-cyan-300',
+    color: 'bg-palette-9/15 text-palette-9 border-palette-9/30',
     icon: Bell
   },
 };
@@ -71,19 +71,19 @@ const TIPO_DOCUMENTO_CONFIG: Record<string, { color: string; icon: typeof FileTe
     icon: FileText
   },
   Sentença: {
-    color: 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/30 dark:text-indigo-300',
+    color: 'bg-info text-info border-info dark:bg-info/30 dark:text-info',
     icon: Gavel
   },
   Acórdão: {
-    color: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300',
+    color: 'bg-success text-success border-success dark:bg-success/30 dark:text-success',
     icon: ScrollText
   },
   Decisão: {
-    color: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300',
+    color: 'bg-info text-info border-info dark:bg-info/30 dark:text-info',
     icon: Gavel
   },
   Certidão: {
-    color: 'bg-teal-100 text-teal-800 border-teal-300 dark:bg-teal-900/30 dark:text-teal-300',
+    color: 'bg-palette-8/15 text-palette-8 border-palette-8/30',
     icon: FileText
   },
 };

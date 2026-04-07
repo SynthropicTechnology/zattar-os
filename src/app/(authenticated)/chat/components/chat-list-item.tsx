@@ -44,7 +44,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
             </span>
           )}
           {unreadCount > 0 && (
-            <div className="ms-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500 text-sm text-white">
+            <div className="ms-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success text-sm text-white">
               {unreadCount}
             </div>
           )}

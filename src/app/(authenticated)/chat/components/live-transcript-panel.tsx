@@ -51,7 +51,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
             transcripts.map((segment) => (
               <div key={segment.id} className="flex flex-col gap-1">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-blue-400 truncate max-w-37.5">
+                  <span className="text-xs font-bold text-info truncate max-w-37.5">
                     {segment.participantName}
                   </span>
                   <span className="text-[10px] text-gray-500">

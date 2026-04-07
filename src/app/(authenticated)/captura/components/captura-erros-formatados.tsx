@@ -150,7 +150,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
           {/* Erros agrupados por tribunal */}
           <div className="space-y-3">
             {grupos.map((grupo) => (
-              <div key={grupo.tribunal} className="rounded-md border border-red-200 dark:border-red-900 bg-background/50 p-3">
+              <div key={grupo.tribunal} className="rounded-md border border-destructive dark:border-destructive bg-background/50 p-3">
                 <div className="mb-2 font-medium text-sm text-foreground">
                   {grupo.tribunal}
                   <span className="ml-2 text-muted-foreground font-normal">

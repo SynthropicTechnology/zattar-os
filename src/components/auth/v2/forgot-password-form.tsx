@@ -92,9 +92,9 @@ export function ForgotPasswordFormV2({
               </p>
             </div>
 
-            <div className="flex items-start gap-3 rounded-md border border-emerald-500/15 bg-emerald-50/50 p-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
-                <Mail className="h-4 w-4 text-emerald-600" />
+            <div className="flex items-start gap-3 rounded-md border border-success/15 bg-success/50 p-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-success/10">
+                <Mail className="h-4 w-4 text-success" />
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground/80">

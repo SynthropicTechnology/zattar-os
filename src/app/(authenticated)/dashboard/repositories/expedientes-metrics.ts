@@ -10,6 +10,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { toDateString } from '@/lib/date-utils';
+import type { SemanticTone } from '@/lib/design-system';
 import type { ExpedientesResumo, ExpedienteUrgente } from '../domain';
 
 /**
@@ -220,8 +221,8 @@ export async function buscarExpedientesUrgentes(
 export async function buscarExpedientesDetalhados(
   responsavelId?: number
 ): Promise<{
-  porOrigem: { origem: string; count: number; color: string }[];
-  resultadoDecisao: { resultado: string; count: number; color: string }[];
+  porOrigem: { origem: string; count: number; tone: SemanticTone }[];
+  resultadoDecisao: { resultado: string; count: number; tone: SemanticTone }[];
   volumeSemanal: { dia: string; recebidos: number; baixados: number }[];
   prazoMedio: number[];
   calendarioPrazos: number[];
@@ -267,10 +268,10 @@ export async function buscarExpedientesDetalhados(
   const expedientes = data || [];
 
   // --- Distribuição por origem ---
-  const ORIGEM_COLORS: Record<string, string> = {
-    'Captura PJE': 'hsl(217 91% 60%)',
-    'Comunica CNJ': 'hsl(35 95% 58%)',
-    'Manual': 'oklch(from var(--muted-foreground) l c h / 0.55)',
+  const ORIGEM_TONES: Record<string, SemanticTone> = {
+    'Captura PJE': 'info',
+    'Comunica CNJ': 'warning',
+    'Manual': 'neutral',
   };
   const origemMap = new Map<string, number>();
   expedientes.forEach((e) => {
@@ -282,12 +283,12 @@ export async function buscarExpedientesDetalhados(
   const porOrigem = Array.from(origemMap.entries()).map(([origem, count]) => ({
     origem,
     count,
-    color: ORIGEM_COLORS[origem] || 'hsl(215 14% 60%)',
+    tone: ORIGEM_TONES[origem] ?? 'neutral' as SemanticTone,
   }));
 
   // --- Resultado das decisões ---
   // resultado_decisao não existe na view — retornar vazio
-  const resultadoDecisao: { resultado: string; count: number; color: string }[] = [];
+  const resultadoDecisao: { resultado: string; count: number; tone: SemanticTone }[] = [];
 
   // --- Volume semanal (semana atual) ---
   const diasLabel = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'];
