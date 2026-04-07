@@ -74,16 +74,26 @@ const PUBLIC_ROUTES = [
 
 // ─── Provider ────────────────────────────────────────────
 
-export function UserProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [permissoes, setPermissoes] = useState<Permissao[]>([]);
+export function UserProvider({
+  children,
+  initialUser = null,
+  initialPermissoes = [],
+}: {
+  children: ReactNode;
+  initialUser?: UserData | null;
+  initialPermissoes?: Permissao[];
+}) {
+  const [user, setUser] = useState<UserData | null>(initialUser);
+  const [permissoes, setPermissoes] = useState<Permissao[]>(initialPermissoes);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Se recebemos dados do server, não precisa de loading na UI
+  const [isLoading, setIsLoading] = useState(!initialUser);
 
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const logoutInProgressRef = useRef(false);
-  const hasFetchedRef = useRef(false);
+  // Se inicializamos com usuário, consideramos que já buscamos inicialmente
+  const hasFetchedRef = useRef(!!initialUser);
   const userRef = useRef<UserData | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -146,6 +156,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, [clearAuthState, isCurrentRoutePublic, logout]);
 
+  // Função auxiliar para verificar erros de Lock
+  const isLockOrAbortError = (error: unknown) => {
+    if (!error) return false;
+    const errString = String(error).toLowerCase();
+    return errString.includes('lock') || errString.includes('abort') || errString.includes('steal');
+  };
+
   /**
    * Busca dados do usuário + permissões da API consolidada
    */
@@ -161,6 +178,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (signal?.aborted) return;
 
       if (authError || !authUser) {
+        if (isLockOrAbortError(authError)) {
+          // Apenas ignore timeout/lock no carregamento para não deslogar abruptamente
+          console.warn('getUser() abortado ou em lock, ignorando para não causar logout.');
+          setIsLoading(false);
+          return;
+        }
         hasFetchedRef.current = false;
         await invalidateSession();
         return;
@@ -232,9 +255,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     abortControllerRef.current = controller;
 
     const init = async () => {
-      if (!mounted || hasFetchedRef.current) return;
-      hasFetchedRef.current = true;
-      await fetchUserData(controller.signal);
+      // Se não tem usuário inicial (SSR cache loss etc), deve buscar
+      if (!userRef.current && !hasFetchedRef.current) {
+        hasFetchedRef.current = true;
+        await fetchUserData(controller.signal);
+      }
     };
 
     const validateSession = async () => {
@@ -245,6 +270,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
 
       if (userError || !userData.user) {
+        if (isLockOrAbortError(userError)) {
+          console.warn('Cuidado: Sessão validation teve Lock/Abort Error. Ignorando.');
+          return;
+        }
         console.log('Sessão inválida detectada, fazendo logout automático');
         hasFetchedRef.current = false;
         await invalidateSession();
@@ -271,13 +300,21 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted || logoutInProgressRef.current) return;
 
+      // Ignite initial fetch if not INITIAL_SESSION, to avoid duplicate concurrent getUser()
+      if (event === 'INITIAL_SESSION') return;
+
       if (session?.access_token) {
         setSessionToken(session.access_token);
 
         // Supabase recomenda não confiar em session.user de onAuthStateChange,
         // pois esse objeto vem do storage local; validar via getUser().
         const { data: verifiedUserData, error: verifiedUserError } = await supabase.auth.getUser();
+        
         if (verifiedUserError || !verifiedUserData.user) {
+          if (isLockOrAbortError(verifiedUserError)) {
+             console.warn('onAuthStateChange teve Lock/Abort Error. Ignorando.');
+             return;
+          }
           hasFetchedRef.current = false;
           await invalidateSession();
           return;
@@ -289,11 +326,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
       } else if (event === 'SIGNED_OUT') {
         // Apenas reagir ao SIGNED_OUT explícito.
-        // INITIAL_SESSION com session=null é ignorado aqui pois o
-        // fetchUserData() já é a fonte de verdade para o estado inicial.
-        // Reagir ao INITIAL_SESSION causava race condition no CTRL+R:
-        // o evento disparava antes do Supabase restaurar a sessão dos cookies,
-        // resultando em logout prematuro.
         hasFetchedRef.current = false;
         clearAuthState();
         await invalidateSession();

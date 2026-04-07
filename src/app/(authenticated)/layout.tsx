@@ -1,31 +1,47 @@
-"use client"
+import { createClient } from "@/lib/supabase/server"
+import { AuthenticatedLayoutClient } from "./layout-client"
+import { resolveAvatarUrl } from "@/lib/avatar-url"
+import { listarPermissoesUsuario } from "@/app/(authenticated)/usuarios/repository"
+import type { UserData } from "@/providers/user-provider"
 
-import dynamic from "next/dynamic"
-import { usePathname } from "next/navigation"
-import { UserProvider } from "@/providers/user-provider"
-
-const MINIMAL_ROUTES = [
-  "/app/chat/call",
-  "/chat/call",
-]
-
-// Lazy-load CopilotKit + Dashboard shell (evita compilar 108MB de módulos no startup)
-const CopilotDashboard = dynamic(
-  () => import("@/components/layout/copilot-dashboard"),
-  { ssr: false }
-)
-
-export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-
-  const isMinimalRoute = MINIMAL_ROUTES.some(route => pathname?.startsWith(route))
-  if (isMinimalRoute) {
-    return <>{children}</>
+export default async function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
+  let initialUser: UserData | null = null;
+  let initialPermissoes: any[] = [];
+  
+  try {
+     const supabase = await createClient();
+     const { data: { user } } = await supabase.auth.getUser();
+     
+     if (user) {
+        // Fetch user basic data server-side
+        const { data: usuario } = await supabase
+          .from('usuarios')
+          .select('id, auth_user_id, nome_completo, nome_exibicao, email_corporativo, email_pessoal, avatar_url, is_super_admin')
+          .eq('auth_user_id', user.id)
+          .single();
+          
+        if (usuario) {
+          initialUser = {
+            id: usuario.id,
+            authUserId: usuario.auth_user_id,
+            nomeCompleto: usuario.nome_completo,
+            nomeExibicao: usuario.nome_exibicao,
+            emailCorporativo: usuario.email_corporativo,
+            emailPessoal: usuario.email_pessoal,
+            avatarUrl: resolveAvatarUrl(usuario.avatar_url),
+            isSuperAdmin: usuario.is_super_admin || false,
+          };
+          
+          initialPermissoes = await listarPermissoesUsuario(usuario.id);
+        }
+     }
+  } catch (e) {
+     console.error("[Layout] Erro ao pré-buscar usuário:", e);
   }
 
   return (
-    <UserProvider>
-      <CopilotDashboard>{children}</CopilotDashboard>
-    </UserProvider>
+    <AuthenticatedLayoutClient initialUser={initialUser} initialPermissoes={initialPermissoes}>
+      {children}
+    </AuthenticatedLayoutClient>
   )
 }

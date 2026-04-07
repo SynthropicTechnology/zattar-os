@@ -330,15 +330,36 @@ export async function proxy(request: NextRequest) {
     };
   } else {
     // Normal auth check
-    const authResult = await supabase.auth.getUser();
+  const authResult = await supabase.auth.getUser();
     data = authResult.data;
     authError = authResult.error;
   }
 
   const user = data?.user;
 
+  // Função auxiliar para verificar erros de Lock no servidor (Next.js middleware)
+  const isLockOrAbortError = (error: unknown) => {
+    if (!error) return false;
+    const errString = String(error).toLowerCase();
+    return errString.includes('lock') || errString.includes('abort') || errString.includes('steal') || errString.includes('fetch is aborted');
+  };
+
+  // Se o erro for um lock breaking (por concorrência na atualização do token)
+  // não devemos deslogar o usuário e redirecioná-lo. Vamos assumir que a sessão 
+  // pode estar válida ainda (ou será atualizada por outro request que ganhou o lock).
+  if (authError && isLockOrAbortError(authError)) {
+    console.warn(`[Proxy] getUser() abortado ou com Lock Error. Continuando request: ${authError.message}`);
+    // Ignorar este erro para não forçar logout
+    authError = null;
+    // Opcional: Se 'user' for nulo e for uma rota privada, a página falhará
+    // posteriormente, mas na maioria dos casos o Supabase Client do component 
+    // resolverá.
+  }
+
   // Se não está autenticado e não é rota pública, redirecionar para login
   if ((!user || authError) && !isPublicRoute) {
+    // IMPORTANTE: Antes de deslogar, garantir que não apagamos 
+    // a sessão se houver apenas um erro de fetch/lock e o usuário ainda tinha token!
     try {
       await supabase.auth.signOut();
     } catch {
