@@ -161,10 +161,10 @@ const nextConfig: NextConfig = {
     // NOTA: Warnings de "Invalid source map" do Turbopack são conhecidos no Next.js 16.0.10
     // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
-    // Cache persistente do Turbopack entre builds — acelera builds incrementais no CI/Cloudron.
-    // Flag experimental do Next.js 16.2+. Se causar problemas, basta remover esta linha.
-    // Doc: https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache
-    turbopackFileSystemCacheForBuild: true,
+    // NOTA: `turbopackFileSystemCacheForBuild` (Next 16.2+ experimental) foi testado em 2026-04-07
+    // e causou crash silencioso no builder remoto do Cloudron (builder.sinesys.online), provavelmente
+    // por quota de disco do sandbox vs. cold seed multi-GB do cache Turbopack. Manter desabilitado
+    // até que o builder tenha mais espaço livre ou a flag saia do experimental.
     // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
     serverActions: {
       bodySizeLimit: "50mb",

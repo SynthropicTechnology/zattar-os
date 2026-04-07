@@ -66,7 +66,7 @@ export function WidgetScorePessoal() {
             </Text>
           </div>
           <InsightBanner type="info">
-            Acesse o painel administrativo para métricas do escritório.
+            Nenhuma ação administrativa pendente na sua fila.
           </InsightBanner>
         </div>
       </WidgetContainer>

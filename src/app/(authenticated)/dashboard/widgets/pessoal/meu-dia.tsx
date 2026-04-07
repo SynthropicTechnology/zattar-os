@@ -18,6 +18,7 @@ import type { AudienciaProxima, Lembrete } from '../../domain';
 // ─── Tipos da Timeline ────────────────────────────────────────────────────────
 
 type TipoEvento = 'audiencia' | 'lembrete' | 'tarefa';
+type EventoState = 'done' | 'near' | 'next' | 'future';
 
 interface EventoTimeline {
   id: string;
@@ -39,7 +40,10 @@ function hojeISO(): string {
 }
 
 function audienciaParaEvento(a: AudienciaProxima): EventoTimeline {
-  const hora = a.hora_audiencia ?? null;
+  let hora = a.hora_audiencia ?? null;
+  if (hora && hora.length >= 5) {
+    hora = hora.slice(0, 5) + 'h';
+  }
 
   return {
     id: `aud-${a.id}`,
@@ -55,7 +59,7 @@ function audienciaParaEvento(a: AudienciaProxima): EventoTimeline {
 
 function lembreteParaEvento(l: Lembrete): EventoTimeline {
   const d = new Date(l.data_lembrete);
-  const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + 'h';
 
   return {
     id: `lem-${l.id}`,
@@ -68,7 +72,7 @@ function lembreteParaEvento(l: Lembrete): EventoTimeline {
 
 function horaParaMinutos(hora: string | null): number {
   if (!hora) return 9999; // sem hora → final da lista
-  const [h, m] = hora.split(':').map(Number);
+  const [h, m] = hora.replace(/h/g, '').split(':').map(Number);
   return (h ?? 0) * 60 + (m ?? 0);
 }
 
@@ -83,52 +87,47 @@ function ehHoje(isoStr: string): boolean {
 
 // ─── Componentes de Ícone de Trilho ──────────────────────────────────────────
 
-function DotAudiencia({ done, isNext }: { done: boolean; isNext: boolean }) {
+function DotAudiencia({ state }: { state: EventoState }) {
+  const isDone = state === 'done';
+  const isNear = state === 'near';
+  const isNext = state === 'next';
+
+  const border = isDone ? 'border-muted-foreground/20' : isNear ? 'border-orange-500/80' : isNext ? 'border-primary' : 'border-primary/50';
+  const bg = isDone ? 'bg-muted-foreground/20' : isNear ? 'bg-orange-500/30' : isNext ? 'bg-primary/30' : 'bg-transparent';
+  const innerBg = isDone ? 'bg-muted-foreground/30' : isNear ? 'bg-orange-500' : isNext ? 'bg-primary' : 'bg-primary/60';
+
   return (
-    <div
-      className={`size-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-        done
-          ? 'border-muted-foreground/20 bg-muted-foreground/20'
-          : isNext
-          ? 'border-primary bg-primary/30'
-          : 'border-primary/50 bg-transparent'
-      }`}
-    >
-      <div
-        className={`size-1.5 rounded-full ${
-          done ? 'bg-muted-foreground/30' : isNext ? 'bg-primary' : 'bg-primary/60'
-        }`}
-      />
+    <div className={`size-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${border} ${bg}`}>
+      <div className={`size-1.5 rounded-full ${innerBg}`} />
     </div>
   );
 }
 
-function DotLembrete({ done, isNext }: { done: boolean; isNext: boolean }) {
-  return (
-    <div
-      className={`size-2 rounded-full mt-0.5 shrink-0 ${
-        done
-          ? 'bg-muted-foreground/25'
-          : isNext
-          ? 'bg-primary shadow-[0_0_6px_color-mix(in_oklch,var(--primary)_40%,transparent)]'
-          : 'bg-border/40'
-      }`}
-    />
-  );
+function DotLembrete({ state }: { state: EventoState }) {
+  const isDone = state === 'done';
+  const isNear = state === 'near';
+  const isNext = state === 'next';
+
+  let bgClass = 'bg-border/40';
+  if (isDone) bgClass = 'bg-muted-foreground/25';
+  else if (isNear) bgClass = 'bg-orange-500 shadow-[0_0_6px_rgba(249,115,22,0.6)]';
+  else if (isNext) bgClass = 'bg-primary shadow-[0_0_6px_color-mix(in_oklch,var(--primary)_60%,transparent)]';
+
+  return <div className={`size-2 rounded-full mt-0.5 shrink-0 ${bgClass}`} />;
 }
 
-function DotTarefa({ done, isNext }: { done: boolean; isNext: boolean }) {
+function DotTarefa({ state }: { state: EventoState }) {
+  const isDone = state === 'done';
+  const isNear = state === 'near';
+  const isNext = state === 'next';
+
+  const border = isDone ? 'border-muted-foreground/20' : isNear ? 'border-orange-500' : isNext ? 'border-primary/80' : 'border-border/40';
+  const bg = isDone ? 'bg-muted-foreground/15' : 'bg-transparent';
+  const innerBg = isDone ? 'bg-muted-foreground/40' : isNear ? 'bg-orange-500' : isNext ? 'bg-primary' : 'bg-transparent';
+
   return (
-    <div
-      className={`size-3.5 rounded-sm border flex items-center justify-center shrink-0 ${
-        done
-          ? 'border-muted-foreground/20 bg-muted-foreground/15'
-          : isNext
-          ? 'border-primary/60 bg-transparent'
-          : 'border-border/30 bg-transparent'
-      }`}
-    >
-      {done && <div className="size-1.5 rounded-sm bg-muted-foreground/40" />}
+    <div className={`size-3.5 rounded-sm border flex items-center justify-center shrink-0 ${border} ${bg}`}>
+      {(isDone || isNext || isNear) && <div className={`size-1.5 rounded-sm ${innerBg}`} />}
     </div>
   );
 }
@@ -206,14 +205,28 @@ export function WidgetMeuDia() {
         <div className="flex flex-col gap-1">
           {eventos.map((evento, i) => {
             const isNext = i === proximoIdx;
-            const isDone = evento.done || (evento.hora !== null && horaParaMinutos(evento.hora) < agora);
-            const Icon = TIPO_ICONS[evento.tipo];
+            const minutos = evento.hora ? horaParaMinutos(evento.hora) : null;
+            const isDone = evento.done || (minutos !== null && minutos < agora);
+            
+            let state: EventoState = 'future';
+            if (isDone) {
+              state = 'done';
+            } else if (minutos !== null) {
+              const diff = minutos - agora;
+              if (diff <= 60 && diff >= 0) {
+                state = 'near';
+              } else if (isNext) {
+                state = 'next';
+              }
+            }
 
             return (
               <div
                 key={evento.id}
                 className={`flex items-start gap-3 px-2 py-2 rounded-xl transition-all duration-150 group ${
-                  isNext
+                  state === 'near' 
+                    ? 'bg-orange-500/[0.04] ring-1 ring-orange-500/20'
+                    : isNext
                     ? 'bg-primary/[0.04] ring-1 ring-primary/20'
                     : 'hover:bg-muted/40'
                 }`}
@@ -221,11 +234,11 @@ export function WidgetMeuDia() {
                 {/* Coluna do Ícone Timeline (Centralizado no box w-6) */}
                 <div className="w-6 flex justify-center shrink-0 mt-0.5 z-10 bg-background/80 rounded-full group-hover:bg-transparent backdrop-blur-sm">
                   {evento.tipo === 'audiencia' ? (
-                    <DotAudiencia done={isDone} isNext={isNext} />
+                    <DotAudiencia state={state} />
                   ) : evento.tipo === 'lembrete' ? (
-                    <DotLembrete done={isDone} isNext={isNext} />
+                    <DotLembrete state={state} />
                   ) : (
-                    <DotTarefa done={isDone} isNext={isNext} />
+                    <DotTarefa state={state} />
                   )}
                 </div>
 
@@ -254,22 +267,7 @@ export function WidgetMeuDia() {
                         {evento.numeroProcesso}
                       </p>
                     )}
-                    
-                    {/* Badge de tipo */}
-                     <div className="flex items-center gap-1 mt-1.5">
-                       <Icon
-                         className={`size-3 shrink-0 ${
-                           isDone ? 'text-muted-foreground/60' : 'text-primary/70'
-                         }`}
-                       />
-                       <span
-                         className={`text-[9px] font-medium uppercase tracking-wider ${
-                           isDone ? 'text-muted-foreground/60' : 'text-primary/70'
-                         }`}
-                       >
-                         {evento.tipo}
-                       </span>
-                     </div>
+                    {/* Sem badge de tipo aqui */}
                   </div>
 
                   {/* Horário à direita */}
@@ -277,13 +275,25 @@ export function WidgetMeuDia() {
                     {evento.hora && (
                       <span
                         className={`text-xs font-display tabular-nums font-semibold ${
-                          isDone ? 'text-muted-foreground/70' : 'text-foreground/90'
+                          isDone ? 'text-muted-foreground/70' : state === 'near' ? 'text-orange-500' : 'text-foreground/90'
                         }`}
                       >
                         {evento.hora}
                       </span>
                     )}
-                    {isNext && (
+                    <span 
+                      className={`text-[9px] font-medium uppercase tracking-wider mt-0.5 ${
+                        isDone ? 'text-muted-foreground/50' : state === 'near' ? 'text-orange-500/80' : 'text-primary/70'
+                      }`}
+                    >
+                      {evento.tipo === 'audiencia' ? 'Audiência' : evento.tipo}
+                    </span>
+                    {state === 'near' && (
+                       <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded shadow-sm shrink-0">
+                         Em Breve
+                       </span>
+                    )}
+                    {state === 'next' && (
                       <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded shadow-sm shrink-0">
                         Próximo
                       </span>
