@@ -114,7 +114,7 @@ export function AudienciasSemanaView({
     <div className="space-y-4">
       {/* Week Navigator */}
       <div className="flex items-center gap-2">
-        <button onClick={handlePrevWeek} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handlePrevWeek} className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer">
           <ChevronLeft className="size-4" />
         </button>
         <button
@@ -126,7 +126,7 @@ export function AudienciasSemanaView({
         >
           Hoje
         </button>
-        <button onClick={handleNextWeek} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handleNextWeek} className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer">
           <ChevronRight className="size-4" />
         </button>
         <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>

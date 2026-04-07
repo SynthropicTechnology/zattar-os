@@ -295,7 +295,7 @@ export function MissionCard({
                   'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-medium transition-all cursor-pointer group',
                   action.primary
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
-                    : 'text-muted-foreground/50 hover:text-foreground/70 hover:bg-white/4',
+                    : 'text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/[0.04]',
                 )}
               >
                 <action.icon className="size-2.5" />

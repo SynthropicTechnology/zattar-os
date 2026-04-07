@@ -766,7 +766,7 @@ function MissionHeroCard({ audiencia }: { audiencia: MockAudiencia }) {
                   'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-medium transition-all cursor-pointer group',
                   action.primary
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
-                    : 'text-muted-foreground/50 hover:text-foreground/70 hover:bg-white/4',
+                    : 'text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/[0.04]',
                 )}
               >
                 <action.icon className="size-2.5" />
@@ -876,7 +876,7 @@ function PostHearingCard({ audiencia }: { audiencia: MockAudiencia }) {
                 key={action.id}
                 className={cn(
                   'flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] transition-all',
-                  action.done ? 'text-muted-foreground/55' : 'text-foreground/60 hover:bg-white/4 cursor-pointer',
+                  action.done ? 'text-muted-foreground/55' : 'text-foreground/60 hover:bg-foreground/[0.04] cursor-pointer',
                 )}
               >
                 {action.done ? (
@@ -1153,7 +1153,7 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
   return (
     <div className={cn(
       'flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none',
-      'focus-visible:ring-1 focus-visible:ring-primary/30 hover:bg-white/4',
+      'focus-visible:ring-1 focus-visible:ring-primary/30 hover:bg-foreground/[0.04]',
       (isPast || isFinalizada) && 'opacity-55',
     )}>
       {/* Status dot */}

@@ -211,7 +211,7 @@ export function PostHearingFlow({
                   "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] transition-all",
                   action.done
                     ? "text-muted-foreground/55"
-                    : "text-foreground/60 hover:bg-white/4 cursor-pointer",
+                    : "text-foreground/60 hover:bg-foreground/[0.04] cursor-pointer",
                 )}
               >
                 {action.done ? (

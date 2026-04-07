@@ -46,7 +46,7 @@ export function AudienciasAnoView({
     <div className="space-y-4">
       {/* Year Navigator */}
       <div className="flex items-center gap-2">
-        <button onClick={handlePrevYear} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handlePrevYear} className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer">
           <ChevronLeft className="size-4" />
         </button>
         <button
@@ -58,7 +58,7 @@ export function AudienciasAnoView({
         >
           Hoje
         </button>
-        <button onClick={handleNextYear} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handleNextYear} className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer">
           <ChevronRight className="size-4" />
         </button>
         <span className="text-sm font-medium ml-1">{year}</span>
