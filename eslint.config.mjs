@@ -5,6 +5,7 @@ import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import nextPlugin from "@next/eslint-plugin-next";
 import noHardcodedSecrets from "./eslint-rules/no-hardcoded-secrets.js";
+import noHslVarTokens from "./eslint-rules/no-hsl-var-tokens.js";
 
 const eslintConfig = defineConfig([
   {
@@ -67,11 +68,16 @@ const eslintConfig = defineConfig([
       custom: {
         rules: {
           "no-hardcoded-secrets": noHardcodedSecrets,
+          "no-hsl-var-tokens": noHslVarTokens,
         },
       },
     },
     rules: {
       "custom/no-hardcoded-secrets": "error",
+      // ERROR — quebra build. CSS inválido detectado em produção em 36 arquivos
+      // antes desta sessão. Não é estilo, é bug visual confirmado.
+      // Aplica em TODO o codebase, sem exclusões.
+      "custom/no-hsl-var-tokens": "error",
     },
   },
   // Exceções para arquivos de exemplo e documentação
@@ -214,21 +220,11 @@ const eslintConfig = defineConfig([
       "src/app/(dev)/**",
     ],
     rules: {
+      // WARN — apontamentos de débito técnico, não bloqueia build.
+      // A regra hsl(var(--)) foi promovida para custom/no-hsl-var-tokens (error)
+      // pois é bug visual real, não dívida estilística.
       "no-restricted-syntax": [
         "warn",
-        {
-          // hsl(var(--token)) é INVÁLIDO — globals.css usa OKLCH, não HSL.
-          // Use var(--token) direto, ou oklch(from var(--token) ...) para opacidade.
-          selector: "Literal[value=/hsl\\(var\\(--/]",
-          message:
-            "Não use hsl(var(--token)). globals.css define tokens em OKLCH — hsl(oklch(...)) é CSS inválido. Use var(--token) direto ou oklch(from var(--token) l c h / alpha) para opacidade.",
-        },
-        {
-          // Templates literais com hsl(var(--))
-          selector: "TemplateElement[value.raw=/hsl\\(var\\(--/]",
-          message:
-            "Não use hsl(var(--token)) em template literals. Use var(--token) direto.",
-        },
         {
           // Cores Tailwind cruas (text-red-500, bg-blue-200, etc.) — use tokens semânticos
           // text-success, text-destructive, text-warning, text-info, text-muted-foreground
