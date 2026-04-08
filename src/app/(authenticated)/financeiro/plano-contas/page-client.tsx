@@ -16,7 +16,6 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { PageShell } from '@/components/shared/page-shell';
 import {
   type NivelConta,
   PlanoContaCreateDialog,
@@ -30,7 +29,7 @@ import {
   NIVEL_LABELS,
   MaisFiltrosPlanoContasPopover,
 } from '@/app/(authenticated)/financeiro';
-import { actionAtualizarConta } from '@/app/(authenticated)/financeiro/server-actions';
+import { actionAtualizarConta } from '@/app/(authenticated)/financeiro/actions';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
@@ -414,7 +413,7 @@ export default function PlanoContasPage() {
   );
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           <DataTableToolbar
@@ -555,6 +554,6 @@ export default function PlanoContasPage() {
           conta={selectedConta}
         />
       )}
-    </PageShell>
+    </>
   );
 }

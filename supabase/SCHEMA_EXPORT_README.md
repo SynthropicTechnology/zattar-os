@@ -1,8 +1,8 @@
-# Diego Barbosa Advocacia (Sinesys) - Schema Export Documentation
+# Diego Barbosa Advocacia (Synthropic) - Schema Export Documentation
 
 ## Overview
 
-This directory contains the database schema export for the Zattar Advogados (Sinesys) application.
+This directory contains the database schema export for the Zattar Advogados (Synthropic) application.
 
 ## Files
 

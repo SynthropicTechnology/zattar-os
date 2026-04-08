@@ -51,19 +51,19 @@ const MEU_DIA: {
   done: boolean;
   next?: boolean;
 }[] = [
-  { time: '09:00', title: 'Revisar contestação proc. 0024891-12', type: 'tarefa',   done: true  },
-  { time: '09:30', title: 'Audiência — João Ferreira x Metalúrgica SP', type: 'audiencia', done: true  },
-  { time: '10:30', title: 'Ligar para Dra. Camila sobre recurso', type: 'lembrete', done: true  },
-  { time: '11:00', title: 'Protocolar impugnação TRT2',           type: 'tarefa',   done: false, next: true },
-  { time: '14:00', title: 'Audiência de conciliação — TRT1',      type: 'audiencia', done: false },
-  { time: '15:30', title: 'Entregar parecer societário',          type: 'lembrete', done: false },
-  { time: '17:00', title: 'Fechar relatório mensal de honorários', type: 'tarefa',   done: false },
-];
+    { time: '09:00', title: 'Revisar contestação proc. 0024891-12', type: 'tarefa', done: true },
+    { time: '09:30', title: 'Audiência — João Ferreira x Metalúrgica SP', type: 'audiencia', done: true },
+    { time: '10:30', title: 'Ligar para Dra. Camila sobre recurso', type: 'lembrete', done: true },
+    { time: '11:00', title: 'Protocolar impugnação TRT2', type: 'tarefa', done: false, next: true },
+    { time: '14:00', title: 'Audiência de conciliação — TRT1', type: 'audiencia', done: false },
+    { time: '15:30', title: 'Entregar parecer societário', type: 'lembrete', done: false },
+    { time: '17:00', title: 'Fechar relatório mensal de honorários', type: 'tarefa', done: false },
+  ];
 
 const TAREFAS_SEGMENTS = [
-  { value: 8,  color: 'var(--warning)',       label: 'Pendentes'     },
-  { value: 3,  color: 'hsl(220 70% 60%)',          label: 'Em Andamento'  },
-  { value: 14, color: 'hsl(142 60% 45%)',          label: 'Concluídas'    },
+  { value: 8, color: 'var(--warning)', label: 'Pendentes' },
+  { value: 3, color: 'hsl(220 70% 60%)', label: 'Em Andamento' },
+  { value: 14, color: 'hsl(142 60% 45%)', label: 'Concluídas' },
 ];
 
 const PRODUTIVIDADE_SEMANAL = [
@@ -78,10 +78,10 @@ const PRODUTIVIDADE_AVG = 5;
 const PRODUTIVIDADE_TOTAL = PRODUTIVIDADE_SEMANAL.reduce((s, d) => s + d.value, 0);
 
 const LEMBRETES = [
-  { time: '15:00', text: 'Ligação com Dr. Mendes sobre acordo',    urgency: 'alto'  as const },
-  { time: '17:00', text: 'Entregar parecer de rescisão indireta',  urgency: 'alto'  as const },
-  { time: '18:30', text: 'Reunião de equipe — pauta semanal',      urgency: 'medio' as const },
-  { time: null,    text: 'Atualizar senha do e-CAC',               urgency: 'baixo' as const },
+  { time: '15:00', text: 'Ligação com Dr. Mendes sobre acordo', urgency: 'alto' as const },
+  { time: '17:00', text: 'Entregar parecer de rescisão indireta', urgency: 'alto' as const },
+  { time: '18:30', text: 'Reunião de equipe — pauta semanal', urgency: 'medio' as const },
+  { time: null, text: 'Atualizar senha do e-CAC', urgency: 'baixo' as const },
 ];
 
 const CAPTURA_TRIBUNAIS: {
@@ -89,11 +89,11 @@ const CAPTURA_TRIBUNAIS: {
   nome: string;
   status: 'ok' | 'erro' | 'sincronizando';
 }[] = [
-  { sigla: 'TRT1',  nome: 'Rio de Janeiro', status: 'ok'            },
-  { sigla: 'TRT2',  nome: 'São Paulo',      status: 'ok'            },
-  { sigla: 'TRT3',  nome: 'Minas Gerais',   status: 'erro'          },
-  { sigla: 'TRT15', nome: 'Campinas',       status: 'sincronizando' },
-];
+    { sigla: 'TRT1', nome: 'Rio de Janeiro', status: 'ok' },
+    { sigla: 'TRT2', nome: 'São Paulo', status: 'ok' },
+    { sigla: 'TRT3', nome: 'Minas Gerais', status: 'erro' },
+    { sigla: 'TRT15', nome: 'Campinas', status: 'sincronizando' },
+  ];
 
 const CHAT_SALAS = 4;
 const CHAT_NAO_LIDAS = 3;
@@ -108,10 +108,10 @@ const DOCUMENTOS_RECENTES: {
   tipo: 'doc' | 'pdf';
   tempo: string;
 }[] = [
-  { nome: 'Contestação_João_Ferreira_v3',   tipo: 'doc', tempo: 'há 12 min' },
-  { nome: 'Relatório_Honorários_Mar2026',   tipo: 'pdf', tempo: 'há 1h'     },
-  { nome: 'Parecer_Rescisao_Indireta',      tipo: 'doc', tempo: 'há 3h'     },
-];
+    { nome: 'Contestação_João_Ferreira_v3', tipo: 'doc', tempo: 'há 12 min' },
+    { nome: 'Relatório_Honorários_Mar2026', tipo: 'pdf', tempo: 'há 1h' },
+    { nome: 'Parecer_Rescisao_Indireta', tipo: 'doc', tempo: 'há 3h' },
+  ];
 
 // ─── Mock Data — Novos Widgets ───────────────────────────────────────────────
 
@@ -136,55 +136,55 @@ const FOCO_HOJE: {
   acao: string;
   urgencia: 'critico' | 'alto' | 'medio';
 }[] = [
-  {
-    titulo: 'Protocolar impugnação TRT2',
-    razao: 'Prazo vence hoje às 18h',
-    acao: 'Abrir expediente',
-    urgencia: 'critico',
-  },
-  {
-    titulo: 'Preparar documentos — Audiência 14h',
-    razao: 'Audiência em 2h sem docs preparados',
-    acao: 'Ver processo',
-    urgencia: 'alto',
-  },
-  {
-    titulo: 'Responder Dr. Silva sobre parecer',
-    razao: 'Bloqueando colega desde ontem',
-    acao: 'Abrir chat',
-    urgencia: 'medio',
-  },
-];
+    {
+      titulo: 'Protocolar impugnação TRT2',
+      razao: 'Prazo vence hoje às 18h',
+      acao: 'Abrir expediente',
+      urgencia: 'critico',
+    },
+    {
+      titulo: 'Preparar documentos — Audiência 14h',
+      razao: 'Audiência em 2h sem docs preparados',
+      acao: 'Ver processo',
+      urgencia: 'alto',
+    },
+    {
+      titulo: 'Responder Dr. Silva sobre parecer',
+      razao: 'Bloqueando colega desde ontem',
+      acao: 'Abrir chat',
+      urgencia: 'medio',
+    },
+  ];
 
 const URGENCIA_COLORS: Record<string, string> = {
   critico: 'bg-destructive text-destructive-foreground',
-  alto:    'bg-warning text-warning-foreground',
-  medio:   'bg-primary/80 text-primary-foreground',
+  alto: 'bg-warning text-warning-foreground',
+  medio: 'bg-primary/80 text-primary-foreground',
 };
 
 const URGENCIA_RING: Record<string, string> = {
   critico: 'ring-destructive/30',
-  alto:    'ring-warning/30',
-  medio:   'ring-primary/20',
+  alto: 'ring-warning/30',
+  medio: 'ring-primary/20',
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const TIPO_ICONS = {
-  tarefa:    CheckSquare,
+  tarefa: CheckSquare,
   audiencia: Gavel,
-  lembrete:  Bell,
+  lembrete: Bell,
 };
 
 const CAPTURA_STATUS_STYLES: Record<string, string> = {
-  ok:            'bg-emerald-500/70',
-  erro:          'bg-destructive/80 animate-pulse',
+  ok: 'bg-emerald-500/70',
+  erro: 'bg-destructive/80 animate-pulse',
   sincronizando: 'bg-warning/70 animate-pulse',
 };
 
 const CAPTURA_STATUS_LABELS: Record<string, string> = {
-  ok:            'ok',
-  erro:          'erro',
+  ok: 'ok',
+  erro: 'erro',
   sincronizando: 'sync',
 };
 
@@ -334,11 +334,11 @@ export function WidgetFocoHoje() {
               className={`shrink-0 text-[9px] font-medium px-2 py-1 rounded-lg
                           transition-all duration-150 cursor-pointer
                           ${item.urgencia === 'critico'
-                            ? 'bg-destructive/10 text-destructive/70 hover:bg-destructive/15'
-                            : item.urgencia === 'alto'
-                            ? 'bg-warning/10 text-warning/70 hover:bg-warning/15'
-                            : 'bg-primary/10 text-primary/70 hover:bg-primary/15'
-                          }`}
+                  ? 'bg-destructive/10 text-destructive/70 hover:bg-destructive/15'
+                  : item.urgencia === 'alto'
+                    ? 'bg-warning/10 text-warning/70 hover:bg-warning/15'
+                    : 'bg-primary/10 text-primary/70 hover:bg-primary/15'
+                }`}
             >
               {item.acao}
             </button>
@@ -379,35 +379,32 @@ export function WidgetMeuDia() {
             return (
               <div
                 key={i}
-                className={`flex items-start gap-3 px-2 py-1.5 rounded-xl transition-all duration-150 ${
-                  isNext
+                className={`flex items-start gap-3 px-2 py-1.5 rounded-xl transition-all duration-150 ${isNext
                     ? 'bg-primary/[0.07] ring-1 ring-primary/20'
                     : 'hover:bg-white/4'
-                }`}
+                  }`}
               >
                 {/* Dot no trilho */}
                 <div className="relative z-10 mt-0.5 shrink-0">
                   {item.type === 'audiencia' ? (
                     <div
-                      className={`size-3.5 rounded-full border-2 flex items-center justify-center ${
-                        item.done
+                      className={`size-3.5 rounded-full border-2 flex items-center justify-center ${item.done
                           ? 'border-muted-foreground/20 bg-muted-foreground/20'
                           : isNext
-                          ? 'border-primary bg-primary/30'
-                          : 'border-primary/50 bg-transparent'
-                      }`}
+                            ? 'border-primary bg-primary/30'
+                            : 'border-primary/50 bg-transparent'
+                        }`}
                     >
                       <div className={`size-1.5 rounded-full ${item.done ? 'bg-muted-foreground/30' : isNext ? 'bg-primary' : 'bg-primary/60'}`} />
                     </div>
                   ) : item.type === 'tarefa' ? (
                     <div
-                      className={`size-3.5 rounded-sm border flex items-center justify-center ${
-                        item.done
+                      className={`size-3.5 rounded-sm border flex items-center justify-center ${item.done
                           ? 'border-muted-foreground/20 bg-muted-foreground/15'
                           : isNext
-                          ? 'border-primary/60 bg-transparent'
-                          : 'border-border/30 bg-transparent'
-                      }`}
+                            ? 'border-primary/60 bg-transparent'
+                            : 'border-border/30 bg-transparent'
+                        }`}
                     >
                       {item.done && (
                         <div className="size-1.5 rounded-sm bg-muted-foreground/40" />
@@ -416,13 +413,12 @@ export function WidgetMeuDia() {
                   ) : (
                     /* lembrete — ponto simples */
                     <div
-                      className={`size-2 rounded-full mt-0.5 ${
-                        item.done
+                      className={`size-2 rounded-full mt-0.5 ${item.done
                           ? 'bg-muted-foreground/25'
                           : isNext
-                          ? 'bg-primary shadow-[0_0_6px_oklch(from var(--primary) l c h / 0.4)]'
-                          : 'bg-border/40'
-                      }`}
+                            ? 'bg-primary shadow-[0_0_6px_var(--glow-primary)]'
+                            : 'bg-border/40'
+                        }`}
                     />
                   )}
                 </div>
@@ -430,13 +426,12 @@ export function WidgetMeuDia() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-[10px] font-medium truncate flex-1 ${
-                        item.done
+                      className={`text-[10px] font-medium truncate flex-1 ${item.done
                           ? 'line-through text-muted-foreground/55'
                           : isNext
-                          ? 'text-foreground/90'
-                          : 'text-foreground/70'
-                      }`}
+                            ? 'text-foreground/90'
+                            : 'text-foreground/70'
+                        }`}
                     >
                       {item.title}
                     </span>
@@ -448,23 +443,20 @@ export function WidgetMeuDia() {
                   </div>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <Icon
-                      className={`size-2.5 shrink-0 ${
-                        item.done ? 'text-muted-foreground/45' : 'text-muted-foreground/60'
-                      }`}
+                      className={`size-2.5 shrink-0 ${item.done ? 'text-muted-foreground/45' : 'text-muted-foreground/60'
+                        }`}
                     />
                     {item.time && (
                       <span
-                        className={`text-[9px] tabular-nums ${
-                          item.done ? 'text-muted-foreground/50' : 'text-muted-foreground/60'
-                        }`}
+                        className={`text-[9px] tabular-nums ${item.done ? 'text-muted-foreground/50' : 'text-muted-foreground/60'
+                          }`}
                       >
                         {item.time}
                       </span>
                     )}
                     <span
-                      className={`text-[9px] capitalize ${
-                        item.done ? 'text-muted-foreground/45' : 'text-muted-foreground/55'
-                      }`}
+                      className={`text-[9px] capitalize ${item.done ? 'text-muted-foreground/45' : 'text-muted-foreground/55'
+                        }`}
                     >
                       {item.type}
                     </span>
@@ -677,13 +669,12 @@ export function WidgetCapturaStatus() {
             </span>
             <span className="text-[10px] text-muted-foreground/45 flex-1 truncate">{t.nome}</span>
             <span
-              className={`text-[9px] uppercase tracking-wider font-medium ${
-                t.status === 'ok'
+              className={`text-[9px] uppercase tracking-wider font-medium ${t.status === 'ok'
                   ? 'text-emerald-400/60'
                   : t.status === 'erro'
-                  ? 'text-destructive/70'
-                  : 'text-warning/60'
-              }`}
+                    ? 'text-destructive/70'
+                    : 'text-warning/60'
+                }`}
             >
               {CAPTURA_STATUS_LABELS[t.status]}
             </span>
@@ -782,16 +773,14 @@ export function WidgetDocumentosRecentes() {
           return (
             <ListItem key={i}>
               <div
-                className={`size-7 rounded-lg flex items-center justify-center shrink-0 ${
-                  doc.tipo === 'pdf'
+                className={`size-7 rounded-lg flex items-center justify-center shrink-0 ${doc.tipo === 'pdf'
                     ? 'bg-destructive/8 border border-destructive/15'
                     : 'bg-primary/8 border border-primary/15'
-                }`}
+                  }`}
               >
                 <Icon
-                  className={`size-3.5 ${
-                    doc.tipo === 'pdf' ? 'text-destructive/50' : 'text-primary/50'
-                  }`}
+                  className={`size-3.5 ${doc.tipo === 'pdf' ? 'text-destructive/50' : 'text-primary/50'
+                    }`}
                 />
               </div>
               <div className="flex-1 min-w-0">
@@ -803,11 +792,10 @@ export function WidgetDocumentosRecentes() {
                 </p>
               </div>
               <span
-                className={`text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-md font-medium shrink-0 ${
-                  doc.tipo === 'pdf'
+                className={`text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-md font-medium shrink-0 ${doc.tipo === 'pdf'
                     ? 'text-destructive/50 bg-destructive/6'
                     : 'text-primary/50 bg-primary/6'
-                }`}
+                  }`}
               >
                 {doc.tipo}
               </span>

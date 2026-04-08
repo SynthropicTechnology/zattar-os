@@ -39,7 +39,7 @@ export default function PesquisaJuridicaDoc() {
       <DocSection title="Diário Oficial — Comunica CNJ">
         <p className="text-muted-foreground mb-4">
           O Comunica CNJ é a plataforma oficial do Conselho Nacional de Justiça para comunicação
-          eletrônica processual. Pelo Sinesys, você acessa e monitora as publicações e intimações
+          eletrônica processual. Pelo Synthropic, você acessa e monitora as publicações e intimações
           diretamente vinculadas aos processos cadastrados no sistema.
         </p>
 
@@ -58,7 +58,7 @@ export default function PesquisaJuridicaDoc() {
               icon: Bell,
               nome: 'Monitoramento Automático',
               descricao:
-                'O Sinesys verifica periodicamente o Comunica CNJ e exibe as novas comunicações recebidas, com alerta visual para itens não lidos.',
+                'O Synthropic verifica periodicamente o Comunica CNJ e exibe as novas comunicações recebidas, com alerta visual para itens não lidos.',
             },
             {
               icon: Newspaper,

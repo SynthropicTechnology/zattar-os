@@ -4,13 +4,13 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { 
-  Building2, 
-  Calendar as CalendarIcon, 
-  ClipboardList, 
-  Clock, 
-  FileCheck2, 
-  
+import {
+  Building2,
+  Calendar as CalendarIcon,
+  ClipboardList,
+  Clock,
+  FileCheck2,
+
   ListTodo
 } from 'lucide-react';
 
@@ -29,12 +29,14 @@ import {
   DetailSheetContent,
   DetailSheetSection,
   DetailSheetInfoRow,
-  
+
   DetailSheetMetaGrid,
   DetailSheetMetaItem,
-  
+
   DetailSheetFooter,
 } from '@/components/shared/detail-sheet';
+
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 import type { Pericia } from '../domain';
 import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';
@@ -54,18 +56,6 @@ function formatarData(dataISO: string | null): string {
   } catch {
     return '-';
   }
-}
-
-function getSituacaoVariant(codigo: SituacaoPericiaCodigo) {
-  const variantMap: Record<string, 'success' | 'info' | 'destructive' | 'warning' | 'secondary'> = {
-    F: 'success',
-    P: 'info',
-    C: 'destructive',
-    L: 'warning',
-    S: 'warning',
-    R: 'secondary',
-  };
-  return variantMap[codigo] || 'secondary';
 }
 
 function getInitials(name: string | null | undefined): string {
@@ -97,7 +87,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               </div>
             </div>
             <div className="flex shrink-0">
-              <AppBadge variant={getSituacaoVariant(pericia.situacaoCodigo)}>
+              <AppBadge variant={getSemanticBadgeVariant('pericia_situacao', pericia.situacaoCodigo)}>
                 {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
               </AppBadge>
             </div>
@@ -228,7 +218,7 @@ export function PericiaDetalhesDialog({
           </div>
           <div className="flex-1 min-w-0">
             <DetailSheetTitle badge={periciaUnica ? (
-              <AppBadge variant={getSituacaoVariant(periciaUnica.situacaoCodigo)}>
+              <AppBadge variant={getSemanticBadgeVariant('pericia_situacao', periciaUnica.situacaoCodigo)}>
                 {SITUACAO_PERICIA_LABELS[periciaUnica.situacaoCodigo]}
               </AppBadge>
             ) : null}>

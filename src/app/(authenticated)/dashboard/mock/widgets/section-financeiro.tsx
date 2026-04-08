@@ -54,32 +54,32 @@ const fluxoCaixaData = [
 const saldoTrend = [98200, 102400, 95800, 108300, 111200, 99700, 115600, 109800, 118400, 121000, 119300, 124350];
 
 const contasReceberAging = [
-  { label: 'A vencer',  value: 42000, color: 'var(--success)' },
-  { label: 'Até 30d',   value: 15000, color: 'oklch(from var(--success) calc(l - 0.05) c h)' },
-  { label: '30–60d',    value:  7000, color: 'var(--warning)' },
-  { label: '60–90d',    value:  2500, color: 'oklch(from var(--warning) calc(l - 0.05) c h)' },
-  { label: '90+ dias',  value:  1000, color: 'var(--destructive)' },
+  { label: 'A vencer', value: 42000, color: 'var(--success)' },
+  { label: 'Até 30d', value: 15000, color: 'var(--chart-success-dark)' },
+  { label: '30–60d', value: 7000, color: 'var(--warning)' },
+  { label: '60–90d', value: 2500, color: 'var(--chart-warning-dark)' },
+  { label: '90+ dias', value: 1000, color: 'var(--destructive)' },
 ];
 
 const contasPagarAging = [
-  { label: 'A vencer',  value: 22000, color: 'var(--success)' },
-  { label: 'Até 30d',   value:  6000, color: 'oklch(from var(--success) calc(l - 0.05) c h)' },
-  { label: '30–60d',    value:  2800, color: 'var(--warning)' },
-  { label: '60–90d',    value:  1000, color: 'oklch(from var(--warning) calc(l - 0.05) c h)' },
-  { label: '90+ dias',  value:   300, color: 'var(--destructive)' },
+  { label: 'A vencer', value: 22000, color: 'var(--success)' },
+  { label: 'Até 30d', value: 6000, color: 'var(--chart-success-dark)' },
+  { label: '30–60d', value: 2800, color: 'var(--warning)' },
+  { label: '60–90d', value: 1000, color: 'var(--chart-warning-dark)' },
+  { label: '90+ dias', value: 300, color: 'var(--destructive)' },
 ];
 
 const despesasSegmentos = [
-  { label: 'Pessoal',    value: 18500, color: 'var(--primary)' },
-  { label: 'Aluguel',    value:  6200, color: 'var(--chart-2)' },
-  { label: 'Serviços',   value:  4100, color: 'var(--chart-3)' },
-  { label: 'Tributário', value:  2800, color: 'var(--warning)' },
-  { label: 'Outros',     value:   600, color: 'var(--muted-foreground)' },
+  { label: 'Pessoal', value: 18500, color: 'var(--primary)' },
+  { label: 'Aluguel', value: 6200, color: 'var(--chart-2)' },
+  { label: 'Serviços', value: 4100, color: 'var(--chart-3)' },
+  { label: 'Tributário', value: 2800, color: 'var(--warning)' },
+  { label: 'Outros', value: 600, color: 'var(--muted-foreground)' },
 ];
 
 const dreSparklines: Record<string, number[]> = {
-  receita:   [52000, 58000, 55000, 61000, 57000, 63000, 60000, 65000, 62000, 68000, 64000, 67500],
-  despesa:   [38000, 35000, 37000, 34000, 36000, 33000, 35000, 32000, 34000, 31000, 33000, 32100],
+  receita: [52000, 58000, 55000, 61000, 57000, 63000, 60000, 65000, 62000, 68000, 64000, 67500],
+  despesa: [38000, 35000, 37000, 34000, 36000, 33000, 35000, 32000, 34000, 31000, 33000, 32100],
   resultado: [14000, 23000, 18000, 27000, 21000, 30000, 25000, 33000, 28000, 37000, 31000, 35400],
 };
 
@@ -516,12 +516,12 @@ export function WidgetInadimplencia() {
 // ─── Widget 9: Despesas Treemap ──────────────────────────────────────────────
 
 const treemapSegmentos = [
-  { label: 'Pessoal',    value: 18500, color: 'var(--primary)' },
-  { label: 'Aluguel',    value:  6200, color: 'var(--warning)' },
-  { label: 'Serviços',   value:  4100, color: 'var(--success)' },
-  { label: 'Tributário', value:  2800, color: 'var(--info, var(--primary))' },
-  { label: 'Marketing',  value:  1800, color: 'var(--chart-2)' },
-  { label: 'Outros',     value:   600, color: 'oklch(from var(--muted-foreground) l c h / 0.4)' },
+  { label: 'Pessoal', value: 18500, color: 'var(--primary)' },
+  { label: 'Aluguel', value: 6200, color: 'var(--warning)' },
+  { label: 'Serviços', value: 4100, color: 'var(--success)' },
+  { label: 'Tributário', value: 2800, color: 'var(--info, var(--primary))' },
+  { label: 'Marketing', value: 1800, color: 'var(--chart-2)' },
+  { label: 'Outros', value: 600, color: 'var(--chart-muted-soft)' },
 ];
 
 export function WidgetDespesasTreemap() {
@@ -579,8 +579,8 @@ const fluxoMensalData = [
 const fluxoAcumulado = [13, 27, 34, 60, 73, 108.4];
 
 const tabOptions = [
-  { id: 'mensal',     label: 'Mensal' },
-  { id: 'acumulado',  label: 'Acumulado' },
+  { id: 'mensal', label: 'Mensal' },
+  { id: 'acumulado', label: 'Acumulado' },
 ];
 
 export function WidgetFluxoComTabs() {

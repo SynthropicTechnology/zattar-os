@@ -7,7 +7,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${GREEN}Starting Sinesys Local Development Environment Setup...${NC}"
+echo -e "${GREEN}Starting Synthropic Local Development Environment Setup...${NC}"
 
 # 1. Check dependencies
 echo -e "${YELLOW}Checking dependencies...${NC}"
@@ -52,7 +52,7 @@ while [ $attempt -lt $max_attempts ]; do
     fi
     
     # Check if Postgres is ready (using pg_isready inside container)
-    if docker exec sinesys_postgres pg_isready -U postgres > /dev/null 2>&1; then
+    if docker exec synthropic_postgres pg_isready -U postgres > /dev/null 2>&1; then
         echo -e "${GREEN}Postgres is ready!${NC}"
         break
     fi
@@ -81,7 +81,7 @@ echo -e "${YELLOW}Running migrations and seed...${NC}"
 # It doesn't explicitly show "seed" but "populate:tabelas-audiencias".
 # I'll add a placeholder or run specific script.
 # For now, I will just print a message that it's ready, or try to run migrations if external tool available.
-echo -e "${GREEN}Services are up. To seed data, run: docker exec -it sinesys_app npm run populate:tabelas-audiencias${NC}"
+echo -e "${GREEN}Services are up. To seed data, run: docker exec -it synthropic_app npm run populate:tabelas-audiencias${NC}"
 
 # 6. Final Status
 echo -e "${GREEN}Development environment is ready!${NC}"

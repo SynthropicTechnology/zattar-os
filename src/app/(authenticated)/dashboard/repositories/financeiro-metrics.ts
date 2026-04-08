@@ -6,7 +6,7 @@
  * - Saldo, contas a pagar/receber, alertas
  */
 
-import { getDashboardFinanceiro } from '@/app/(authenticated)/financeiro/services/dashboard';
+import { getDashboardFinanceiro } from '@/app/(authenticated)/financeiro/service';
 import { formatarMoeda } from './shared/formatters';
 import { createClient } from '@/lib/supabase/server';
 import type { SemanticTone } from '@/lib/design-system';

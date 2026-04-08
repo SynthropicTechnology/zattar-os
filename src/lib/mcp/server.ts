@@ -1,5 +1,5 @@
 /**
- * Servidor MCP do Sinesys
+ * Servidor MCP do Synthropic
  *
  * Configuração singleton do McpServer para exposição de ferramentas
  */
@@ -27,13 +27,13 @@ import {
 import { auditMcpCall } from "./audit";
 
 /**
- * Configuração do servidor MCP Sinesys
+ * Configuração do servidor MCP Synthropic
  */
 const SERVER_CONFIG: MCPServerConfig = {
   info: {
-    name: "sinesys-api",
+    name: "synthropic-api",
     version: "2.0.0",
-    description: "API MCP do Sinesys - Sistema de Gestão Jurídica",
+    description: "API MCP do Synthropic - Sistema de Gestão Jurídica",
   },
   capabilities: {
     tools: true,

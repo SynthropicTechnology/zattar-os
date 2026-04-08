@@ -34,10 +34,10 @@ import {
   type StatusOrcamento,
   useOrcamentos,
 } from '@/app/(authenticated)/financeiro';
-import { PageShell } from '@/components/shared/page-shell';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   MoreHorizontal,
   Eye,
@@ -75,12 +75,12 @@ import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
 
-const STATUS_CONFIG: Record<StatusOrcamento, { label: string; tone: BadgeVariant }> = {
-  rascunho: { label: 'Rascunho', tone: 'secondary' },
-  aprovado: { label: 'Aprovado', tone: 'default' },
-  em_execucao: { label: 'Em Execução', tone: 'success' },
-  encerrado: { label: 'Encerrado', tone: 'outline' },
-  cancelado: { label: 'Cancelado', tone: 'destructive' },
+const STATUS_LABELS: Record<StatusOrcamento, string> = {
+  rascunho: 'Rascunho',
+  aprovado: 'Aprovado',
+  em_execucao: 'Em Execução',
+  encerrado: 'Encerrado',
+  cancelado: 'Cancelado',
 };
 
 const PERIODO_LABELS: Record<string, string> = {
@@ -339,11 +339,11 @@ function criarColunas(
       meta: { align: 'left' as const, headerLabel: 'Status' },
       cell: ({ row }) => {
         const status = row.getValue('status') as StatusOrcamento;
-        const config = STATUS_CONFIG[status];
+        const label = STATUS_LABELS[status];
         return (
           <div className="flex items-center">
-            <Badge variant={config.tone}>
-              {config.label}
+            <Badge variant={getSemanticBadgeVariant('orcamento_status', status)}>
+              {label}
             </Badge>
           </div>
         );
@@ -652,7 +652,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
   );
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           table ? (
@@ -858,6 +858,6 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </PageShell>
+    </>
   );
 }

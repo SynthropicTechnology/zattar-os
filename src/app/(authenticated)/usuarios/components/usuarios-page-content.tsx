@@ -12,7 +12,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PageShell } from '@/components/shared/page-shell';
 import { Heading } from '@/components/ui/typography';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 
@@ -69,7 +68,7 @@ export function UsuariosPageContent() {
   );
 
   return (
-    <PageShell
+    <div
       className="space-y-4"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -152,6 +151,6 @@ export function UsuariosPageContent() {
           onSuccess={handleCreateSuccess}
         />
       )}
-    </PageShell>
+    </div>
   );
 }

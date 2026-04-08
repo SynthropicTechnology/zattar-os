@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import { useDashboard } from './use-dashboard';
-import { actionListarOrcamentos, actionObterAnaliseOrcamentaria } from '@/app/(authenticated)/financeiro/server-actions';
+import { actionListarOrcamentos, actionObterAnaliseOrcamentaria } from '@/app/(authenticated)/financeiro/actions';
 import { AnaliseOrcamentariaUI } from '@/app/(authenticated)/financeiro/actions';
 
 // ============================================================================
@@ -26,7 +26,7 @@ import { AnaliseOrcamentariaUI } from '@/app/(authenticated)/financeiro/actions'
 
 export function useDashboardFinanceiro() {
   const dash = useDashboard();
-  
+
   return {
     data: dash.data?.dadosFinanceiros ?? null,
     isLoading: dash.isLoading,
@@ -88,7 +88,7 @@ export function useFluxoCaixa(meses: number = 6) {
     isLoading: dash.isLoading,
     error: dash.error,
     isValidating: false,
-    mutate: () => {},
+    mutate: () => { },
   };
 }
 
@@ -98,7 +98,7 @@ export function useFluxoCaixa(meses: number = 6) {
 
 export function useDespesasPorCategoria() {
   const dash = useDashboardFinanceiro();
-  
+
   const despesasPorCategoria = dash.data?.despesasPorCategoria?.map((c) => ({
     categoria: c.categoria,
     valor: c.valor,
@@ -151,8 +151,8 @@ export function useOrcamentoAtual() {
         const resultAnalise = await actionObterAnaliseOrcamentaria(orcamentoAtivo.id);
 
         if (!resultAnalise.success) {
-           console.error('[Dashboard Financeiro] Erro ao buscar análise:', resultAnalise.error);
-           return;
+          console.error('[Dashboard Financeiro] Erro ao buscar análise:', resultAnalise.error);
+          return;
         }
 
         setOrcamento(resultAnalise.data);

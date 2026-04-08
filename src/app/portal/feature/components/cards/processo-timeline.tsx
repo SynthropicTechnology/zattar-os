@@ -40,7 +40,7 @@ const ProcessoTimeline = React.forwardRef<HTMLDivElement, ProcessoTimelineProps>
     }, [sortedItems]);
 
     const formatarData = (data: string) => {
-      // Sinesys returns YYYY-MM-DD
+      // Synthropic returns YYYY-MM-DD
       const [year, month, day] = data.split('-').map(Number);
       const dateObj = new Date(year, month - 1, day);
       return dateObj.toLocaleDateString('pt-BR', {
@@ -104,7 +104,7 @@ const ProcessoTimeline = React.forwardRef<HTMLDivElement, ProcessoTimelineProps>
                         )}
                       </div>
 
-                      {/* TODO: Implementar visualização de documento quando Sinesys fornecer URL
+                      {/* TODO: Implementar visualização de documento quando Synthropic fornecer URL
                       {item.tem_documento && (
                         <Button variant="outline" size="sm" onClick={() => visualizarDocumento(item.documento_url)}>
                           <FileText className="h-4 w-4 mr-1" />

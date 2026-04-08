@@ -1,4 +1,10 @@
-// Types
+// ============================================================================
+// Módulo Usuários — Barrel Export (API Pública)
+// ============================================================================
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
 export type {
   Usuario,
   UsuarioDados,
@@ -14,13 +20,11 @@ export type {
   UsuariosFilters,
 } from "./domain";
 
-// Permission Types
 export type {
   Recurso,
   Operacao,
-} from "./types/types";
+} from "./domain";
 
-// Domain
 export {
   GENERO_LABELS,
   STATUS_LABELS,
@@ -32,9 +36,19 @@ export {
   atualizarUsuarioSchema,
   isUsuarioAtivo,
   isSuperAdmin,
+  MATRIZ_PERMISSOES,
+  obterMatrizPermissoes,
+  obterTotalPermissoes,
+  isPermissaoValida,
+  isRecursoValido,
+  isOperacaoValida,
 } from "./domain";
 
+export type { AtividadeLog } from "./repository";
+
+// ============================================================================
 // Utils
+// ============================================================================
 export {
   formatarCpf,
   formatarTelefone,
@@ -50,7 +64,6 @@ export {
   getCoverUrl,
 } from "./utils";
 
-// Permissions Utils
 export {
   formatarPermissoesParaMatriz,
   formatarMatrizParaPermissoes,
@@ -60,32 +73,23 @@ export {
   detectarMudancas,
 } from "./permissions-utils";
 
-// Permission validation functions and matriz
-export {
-  MATRIZ_PERMISSOES,
-  obterMatrizPermissoes,
-  obterTotalPermissoes,
-  isPermissaoValida,
-  isRecursoValido,
-  isOperacaoValida,
-} from "./types/types";
+// ============================================================================
+// Actions
+// ============================================================================
 
-// Service Functions
 // NOTE: Server-side service and repository are NOT exported here to prevent
 // Redis/Node.js dependencies from being bundled in client components.
 // These should only be used by server actions and can be imported directly:
 //   import { service } from '@/app/(authenticated)/usuarios/service';
 //   import { usuarioRepository } from '@/app/(authenticated)/usuarios/repository';
 
-// Auth Utils
-export { requireAuth } from "./actions/utils";
+export { requireAuth } from "./actions";
 
-// Actions
 export {
   actionAlterarSenhaComVerificacao,
   actionRedefinirSenha,
   actionAtualizarSenhaServer,
-} from "./actions/senha-actions";
+} from "./actions";
 
 export {
   actionAtualizarUsuario,
@@ -96,16 +100,16 @@ export {
   actionBuscarPorCpf,
   actionBuscarPorEmail,
   actionSincronizarUsuarios,
-} from "./actions/usuarios-actions";
+} from "./actions";
 
 export {
   actionUploadCover,
   actionRemoverCover,
-} from "./actions/cover-actions";
+} from "./actions";
 
 export {
   actionBuscarAuthLogs,
-} from "./actions/auth-logs-actions";
+} from "./actions";
 
 export {
   actionBuscarEstatisticasAtividades,
@@ -113,22 +117,23 @@ export {
   actionBuscarAudienciasAtribuidas,
   actionBuscarPendentesAtribuidos,
   actionBuscarContratosAtribuidos,
-} from "./actions/atividades-actions";
+} from "./actions";
 
 export {
   actionBuscarAtividadesUsuario,
-} from "./actions/audit-atividades-actions";
+} from "./actions";
 
-export type {
-  AtividadeLog,
-} from "./repository-audit-atividades";
-
+// ============================================================================
 // Hooks
+// ============================================================================
 export { useUsuarios } from "./hooks/use-usuarios";
 export { useUsuario } from "./hooks/use-usuario";
 export { useCargos } from "./hooks/use-cargos";
 export { useUsuarioPermissoes } from "./hooks/use-usuario-permissoes";
+
+// ============================================================================
 // Components
+// ============================================================================
 export { UsuariosGridView } from "./components/list/usuarios-grid-view";
 export { UsuariosPagination } from "./components/list/usuarios-pagination";
 export {

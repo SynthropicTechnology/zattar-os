@@ -62,3 +62,9 @@ export {
   contarLembretesPendentes,
   buscarLembretesVencidos,
 } from './lembretes-repository';
+
+// Progresso Diário
+export {
+  buscarProgressoDiario,
+  type ProgressoDiario,
+} from './progresso-diario';

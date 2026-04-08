@@ -1,7 +1,7 @@
 /**
  * Design System Variants
  *
- * Este arquivo define os mapeamentos semânticos do Design System Sinesys.
+ * Este arquivo define os mapeamentos semânticos do Design System Synthropic.
  * Aqui centralizamos TODA a lógica de mapeamento de domínio para variante visual.
  *
  * @ai-context Use getSemanticBadgeVariant() para determinar a variante visual correta.
@@ -67,7 +67,14 @@ export type BadgeCategory =
   | 'expediente_status'
   | 'payment_status'
   | 'financial_alert'
-  | 'error_type';
+  | 'error_type'
+  | 'pericia_situacao'
+  | 'parcela_status'
+  | 'repasse_status'
+  | 'orcamento_status'
+  | 'tipo_conta_contabil'
+  | 'conciliacao_status'
+  | 'orcamento_item_status';
 
 /**
  * Determina o tom (intensidade) padrão por categoria.
@@ -90,6 +97,9 @@ export function getSemanticBadgeTone(category: BadgeCategory, _value?: string | 
     'payment_status',
     'financial_alert',
     'error_type',
+    'pericia_situacao',
+    'parcela_status',
+    'repasse_status',
   ];
 
   if (softCategories.includes(category)) {
@@ -613,6 +623,80 @@ export const OBRIGACAO_TIPO_VARIANTS: Record<string, BadgeVisualVariant> = {
 } as const;
 
 // =============================================================================
+// MAPEAMENTO DE SITUAÇÃO DE PERÍCIA
+// =============================================================================
+
+/**
+ * Mapeamento de situação de perícia para variantes visuais.
+ * Inclui códigos de letra (F, A, C, R, P) e labels por extenso.
+ */
+export const PERICIA_SITUACAO_VARIANTS: Record<string, BadgeVisualVariant> = {
+  F: 'success',
+  A: 'info',
+  C: 'destructive',
+  R: 'warning',
+  P: 'secondary',
+  L: 'warning',
+  S: 'warning',
+  FINALIZADA: 'success',
+  AGENDADA: 'info',
+  CANCELADA: 'destructive',
+  REAGENDADA: 'warning',
+  PENDENTE: 'secondary',
+  AGUARDANDOLAUDO: 'warning',
+  AGUARDANDOESCLARECIMENTOS: 'warning',
+  LAUDOJUNTADO: 'secondary',
+  REDESIGNADA: 'warning',
+};
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE PARCELA (OBRIGAÇÕES)
+// =============================================================================
+
+/**
+ * Mapeamento de status de parcela para variantes visuais.
+ * Inclui variantes lowercase e UPPERCASE.
+ */
+export const PARCELA_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pendente: 'warning',
+  PENDENTE: 'warning',
+  paga: 'success',
+  PAGA: 'success',
+  recebida: 'success',
+  RECEBIDA: 'success',
+  vencida: 'destructive',
+  VENCIDA: 'destructive',
+  atrasado: 'destructive',
+  ATRASADO: 'destructive',
+  cancelada: 'neutral',
+  CANCELADA: 'neutral',
+};
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE REPASSE (OBRIGAÇÕES)
+// =============================================================================
+
+/**
+ * Mapeamento de status de repasse para variantes visuais.
+ * Inclui variantes com underscore, UPPERCASE e sem underscore (normalizado).
+ */
+export const REPASSE_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  nao_aplicavel: 'neutral',
+  NAO_APLICAVEL: 'neutral',
+  NAOAPLICAVEL: 'neutral',
+  pendente_declaracao: 'warning',
+  PENDENTE_DECLARACAO: 'warning',
+  PENDENTEDECLARACAO: 'warning',
+  pendente_transferencia: 'info',
+  PENDENTE_TRANSFERENCIA: 'info',
+  PENDENTETRANSFERENCIA: 'info',
+  realizado: 'success',
+  REALIZADO: 'success',
+  repassado: 'success',
+  REPASSADO: 'success',
+};
+
+// =============================================================================
 // MAPEAMENTO DE DIREÇÃO DE PAGAMENTO
 // =============================================================================
 
@@ -730,6 +814,18 @@ export function getSemanticBadgeVariant(
       return OBRIGACAO_DIRECAO_VARIANTS[key as string] ??
         OBRIGACAO_DIRECAO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
+    case 'pericia_situacao':
+      return PERICIA_SITUACAO_VARIANTS[key as string] ??
+        PERICIA_SITUACAO_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'parcela_status':
+      return PARCELA_STATUS_VARIANTS[key as string] ??
+        PARCELA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'repasse_status':
+      return REPASSE_STATUS_VARIANTS[key as string] ??
+        REPASSE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
     case 'expediente_status':
       return EXPEDIENTE_STATUS_VARIANTS[key as string] ??
         EXPEDIENTE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
@@ -769,6 +865,22 @@ export function getSemanticBadgeVariant(
     case 'error_type':
       return ERROR_TYPE_VARIANTS[key as string] ??
         ERROR_TYPE_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'orcamento_status':
+      return ORCAMENTO_STATUS_VARIANTS[key as string] ??
+        ORCAMENTO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'tipo_conta_contabil':
+      return TIPO_CONTA_CONTABIL_VARIANTS[key as string] ??
+        TIPO_CONTA_CONTABIL_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'conciliacao_status':
+      return CONCILIACAO_STATUS_VARIANTS[key as string] ??
+        CONCILIACAO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'orcamento_item_status':
+      return ORCAMENTO_ITEM_STATUS_VARIANTS[key as string] ??
+        ORCAMENTO_ITEM_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     default:
       return 'neutral';
@@ -1051,6 +1163,71 @@ export function getParteTipoLabel(tipoParte: string): string {
 }
 
 // =============================================================================
+// MAPEAMENTO DE STATUS DE ORÇAMENTO (FINANCEIRO)
+// =============================================================================
+
+export const ORCAMENTO_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  rascunho: 'secondary',
+  RASCUNHO: 'secondary',
+  aprovado: 'info',
+  APROVADO: 'info',
+  em_execucao: 'success',
+  EM_EXECUCAO: 'success',
+  EMEXECUCAO: 'success',
+  encerrado: 'neutral',
+  ENCERRADO: 'neutral',
+  cancelado: 'destructive',
+  CANCELADO: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE TIPO DE CONTA CONTÁBIL (PLANO DE CONTAS)
+// =============================================================================
+
+export const TIPO_CONTA_CONTABIL_VARIANTS: Record<string, BadgeVisualVariant> = {
+  ativo: 'info',
+  ATIVO: 'info',
+  passivo: 'destructive',
+  PASSIVO: 'destructive',
+  receita: 'success',
+  RECEITA: 'success',
+  despesa: 'warning',
+  DESPESA: 'warning',
+  patrimonio_liquido: 'default',
+  PATRIMONIO_LIQUIDO: 'default',
+  PATRIMONIOLIQUIDO: 'default',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE CONCILIAÇÃO BANCÁRIA
+// =============================================================================
+
+export const CONCILIACAO_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pendente: 'warning',
+  PENDENTE: 'warning',
+  conciliado: 'success',
+  CONCILIADO: 'success',
+  divergente: 'destructive',
+  DIVERGENTE: 'destructive',
+  ignorado: 'neutral',
+  IGNORADO: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE ITEM DE ORÇAMENTO
+// =============================================================================
+
+export const ORCAMENTO_ITEM_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  dentro_orcamento: 'success',
+  DENTRO_ORCAMENTO: 'success',
+  DENTROORCAMENTO: 'success',
+  atencao: 'warning',
+  ATENCAO: 'warning',
+  estourado: 'destructive',
+  ESTOURADO: 'destructive',
+} as const;
+
+// =============================================================================
 // EXPORTS AGRUPADOS
 // =============================================================================
 
@@ -1076,6 +1253,9 @@ export const VARIANTS = {
   obrigacaoStatus: OBRIGACAO_STATUS_VARIANTS,
   obrigacaoTipo: OBRIGACAO_TIPO_VARIANTS,
   obrigacaoDirecao: OBRIGACAO_DIRECAO_VARIANTS,
+  periciaSituacao: PERICIA_SITUACAO_VARIANTS,
+  parcelaStatus: PARCELA_STATUS_VARIANTS,
+  repasseStatus: REPASSE_STATUS_VARIANTS,
   templateStatus: TEMPLATE_STATUS_VARIANTS,
   ativoStatus: ATIVO_STATUS_VARIANTS,
   expedienteStatus: EXPEDIENTE_STATUS_VARIANTS,
@@ -1086,6 +1266,10 @@ export const VARIANTS = {
   paymentStatus: PAYMENT_STATUS_VARIANTS,
   financialAlert: FINANCIAL_ALERT_VARIANTS,
   errorType: ERROR_TYPE_VARIANTS,
+  orcamentoStatus: ORCAMENTO_STATUS_VARIANTS,
+  tipoContaContabil: TIPO_CONTA_CONTABIL_VARIANTS,
+  conciliacaoStatus: CONCILIACAO_STATUS_VARIANTS,
+  orcamentoItemStatus: ORCAMENTO_ITEM_STATUS_VARIANTS,
 } as const;
 
 export const LABELS = {

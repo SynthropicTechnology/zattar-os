@@ -1,5 +1,5 @@
 /**
- * Tipos para integração MCP do Sinesys
+ * Tipos para integração MCP do Synthropic
  */
 
 import { z, type ZodSchema } from 'zod';

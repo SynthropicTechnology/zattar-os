@@ -29,7 +29,7 @@ O Access Token é uma chave de API pessoal para acessar a Management API.
 **Como gerar:**
 1. Acesse: https://supabase.com/dashboard/account/tokens
 2. Clique em "Generate new token"
-3. Dê um nome descritivo (ex: "Sinesys Management API")
+3. Dê um nome descritivo (ex: "Synthropic Management API")
 4. Copie o token gerado (você não poderá vê-lo novamente!)
 
 **Importante:**

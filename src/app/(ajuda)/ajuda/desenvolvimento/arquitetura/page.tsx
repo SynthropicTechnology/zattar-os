@@ -60,7 +60,7 @@ export default function ArquiteturaPage() {
           <h1 className="text-3xl font-bold tracking-tight">Arquitetura</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Princípios de Domain-Driven Design (DDD) e organização de tipos no Sinesys.
+          Princípios de Domain-Driven Design (DDD) e organização de tipos no Synthropic.
         </p>
       </div>
 

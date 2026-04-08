@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 /**
- * Suite de Testes Completa - Tools MCP Sinesys
+ * Suite de Testes Completa - Tools MCP Synthropic
  *
  * Valida todas as 96 tools MCP registradas sistematicamente
  * Testa: parâmetros válidos, validação de schema, autenticação, rate limiting, formato de resposta
@@ -684,7 +684,7 @@ async function testModuloUsuarios(): Promise<void> {
 
   // 2. buscar_usuario_por_email
   await testTool('buscar_usuario_por_email', {
-    email: 'admin@sinesys.com.br'
+    email: 'admin@synthropic.com.br'
   }, true, 'buscar_usuario_por_email');
 
   // 3. buscar_usuario_por_cpf
@@ -814,7 +814,7 @@ async function testPerformanceELimites(): Promise<void> {
 // EXECUTAR TODOS OS TESTES
 // ========================================
 async function runAllTests(): Promise<void> {
-  console.log('🧪 Iniciando Suite de Testes MCP - Sinesys\n');
+  console.log('🧪 Iniciando Suite de Testes MCP - Synthropic\n');
   console.log('═'.repeat(60));
 
   // Inicializar registry

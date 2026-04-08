@@ -1,7 +1,7 @@
 # Capability: Gestão de Usuários
 
 ## Purpose
-API REST para gerenciamento de usuários do sistema Sinesys. Fornece operações CRUD completas, sincronização com Supabase Auth, busca por CPF/email, listagem com filtros e controle de status ativo/inativo. Usuários podem ser atribuídos como responsáveis em processos, audiências e pendências.
+API REST para gerenciamento de usuários do sistema Synthropic. Fornece operações CRUD completas, sincronização com Supabase Auth, busca por CPF/email, listagem com filtros e controle de status ativo/inativo. Usuários podem ser atribuídos como responsáveis em processos, audiências e pendências.
 
 ## Requirements
 

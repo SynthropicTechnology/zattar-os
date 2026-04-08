@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
-import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useTribunais } from '@/app/(authenticated)/captura';
 import { criarColunasTribunais } from '../components/tribunais/tribunais-columns';
@@ -102,7 +101,7 @@ export default function TribunaisPage() {
   );
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           table ? (
@@ -161,6 +160,6 @@ export default function TribunaisPage() {
           setTribunalDialog({ open: false, tribunal: null });
         }}
       />
-    </PageShell>
+    </>
   );
 }

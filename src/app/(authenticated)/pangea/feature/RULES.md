@@ -56,7 +56,7 @@ Módulo de busca no **Banco Nacional de Precedentes (BNP)** do CNJ — também c
 ## Regras de Negócio
 
 ### Normalização de Códigos de Tribunal
-A API do Pangea usa formato com 2 dígitos (`TRT01`, `TRF01`), enquanto o banco interno do Sinesys usa `TRT1`, `TRF1`. A função `toPangeaOrgaoCodigo()` converte:
+A API do Pangea usa formato com 2 dígitos (`TRT01`, `TRF01`), enquanto o banco interno do Synthropic usa `TRT1`, `TRF1`. A função `toPangeaOrgaoCodigo()` converte:
 - `TRT1` → `TRT01`
 - `TRF1` → `TRF01`
 - `TRT15` → `TRT15` (mantém — já tem 2 dígitos)

@@ -21,6 +21,7 @@ import {
 } from '@/app/(authenticated)/financeiro';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   Card,
   CardContent,
@@ -65,13 +66,13 @@ import { cn } from '@/lib/utils';
 
 type BadgeVariant = React.ComponentProps<typeof Badge>['variant'];
 
-const STATUS_CONFIG: Record<StatusContaPagar, { label: string; variant: NonNullable<BadgeVariant> }> = {
-  pendente: { label: 'Pendente', variant: 'warning' },
-  confirmado: { label: 'Pago', variant: 'success' },
-  pago: { label: 'Pago', variant: 'success' },
-  recebido: { label: 'Recebido', variant: 'success' },
-  cancelado: { label: 'Cancelado', variant: 'neutral' },
-  estornado: { label: 'Estornado', variant: 'destructive' },
+const STATUS_LABELS: Record<StatusContaPagar, string> = {
+  pendente: 'Pendente',
+  confirmado: 'Pago',
+  pago: 'Pago',
+  recebido: 'Recebido',
+  cancelado: 'Cancelado',
+  estornado: 'Estornado',
 };
 
 const formatarValor = (valor: number): string => {
@@ -229,7 +230,7 @@ export default function ContaPagarDetalhesPage() {
     );
   }
 
-  const statusConfig = STATUS_CONFIG[contaPagar.status];
+  const statusLabel = STATUS_LABELS[contaPagar.status];
   const isPendente = contaPagar.status === 'pendente';
 
   return (
@@ -240,8 +241,8 @@ export default function ContaPagarDetalhesPage() {
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Badge variant={statusConfig.variant}>
-            {statusConfig.label}
+          <Badge variant={getSemanticBadgeVariant('payment_status', contaPagar.status)}>
+            {statusLabel}
           </Badge>
           {contaPagar.recorrente && (
             <Badge variant="outline">

@@ -1,6 +1,6 @@
-# Testes E2E - Sinesys
+# Testes E2E - Synthropic
 
-Este diretório contém a infraestrutura e testes end-to-end (E2E) para a aplicação Sinesys, cobrindo os fluxos críticos de negócio.
+Este diretório contém a infraestrutura e testes end-to-end (E2E) para a aplicação Synthropic, cobrindo os fluxos críticos de negócio.
 
 ## 📁 Estrutura
 

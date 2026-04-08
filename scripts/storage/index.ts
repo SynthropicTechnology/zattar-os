@@ -44,7 +44,7 @@
  * 
  * Opcional (N8N):
  * ```bash
- * N8N_WEBHOOK_URL=https://webhook.sinesys.app/webhook/drive
+ * N8N_WEBHOOK_URL=https://webhook.synthropic.app/webhook/drive
  * ```
  * 
  * 
@@ -147,7 +147,7 @@
  *    B2_REGION=us-west-000
  *    B2_KEY_ID=...
  *    B2_APPLICATION_KEY=...
- *    B2_BUCKET=sinesys-documentos
+ *    B2_BUCKET=synthropic-documentos
  *    ```
  * 
  * 3. Testar conexão:

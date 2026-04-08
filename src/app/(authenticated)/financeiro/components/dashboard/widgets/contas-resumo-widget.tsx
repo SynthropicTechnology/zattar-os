@@ -127,8 +127,8 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
         {total > 0 && (
           <ProgressBarChart
             data={[
-              { name: 'A Pagar', value: contasPagar.valor, color: '#f59e0b' },
-              { name: 'A Receber', value: contasReceber.valor, color: '#3b82f6' },
+              { name: 'A Pagar', value: contasPagar.valor, color: 'var(--warning)' },
+              { name: 'A Receber', value: contasReceber.valor, color: 'var(--info)' },
             ]}
             height={6}
             showLabels

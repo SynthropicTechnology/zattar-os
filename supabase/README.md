@@ -1,6 +1,6 @@
 # Zattar Advogados - Supabase Database Schema Export
 
-> **Complete schema export of the Zattar Advogados (Sinesys) database**
+> **Complete schema export of the Zattar Advogados (Synthropic) database**
 >
 > Generated: February 10, 2026 | PostgreSQL 15.x | Supabase
 
@@ -219,7 +219,7 @@ After migration, verify:
 ## 📊 Schema Statistics
 
 ```
-Database: Zattar Advogados (Sinesys)
+Database: Zattar Advogados (Synthropic)
 PostgreSQL Version: 15.x
 Supabase Version: Latest stable
 
@@ -338,7 +338,7 @@ Approximate Size:
 
 **Export Version**: 1.0
 **Export Date**: 2026-02-10
-**Database**: Zattar Advogados (Sinesys)
+**Database**: Zattar Advogados (Synthropic)
 **PostgreSQL**: 15.x
 **Supabase**: Latest stable
 **Next.js**: 16+ (Turbopack)
@@ -354,7 +354,7 @@ Assisted by: Zattar Advogados Development Team
 
 ## 📄 License
 
-Proprietary to Zattar Advogados (Sinesys)
+Proprietary to Zattar Advogados (Synthropic)
 Not for public distribution
 
 ---

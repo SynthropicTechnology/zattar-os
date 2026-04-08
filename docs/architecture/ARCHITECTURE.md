@@ -1,8 +1,8 @@
-# Arquitetura Sinesys
+# Arquitetura Synthropic
 
 ## Visão Geral
 
-O Sinesys é um sistema de gestão jurídica desenvolvido com arquitetura AI-First, utilizando Next.js 16, React 19, Supabase e integração MCP (Model Context Protocol).
+O Synthropic é um sistema de gestão jurídica desenvolvido com arquitetura AI-First, utilizando Next.js 16, React 19, Supabase e integração MCP (Model Context Protocol).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -207,7 +207,7 @@ registerMcpTool({
 // .mcp.json
 {
   "mcpServers": {
-    "sinesys": {
+    "synthropic": {
       "type": "sse",
       "url": "http://localhost:3000/api/mcp"
     }
@@ -352,7 +352,7 @@ AI_EMBEDDING_PROVIDER=openai  # ou cohere
 AI_EMBEDDING_CACHE_ENABLED=true
 
 # MCP
-SINESYS_API_TOKEN=
+SYNTHROPIC_API_TOKEN=
 ```
 
 ## Princípios de Design

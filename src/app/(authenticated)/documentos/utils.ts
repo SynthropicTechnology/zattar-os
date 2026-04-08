@@ -328,9 +328,9 @@ export async function exportToDocx(
 
     // Criar documento
     const doc = new Document({
-      creator: 'Sinesys',
+      creator: 'Synthropic',
       title: titulo,
-      description: 'Documento exportado do Sinesys',
+      description: 'Documento exportado do Synthropic',
       sections: [
         {
           properties: {

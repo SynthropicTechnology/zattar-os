@@ -29,7 +29,7 @@ export default function AgendaDoc() {
 
       <DocSection title="Visão Geral">
         <p className="text-muted-foreground">
-          A Agenda do Sinesys é o ponto central de organização do seu escritório. Ela consolida automaticamente
+          A Agenda do Synthropic é o ponto central de organização do seu escritório. Ela consolida automaticamente
           eventos vindos dos módulos de Audiências e Expedientes, além de permitir a criação manual de
           compromissos e lembretes. Utilize as diferentes visualizações para ter a perspectiva ideal do seu
           calendário — seja o dia de hoje, a semana corrente ou o mês completo.

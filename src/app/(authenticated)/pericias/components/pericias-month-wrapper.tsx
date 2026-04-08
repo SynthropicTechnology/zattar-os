@@ -21,12 +21,11 @@ import {
   TemporalViewError,
 } from '@/components/shared';
 
-import { SituacaoPericiaCodigo } from '../domain';
+import { SituacaoPericiaCodigo, type UsuarioOption, type EspecialidadePericiaOption, type PeritoOption } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
 import { usePeritos } from '../hooks/use-peritos';
-import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
 
 import {
   PericiasListFilters,

@@ -1,7 +1,7 @@
 # Regras de Negócio - Admin
 
 ## Contexto
-Módulo administrativo do Sinesys, focado em **observabilidade do banco de dados** e **gestão de infraestrutura**. Provê métricas de performance do Postgres (cache hit rate, queries lentas, bloat, índices não utilizados, disk I/O) e um assistente de decisão para upgrade de tier de compute do Supabase.
+Módulo administrativo do Synthropic, focado em **observabilidade do banco de dados** e **gestão de infraestrutura**. Provê métricas de performance do Postgres (cache hit rate, queries lentas, bloat, índices não utilizados, disk I/O) e um assistente de decisão para upgrade de tier de compute do Supabase.
 
 ## Entidades Principais
 - **MetricasDB**: Snapshot consolidado de métricas do banco — cache hit rate, queries lentas, sequential scans, bloat, índices não utilizados, status de Disk I/O

@@ -37,7 +37,7 @@ export default function IntegracaoViacepPage() {
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
             O ViaCEP é um webservice gratuito de alto desempenho para consulta de
-            Códigos de Endereçamento Postal (CEP) do Brasil. Utilizado no Sinesys
+            Códigos de Endereçamento Postal (CEP) do Brasil. Utilizado no Synthropic
             para auto-preenchimento de endereços em formulários.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -165,7 +165,7 @@ GET https://viacep.com.br/ws/01001000/json/`}
         <CardHeader>
           <div className="flex items-center gap-2">
             <Code className="h-5 w-5" />
-            <CardTitle>Implementação no Sinesys</CardTitle>
+            <CardTitle>Implementação no Synthropic</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">

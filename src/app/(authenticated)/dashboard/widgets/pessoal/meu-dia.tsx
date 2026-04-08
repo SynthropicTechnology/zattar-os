@@ -110,8 +110,8 @@ function DotLembrete({ state }: { state: EventoState }) {
 
   let bgClass = 'bg-border/40';
   if (isDone) bgClass = 'bg-muted-foreground/25';
-  else if (isNear) bgClass = 'bg-warning shadow-[0_0_6px_color-mix(in_oklch,var(--warning)_60%,transparent)]';
-  else if (isNext) bgClass = 'bg-primary shadow-[0_0_6px_color-mix(in_oklch,var(--primary)_60%,transparent)]';
+  else if (isNear) bgClass = 'bg-warning shadow-[0_0_6px_var(--glow-warning)]';
+  else if (isNext) bgClass = 'bg-primary shadow-[0_0_6px_var(--glow-primary)]';
 
   return <div className={`size-2 rounded-full mt-0.5 shrink-0 ${bgClass}`} />;
 }
@@ -201,7 +201,7 @@ export function WidgetMeuDia() {
             const isNext = i === proximoIdx;
             const minutos = evento.hora ? horaParaMinutos(evento.hora) : null;
             const isDone = evento.done || (minutos !== null && minutos < agora);
-            
+
             let state: EventoState = 'future';
             if (isDone) {
               state = 'done';
@@ -217,13 +217,12 @@ export function WidgetMeuDia() {
             return (
               <div
                 key={evento.id}
-                className={`flex items-start gap-3 px-2 py-2 rounded-xl transition-all duration-150 group ${
-                  state === 'near' 
+                className={`flex items-start gap-3 px-2 py-2 rounded-xl transition-all duration-150 group ${state === 'near'
                     ? 'bg-warning/[0.04] ring-1 ring-warning/20'
                     : isNext
-                    ? 'bg-primary/[0.04] ring-1 ring-primary/20'
-                    : 'hover:bg-muted/40'
-                }`}
+                      ? 'bg-primary/[0.04] ring-1 ring-primary/20'
+                      : 'hover:bg-muted/40'
+                  }`}
               >
                 {/* Coluna do Ícone Timeline (Centralizado no box w-6) */}
                 <div className="w-6 flex justify-center shrink-0 mt-0.5 z-10 bg-background/80 rounded-full group-hover:bg-transparent backdrop-blur-sm">
@@ -239,17 +238,15 @@ export function WidgetMeuDia() {
                 <div className="flex-1 min-w-0 flex items-start justify-between gap-3">
                   {/* Informações à esquerda */}
                   <div className="flex-1 min-w-0">
-                    <span 
-                      className={`block text-[9px] font-medium uppercase tracking-wider mb-0.5 ${
-                        isDone ? 'text-muted-foreground/50' : state === 'near' ? 'text-warning/90' : 'text-primary/70'
-                      }`}
+                    <span
+                      className={`block text-[9px] font-medium uppercase tracking-wider mb-0.5 ${isDone ? 'text-muted-foreground/50' : state === 'near' ? 'text-warning/90' : 'text-primary/70'
+                        }`}
                     >
                       {evento.tipo === 'audiencia' ? 'Audiência' : evento.tipo}
                     </span>
-                    <p 
-                      className={`text-[11px] font-semibold leading-tight truncate ${
-                        isDone ? 'text-muted-foreground line-through' : 'text-foreground'
-                      }`}
+                    <p
+                      className={`text-[11px] font-semibold leading-tight truncate ${isDone ? 'text-muted-foreground line-through' : 'text-foreground'
+                        }`}
                     >
                       {evento.titulo}
                     </p>
@@ -275,17 +272,16 @@ export function WidgetMeuDia() {
                   <div className="flex flex-col items-end shrink-0 pl-2">
                     {evento.hora && (
                       <span
-                        className={`text-xs font-display tabular-nums font-semibold ${
-                          isDone ? 'text-muted-foreground/70' : state === 'near' ? 'text-warning' : 'text-foreground/90'
-                        }`}
+                        className={`text-xs font-display tabular-nums font-semibold ${isDone ? 'text-muted-foreground/70' : state === 'near' ? 'text-warning' : 'text-foreground/90'
+                          }`}
                       >
                         {evento.hora}
                       </span>
                     )}
                     {state === 'near' && (
-                       <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-warning-foreground bg-warning px-2 py-0.5 rounded shadow-sm shrink-0">
-                         Em Breve
-                       </span>
+                      <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-warning-foreground bg-warning px-2 py-0.5 rounded shadow-sm shrink-0">
+                        Em Breve
+                      </span>
                     )}
                     {state === 'next' && (
                       <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded shadow-sm shrink-0">

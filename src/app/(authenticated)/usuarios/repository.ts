@@ -20,6 +20,29 @@ import {
   getUsuarioColumnsWithCargo,
 } from "./domain";
 
+// =============================================================================
+// RE-EXPORTS — Repositórios especializados
+// =============================================================================
+export {
+  buscarEstatisticasAtividades,
+  buscarProcessosAtribuidos,
+  buscarAudienciasAtribuidas,
+  buscarPendentesAtribuidos,
+  buscarContratosAtribuidos,
+} from "./repository-atividades";
+export type { AtividadeEstatisticas } from "./repository-atividades";
+
+export {
+  buscarAtividadesUsuario,
+  contarAtividadesUsuario,
+} from "./repository-audit-atividades";
+export type { AtividadeLog } from "./repository-audit-atividades";
+
+export {
+  buscarAuthLogsPorUsuario,
+} from "./repository-auth-logs";
+export type { AuthLogEntry } from "./repository-auth-logs";
+
 // Conversores
 /**
  * Normaliza uma string de data para o formato YYYY-MM-DD sem criar objetos Date.
@@ -85,10 +108,10 @@ function converterParaUsuario(data: Record<string, unknown>): Usuario {
     cargoId: (data.cargo_id as number | null) ?? null,
     cargo: cargos
       ? {
-          id: cargos.id as number,
-          nome: cargos.nome as string,
-          descricao: (cargos.descricao as string | null) ?? null,
-        }
+        id: cargos.id as number,
+        nome: cargos.nome as string,
+        descricao: (cargos.descricao as string | null) ?? null,
+      }
       : undefined,
     avatarUrl: (data.avatar_url as string | null) ?? null,
     coverUrl: (data.cover_url as string | null) ?? null,
@@ -204,7 +227,7 @@ export const usuarioRepository = {
     const supabase = createServiceClient();
     // Detectar se deve buscar sem paginação
     const semPaginacao = params.pagina === undefined && params.limite === undefined;
-    
+
     const pagina = params.pagina ?? 1;
     const limite = params.limite ?? 50;
     const offset = semPaginacao ? 0 : (pagina - 1) * limite;

@@ -24,7 +24,7 @@ const envVars = [
   {
     name: 'DOMAIN',
     description: 'Domínio da aplicação',
-    example: 'sinesys.exemplo.com.br',
+    example: 'synthropic.exemplo.com.br',
     required: true,
   },
 ];
@@ -162,7 +162,7 @@ docker push seu-registry.com/zattar_advogados:latest`}
             <li>Acesse o Portainer</li>
             <li>Vá em <strong>Stacks</strong> no menu lateral</li>
             <li>Clique em <strong>Add stack</strong></li>
-            <li>Nome: <code className="bg-muted px-1 rounded">sinesys</code></li>
+            <li>Nome: <code className="bg-muted px-1 rounded">synthropic</code></li>
             <li>Escolha método: <strong>Repository</strong> ou <strong>Web editor</strong></li>
           </ol>
           <div>
@@ -195,10 +195,10 @@ docker push seu-registry.com/zattar_advogados:latest`}
         max_attempts: 3
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.sinesys.rule=Host(\`\${DOMAIN}\`)"
-        - "traefik.http.routers.sinesys.entrypoints=websecure"
-        - "traefik.http.routers.sinesys.tls.certresolver=letsencrypt"
-        - "traefik.http.services.sinesys.loadbalancer.server.port=3000"
+        - "traefik.http.routers.synthropic.rule=Host(\`\${DOMAIN}\`)"
+        - "traefik.http.routers.synthropic.entrypoints=websecure"
+        - "traefik.http.routers.synthropic.tls.certresolver=letsencrypt"
+        - "traefik.http.services.synthropic.loadbalancer.server.port=3000"
     environment:
       - NEXT_PUBLIC_SUPABASE_URL=\${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=\${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
@@ -256,7 +256,7 @@ curl https://seu-dominio.com.br/api/health`}
           <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
             <li>Faça pull das alterações do código</li>
             <li>Rebuild da imagem (se necessário)</li>
-            <li>No Portainer: <strong>Stacks</strong> → <strong>sinesys</strong> → <strong>Editor</strong></li>
+            <li>No Portainer: <strong>Stacks</strong> → <strong>synthropic</strong> → <strong>Editor</strong></li>
             <li>Clique em <strong>Update the stack</strong></li>
             <li>Aguarde o redeploy</li>
           </ol>
@@ -294,7 +294,7 @@ curl https://seu-dominio.com.br/api/health`}
           <div>
             <h4 className="font-semibold mb-1">Container não inicia</h4>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• Verifique logs: <code className="bg-muted px-1 rounded">docker logs sinesys</code></li>
+              <li>• Verifique logs: <code className="bg-muted px-1 rounded">docker logs synthropic</code></li>
               <li>• Verifique variáveis de ambiente</li>
               <li>• Verifique se porta 3000 está livre</li>
             </ul>

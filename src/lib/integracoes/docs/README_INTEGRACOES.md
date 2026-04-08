@@ -1,4 +1,4 @@
-# Sistema de Integrações - Sinesys
+# Sistema de Integrações - Synthropic
 
 ## ✅ Status: Operacional
 

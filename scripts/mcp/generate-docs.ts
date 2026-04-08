@@ -216,11 +216,11 @@ function generateDocumentation(): string {
   const tools = listMcpTools();
   const grouped = groupToolsByModule(tools);
 
-  let doc = '# Referência Completa - Tools MCP Sinesys\n\n';
+  let doc = '# Referência Completa - Tools MCP Synthropic\n\n';
 
   // Visão Geral
   doc += '## Visão Geral\n\n';
-  doc += `O Sinesys expõe **${tools.length} ferramentas MCP** organizadas em ${grouped.size} módulos funcionais. `;
+  doc += `O Synthropic expõe **${tools.length} ferramentas MCP** organizadas em ${grouped.size} módulos funcionais. `;
   doc += 'Estas ferramentas permitem que agentes de IA interajam com o sistema de forma estruturada e segura.\\n\\n';
 
   // Índice Rápido

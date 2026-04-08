@@ -169,7 +169,7 @@ export default function CapturaHistorico() {
         <p className="text-muted-foreground">
           Dentro do detalhamento de uma captura bem-sucedida, a aba &quot;Movimentações&quot; lista todas
           as novidades encontradas nessa execução, com o número do processo, a data do ato no
-          tribunal, o conteúdo da movimentação e o link direto para o processo no Sinesys. Clique
+          tribunal, o conteúdo da movimentação e o link direto para o processo no Synthropic. Clique
           em qualquer movimentação para navegar ao processo correspondente.
         </p>
       </DocSection>

@@ -27,7 +27,7 @@ O sistema MUST fornecer uma rota dedicada para visualização detalhada de uma c
 
 **Given** o usuário acessa `/captura/historico/123`
 **And** a captura existe e é do tipo "Acervo Geral"
-**Then** o título da página DEVE ser "Captura #123 - Acervo Geral | Sinesys"
+**Then** o título da página DEVE ser "Captura #123 - Acervo Geral | Synthropic"
 **And** a description DEVE conter informações relevantes da captura
 
 #### Scenario: ID inválido

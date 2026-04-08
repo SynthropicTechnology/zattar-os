@@ -21,7 +21,7 @@ export default function ChatDoc() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Chat</h1>
         <p className="text-muted-foreground text-lg">
-          Converse com a inteligência artificial do Sinesys para tirar dúvidas jurídicas, analisar documentos e obter suporte nas suas atividades diárias.
+          Converse com a inteligência artificial do Synthropic para tirar dúvidas jurídicas, analisar documentos e obter suporte nas suas atividades diárias.
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export default function ChatDoc() {
               icon: MessageSquare,
               nome: 'Consultas sobre o Sistema',
               descricao:
-                'Tire dúvidas sobre como usar funcionalidades do Sinesys. Ex: "Como cadastrar um novo cliente?" ou "Como exportar um relatório financeiro?".',
+                'Tire dúvidas sobre como usar funcionalidades do Synthropic. Ex: "Como cadastrar um novo cliente?" ou "Como exportar um relatório financeiro?".',
             },
           ]}
         />
@@ -117,7 +117,7 @@ export default function ChatDoc() {
               icon: Paperclip,
               nome: 'Vincular Documento do Sistema',
               descricao:
-                'Em vez de fazer upload, você pode vincular um documento já existente no módulo de Documentos do Sinesys usando o ícone de busca.',
+                'Em vez de fazer upload, você pode vincular um documento já existente no módulo de Documentos do Synthropic usando o ícone de busca.',
             },
           ]}
         />

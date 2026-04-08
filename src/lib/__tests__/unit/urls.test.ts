@@ -1,7 +1,7 @@
 /**
  * Testes Unitários para URLs
  *
- * Valida funções de geração de URLs dos apps Sinesys
+ * Valida funções de geração de URLs dos apps Synthropic
  */
 
 import { getDashboardUrl, getMeuProcessoUrl, getWebsiteUrl } from '@/lib/urls';

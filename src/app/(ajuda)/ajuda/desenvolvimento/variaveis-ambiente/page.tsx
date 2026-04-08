@@ -55,7 +55,7 @@ const categories: Category[] = [
       {
         name: 'DOMAIN',
         description: 'Domínio onde a aplicação estará disponível',
-        example: 'sinesys.exemplo.com.br',
+        example: 'synthropic.exemplo.com.br',
         location: 'Seu domínio configurado no DNS',
         required: true,
         public: false,
@@ -212,7 +212,7 @@ export default function VariaveisAmbientePage() {
               <p className="text-muted-foreground">
                 Domínio da <strong>sua aplicação</strong> (frontend)
               </p>
-              <code className="text-xs bg-muted px-1 rounded">sinesys.exemplo.com.br</code>
+              <code className="text-xs bg-muted px-1 rounded">synthropic.exemplo.com.br</code>
             </div>
           </div>
         </CardContent>
@@ -272,7 +272,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=eyJxxxxx
 SUPABASE_SECRET_KEY=eyJxxxxx
 
 # Domínio (produção)
-DOMAIN=sinesys.exemplo.com.br
+DOMAIN=synthropic.exemplo.com.br
 
 # Redis (opcional)
 ENABLE_REDIS_CACHE=true

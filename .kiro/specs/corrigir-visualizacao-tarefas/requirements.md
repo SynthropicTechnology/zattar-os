@@ -47,7 +47,7 @@ Após a unificação dos módulos To-Do e Tarefas, foram identificados dois prob
 
 ### 4.1 Consistência Visual
 
-- Seguir os padrões do design system Sinesys
+- Seguir os padrões do design system Synthropic
 - Manter consistência com o módulo de Audiências (que tem ViewModePopover funcional)
 - Usar componentes compartilhados (DataShell, ViewModePopover)
 

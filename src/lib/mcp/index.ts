@@ -1,5 +1,5 @@
 /**
- * Módulo MCP do Sinesys
+ * Módulo MCP do Synthropic
  *
  * Exporta servidor, registry e utilitários para integração MCP
  */

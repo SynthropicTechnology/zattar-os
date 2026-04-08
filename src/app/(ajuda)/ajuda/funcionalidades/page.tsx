@@ -59,7 +59,7 @@ export default function FuncionalidadesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Funcionalidades</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Conheça as principais funcionalidades do Sinesys e aprenda a utilizá-las de forma eficiente.
+          Conheça as principais funcionalidades do Synthropic e aprenda a utilizá-las de forma eficiente.
         </p>
       </div>
 
@@ -92,7 +92,7 @@ export default function FuncionalidadesPage() {
         <h2 className="text-2xl font-semibold tracking-tight">Visão Geral</h2>
         <div className="prose prose-neutral dark:prose-invert max-w-none">
           <p>
-            O Sinesys foi desenvolvido para automatizar e otimizar a gestão de processos
+            O Synthropic foi desenvolvido para automatizar e otimizar a gestão de processos
             trabalhistas. Cada funcionalidade foi pensada para integrar-se perfeitamente
             com o fluxo de trabalho do escritório.
           </p>

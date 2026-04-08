@@ -8,7 +8,7 @@ A MP distingue dois tipos principais de assinaturas eletrônicas:
 
 2.  **Assinatura Eletrônica Avançada (Art. 10, § 2º):** É a que utiliza outros meios de comprovação da autoria e integridade de documentos em forma eletrônica, desde que admitido pelas partes como válido ou aceito pela pessoa a quem for oposto o documento.
 
-O Sinesys implementa a **Assinatura Eletrônica Avançada**, cumprindo rigorosamente os quatro requisitos (alíneas) do § 2º para garantir sua validade jurídica:
+O Synthropic implementa a **Assinatura Eletrônica Avançada**, cumprindo rigorosamente os quatro requisitos (alíneas) do § 2º para garantir sua validade jurídica:
 
 > *a) estar associada ao signatário de maneira unívoca;*
 > *b) que o signatário possa ser identificado de forma inequívoca;*
@@ -21,7 +21,7 @@ A jurisprudência brasileira, notadamente o Superior Tribunal de Justiça (STJ),
 
 ## Seção 2: Implementação Técnica da Assinatura Eletrônica Avançada
 
-O Sinesys mapeia cada requisito legal para uma robusta coleta de evidências técnicas, formando uma cadeia de custódia digital irrefutável.
+O Synthropic mapeia cada requisito legal para uma robusta coleta de evidências técnicas, formando uma cadeia de custódia digital irrefutável.
 
 -   **Alínea (a) - Associação unívoca:** A assinatura é vinculada a uma "impressão digital" do dispositivo (`device fingerprint`) que inclui dezenas de parâmetros (resolução de tela, hash de canvas, fuso horário, plataforma), além de endereço IP, geolocalização (com consentimento) e um timestamp preciso.
 
@@ -47,7 +47,7 @@ O Sinesys mapeia cada requisito legal para uma robusta coleta de evidências té
 4.  **Pré-visualização:** O usuário pré-visualiza o documento PDF já preenchido.
 5.  **Consentimento:** O usuário lê e aceita os termos da assinatura eletrônica.
 6.  **Assinatura:** O usuário desenha sua assinatura manuscrita em um campo na tela.
-7.  **Finalização:** A API do Sinesys recebe todas as evidências, gera o documento final com o manifesto de assinatura, calcula os hashes e armazena tudo de forma segura.
+7.  **Finalização:** A API do Synthropic recebe todas as evidências, gera o documento final com o manifesto de assinatura, calcula os hashes e armazena tudo de forma segura.
 
 ---
 
@@ -122,7 +122,7 @@ sequenceDiagram
 
 ## Seção 4: Procedimentos de Auditoria Forense
 
-O Sinesys fornece uma função de auditoria (`auditSignatureIntegrity`) para validar a integridade de qualquer assinatura a qualquer momento.
+O Synthropic fornece uma função de auditoria (`auditSignatureIntegrity`) para validar a integridade de qualquer assinatura a qualquer momento.
 
 ### Função de Auditoria
 

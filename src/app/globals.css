@@ -1,5 +1,5 @@
 /**
- * SINESYS DESIGN SYSTEM - FUNDAÇÃO
+ * SYNTHROPIC DESIGN SYSTEM - FUNDAÇÃO
  * 
  * Hierarquia de Tokens:
  * 1. Brand Tokens (--color-brand-*): Cores da marca Zattar
@@ -68,8 +68,10 @@
   --color-chart-5: var(--chart-5);
 
   /* --- 4. Zattar Custom Tokens --- */
-  --color-brand: var(--brand); /* O Roxo Zattar Puro */
-  --color-highlight: var(--highlight); /* O Laranja de Ação */
+  --color-brand: var(--brand);
+  /* O Roxo Zattar Puro */
+  --color-highlight: var(--highlight);
+  /* O Laranja de Ação */
 
   /* --- 5. Semantic Status Colors --- */
   --color-success: var(--success);
@@ -90,14 +92,28 @@
   --color-chat-bubble-sent: var(--chat-bubble-sent);
   --color-chat-sidebar-active: var(--chat-sidebar-active);
 
+  /* --- 7b. Video Call Tokens (always dark) --- */
+  --color-video-bg: var(--video-bg);
+  --color-video-surface: var(--video-surface);
+  --color-video-surface-hover: var(--video-surface-hover);
+  --color-video-border: var(--video-border);
+  --color-video-muted: var(--video-muted);
+  --color-video-text: var(--video-text);
+  --color-video-skeleton: var(--video-skeleton);
+
   /* --- 8. Tipografia & Layout --- */
   --font-sans: var(--font-inter);
-  --font-heading: var(--font-montserrat); /* Títulos */
-  --font-headline: var(--font-manrope); /* Magistrate AI Headline */
+  --font-heading: var(--font-montserrat);
+  /* Títulos */
+  --font-headline: var(--font-manrope);
+  /* Magistrate AI Headline */
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-montserrat); /* KPIs, métricas grandes — alias de heading */
-  --font-label: var(--font-inter);   /* Alias → font-sans (labels, chips, badges) */
-  --font-body: var(--font-inter);    /* Alias → font-sans (corpo de texto) */
+  --font-display: var(--font-montserrat);
+  /* KPIs, métricas grandes — alias de heading */
+  --font-label: var(--font-inter);
+  /* Alias → font-sans (labels, chips, badges) */
+  --font-body: var(--font-inter);
+  /* Alias → font-sans (corpo de texto) */
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -121,7 +137,7 @@
   --color-on-surface-variant: var(--on-surface-variant);
   --color-inverse-surface: var(--inverse-surface);
   --color-inverse-on-surface: var(--inverse-on-surface);
-  
+
   --color-outline: var(--outline);
   --color-outline-variant: var(--outline-variant);
 
@@ -132,7 +148,7 @@
   --color-primary-fixed-dim: var(--primary-fixed-dim);
   --color-on-primary-fixed: var(--on-primary-fixed);
   --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
-  
+
   --color-on-secondary: var(--on-secondary);
   --color-secondary-container: var(--secondary-container);
   --color-on-secondary-container: var(--on-secondary-container);
@@ -216,7 +232,8 @@
 /* .dark = DARK MODE (website público + toggle) */
 :root {
   /* Configuração Global */
-  --radius: 0.5rem; /* 8px -> Visual Tech/Sharp */
+  --radius: 0.5rem;
+  /* 8px -> Visual Tech/Sharp */
 
   /* === ZATTAR LIGHT MODE === */
   /* Âncoras: Primary #5523eb | Neutral #282828 | Highlight oklch(0.6 0.22 45) */
@@ -273,6 +290,34 @@
   --chart-3: oklch(0.92 0.01 281);
   --chart-4: oklch(0.55 0.18 150);
   --chart-5: oklch(0.70 0.01 281);
+  --chart-6: oklch(0.65 0.15 200);
+  --chart-7: oklch(0.60 0.18 320);
+  --chart-8: oklch(0.70 0.12 80);
+
+  /* Tons derivados para treemaps e funnels */
+  --chart-primary-soft: oklch(from var(--primary) l c h / 0.50);
+  --chart-destructive-soft: oklch(from var(--destructive) l c h / 0.45);
+  --chart-warning-soft: oklch(from var(--warning) l c h / 0.45);
+  --chart-success-soft: oklch(from var(--success) l c h / 0.50);
+  --chart-muted-soft: oklch(from var(--muted-foreground) l c h / 0.40);
+  --chart-success-dark: oklch(from var(--success) calc(l - 0.05) c h);
+  --chart-warning-dark: oklch(from var(--warning) calc(l - 0.05) c h);
+
+  /* Glow effects */
+  --glow-primary: oklch(from var(--primary) l c h / 0.35);
+  --glow-primary-subtle: oklch(from var(--primary) l c h / 0.04);
+  --glow-primary-faint: oklch(from var(--primary) l c h / 0.02);
+  --glow-destructive: oklch(from var(--destructive) l c h / 0.50);
+  --glow-warning: oklch(from var(--warning) l c h / 0.40);
+
+  /* VIDEO CALL TOKENS (always dark — videochamada é sempre escura) */
+  --video-bg: oklch(0.145 0.005 281);
+  --video-surface: oklch(0.21 0.005 281);
+  --video-surface-hover: oklch(0.278 0.005 281);
+  --video-border: oklch(0.278 0.005 281);
+  --video-muted: oklch(0.556 0.01 281);
+  --video-text: oklch(1.0 0 0);
+  --video-skeleton: oklch(0.278 0.005 281);
 
   /* SEMANTIC STATUS COLORS (Light) */
   --success: oklch(0.55 0.18 145);
@@ -425,6 +470,25 @@
   --chart-3: oklch(0.35 0.005 281);
   --chart-4: oklch(0.65 0.18 150);
   --chart-5: oklch(0.50 0.005 281);
+  --chart-6: oklch(0.65 0.15 200);
+  --chart-7: oklch(0.60 0.18 320);
+  --chart-8: oklch(0.70 0.12 80);
+
+  /* Tons derivados para treemaps e funnels (Dark) */
+  --chart-primary-soft: oklch(from var(--primary) l c h / 0.35);
+  --chart-destructive-soft: oklch(from var(--destructive) l c h / 0.30);
+  --chart-warning-soft: oklch(from var(--warning) l c h / 0.30);
+  --chart-success-soft: oklch(from var(--success) l c h / 0.35);
+  --chart-muted-soft: oklch(from var(--muted-foreground) l c h / 0.25);
+  --chart-success-dark: oklch(from var(--success) calc(l - 0.05) c h);
+  --chart-warning-dark: oklch(from var(--warning) calc(l - 0.05) c h);
+
+  /* Glow effects (Dark) */
+  --glow-primary: oklch(from var(--primary) l c h / 0.25);
+  --glow-primary-subtle: oklch(from var(--primary) l c h / 0.03);
+  --glow-primary-faint: oklch(from var(--primary) l c h / 0.015);
+  --glow-destructive: oklch(from var(--destructive) l c h / 0.35);
+  --glow-warning: oklch(from var(--warning) l c h / 0.30);
 
   /* SEMANTIC STATUS COLORS (Dark) — tons mais claros para contraste */
   --success: oklch(0.70 0.18 145);
@@ -575,16 +639,20 @@
 :root:not(.dark) [class*="border-white/"] {
   border-color: rgba(0, 0, 0, 0.08);
 }
+
 :root:not(.dark) [class*="hover\\:border-white/"]:hover {
   border-color: rgba(0, 0, 0, 0.12);
 }
+
 :root:not(.dark) [class*="bg-white/5"],
 :root:not(.dark) [class*="hover\\:bg-white/5"]:hover {
   background-color: rgba(0, 0, 0, 0.03);
 }
+
 :root:not(.dark) [class*="bg-white/10"] {
   background-color: rgba(0, 0, 0, 0.05);
 }
+
 :root:not(.dark) [class*="bg-white/20"] {
   background-color: rgba(0, 0, 0, 0.08);
 }
@@ -680,24 +748,42 @@
    *   - Database stores hex (legacy compat) — TAG_COLORS em domain.ts mapeia
    *   - UI consome via var(--palette-N) ou via helper getPaletteToken(n)
    * ========================================================================= */
-  --palette-1:  oklch(0.65 0.18 25);    /* vermelho      #ED4949 */
-  --palette-2:  oklch(0.68 0.18 50);    /* laranja       #ED7E40 */
-  --palette-3:  oklch(0.74 0.16 75);    /* âmbar         #E5A23A */
-  --palette-4:  oklch(0.80 0.16 95);    /* amarelo       #DAB52D */
-  --palette-5:  oklch(0.78 0.18 130);   /* lima          #9FBE3E */
-  --palette-6:  oklch(0.70 0.18 145);   /* verde         #4FB04F */
-  --palette-7:  oklch(0.70 0.15 160);   /* esmeralda     #3DAF7A */
-  --palette-8:  oklch(0.72 0.13 180);   /* teal          #3DAFA6 */
-  --palette-9:  oklch(0.72 0.14 210);   /* ciano         #3DA8C7 */
-  --palette-10: oklch(0.68 0.16 230);   /* azul claro    #3D90D6 */
-  --palette-11: oklch(0.62 0.20 255);   /* azul          #3D6BD6 */
-  --palette-12: oklch(0.60 0.22 275);   /* índigo        #4D55E0 */
-  --palette-13: oklch(0.62 0.22 295);   /* violeta       #6E48E0 */
-  --palette-14: oklch(0.62 0.22 310);   /* roxo          #8E48E0 */
-  --palette-15: oklch(0.65 0.22 330);   /* fúcsia        #C449D6 */
-  --palette-16: oklch(0.65 0.20 0);     /* pink          #D6498F */
-  --palette-17: oklch(0.62 0.22 15);    /* rosa          #DA4566 */
-  --palette-18: oklch(0.55 0.01 281);   /* cinza neutro  #6B6B70 */
+  --palette-1: oklch(0.65 0.18 25);
+  /* vermelho      #ED4949 */
+  --palette-2: oklch(0.68 0.18 50);
+  /* laranja       #ED7E40 */
+  --palette-3: oklch(0.74 0.16 75);
+  /* âmbar         #E5A23A */
+  --palette-4: oklch(0.80 0.16 95);
+  /* amarelo       #DAB52D */
+  --palette-5: oklch(0.78 0.18 130);
+  /* lima          #9FBE3E */
+  --palette-6: oklch(0.70 0.18 145);
+  /* verde         #4FB04F */
+  --palette-7: oklch(0.70 0.15 160);
+  /* esmeralda     #3DAF7A */
+  --palette-8: oklch(0.72 0.13 180);
+  /* teal          #3DAFA6 */
+  --palette-9: oklch(0.72 0.14 210);
+  /* ciano         #3DA8C7 */
+  --palette-10: oklch(0.68 0.16 230);
+  /* azul claro    #3D90D6 */
+  --palette-11: oklch(0.62 0.20 255);
+  /* azul          #3D6BD6 */
+  --palette-12: oklch(0.60 0.22 275);
+  /* índigo        #4D55E0 */
+  --palette-13: oklch(0.62 0.22 295);
+  /* violeta       #6E48E0 */
+  --palette-14: oklch(0.62 0.22 310);
+  /* roxo          #8E48E0 */
+  --palette-15: oklch(0.65 0.22 330);
+  /* fúcsia        #C449D6 */
+  --palette-16: oklch(0.65 0.20 0);
+  /* pink          #D6498F */
+  --palette-17: oklch(0.62 0.22 15);
+  /* rosa          #DA4566 */
+  --palette-18: oklch(0.55 0.01 281);
+  /* cinza neutro  #6B6B70 */
 
   /* =========================================================================
    * EVENT COLORS — Calendar/Agenda Event Sources
@@ -706,13 +792,20 @@
    * mas com nomes intencionais que refletem o domínio (audiência, expediente,
    * obrigação, perícia, agenda).
    * ========================================================================= */
-  --event-audiencia:   var(--palette-10);  /* azul claro — formal/oficial */
-  --event-expediente:  var(--palette-3);   /* âmbar — atenção/prazo */
-  --event-obrigacao:   var(--palette-2);   /* laranja — financeiro */
-  --event-pericia:     var(--palette-13);  /* violeta — técnico/expert */
-  --event-agenda:      var(--palette-13);  /* violeta — neutro */
-  --event-prazo:       var(--palette-1);   /* vermelho — urgência */
-  --event-default:     var(--palette-11);  /* azul */
+  --event-audiencia: var(--palette-10);
+  /* azul claro — formal/oficial */
+  --event-expediente: var(--palette-3);
+  /* âmbar — atenção/prazo */
+  --event-obrigacao: var(--palette-2);
+  /* laranja — financeiro */
+  --event-pericia: var(--palette-13);
+  /* violeta — técnico/expert */
+  --event-agenda: var(--palette-13);
+  /* violeta — neutro */
+  --event-prazo: var(--palette-1);
+  /* vermelho — urgência */
+  --event-default: var(--palette-11);
+  /* azul */
 }
 
 /* =============================================================================
@@ -733,6 +826,7 @@
     0 1px 2px rgba(0, 0, 0, 0.02),
     inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
+
 :root:not(.dark) .glass-kpi:hover {
   background: rgba(255, 255, 255, 0.85);
   box-shadow:
@@ -750,6 +844,7 @@
     0 1px 2px rgba(0, 0, 0, 0.02),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
+
 :root:not(.dark) .glass-widget:hover {
   background: rgba(255, 255, 255, 0.75);
   box-shadow:
@@ -768,6 +863,7 @@
     0 1px 3px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
+
 .dark .glass-kpi:hover {
   background: rgba(255, 255, 255, 0.10);
   box-shadow:
@@ -784,6 +880,7 @@
     0 2px 8px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
+
 .dark .glass-widget:hover {
   background: rgba(255, 255, 255, 0.07);
   box-shadow:
@@ -793,6 +890,7 @@
 
 /* --- ESTILOS BASE --- */
 @layer base {
+
   /* Prevenir scroll horizontal globalmente */
   html,
   body {
@@ -802,6 +900,7 @@
 
   /* Acessibilidade: Respeitar preferencia de movimento reduzido */
   @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -1025,14 +1124,16 @@
 
   /* === DISPLAY HEADINGS (Hero, Landing) === */
   .text-display-1 {
-    font-size: clamp(2.25rem, 5vw, 3.75rem); /* 36px → 60px */
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    /* 36px → 60px */
     line-height: 1.1;
     letter-spacing: -0.02em;
     @apply font-heading font-bold text-foreground;
   }
 
   .text-display-2 {
-    font-size: clamp(1.875rem, 4vw, 3rem); /* 30px → 48px */
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    /* 30px → 48px */
     line-height: 1.15;
     letter-spacing: -0.02em;
     @apply font-heading font-bold text-foreground;
@@ -1307,6 +1408,7 @@
 }
 
 @layer utilities {
+
   /* Canvas dot pattern + ambient gradient — depth for glass surfaces */
   .canvas-dots {
     --dot-color: oklch(0 0 0 / 0.08);
@@ -1410,12 +1512,15 @@
   .text-status-success {
     color: var(--success);
   }
+
   .text-status-warning {
     color: var(--warning);
   }
+
   .text-status-error {
     color: var(--destructive);
   }
+
   .text-status-info {
     color: var(--info);
   }
@@ -1425,14 +1530,17 @@
     background-color: oklch(from var(--success) l c h / 0.1);
     color: var(--success);
   }
+
   .bg-status-warning {
     background-color: oklch(from var(--warning) l c h / 0.1);
     color: var(--warning);
   }
+
   .bg-status-error {
     background-color: oklch(from var(--destructive) l c h / 0.1);
     color: var(--destructive);
   }
+
   .bg-status-info {
     background-color: oklch(from var(--info) l c h / 0.1);
     color: var(--info);
@@ -1442,9 +1550,11 @@
   .bg-surface-1 {
     background-color: var(--surface-1);
   }
+
   .bg-surface-2 {
     background-color: var(--surface-2);
   }
+
   .bg-surface-3 {
     background-color: var(--surface-3);
   }
@@ -1453,12 +1563,15 @@
   .bg-chat-thread {
     background-color: var(--chat-thread-bg);
   }
+
   .bg-chat-bubble-received {
     background-color: var(--chat-bubble-received);
   }
+
   .bg-chat-bubble-sent {
     background-color: var(--chat-bubble-sent);
   }
+
   .bg-chat-sidebar-active {
     background-color: var(--chat-sidebar-active);
   }
@@ -1466,6 +1579,7 @@
 
 /* --- ESTILOS DE IMPRESSÃO --- */
 @media print {
+
   /* Ocultar elementos de navegação e interativos */
   aside,
   header,
@@ -1690,16 +1804,20 @@ body[data-theme-content-layout="centered"] .content-container {
  * Estilos baseados no Design System "The Neon Magistrate"
  */
 @layer components {
+
   /* Typography */
   .display-lg {
     @apply font-headline text-5xl md:text-7xl font-extrabold tracking-[-0.02em];
   }
+
   .headline-lg {
     @apply font-headline text-3xl md:text-4xl font-bold tracking-[-0.01em];
   }
+
   .label-md {
     @apply font-sans text-xs uppercase tracking-widest text-primary font-bold;
   }
+
   .body-editorial {
     @apply font-sans text-lg md:text-xl text-on-surface-variant leading-relaxed;
   }
@@ -1718,6 +1836,7 @@ body[data-theme-content-layout="centered"] .content-container {
   .glass-glow {
     @apply relative overflow-hidden;
   }
+
   .glass-glow::after {
     content: '';
     @apply absolute inset-0 bg-primary/5 pointer-events-none;
@@ -1736,16 +1855,20 @@ body[data-theme-content-layout="centered"] .content-container {
   .btn-primary {
     @apply bg-primary text-on-primary-fixed rounded-md font-bold px-6 py-3 transition-colors hover:bg-primary-container;
   }
+
   .btn-secondary {
     @apply border border-outline-variant/20 text-on-surface rounded-md font-bold px-6 py-3 transition-colors hover:bg-surface-container-high;
   }
+
   .btn-tertiary {
     @apply text-on-surface font-bold px-4 py-2 relative transition-all;
   }
+
   .btn-tertiary::after {
     content: '';
     @apply absolute bottom-0 left-4 right-4 h-0.5 bg-primary origin-left scale-x-0 transition-transform duration-300;
   }
+
   .btn-tertiary:hover::after {
     @apply scale-x-100;
   }
@@ -1757,14 +1880,14 @@ body[data-theme-content-layout="centered"] .content-container {
 
   /* Component: Cards */
   .card-editorial {
-    @apply bg-surface-container rounded-xl p-5 md:p-8 border-none; 
+    @apply bg-surface-container rounded-xl p-5 md:p-8 border-none;
   }
 
   /* Component: Inputs */
   .input-magistrate {
-    @apply bg-surface-container-high rounded-sm text-on-surface border-none px-4 py-3 transition-all outline-none ring-0
-           focus:border focus:border-primary/50 focus:shadow-[0_0_4px_var(--color-primary)];
+    @apply bg-surface-container-high rounded-sm text-on-surface border-none px-4 py-3 transition-all outline-none ring-0 focus:border focus:border-primary/50 focus:shadow-[0_0_4px_var(--color-primary)];
   }
+
   .input-error {
     @apply text-destructive;
   }
@@ -1799,10 +1922,14 @@ body[data-theme-content-layout="centered"] .content-container {
     background: rgba(25, 25, 25, 0.6);
     border-radius: 0.75rem;
   }
+
   .gradient-border::before {
     content: "";
     position: absolute;
-    top: -1px; left: -1px; right: -1px; bottom: -1px;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
     border-radius: 0.75rem;
     padding: 1px;
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(0, 0, 0, 0.1));
@@ -1817,6 +1944,7 @@ body[data-theme-content-layout="centered"] .content-container {
   .purple-glow-hover {
     @apply transition-shadow duration-300;
   }
+
   .purple-glow-hover:hover {
     box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
   }
@@ -1836,38 +1964,98 @@ body[data-theme-content-layout="centered"] .content-container {
 
 /* Auth orb drift animation */
 @keyframes drift {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(30px, -20px); }
-  50% { transform: translate(-20px, 30px); }
-  75% { transform: translate(20px, 20px); }
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(30px, -20px);
+  }
+
+  50% {
+    transform: translate(-20px, 30px);
+  }
+
+  75% {
+    transform: translate(20px, 20px);
+  }
 }
 
 /* ═══ Auth V2 — Mesh Aurora Drift Animations ═══
    Three independent drift paths with scale modulation
    for organic, never-repeating mesh gradient canvas. */
 @keyframes mesh-drift-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(30px, -40px) scale(1.05); }
-  50% { transform: translate(-20px, 20px) scale(0.98); }
-  75% { transform: translate(40px, 10px) scale(1.02); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(30px, -40px) scale(1.05);
+  }
+
+  50% {
+    transform: translate(-20px, 20px) scale(0.98);
+  }
+
+  75% {
+    transform: translate(40px, 10px) scale(1.02);
+  }
 }
 
 @keyframes mesh-drift-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(-40px, 30px) scale(1.03); }
-  50% { transform: translate(30px, -20px) scale(0.97); }
-  75% { transform: translate(-10px, -30px) scale(1.05); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(-40px, 30px) scale(1.03);
+  }
+
+  50% {
+    transform: translate(30px, -20px) scale(0.97);
+  }
+
+  75% {
+    transform: translate(-10px, -30px) scale(1.05);
+  }
 }
 
 @keyframes mesh-drift-3 {
-  0%, 100% { transform: translate(0, 0) scale(1.02); }
-  33% { transform: translate(20px, 30px) scale(0.96); }
-  66% { transform: translate(-30px, -15px) scale(1.04); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.02);
+  }
+
+  33% {
+    transform: translate(20px, 30px) scale(0.96);
+  }
+
+  66% {
+    transform: translate(-30px, -15px) scale(1.04);
+  }
 }
 
 /* Aurora ribbon — horizontal light band that breathes */
 @keyframes aurora-shift {
-  0%   { transform: rotate(-4deg) scaleY(0.5) translateX(-5%); opacity: 0.8; }
-  50%  { transform: rotate(-2deg) scaleY(0.6) translateX(5%); opacity: 1; }
-  100% { transform: rotate(-4deg) scaleY(0.5) translateX(-5%); opacity: 0.8; }
+  0% {
+    transform: rotate(-4deg) scaleY(0.5) translateX(-5%);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: rotate(-2deg) scaleY(0.6) translateX(5%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(-4deg) scaleY(0.5) translateX(-5%);
+    opacity: 0.8;
+  }
 }

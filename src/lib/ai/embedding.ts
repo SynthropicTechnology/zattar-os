@@ -1,5 +1,5 @@
 /**
- * Módulo de geração de embeddings para o Sinesys
+ * Módulo de geração de embeddings para o Synthropic
  *
  * Suporta OpenAI e Cohere como provedores.
  * Inclui cache em Redis para otimização.

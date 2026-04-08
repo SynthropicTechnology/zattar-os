@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: ProcessoPageProps): Promise<M
   }
 
   return {
-    title: `Processo - Sinesys`,
+    title: `Processo - Synthropic`,
     description: 'Visualização detalhada do processo com timeline completa',
   };
 }

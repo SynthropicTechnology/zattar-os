@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Este documento descreve o design técnico para alinhar todos os módulos do Sinesys ao Design System, usando o módulo **partes** como padrão ouro. A refatoração abrange 5 módulos-alvo (processos, contratos, assinatura-digital, audiências, expedientes) e envolve: migração de layout para shells compartilhados, eliminação de funções locais de badge, padronização de tipografia, espaçamento Grid 4px e estrutura FSD.
+Este documento descreve o design técnico para alinhar todos os módulos do Synthropic ao Design System, usando o módulo **partes** como padrão ouro. A refatoração abrange 5 módulos-alvo (processos, contratos, assinatura-digital, audiências, expedientes) e envolve: migração de layout para shells compartilhados, eliminação de funções locais de badge, padronização de tipografia, espaçamento Grid 4px e estrutura FSD.
 
 ### Princípios de Design
 

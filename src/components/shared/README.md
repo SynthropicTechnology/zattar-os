@@ -1,6 +1,6 @@
 ## Padrões de Componentes Compartilhados (`shared/`)
 
-Este diretório contém componentes de UI reutilizáveis e agnósticos de negócio, que formam a base para a construção de interfaces consistentes em todo o Sinesys.
+Este diretório contém componentes de UI reutilizáveis e agnósticos de negócio, que formam a base para a construção de interfaces consistentes em todo o Synthropic.
 
 > **Para Agentes de IA:** Consulte o arquivo [CLAUDE.md](./CLAUDE.md) para instruções detalhadas e padrões obrigatórios.
 

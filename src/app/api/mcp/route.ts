@@ -1,5 +1,5 @@
 /**
- * Endpoint MCP Principal do Sinesys
+ * Endpoint MCP Principal do Synthropic
  *
  * Implementa comunicação Server-Sent Events (SSE) para o protocolo MCP
  */

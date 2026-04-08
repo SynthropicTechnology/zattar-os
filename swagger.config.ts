@@ -4,12 +4,12 @@ const options: Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Sinesys API',
+      title: 'Synthropic API',
       version: '1.0.0',
-      description: 'Documentação da API do Sinesys - Sistema de captura de dados do PJE/TRT',
+      description: 'Documentação da API do Synthropic - Sistema de captura de dados do PJE/TRT',
       contact: {
-        name: 'Sinesys',
-        email: 'suporte@sinesys.com.br',
+        name: 'Synthropic',
+        email: 'suporte@synthropic.com.br',
       },
     },
     servers: [
@@ -18,7 +18,7 @@ const options: Options = {
         description: 'Servidor de desenvolvimento',
       },
       {
-        url: 'https://api.sinesys.com.br',
+        url: 'https://api.synthropic.com.br',
         description: 'Servidor de produção',
       },
     ],

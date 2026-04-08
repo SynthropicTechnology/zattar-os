@@ -27,9 +27,9 @@ interface ObrigacaoPorTipo {
 }
 
 const TIPO_CONFIG: Record<string, { label: string; color: string }> = {
-  acordo:              { label: 'Acordos',              color: 'oklch(from var(--primary) l c h / 0.50)' },
-  condenacao:          { label: 'Condenações',          color: 'oklch(from var(--destructive) l c h / 0.45)' },
-  custas_processuais:  { label: 'Custas Processuais',   color: 'oklch(from var(--warning) l c h / 0.45)' },
+  acordo: { label: 'Acordos', color: 'var(--chart-primary-soft)' },
+  condenacao: { label: 'Condenações', color: 'var(--chart-destructive-soft)' },
+  custas_processuais: { label: 'Custas Processuais', color: 'var(--chart-warning-soft)' },
 };
 
 export function WidgetObrigacoesTreemap() {

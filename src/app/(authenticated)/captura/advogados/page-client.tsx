@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataPagination } from '@/components/shared/data-shell/data-pagination';
-import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
 import { buttonVariants } from '@/components/ui/button';
 import {
@@ -156,7 +155,7 @@ export default function AdvogadosPage() {
   }, []);
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           table ? (
@@ -257,6 +256,6 @@ export default function AdvogadosPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </PageShell>
+    </>
   );
 }

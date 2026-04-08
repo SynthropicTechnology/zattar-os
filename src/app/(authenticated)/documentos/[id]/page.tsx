@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 import { ClientLoader } from './client-loader';
 
 export const metadata: Metadata = {
-  title: 'Documentos | Sinesys',
+  title: 'Documentos | Synthropic',
   description: 'Gerencie seus documentos',
 };
 

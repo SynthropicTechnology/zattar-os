@@ -1,5 +1,5 @@
 /**
- * Sistema de Prompts MCP do Sinesys
+ * Sistema de Prompts MCP do Synthropic
  *
  * Prompts são templates pré-configurados que geram mensagens
  * para uso com LLMs, incluindo contexto relevante do sistema.

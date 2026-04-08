@@ -2,7 +2,7 @@
 
 ## Why
 
-O Sinesys atualmente não possui um sistema standalone para criação, edição e gerenciamento de documentos internos. Usuários precisam recorrer a ferramentas externas (Google Docs, Word) para criar documentos de trabalho, petições, atas, minutas e outros textos do dia a dia do escritório.
+O Synthropic atualmente não possui um sistema standalone para criação, edição e gerenciamento de documentos internos. Usuários precisam recorrer a ferramentas externas (Google Docs, Word) para criar documentos de trabalho, petições, atas, minutas e outros textos do dia a dia do escritório.
 
 Esta proposta implementa um **sistema completo de editor de documentos** com:
 

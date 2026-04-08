@@ -1,5 +1,5 @@
 /**
- * Logger estruturado para MCP do Sinesys
+ * Logger estruturado para MCP do Synthropic
  *
  * Implementa logging estruturado com Pino para operações MCP,
  * incluindo métricas de performance e auditoria.

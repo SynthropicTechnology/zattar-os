@@ -4,7 +4,7 @@ Este documento provê diretivas diretas e definitivas para ferramentas baseadas 
 
 ## Visão Geral do Projeto
 
-**Sinesys (Zattar OS)** — Sistema corporativo para firmas legais. A base inteira usa linguagem de negócios em PT-BR.
+**Synthropic (Zattar OS)** — Sistema corporativo para firmas legais. A base inteira usa linguagem de negócios em PT-BR.
 **Stack**: Next.js 16 (App Router + Turbopack), React 19, TypeScript 5, Supabase (RLS + pgvector), Redis, Tailwind CSS 4, shadcn/ui.
 
 ## Comandos Chave
@@ -21,7 +21,7 @@ npm run validate:exports             # Valida barreiras
 
 ## Arquitetura de Módulos (FSD + Colocation)
 
-Todos os domínios funcionais do Sinesys residem sob a hierarquia de rotas em `src/app/(authenticated)`.
+Todos os domínios funcionais do Synthropic residem sob a hierarquia de rotas em `src/app/(authenticated)`.
 
 ```text
 src/

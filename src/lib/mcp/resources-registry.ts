@@ -1,5 +1,5 @@
 /**
- * Registry de Resources MCP do Sinesys
+ * Registry de Resources MCP do Synthropic
  *
  * Registra todos os recursos acessíveis via MCP
  */
@@ -21,7 +21,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://documentos/{id}",
+    uri: "synthropic://documentos/{id}",
     name: "Documento",
     description: "Acessa conteúdo de documento Plate.js",
     mimeType: "application/json",
@@ -55,7 +55,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://processos/{id}",
+    uri: "synthropic://processos/{id}",
     name: "Processo",
     description: "Acessa dados completos de processo",
     mimeType: "application/json",
@@ -87,7 +87,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://clientes/{id}",
+    uri: "synthropic://clientes/{id}",
     name: "Cliente",
     description: "Acessa dados de cliente",
     mimeType: "application/json",
@@ -118,7 +118,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://contratos/{id}",
+    uri: "synthropic://contratos/{id}",
     name: "Contrato",
     description: "Acessa dados de contrato",
     mimeType: "application/json",
@@ -147,7 +147,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://expedientes/{id}",
+    uri: "synthropic://expedientes/{id}",
     name: "Expediente",
     description: "Acessa dados de expediente/prazo",
     mimeType: "application/json",
@@ -177,7 +177,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://audiencias/{id}",
+    uri: "synthropic://audiencias/{id}",
     name: "Audiência",
     description: "Acessa dados de audiência",
     mimeType: "application/json",
@@ -208,7 +208,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://lancamentos/{id}",
+    uri: "synthropic://lancamentos/{id}",
     name: "Lançamento Financeiro",
     description: "Acessa dados de lançamento financeiro",
     mimeType: "application/json",
@@ -240,7 +240,7 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: "sinesys://processos",
+    uri: "synthropic://processos",
     name: "Lista de Processos",
     description: "Lista processos ativos",
     mimeType: "application/json",
@@ -266,7 +266,7 @@ export async function registerAllResources(): Promise<void> {
   });
 
   registerMcpResource({
-    uri: "sinesys://clientes",
+    uri: "synthropic://clientes",
     name: "Lista de Clientes",
     description: "Lista clientes cadastrados",
     mimeType: "application/json",

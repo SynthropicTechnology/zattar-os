@@ -1,6 +1,6 @@
 ## Why
 
-O sistema Sinesys 2.0 não possui documentação de usuário final. A página de ajuda (`/app/ajuda`) existe mas contém apenas um playground do design system interno. Usuários novos dependem de treinamento presencial ou tentativa e erro para aprender a usar o sistema. Uma documentação completa, acessível dentro do próprio sistema, reduz o tempo de onboarding, diminui a carga de suporte e serve como referência permanente para todas as funcionalidades.
+O sistema Synthropic 2.0 não possui documentação de usuário final. A página de ajuda (`/app/ajuda`) existe mas contém apenas um playground do design system interno. Usuários novos dependem de treinamento presencial ou tentativa e erro para aprender a usar o sistema. Uma documentação completa, acessível dentro do próprio sistema, reduz o tempo de onboarding, diminui a carga de suporte e serve como referência permanente para todas as funcionalidades.
 
 ## What Changes
 

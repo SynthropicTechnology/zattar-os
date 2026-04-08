@@ -1,5 +1,5 @@
 /**
- * URLs dos Apps do Sinesys
+ * URLs dos Apps do Synthropic
  *
  * Este módulo é usado para gerar URLs absolutas (ex.: e-mails/links externos)
  * e por isso retorna URLs completas por padrão.

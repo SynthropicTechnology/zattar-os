@@ -1,6 +1,6 @@
 ## Context
 
-O projeto Sinesys utiliza Docker para containerização e GitHub Actions para CI/CD. A infraestrutura atual está funcional mas não otimizada para as melhores práticas de 2025. O workflow de deploy está inativo em `.gemini/` e precisa ser migrado e modernizado.
+O projeto Synthropic utiliza Docker para containerização e GitHub Actions para CI/CD. A infraestrutura atual está funcional mas não otimizada para as melhores práticas de 2025. O workflow de deploy está inativo em `.gemini/` e precisa ser migrado e modernizado.
 
 ### Stakeholders
 - Desenvolvedores (tempo de build local e CI)
@@ -144,7 +144,7 @@ O projeto Sinesys utiliza Docker para containerização e GitHub Actions para CI
                └─────────────────┘                                                        │
                                                                                           ▼
                                                                                  ┌─────────────────┐
-                                                                                 │   Sinesys App   │
+                                                                                 │   Synthropic App   │
                                                                                  │    Running      │
                                                                                  └─────────────────┘
 ```

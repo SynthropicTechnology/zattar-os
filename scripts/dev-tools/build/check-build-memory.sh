@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script de verificação de memória para build do Sinesys
+# Script de verificação de memória para build do Synthropic
 # Uso: bash scripts/check-build-memory.sh [--skip-check] [--min-memory=4] [--log-file=path]
 
 # Cores para output
@@ -77,7 +77,7 @@ if [[ "$SKIP_CHECK" == true ]]; then
 fi
 
 log "==========================================="
-log "Verificação de Memória para Build Sinesys"
+log "Verificação de Memória para Build Synthropic"
 log "==========================================="
 
 if [[ "$HAS_BC" == false ]]; then

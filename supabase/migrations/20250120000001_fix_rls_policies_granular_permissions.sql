@@ -1,6 +1,6 @@
 -- Migration: Corrigir políticas RLS para alinhamento com sistema de permissões granulares
 -- 
--- IMPORTANTE: O sistema Sinesys usa permissões granulares por usuário (não baseado em roles)
+-- IMPORTANTE: O sistema Synthropic usa permissões granulares por usuário (não baseado em roles)
 -- Cada operação é verificada no backend via checkPermission(usuarioId, recurso, operacao)
 -- 
 -- As políticas RLS servem como camada de segurança ADICIONAL, mas a autorização principal

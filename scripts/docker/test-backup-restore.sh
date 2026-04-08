@@ -20,7 +20,7 @@ fi
 
 # 3. Simulate Data Loss (Optional - dangerous)
 # echo "Step 2: Simulating data loss..."
-# docker exec sinesys_postgres psql -U postgres -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+# docker exec synthropic_postgres psql -U postgres -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 
 # 4. Run Restore
 echo "Step 3: Restoring from backup..."
@@ -29,6 +29,6 @@ bash scripts/docker/restore.sh "$BACKUP_FILE"
 # 5. Verify Data (Simple check)
 echo "Step 4: Verifying health..."
 # Check if Postgres is responding
-docker exec sinesys_postgres pg_isready -U postgres
+docker exec synthropic_postgres pg_isready -U postgres
 
 echo "Test complete. Please manually verify data integrity if needed."

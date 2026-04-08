@@ -54,7 +54,7 @@ Total de processos: 0
 ❌ Erro durante captura:
 [ERROR]   Mensagem: primeiraPagina.resultado is not iterable (cannot read property undefined)
 [ERROR]   Stack: TypeError: primeiraPagina.resultado is not iterable (cannot read property undefined)
-    at obterTodosProcessos (E:\Zattar Advogados\sinesys\sinesys\backend\captura\services\trt\pje-api.service.ts:226:18)
-    at async pendentesManifestacaoCapture (E:\Zattar Advogados\sinesys\sinesys\backend\captura\services\trt\pendentes-manifestacao.service.ts:85:23)
-    at async testarPendentesManifestacaoSemPrazo (E:\Zattar Advogados\sinesys\sinesys\dev_data\scripts\test-capture-pendentes-manifestacao-sem-prazo.ts:141:17)
-    at async main (E:\Zattar Advogados\sinesys\sinesys\dev_data\scripts\test-capture-pendentes-manifestacao-sem-prazo.ts:222:3)
+    at obterTodosProcessos (E:\Zattar Advogados\synthropic\synthropic\backend\captura\services\trt\pje-api.service.ts:226:18)
+    at async pendentesManifestacaoCapture (E:\Zattar Advogados\synthropic\synthropic\backend\captura\services\trt\pendentes-manifestacao.service.ts:85:23)
+    at async testarPendentesManifestacaoSemPrazo (E:\Zattar Advogados\synthropic\synthropic\dev_data\scripts\test-capture-pendentes-manifestacao-sem-prazo.ts:141:17)
+    at async main (E:\Zattar Advogados\synthropic\synthropic\dev_data\scripts\test-capture-pendentes-manifestacao-sem-prazo.ts:222:3)

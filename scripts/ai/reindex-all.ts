@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Script de Reindexação Completa - Sinesys AI
+ * Script de Reindexação Completa - Synthropic AI
  *
  * Script oficial de reindexação da camada RAG unificada.
  * Reindexa todos os documentos do sistema para busca semântica usando o sistema unificado.
@@ -40,7 +40,7 @@ interface IndexStats {
  * Reindexação completa usando o sistema unificado
  */
 async function reindexarTudo(): Promise<IndexStats> {
-  console.log('🔄 Iniciando reindexação completa do Sinesys (sistema unificado)...\n');
+  console.log('🔄 Iniciando reindexação completa do Synthropic (sistema unificado)...\n');
   console.log('📋 Usando: public.embeddings + match_embeddings\n');
 
   const stats: IndexStats = {

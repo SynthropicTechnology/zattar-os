@@ -125,7 +125,7 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
                   formatter={(value, name) => [
                     formatarMoeda(Number(value)),
                     name === 'receitas' ? 'Entradas' :
-                    name === 'despesas' ? 'Saídas' : 'Saldo Acumulado',
+                      name === 'despesas' ? 'Saídas' : 'Saldo Acumulado',
                   ]}
                   contentStyle={{
                     backgroundColor: 'var(--background)',
@@ -138,19 +138,19 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
                 <Legend
                   formatter={(value: string) =>
                     value === 'receitas' ? 'Entradas' :
-                    value === 'despesas' ? 'Saídas' : 'Saldo Acumulado'
+                      value === 'despesas' ? 'Saídas' : 'Saldo Acumulado'
                   }
                   wrapperStyle={{ fontSize: '12px' }}
                 />
                 <Bar
                   dataKey="receitas"
-                  fill="#22c55e"
+                  fill="var(--success)"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={32}
                 />
                 <Bar
                   dataKey="despesas"
-                  fill="#ef4444"
+                  fill="var(--destructive)"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={32}
                 />

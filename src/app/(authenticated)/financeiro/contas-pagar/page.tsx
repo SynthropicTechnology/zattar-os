@@ -31,10 +31,10 @@ import {
   useContasBancarias,
   useContasPagar,
 } from '@/app/(authenticated)/financeiro';
-import { PageShell } from '@/components/shared/page-shell';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   MoreHorizontal,
   CreditCard,
@@ -71,13 +71,13 @@ import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
-const STATUS_CONFIG: Record<StatusLancamento, { label: string; variant: BadgeVariant }> = {
-  pendente: { label: 'Pendente', variant: 'warning' },
-  confirmado: { label: 'Pago', variant: 'success' },
-  pago: { label: 'Pago', variant: 'success' },
-  recebido: { label: 'Recebido', variant: 'success' },
-  cancelado: { label: 'Cancelado', variant: 'outline' },
-  estornado: { label: 'Estornado', variant: 'destructive' },
+const STATUS_LABELS: Record<StatusLancamento, string> = {
+  pendente: 'Pendente',
+  confirmado: 'Pago',
+  pago: 'Pago',
+  recebido: 'Recebido',
+  cancelado: 'Cancelado',
+  estornado: 'Estornado',
 };
 
 const CATEGORIAS = [
@@ -291,11 +291,11 @@ function criarColunas(
       size: 100,
       cell: ({ row }) => {
         const status = row.getValue('status') as StatusLancamento;
-        const config = STATUS_CONFIG[status];
+        const label = STATUS_LABELS[status];
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={config.variant}>
-              {config.label}
+            <Badge variant={getSemanticBadgeVariant('payment_status', status)}>
+              {label}
             </Badge>
           </div>
         );
@@ -526,7 +526,7 @@ export default function ContasPagarPage() {
   );
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           table ? (
@@ -641,13 +641,13 @@ export default function ContasPagarPage() {
           pagination={
             paginacao
               ? {
-                  pageIndex: paginacao.pagina - 1,
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPageIndex,
-                  onPageSizeChange: setPageSize,
-                }
+                pageIndex: paginacao.pagina - 1,
+                pageSize: paginacao.limite,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: setPageIndex,
+                onPageSizeChange: setPageSize,
+              }
               : undefined
           }
           sorting={undefined}
@@ -723,6 +723,6 @@ export default function ContasPagarPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </PageShell>
+    </>
   );
 }

@@ -2,7 +2,7 @@
 
 ## Context
 
-O sistema Sinesys gerencia contratos jurídicos que frequentemente resultam no ajuizamento de ações. A primeira peça necessária é a petição inicial, que requer dados de qualificação completa das partes (cliente e parte contrária). Atualmente não existe automação para gerar documentos jurídicos a partir de dados do sistema.
+O sistema Synthropic gerencia contratos jurídicos que frequentemente resultam no ajuizamento de ações. A primeira peça necessária é a petição inicial, que requer dados de qualificação completa das partes (cliente e parte contrária). Atualmente não existe automação para gerar documentos jurídicos a partir de dados do sistema.
 
 ### Stakeholders
 - Advogados: Criam modelos e geram peças

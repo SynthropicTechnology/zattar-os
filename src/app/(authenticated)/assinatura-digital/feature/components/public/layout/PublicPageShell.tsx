@@ -62,7 +62,7 @@ export function PublicPageShell({
         <div className="max-w-2xl mx-auto px-4 py-2 sm:py-3">
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
             <Lock className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
-            <span>Protegido com segurança por Sinesys</span>
+            <span>Protegido com segurança por Synthropic</span>
           </div>
         </div>
       </footer>

@@ -16,8 +16,9 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge } from '@/components/ui/app-badge';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
-import type { Pericia, SituacaoPericiaCodigo } from '../domain';
+import type { Pericia } from '../domain';
 import { SITUACAO_PERICIA_LABELS } from '../domain';
 
 // =============================================================================
@@ -82,26 +83,6 @@ export function PericiasDayList({
     return formatted.charAt(0).toUpperCase() + formatted.slice(1);
   }, [selectedDate]);
 
-  // Determinar variante do badge por situação
-  const getBadgeVariant = React.useCallback((situacao: SituacaoPericiaCodigo) => {
-    switch (situacao) {
-      case 'F': // FINALIZADA
-        return 'success' as const;
-      case 'P': // LAUDO_JUNTADO
-        return 'default' as const;
-      case 'C': // CANCELADA
-        return 'destructive' as const;
-      case 'L': // AGUARDANDO_LAUDO
-        return 'warning' as const;
-      case 'S': // AGUARDANDO_ESCLARECIMENTOS
-        return 'warning' as const;
-      case 'R': // REDESIGNADA
-        return 'secondary' as const;
-      default:
-        return 'default' as const;
-    }
-  }, []);
-
   return (
     <div className={cn('flex flex-col h-full', className)}>
       {/* Header */}
@@ -130,7 +111,7 @@ export function PericiasDayList({
             <div className="p-3 space-y-2">
               {periciasDoDia.map((pericia) => {
                 const situacaoLabel = SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo];
-                const badgeVariant = getBadgeVariant(pericia.situacaoCodigo);
+                const badgeVariant = getSemanticBadgeVariant('pericia_situacao', pericia.situacaoCodigo);
 
                 return (
                   <div

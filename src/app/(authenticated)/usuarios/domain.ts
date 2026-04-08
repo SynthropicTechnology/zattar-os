@@ -271,3 +271,28 @@ export function getUsuarioColumnsWithCargo(): string {
     cargos!cargo_id(id, nome, descricao, ativo)
   `.trim().replace(/\s+/g, ' ');
 }
+
+// =============================================================================
+// RE-EXPORTS — Permissões (consolidado de types/)
+// =============================================================================
+export type {
+  Recurso,
+  Operacao,
+  Permissao as PermissaoGranular,
+  AtribuirPermissaoDTO,
+  AtribuirPermissoesDTO,
+  PermissoesUsuarioResponse,
+  RecursoOperacoes,
+} from './types/types';
+
+export {
+  MATRIZ_PERMISSOES,
+  obterMatrizPermissoes,
+  obterTotalPermissoes,
+  isRecursoValido,
+  isOperacaoValida,
+  isPermissaoValida,
+  obterTodasPermissoes,
+  validarAtribuirPermissaoDTO,
+  validarAtribuirPermissoesDTO,
+} from './types/types';

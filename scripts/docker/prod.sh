@@ -4,7 +4,7 @@ COMMAND=$1
 SERVICE=$2
 ARGS=$3
 
-STACK_NAME="sinesys"
+STACK_NAME="synthropic"
 
 case $COMMAND in
   deploy)

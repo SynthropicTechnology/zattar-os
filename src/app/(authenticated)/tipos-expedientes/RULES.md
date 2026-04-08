@@ -1,7 +1,7 @@
 # Regras de Negocio - Tipos de Expedientes
 
 ## Contexto
-Modulo de cadastro auxiliar do Sinesys para gerenciar os tipos de expedientes disponiveis no sistema. Funciona como tabela de dominio referenciada pelo modulo de expedientes. Utiliza cache Redis para otimizar leituras.
+Modulo de cadastro auxiliar do Synthropic para gerenciar os tipos de expedientes disponiveis no sistema. Funciona como tabela de dominio referenciada pelo modulo de expedientes. Utiliza cache Redis para otimizar leituras.
 
 ## Entidades Principais
 - **TipoExpediente**: Registro de tipo de expediente com nome, criador e timestamps de auditoria

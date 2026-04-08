@@ -1,5 +1,5 @@
 -- ============================================================================
--- Enums do Sistema Sinesys
+-- Enums do Sistema Synthropic
 -- Gerado automaticamente do banco de dados em produção
 -- ============================================================================
 

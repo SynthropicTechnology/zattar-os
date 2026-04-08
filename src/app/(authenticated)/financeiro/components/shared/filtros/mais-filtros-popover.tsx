@@ -11,6 +11,7 @@ import * as React from 'react';
 import { Filter, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
+import { Typography } from '@/components/ui/typography';
 import {
   Popover,
   PopoverContent,
@@ -111,7 +112,7 @@ export function MaisFiltrosPopover({
       <PopoverContent className="w-80 p-4" align="start">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium text-sm">Filtros Avançados</h4>
+            <Typography.H4>Filtros Avançados</Typography.H4>
             {hasActiveFilters && (
               <Button
                 variant="ghost"

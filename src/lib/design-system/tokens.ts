@@ -1,7 +1,7 @@
 /**
  * Design System Tokens
  *
- * Este arquivo define os tokens fundamentais do Design System Sinesys.
+ * Este arquivo define os tokens fundamentais do Design System Synthropic.
  * Tokens são valores atômicos que servem como base para todas as decisões visuais.
  *
  * @ai-context Use estes tokens para garantir consistência visual em todo o sistema.

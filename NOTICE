@@ -1,7 +1,7 @@
-ZattarOS - Sistema de Gestão Jurídica by Sinesys
+ZattarOS - Sistema de Gestão Jurídica by Synthropic
 =====================================
 
-Copyright (C) 2024-2025 Sinesys
+Copyright (C) 2024-2025 Synthropic
 Desenvolvido para Zattar Advogados
 
 Este software é licenciado sob a GNU Affero General Public License v3.0
@@ -9,7 +9,7 @@ Veja LICENSE para o texto completo da licença.
 
 MARCA REGISTRADA
 ----------------
-A marca "Sinesys" e seus logotipos são propriedade da Sinesys.
+A marca "Synthropic" e seus logotipos são propriedade da Synthropic.
 Veja TRADEMARK para a política completa de uso da marca.
 
 O uso do código-fonte sob AGPL v3 NÃO concede direitos sobre a marca registrada.
@@ -19,7 +19,7 @@ ATRIBUIÇÃO OBRIGATÓRIA
 Ao distribuir ou oferecer este software como serviço, você DEVE:
 
 1. Manter este aviso de copyright
-2. Manter atribuição à Sinesys
+2. Manter atribuição à Synthropic
 3. Disponibilizar código-fonte completo (incluindo modificações)
 4. Licenciar modificações sob AGPL v3
 5. Incluir link para o código-fonte em serviços web
@@ -30,7 +30,7 @@ ESTE SOFTWARE É FORNECIDO "COMO ESTÁ", SEM GARANTIAS DE QUALQUER TIPO,
 EXPRESSAS OU IMPLÍCITAS, INCLUINDO, MAS NÃO SE LIMITANDO ÀS GARANTIAS
 DE COMERCIALIZAÇÃO, ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO E NÃO VIOLAÇÃO.
 
-A SINESYS NÃO É RESPONSÁVEL POR:
+A SYNTHROPIC NÃO É RESPONSÁVEL POR:
 - Serviços de terceiros baseados neste software
 - Bugs, falhas ou perda de dados
 - Danos diretos, indiretos, incidentais ou consequenciais
@@ -55,17 +55,17 @@ Para detalhes completos, consulte o arquivo LICENSE.
 CÓDIGO-FONTE
 ------------
 O código-fonte oficial está disponível em:
-https://github.com/sinesys/sinesys
+https://github.com/synthropic/synthropic
 
 DOCUMENTAÇÃO
 ------------
 Documentação completa em:
-https://docs.sinesys.com.br
+https://docs.synthropic.com.br
 
 SUPORTE E CONTRIBUIÇÕES
 ------------------------
-Issues e Pull Requests: https://github.com/sinesys/sinesys
-Email: contato@sinesys.com.br
+Issues e Pull Requests: https://github.com/synthropic/synthropic
+Email: contato@synthropic.com.br
 
 DEPENDÊNCIAS DE TERCEIROS
 --------------------------
@@ -106,13 +106,13 @@ MÓDULOS PRINCIPAIS
 
 AUTORES E COLABORADORES
 ------------------------
-Desenvolvido por: Sinesys
+Desenvolvido por: Synthropic
 Cliente: Zattar Advogados
 Arquitetura: Feature-Sliced Design (FSD)
 Tecnologias: Next.js 16, TypeScript 5, Supabase, Redis, MongoDB
 
 Para lista completa de contribuidores:
-https://github.com/sinesys/sinesys/graphs/contributors
+https://github.com/synthropic/synthropic/graphs/contributors
 
 ---
 

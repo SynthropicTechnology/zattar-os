@@ -4,7 +4,7 @@
  * Página de DRE (Demonstração de Resultado do Exercício)
  * Visualiza receitas, despesas e resultado por período
  *
- * REFATORADO: Migrado para layout DataShell + DataTableToolbar (padrão Sinesys)
+ * REFATORADO: Migrado para layout DataShell + DataTableToolbar (padrão Synthropic)
  */
 
 import * as React from 'react';
@@ -17,7 +17,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FilterPopover } from '@/app/(authenticated)/partes';
-import { PageShell } from '@/components/shared/page-shell';
 import {
   DataShell,
   DataTableToolbar,
@@ -80,11 +79,11 @@ const CHART_COLORS = [
   'var(--chart-4)',
   'var(--chart-3)',
   'var(--chart-5)',
-  'color-mix(in oklch, var(--chart-1), white 30%)',
-  'color-mix(in oklch, var(--chart-2), white 30%)',
-  'color-mix(in oklch, var(--chart-4), white 30%)',
-  'color-mix(in oklch, var(--chart-3), white 30%)',
-  'color-mix(in oklch, var(--chart-5), white 30%)',
+  'var(--chart-6)',
+  'var(--chart-7)',
+  'var(--chart-8)',
+  'var(--chart-primary-soft)',
+  'var(--chart-muted-soft)',
 ];
 
 const formatarValor = (valor: number | null | undefined): string => {
@@ -446,7 +445,7 @@ function CategoriaPieChart({ categorias }: { categorias: CategoriaDRE[] }) {
               }}
               outerRadius={90}
               innerRadius={40}
-              fill="#8884d8"
+              fill="var(--chart-1)"
               dataKey="value"
               paddingAngle={2}
             >
@@ -768,7 +767,7 @@ export default function DREClient() {
 
   if (error && !isLoading) {
     return (
-      <PageShell>
+      <>
         <DataShell
           header={
             <DataTableToolbar title="Demonstração de Resultado do Exercício" />
@@ -779,12 +778,12 @@ export default function DREClient() {
             <p>{error}</p>
           </div>
         </DataShell>
-      </PageShell>
+      </>
     );
   }
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           <DataTableToolbar
@@ -941,6 +940,6 @@ export default function DREClient() {
           </TabsContent>
         </Tabs>
       </DataShell>
-    </PageShell>
+    </>
   );
 }

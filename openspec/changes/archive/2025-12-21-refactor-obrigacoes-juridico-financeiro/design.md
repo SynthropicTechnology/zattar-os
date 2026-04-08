@@ -2,7 +2,7 @@
 
 ## Context
 
-O sistema Sinesys gerencia obrigacoes de duas perspectivas distintas:
+O sistema Synthropic gerencia obrigacoes de duas perspectivas distintas:
 
 1. **Perspectiva Juridica**: Acordos e Condenacoes vinculados a processos, com parcelas, vencimentos e repasses ao cliente
 2. **Perspectiva Financeira**: Lancamentos em Contas a Receber/Pagar, fluxo de caixa e conciliacao

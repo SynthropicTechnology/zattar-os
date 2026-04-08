@@ -1,5 +1,5 @@
 /**
- * Cache de Schemas MCP do Sinesys
+ * Cache de Schemas MCP do Synthropic
  *
  * Implementa cache Redis para schemas de tools MCP,
  * melhorando performance de listagem de ferramentas.

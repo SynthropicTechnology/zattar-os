@@ -1,127 +1,160 @@
 'use client';
 
 /**
- * FinancialStrip — Faixa de KPIs financeiros de contratos.
+ * FinancialStrip — Cards de KPIs financeiros de contratos.
+ * ============================================================================
+ * Segue o padrão MissionKpiStrip de audiências: grid de cards individuais com
+ * GlassPanel, ícone no canto e visual secundário por card.
  *
- * Extraído do FinancialStrip do mock de contratos.
- * Mostra carteira, ticket médio, taxa de conversão e tendência.
- * Valores financeiros opcionais exibidos como "---" quando indisponíveis (v1).
- *
- * Uso:
- *   <FinancialStrip stats={stats} />
+ * 5 cards: Em Carteira | Ticket Médio | Conversão | Tendência | Total
+ * ============================================================================
  */
 
-import { DollarSign } from 'lucide-react';
+import { DollarSign, Receipt, TrendingUp, BarChart3, FileText } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import {
-  GlassPanel,
-  fmtMoeda,
   AnimatedNumber,
-  ProgressRing,
   Sparkline,
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-// ContratosStatsData vive em domain.ts (arquivo neutro, sem diretiva client/server)
+import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import type { ContratosStatsData } from '../domain';
+
 export type { ContratosStatsData };
 
 export interface FinancialStripProps {
   stats: ContratosStatsData;
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export function FinancialStrip({ stats }: FinancialStripProps) {
   return (
-    <GlassPanel className="px-5 py-3">
-      <div className="flex items-center gap-6 overflow-x-auto">
-        {/* Em Carteira */}
-        <div className="flex items-center gap-2 shrink-0">
-          <DollarSign className="size-4 text-muted-foreground/55" />
-          <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+    <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+      {/* ── Em Carteira ──────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
               Em Carteira
             </p>
-            {stats.emCarteira !== undefined ? (
-              <p className="font-display text-xl font-bold tabular-nums">
-                <AnimatedNumber value={stats.emCarteira} prefix="R$ " duration={1200} />
+            <div className="flex items-baseline gap-1.5 mt-1">
+              {stats.emCarteira !== undefined ? (
+                <p className="font-display text-xl font-bold tabular-nums leading-none">
+                  <AnimatedNumber value={stats.emCarteira} prefix="R$ " duration={1200} />
+                </p>
+              ) : (
+                <p className="font-display text-xl font-bold tabular-nums leading-none text-muted-foreground/50">
+                  ---
+                </p>
+              )}
+            </div>
+          </div>
+          <IconContainer size="md" className="bg-primary/8">
+            <DollarSign className="size-4 text-primary/50" />
+          </IconContainer>
+        </div>
+      </GlassPanel>
+
+      {/* ── Ticket Médio ─────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Ticket Médio
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              {stats.ticketMedio !== undefined ? (
+                <p className="font-display text-xl font-bold tabular-nums leading-none">
+                  {fmtMoeda(stats.ticketMedio)}
+                </p>
+              ) : (
+                <p className="font-display text-xl font-bold tabular-nums leading-none text-muted-foreground/50">
+                  ---
+                </p>
+              )}
+            </div>
+          </div>
+          <IconContainer size="md" className="bg-warning/8">
+            <Receipt className="size-4 text-warning/50" />
+          </IconContainer>
+        </div>
+      </GlassPanel>
+
+      {/* ── Conversão ────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Conversão
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
+                {stats.taxaConversao}%
               </p>
-            ) : (
-              <p className="font-display text-xl font-bold tabular-nums text-muted-foreground/50">
-                ---
+            </div>
+          </div>
+          <IconContainer size="md" className="bg-success/8">
+            <TrendingUp className="size-4 text-success/50" />
+          </IconContainer>
+        </div>
+        {/* Barra de conversão */}
+        <div className="mt-2.5 flex items-center gap-2">
+          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-success/25 transition-all duration-500"
+              style={{ width: `${stats.taxaConversao}%` }}
+            />
+          </div>
+          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+            {stats.taxaConversao}%
+          </span>
+        </div>
+      </GlassPanel>
+
+      {/* ── Tendência 6m ─────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Tendência
+            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
+                {stats.novosMes > 0 ? `+${stats.novosMes}` : stats.novosMes}
               </p>
-            )}
+              <span className="text-[10px] text-muted-foreground/40">este mês</span>
+            </div>
           </div>
+          <IconContainer size="md" className="bg-primary/8">
+            <BarChart3 className="size-4 text-primary/50" />
+          </IconContainer>
         </div>
-
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Ticket Médio */}
-        <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-            Ticket Médio
-          </p>
-          {stats.ticketMedio !== undefined ? (
-            <p className="font-display text-xl font-bold tabular-nums">
-              {fmtMoeda(stats.ticketMedio)}
-            </p>
-          ) : (
-            <p className="font-display text-xl font-bold tabular-nums text-muted-foreground/50">
-              ---
-            </p>
-          )}
-        </div>
-
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Taxa de Conversão */}
-        <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-            Conversão
-          </p>
-          <div className="flex items-center gap-2">
-            <ProgressRing
-              percent={stats.taxaConversao}
-              size={32}
-              color="var(--success)"
-            />
-            <span className="text-xs font-bold text-success/70">{stats.taxaConversao}%</span>
+        {/* Sparkline de tendência */}
+        {stats.trendMensal.length >= 2 && (
+          <div className="mt-2.5">
+            <Sparkline data={stats.trendMensal} width={80} height={16} color="var(--success)" />
           </div>
-        </div>
+        )}
+      </GlassPanel>
 
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Tendência 6m */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-              Tendência 6m
+      {/* ── Total ────────────────────────────────────────── */}
+      <GlassPanel className="px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Total
             </p>
-            <p className="text-xs font-semibold text-success/60">
-              {stats.novosMes > 0 ? `+${stats.novosMes}` : stats.novosMes} este mês
-            </p>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <p className="font-display text-xl font-bold tabular-nums leading-none">
+                <AnimatedNumber value={stats.total} duration={800} />
+              </p>
+              <span className="text-[10px] text-muted-foreground/40">contratos</span>
+            </div>
           </div>
-          {stats.trendMensal.length > 0 && (
-            <Sparkline
-              data={stats.trendMensal}
-              width={60}
-              height={20}
-              color="var(--success)"
-            />
-          )}
+          <IconContainer size="md" className="bg-primary/8">
+            <FileText className="size-4 text-primary/50" />
+          </IconContainer>
         </div>
-
-        <div className="w-px h-8 bg-border/10 shrink-0" />
-
-        {/* Total */}
-        <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Total</p>
-          <p className="font-display text-xl font-bold tabular-nums">
-            <AnimatedNumber value={stats.total} duration={800} />
-          </p>
-        </div>
-      </div>
-    </GlassPanel>
+      </GlassPanel>
+    </div>
   );
 }

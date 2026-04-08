@@ -149,8 +149,8 @@ function GlassPanel({
 
 function UrgencyDot({ level }: { level: string }) {
   const styles: Record<string, string> = {
-    critico: 'bg-destructive shadow-[0_0_8px_oklch(from var(--destructive) l c h / 0.5)] animate-pulse',
-    alto: 'bg-warning shadow-[0_0_6px_oklch(from var(--warning) l c h / 0.4)]',
+    critico: 'bg-destructive shadow-[0_0_8px_var(--glow-destructive)] animate-pulse',
+    alto: 'bg-warning shadow-[0_0_6px_var(--glow-warning)]',
     medio: 'bg-primary/50',
     baixo: 'bg-muted-foreground/30',
   };
@@ -218,8 +218,8 @@ export default function DashboardMockPage() {
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           background: `
-            radial-gradient(ellipse 80% 50% at 50% 0%, oklch(from var(--primary) l c h / 0.04) 0%, transparent 70%),
-            radial-gradient(ellipse 60% 40% at 80% 100%, oklch(from var(--primary) l c h / 0.02) 0%, transparent 60%)
+            radial-gradient(ellipse 80% 50% at 50% 0%, var(--glow-primary-subtle) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 40% at 80% 100%, var(--glow-primary-faint) 0%, transparent 60%)
           `,
         }}
       />
@@ -406,14 +406,12 @@ export default function DashboardMockPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-baseline gap-2">
-                          <span className={`text-[11px] tabular-nums shrink-0 ${
-                            isPast ? 'text-muted-foreground/55' : 'text-muted-foreground/60'
-                          }`}>
+                          <span className={`text-[11px] tabular-nums shrink-0 ${isPast ? 'text-muted-foreground/55' : 'text-muted-foreground/60'
+                            }`}>
                             {item.hora}
                           </span>
-                          <span className={`text-sm truncate ${
-                            isPast ? 'text-muted-foreground/60 line-through' : ''
-                          } ${isNext ? 'font-medium' : ''}`}>
+                          <span className={`text-sm truncate ${isPast ? 'text-muted-foreground/60 line-through' : ''
+                            } ${isNext ? 'font-medium' : ''}`}>
                             {item.titulo}
                           </span>
                         </div>

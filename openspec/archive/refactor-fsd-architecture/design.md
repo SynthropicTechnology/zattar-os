@@ -2,7 +2,7 @@
 
 ## Context
 
-O projeto Sinesys adotou Feature-Sliced Design (FSD) como arquitetura principal, mas ainda contem codigo legado que viola os principios estabelecidos. Esta refatoracao visa eliminar dividas tecnicas acumuladas e estabelecer conformidade arquitetural completa.
+O projeto Synthropic adotou Feature-Sliced Design (FSD) como arquitetura principal, mas ainda contem codigo legado que viola os principios estabelecidos. Esta refatoracao visa eliminar dividas tecnicas acumuladas e estabelecer conformidade arquitetural completa.
 
 ### Stakeholders
 - Equipe de desenvolvimento (manutenibilidade)

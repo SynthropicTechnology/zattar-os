@@ -35,8 +35,8 @@ if [[ -f "$PROJECT_ROOT/.env" ]]; then
   echo "✅ Variáveis carregadas com sucesso"
 fi
 
-DOCKER_IMAGE="${DOCKER_IMAGE:-sinesystec/zattar-os}"
-# Nota: usuário Docker Hub = sinesystec, repositório = zattar-os
+DOCKER_IMAGE="${DOCKER_IMAGE:-synthropictec/zattar-os}"
+# Nota: usuário Docker Hub = synthropictec, repositório = zattar-os
 PLATFORM="${PLATFORM:-linux/amd64}"
 TAG_SHA="${TAG_SHA:-$(git rev-parse --short HEAD 2>/dev/null || echo unknown)}"
 

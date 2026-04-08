@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * Script de Validacao Arquitetural para Sinesys
+ * Script de Validacao Arquitetural para Synthropic
  *
  * Valida conformidade com Feature-Sliced Design (FSD):
  * - Nenhum arquivo em src/app/actions/ (exceto API routes)
@@ -248,7 +248,7 @@ async function validateNoFeatureCrossImports() {
 
 async function main() {
   console.log('='.repeat(60));
-  console.log('VALIDACAO ARQUITETURAL - SINESYS');
+  console.log('VALIDACAO ARQUITETURAL - SYNTHROPIC');
   console.log(`Modo: ${STRICT_MODE ? 'STRICT' : 'NORMAL'}`);
   console.log('='.repeat(60));
   console.log('');

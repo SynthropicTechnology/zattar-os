@@ -29,6 +29,7 @@ import { useClientes } from '@/app/(authenticated)/partes';
 import { useContratos } from '@/app/(authenticated)/contratos';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   Card,
   CardContent,
@@ -78,13 +79,13 @@ import { cn } from '@/lib/utils';
 
 type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
-const STATUS_CONFIG: Record<StatusContaReceber, { label: string; variant: BadgeVariant }> = {
-  pendente: { label: 'Pendente', variant: 'warning' },
-  confirmado: { label: 'Recebido', variant: 'success' },
-  pago: { label: 'Pago', variant: 'success' },
-  recebido: { label: 'Recebido', variant: 'success' },
-  cancelado: { label: 'Cancelado', variant: 'outline' },
-  estornado: { label: 'Estornado', variant: 'destructive' },
+const STATUS_LABELS: Record<StatusContaReceber, string> = {
+  pendente: 'Pendente',
+  confirmado: 'Recebido',
+  pago: 'Pago',
+  recebido: 'Recebido',
+  cancelado: 'Cancelado',
+  estornado: 'Estornado',
 };
 
 const formatarValor = (valor: number): string => {
@@ -161,8 +162,8 @@ export default function ContaReceberDetalhesPage() {
   const clientes = React.useMemo(() => {
     return clientesRaw.map((cliente) => ({
       id: cliente.id,
-      razaoSocial: cliente.tipo_pessoa === 'pj' 
-        ? cliente.nome 
+      razaoSocial: cliente.tipo_pessoa === 'pj'
+        ? cliente.nome
         : cliente.nome,
       nomeFantasia: cliente.nome_social_fantasia || undefined,
     }));
@@ -247,7 +248,7 @@ export default function ContaReceberDetalhesPage() {
     );
   }
 
-  const statusConfig = STATUS_CONFIG[contaReceber.status as StatusLancamento];
+  const statusLabel = STATUS_LABELS[contaReceber.status as StatusContaReceber];
   const isPendente = contaReceber.status === 'pendente';
 
   return (
@@ -258,8 +259,8 @@ export default function ContaReceberDetalhesPage() {
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Badge variant={statusConfig.variant}>
-            {statusConfig.label}
+          <Badge variant={getSemanticBadgeVariant('payment_status', contaReceber.status)}>
+            {statusLabel}
           </Badge>
           {contaReceber.recorrente && (
             <Badge variant="outline">

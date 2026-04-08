@@ -2,7 +2,7 @@
 
 ## Context
 
-O Sinesys precisa de uma dashboard que:
+O Synthropic precisa de uma dashboard que:
 1. Mostre informações relevantes para cada tipo de usuário
 2. Permita visão rápida do estado atual (status cards)
 3. Ofereça detalhamento através de widgets

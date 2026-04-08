@@ -26,7 +26,7 @@ import {
   STATUS_CONTRATO_LABELS,
 } from '@/app/(authenticated)/contratos';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
-import type { Lancamento } from '@/app/(authenticated)/financeiro/domain/lancamentos';
+import type { Lancamento } from '@/app/(authenticated)/financeiro/domain';
 import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/app/(authenticated)/entrevistas-trabalhistas';
 import { EntrevistaTab } from '@/app/(authenticated)/entrevistas-trabalhistas';
 import {

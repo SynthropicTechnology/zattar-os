@@ -1,5 +1,5 @@
 /**
- * Safe Action Wrapper para Arquitetura Sinesys 2.0
+ * Safe Action Wrapper para Arquitetura Synthropic 2.0
  *
  * Fornece wrappers padronizados para Server Actions que:
  * - Validam automaticamente com Zod schemas

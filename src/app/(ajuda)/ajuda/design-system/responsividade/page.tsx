@@ -73,7 +73,7 @@ export default function ResponsividadePage() {
           <h1 className="text-3xl font-bold tracking-tight">Responsividade</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Guia de design responsivo Mobile-First para o Sinesys.
+          Guia de design responsivo Mobile-First para o Synthropic.
         </p>
       </div>
 

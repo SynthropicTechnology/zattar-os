@@ -35,20 +35,20 @@ import {
 
 // Widget 1 — Contratos por Status
 const STATUS_CONTRATOS = [
-  { value: 5,  color: 'hsl(220 70% 60%)',              label: 'Em Contratação' },
-  { value: 18, color: 'var(--primary)',            label: 'Contratado' },
-  { value: 42, color: 'hsl(142 60% 45%)',              label: 'Distribuído' },
-  { value: 3,  color: 'oklch(from var(--destructive) l c h / 0.7)', label: 'Desistência' },
+  { value: 5, color: 'hsl(220 70% 60%)', label: 'Em Contratação' },
+  { value: 18, color: 'var(--primary)', label: 'Contratado' },
+  { value: 42, color: 'hsl(142 60% 45%)', label: 'Distribuído' },
+  { value: 3, color: 'var(--chart-destructive-soft)', label: 'Desistência' },
 ];
 
 // Widget 2 — Contratos por Tipo
 const TIPOS_CONTRATO = [
-  { label: 'Ajuizamento',   value: 24 },
-  { label: 'Defesa',        value: 18 },
-  { label: 'Assessoria',    value: 12 },
-  { label: 'Consultoria',   value: 8  },
-  { label: 'Parecer',       value: 4  },
-  { label: 'Extrajudicial', value: 2  },
+  { label: 'Ajuizamento', value: 24 },
+  { label: 'Defesa', value: 18 },
+  { label: 'Assessoria', value: 12 },
+  { label: 'Consultoria', value: 8 },
+  { label: 'Parecer', value: 4 },
+  { label: 'Extrajudicial', value: 2 },
 ];
 const TIPOS_MAX = TIPOS_CONTRATO[0].value;
 
@@ -63,51 +63,51 @@ const OBRIGACOES: {
   urgencia: ObrigacaoLevel;
   tipo: ObrigacaoBadge;
 }[] = [
-  {
-    descricao: 'Parcela acordo trabalhista — Silva & Cia',
-    valor: 14800,
-    vencimento: '2026-04-02',
-    urgencia: 'critico',
-    tipo: 'Acordo',
-  },
-  {
-    descricao: 'Pagamento custas recursais — TRT3',
-    valor: 3240,
-    vencimento: '2026-04-07',
-    urgencia: 'alto',
-    tipo: 'Custas',
-  },
-  {
-    descricao: 'Condenação em danos morais — Proc. 0014732',
-    valor: 28500,
-    vencimento: '2026-04-15',
-    urgencia: 'medio',
-    tipo: 'Condenação',
-  },
-  {
-    descricao: 'Parcela final acordo extrajudicial — Gonçalves',
-    valor: 9600,
-    vencimento: '2026-04-28',
-    urgencia: 'baixo',
-    tipo: 'Acordo',
-  },
-];
+    {
+      descricao: 'Parcela acordo trabalhista — Silva & Cia',
+      valor: 14800,
+      vencimento: '2026-04-02',
+      urgencia: 'critico',
+      tipo: 'Acordo',
+    },
+    {
+      descricao: 'Pagamento custas recursais — TRT3',
+      valor: 3240,
+      vencimento: '2026-04-07',
+      urgencia: 'alto',
+      tipo: 'Custas',
+    },
+    {
+      descricao: 'Condenação em danos morais — Proc. 0014732',
+      valor: 28500,
+      vencimento: '2026-04-15',
+      urgencia: 'medio',
+      tipo: 'Condenação',
+    },
+    {
+      descricao: 'Parcela final acordo extrajudicial — Gonçalves',
+      valor: 9600,
+      vencimento: '2026-04-28',
+      urgencia: 'baixo',
+      tipo: 'Acordo',
+    },
+  ];
 
 const BADGE_STYLES: Record<ObrigacaoBadge, string> = {
-  'Acordo':     'bg-primary/10 text-primary/80',
+  'Acordo': 'bg-primary/10 text-primary/80',
   'Condenação': 'bg-destructive/10 text-destructive/70',
-  'Custas':     'bg-warning/10 text-warning/80',
+  'Custas': 'bg-warning/10 text-warning/80',
 };
 
 // Widget 4 — Parcelas Status
 const PARCELAS_SEGMENTS = [
-  { value: 45, color: 'hsl(142 60% 45%)',   label: 'Pagas' },
+  { value: 45, color: 'hsl(142 60% 45%)', label: 'Pagas' },
   { value: 12, color: 'var(--warning)', label: 'Pendentes' },
-  { value: 3,  color: 'var(--destructive)', label: 'Atrasadas' },
+  { value: 3, color: 'var(--destructive)', label: 'Atrasadas' },
 ];
-const PARCELAS_TOTAL    = 124800;
+const PARCELAS_TOTAL = 124800;
 const PARCELAS_PENDENTE = 18200;
-const PARCELAS_TOTAL_N  = PARCELAS_SEGMENTS.reduce((a, s) => a + s.value, 0);
+const PARCELAS_TOTAL_N = PARCELAS_SEGMENTS.reduce((a, s) => a + s.value, 0);
 
 // Widget 5 — Repasses Pendentes
 type RepasseStatus = 'pendente_declaração' | 'pendente_transferência' | 'repassado';
@@ -120,51 +120,51 @@ const REPASSES: {
   pctEscritorio: number;
   status: RepasseStatus;
 }[] = [
-  {
-    processo: '0021-45.2023.5.03.0012',
-    cliente: 'Metalúrgica Estrela Ltda',
-    total: 84000,
-    pctCliente: 70,
-    pctEscritorio: 30,
-    status: 'pendente_declaração',
-  },
-  {
-    processo: '0008-19.2022.5.01.0055',
-    cliente: 'Transportes Vitória S/A',
-    total: 52500,
-    pctCliente: 70,
-    pctEscritorio: 30,
-    status: 'pendente_transferência',
-  },
-  {
-    processo: '0034-02.2021.5.15.0033',
-    cliente: 'Comércio Almeida ME',
-    total: 31200,
-    pctCliente: 70,
-    pctEscritorio: 30,
-    status: 'repassado',
-  },
-];
+    {
+      processo: '0021-45.2023.5.03.0012',
+      cliente: 'Metalúrgica Estrela Ltda',
+      total: 84000,
+      pctCliente: 70,
+      pctEscritorio: 30,
+      status: 'pendente_declaração',
+    },
+    {
+      processo: '0008-19.2022.5.01.0055',
+      cliente: 'Transportes Vitória S/A',
+      total: 52500,
+      pctCliente: 70,
+      pctEscritorio: 30,
+      status: 'pendente_transferência',
+    },
+    {
+      processo: '0034-02.2021.5.15.0033',
+      cliente: 'Comércio Almeida ME',
+      total: 31200,
+      pctCliente: 70,
+      pctEscritorio: 30,
+      status: 'repassado',
+    },
+  ];
 
 const REPASSE_STATUS_STYLES: Record<RepasseStatus, { label: string; className: string }> = {
-  pendente_declaração:  { label: 'Decl. Pendente', className: 'bg-destructive/10 text-destructive/70' },
+  pendente_declaração: { label: 'Decl. Pendente', className: 'bg-destructive/10 text-destructive/70' },
   pendente_transferência: { label: 'Transf. Pendente', className: 'bg-warning/10 text-warning/80' },
-  repassado:            { label: 'Repassado',      className: 'bg-success/10 text-success/70' },
+  repassado: { label: 'Repassado', className: 'bg-success/10 text-success/70' },
 };
 
 // Widget 7 — Saúde Contratual (hero)
 const SAUDE_COMPARACOES = [
-  { label: 'Novos contratos',    current: 5,       previous: 3,      format: 'number'   as const },
-  { label: 'Valor em carteira',  current: 1230000, previous: 980000, format: 'currency' as const },
-  { label: 'Taxa inadimplência', current: 8,       previous: 12,     format: 'percent'  as const },
+  { label: 'Novos contratos', current: 5, previous: 3, format: 'number' as const },
+  { label: 'Valor em carteira', current: 1230000, previous: 980000, format: 'currency' as const },
+  { label: 'Taxa inadimplência', current: 8, previous: 12, format: 'percent' as const },
 ];
 
 // Widget 8 — Obrigações Treemap
 const TREEMAP_OBRIGACOES = [
-  { value: 245000, label: 'Acordos Trabalhistas', color: 'oklch(from var(--primary) l c h / 0.70)'     },
-  { value: 180000, label: 'Condenações',          color: 'oklch(from var(--destructive) l c h / 0.65)' },
-  { value: 42000,  label: 'Custas Processuais',   color: 'oklch(from var(--warning) l c h / 0.65)'     },
-  { value: 28000,  label: 'Honorários Periciais', color: 'oklch(from var(--primary) l c h / 0.35)'     },
+  { value: 245000, label: 'Acordos Trabalhistas', color: 'var(--chart-primary-soft)' },
+  { value: 180000, label: 'Condenações', color: 'var(--chart-destructive-soft)' },
+  { value: 42000, label: 'Custas Processuais', color: 'var(--chart-warning-soft)' },
+  { value: 28000, label: 'Honorários Periciais', color: 'var(--glow-primary)' },
 ];
 const TREEMAP_TOTAL = TREEMAP_OBRIGACOES.reduce((a, s) => a + s.value, 0);
 
@@ -359,7 +359,7 @@ export function WidgetRepassesPendentes() {
       <div className="flex flex-col -mx-1">
         {REPASSES.map((rep) => {
           const statusInfo = REPASSE_STATUS_STYLES[rep.status];
-          const valorCliente    = rep.total * (rep.pctCliente / 100);
+          const valorCliente = rep.total * (rep.pctCliente / 100);
           const valorEscritorio = rep.total * (rep.pctEscritorio / 100);
           return (
             <ListItem key={rep.processo}>

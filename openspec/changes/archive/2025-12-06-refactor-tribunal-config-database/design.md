@@ -2,7 +2,7 @@
 
 ## Context
 
-O sistema Sinesys captura dados de 24 Tribunais Regionais do Trabalho (TRT1 a TRT24), cada um com URLs específicas para login, API e base. Atualmente essas configurações estão hardcoded em `backend/captura/services/trt/config.ts` (~400 linhas de código).
+O sistema Synthropic captura dados de 24 Tribunais Regionais do Trabalho (TRT1 a TRT24), cada um com URLs específicas para login, API e base. Atualmente essas configurações estão hardcoded em `backend/captura/services/trt/config.ts` (~400 linhas de código).
 
 Existe uma tabela `TribunalConfig` (camelCase) no banco de dados herdada do projeto anterior, mas não está sendo utilizada. Esta refatoração visa migrar para uso da tabela do banco, renomeando-a para `tribunais_config` (snake_case) seguindo o padrão das novas tabelas.
 

@@ -19,7 +19,7 @@ import { RefreshCw, CheckCircle, AlertCircle, Clock, ExternalLink, ShieldCheck, 
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { actionSincronizarAcordo, actionVerificarConsistencia } from '@/app/(authenticated)/financeiro/server-actions';
+import { actionSincronizarAcordo, actionVerificarConsistencia } from '@/app/(authenticated)/financeiro/actions';
 
 interface IntegracaoFinanceiraSectionProps {
   acordoId: number;
@@ -58,11 +58,11 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
         const data = result.data;
         // Map service response to component interface
         const mappedInconsistencies: Inconsistencia[] = data.parcelasSemLancamento.map(p => ({
-            tipo: 'parcela_sem_lancamento',
-            descricao: `Parcela ${p.numeroParcela} (${p.status}) sem lançamento`,
-            parcelaId: p.parcelaId
+          tipo: 'parcela_sem_lancamento',
+          descricao: `Parcela ${p.numeroParcela} (${p.status}) sem lançamento`,
+          parcelaId: p.parcelaId
         }));
-        
+
         setInconsistencias(mappedInconsistencies);
         setStatusSync({
           totalParcelas: data.totalParcelas || 0,
@@ -118,71 +118,71 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
 
   return (
     <div className="rounded-lg border bg-card p-6">
-       <div className="flex items-center justify-between mb-4">
-         <h2 className="text-lg font-semibold flex items-center gap-2">
-           <RefreshCw className="h-5 w-5" /> Integração Financeira
-         </h2>
-         <Badge variant="outline" className={cn('gap-1',
-            statusGeral === 'sincronizado' && 'text-success border-success',
-            statusGeral === 'pendente' && 'text-warning border-warning',
-            statusGeral === 'inconsistente' && 'text-destructive border-destructive'
-         )}>
-            {statusGeral === 'sincronizado' ? <CheckCircle className="h-3 w-3" /> : 
-             statusGeral === 'pendente' ? <Clock className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
-            {statusGeral.charAt(0).toUpperCase() + statusGeral.slice(1)}
-         </Badge>
-       </div>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <RefreshCw className="h-5 w-5" /> Integração Financeira
+        </h2>
+        <Badge variant="outline" className={cn('gap-1',
+          statusGeral === 'sincronizado' && 'text-success border-success',
+          statusGeral === 'pendente' && 'text-warning border-warning',
+          statusGeral === 'inconsistente' && 'text-destructive border-destructive'
+        )}>
+          {statusGeral === 'sincronizado' ? <CheckCircle className="h-3 w-3" /> :
+            statusGeral === 'pendente' ? <Clock className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+          {statusGeral.charAt(0).toUpperCase() + statusGeral.slice(1)}
+        </Badge>
+      </div>
 
-       {statusSync && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-             <div className="rounded-lg bg-muted/50 p-3">
-                <p className="text-xs text-muted-foreground">Total</p>
-                <p className="text-xl font-bold">{statusSync.totalParcelas}</p>
-             </div>
-             <div className="rounded-lg bg-success/15 p-3">
-                <p className="text-xs text-muted-foreground">Sincronizadas</p>
-                <p className="text-xl font-bold text-success">{statusSync.parcelasSincronizadas}</p>
-             </div>
-             <div className="rounded-lg bg-warning/15 p-3">
-                <p className="text-xs text-muted-foreground">Pendentes</p>
-                <p className="text-xl font-bold text-warning">{statusSync.parcelasPendentes}</p>
-             </div>
-             <div className="rounded-lg bg-destructive/15 p-3">
-                <p className="text-xs text-muted-foreground">Inconsistentes</p>
-                <p className="text-xl font-bold text-destructive">{statusSync.parcelasInconsistentes}</p>
-             </div>
+      {statusSync && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div className="rounded-lg bg-muted/50 p-3">
+            <p className="text-xs text-muted-foreground">Total</p>
+            <p className="text-xl font-bold">{statusSync.totalParcelas}</p>
           </div>
-       )}
+          <div className="rounded-lg bg-success/15 p-3">
+            <p className="text-xs text-muted-foreground">Sincronizadas</p>
+            <p className="text-xl font-bold text-success">{statusSync.parcelasSincronizadas}</p>
+          </div>
+          <div className="rounded-lg bg-warning/15 p-3">
+            <p className="text-xs text-muted-foreground">Pendentes</p>
+            <p className="text-xl font-bold text-warning">{statusSync.parcelasPendentes}</p>
+          </div>
+          <div className="rounded-lg bg-destructive/15 p-3">
+            <p className="text-xs text-muted-foreground">Inconsistentes</p>
+            <p className="text-xl font-bold text-destructive">{statusSync.parcelasInconsistentes}</p>
+          </div>
+        </div>
+      )}
 
-       <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => setSyncDialogOpen(true)} disabled={isSyncing || isVerifying}>
-             {isSyncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-             Sincronizar
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleVerificarConsistencia} disabled={isSyncing || isVerifying}>
-             {isVerifying ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
-             Verificar
-          </Button>
-          <Button variant="outline" size="sm" asChild>
-             <Link href={`/financeiro/contas-pagar?acordoId=${acordoId}`}>
-                <ExternalLink className="h-4 w-4 mr-2" /> Ver no Financeiro
-             </Link>
-          </Button>
-       </div>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" size="sm" onClick={() => setSyncDialogOpen(true)} disabled={isSyncing || isVerifying}>
+          {isSyncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+          Sincronizar
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleVerificarConsistencia} disabled={isSyncing || isVerifying}>
+          {isVerifying ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
+          Verificar
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/financeiro/contas-pagar?acordoId=${acordoId}`}>
+            <ExternalLink className="h-4 w-4 mr-2" /> Ver no Financeiro
+          </Link>
+        </Button>
+      </div>
 
-       <AlertDialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
-         <AlertDialogContent>
-           <AlertDialogHeader>
-             <AlertDialogTitle>Sincronizar</AlertDialogTitle>
-             <AlertDialogDescription>Esta ação irá atualizar os lançamentos financeiros.</AlertDialogDescription>
-           </AlertDialogHeader>
-           <AlertDialogFooter>
-             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-             <AlertDialogAction onClick={() => handleSincronizar(false)}>Sincronizar</AlertDialogAction>
-             {temInconsistencias && <AlertDialogAction onClick={() => handleSincronizar(true)} className="bg-warning hover:bg-warning/90 text-warning-foreground">Forçar</AlertDialogAction>}
-           </AlertDialogFooter>
-         </AlertDialogContent>
-       </AlertDialog>
+      <AlertDialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sincronizar</AlertDialogTitle>
+            <AlertDialogDescription>Esta ação irá atualizar os lançamentos financeiros.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleSincronizar(false)}>Sincronizar</AlertDialogAction>
+            {temInconsistencias && <AlertDialogAction onClick={() => handleSincronizar(true)} className="bg-warning hover:bg-warning/90 text-warning-foreground">Forçar</AlertDialogAction>}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

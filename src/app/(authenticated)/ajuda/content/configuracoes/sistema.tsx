@@ -29,14 +29,14 @@ export default function Sistema() {
         </h1>
         <p className="text-muted-foreground mt-2">
           Configure integrações externas, assistentes de inteligência artificial, aparência e
-          demais parâmetros globais do sistema Sinesys.
+          demais parâmetros globais do sistema Synthropic.
         </p>
       </div>
 
       {/* ─── INTEGRAÇÕES ─────────────────────────────────────────── */}
       <DocSection title="Integrações">
         <p className="text-muted-foreground mb-6">
-          O Sinesys se integra a serviços externos para ampliar suas funcionalidades. As
+          O Synthropic se integra a serviços externos para ampliar suas funcionalidades. As
           integrações são configuradas por administradores e afetam toda a organização.
         </p>
 
@@ -81,7 +81,7 @@ export default function Sistema() {
             Chatwoot (Chat e Atendimento)
           </h3>
           <p className="text-sm text-muted-foreground">
-            Integre o Chatwoot para gerenciar conversas com clientes diretamente do Sinesys,
+            Integre o Chatwoot para gerenciar conversas com clientes diretamente do Synthropic,
             sem precisar alternar entre sistemas.
           </p>
           <DocFieldTable
@@ -102,7 +102,7 @@ export default function Sistema() {
                 campo: 'ID da Caixa de Entrada',
                 tipo: 'Número',
                 obrigatorio: false,
-                descricao: 'ID da inbox padrão para criação de conversas via Sinesys.',
+                descricao: 'ID da inbox padrão para criação de conversas via Synthropic.',
               },
               {
                 campo: 'Habilitado',
@@ -113,7 +113,7 @@ export default function Sistema() {
             ]}
           />
           <DocTip>
-            Após habilitar o Chatwoot, um ícone de chat aparece na barra lateral do Sinesys,
+            Após habilitar o Chatwoot, um ícone de chat aparece na barra lateral do Synthropic,
             permitindo que a equipe acesse e responda conversas sem sair do sistema.
           </DocTip>
         </div>
@@ -125,7 +125,7 @@ export default function Sistema() {
             Dyte (Videoconferências)
           </h3>
           <p className="text-sm text-muted-foreground">
-            Configure o Dyte para realizar videoconferências diretamente do Sinesys, integradas
+            Configure o Dyte para realizar videoconferências diretamente do Synthropic, integradas
             ao Planner e ao módulo de Audiências.
           </p>
           <DocFieldTable
@@ -156,7 +156,7 @@ export default function Sistema() {
       {/* ─── ASSISTENTES DE IA ───────────────────────────────────── */}
       <DocSection title="Assistentes de Inteligência Artificial">
         <p className="text-muted-foreground mb-4">
-          Configure os assistentes de IA disponíveis no Sinesys para auxílio na análise de
+          Configure os assistentes de IA disponíveis no Synthropic para auxílio na análise de
           processos, redação de documentos e consultas jurídicas.
         </p>
         <DocActionList
@@ -225,7 +225,7 @@ export default function Sistema() {
       {/* ─── APARÊNCIA ───────────────────────────────────────────── */}
       <DocSection title="Aparência e Tema">
         <p className="text-muted-foreground mb-4">
-          Personalize a aparência visual do Sinesys para toda a organização ou individualmente
+          Personalize a aparência visual do Synthropic para toda a organização ou individualmente
           por usuário.
         </p>
         <DocActionList

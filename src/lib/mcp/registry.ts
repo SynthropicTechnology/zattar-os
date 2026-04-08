@@ -1,5 +1,5 @@
 /**
- * Registry Principal de Ferramentas MCP do Sinesys
+ * Registry Principal de Ferramentas MCP do Synthropic
  *
  * Orquestra o registro de 119 ferramentas MCP organizadas em 22 módulos.
  * Cada módulo é responsável por registrar ferramentas relacionadas a uma feature específica.

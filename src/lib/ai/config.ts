@@ -1,5 +1,5 @@
 /**
- * Configurações da camada de IA do Sinesys
+ * Configurações da camada de IA do Synthropic
  */
 
 import type { EmbeddingModelConfig } from './types';

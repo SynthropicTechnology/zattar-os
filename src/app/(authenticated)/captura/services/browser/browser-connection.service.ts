@@ -6,7 +6,7 @@
  *
  * 1. **Chromium Remoto**: Quando BROWSER_WS_ENDPOINT está configurado
  *    - Conecta via WebSocket ao Chromium Browser Server (Playwright)
- *    - Recomendado para produção (ver repositório: sinesys-browser-server)
+ *    - Recomendado para produção (ver repositório: synthropic-browser-server)
  *
  * 2. **Chromium Local**: Fallback quando não há endpoint remoto
  *    - Lança Chromium localmente via Playwright

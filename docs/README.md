@@ -1,6 +1,6 @@
-# Documentação Sinesys
+# Documentação Synthropic
 
-Bem-vindo à documentação do Sinesys. Esta pasta concentra documentação técnica, guias operacionais, relatórios e material interno.
+Bem-vindo à documentação do Synthropic. Esta pasta concentra documentação técnica, guias operacionais, relatórios e material interno.
 
 ## 📖 Navegação Rápida
 

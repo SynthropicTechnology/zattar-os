@@ -1,7 +1,7 @@
 # Regras de Negocio - Usuarios
 
 ## Contexto
-Modulo central de gestao de usuarios do Sinesys. Gerencia cadastro, permissoes, cargos, sincronizacao com Supabase Auth e desativacao com desatribuicao automatica de itens. Utiliza cache Redis para otimizar leituras e sistema de permissoes granular por recurso/operacao.
+Modulo central de gestao de usuarios do Synthropic. Gerencia cadastro, permissoes, cargos, sincronizacao com Supabase Auth e desativacao com desatribuicao automatica de itens. Utiliza cache Redis para otimizar leituras e sistema de permissoes granular por recurso/operacao.
 
 ## Entidades Principais
 - **Usuario**: Registro completo de usuario com dados pessoais (CPF, RG, data nascimento, genero), dados profissionais (OAB, cargo, email corporativo), endereco, avatar, cover e flags de controle (ativo, isSuperAdmin)

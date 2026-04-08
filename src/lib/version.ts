@@ -9,7 +9,7 @@
 export const BUILD_ID = process.env.NEXT_PUBLIC_BUILD_ID || "development";
 
 /** Chave usada no sessionStorage para armazenar o BUILD_ID */
-const BUILD_ID_STORAGE_KEY = "__SINESYS_BUILD_ID__";
+const BUILD_ID_STORAGE_KEY = "__SYNTHROPIC_BUILD_ID__";
 
 /**
  * Verifica se houve mudança de versão desde o carregamento inicial da página.

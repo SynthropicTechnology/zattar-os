@@ -16,7 +16,7 @@ import {
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import Link from 'next/link';
 import {
-  
+
   CardAction,
   CardDescription,
   CardHeader,
@@ -31,7 +31,7 @@ import type {
   DashboardData,
   Lembrete,
 } from '../domain';
-import type { ProgressoDiario } from '../repositories/progresso-diario';
+import type { ProgressoDiario } from '../repository';
 import type { Task } from '@/app/(authenticated)/tarefas/domain';
 
 import {

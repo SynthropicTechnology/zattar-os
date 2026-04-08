@@ -1,5 +1,5 @@
 /**
- * Feature de Busca Semântica do Sinesys
+ * Feature de Busca Semântica do Synthropic
  *
  * Exporta actions e tipos para busca inteligente usando IA
  */

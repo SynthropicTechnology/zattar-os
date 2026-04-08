@@ -14,11 +14,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { cn } from '@/lib/utils';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
-import type { GrauTribunal, Pericia } from '../domain';
+import type { GrauTribunal, Pericia, UsuarioOption } from '../domain';
 import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
-import type { UsuarioOption } from '../types';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
 import { PericiaAtribuirResponsavelDialog } from './pericia-atribuir-responsavel-dialog';
 import { PericiaObservacoesDialog } from './pericia-observacoes-dialog';
@@ -26,18 +26,6 @@ import { PericiaObservacoesDialog } from './pericia-observacoes-dialog';
 export interface PericiasTableMeta {
   usuarios: UsuarioOption[];
   onSuccess?: () => void;
-}
-
-function getSituacaoVariant(codigo: SituacaoPericiaCodigo) {
-  const variantMap: Record<string, 'success' | 'info' | 'destructive' | 'warning' | 'secondary'> = {
-    F: 'success',
-    P: 'info',
-    C: 'destructive',
-    L: 'warning',
-    S: 'warning',
-    R: 'secondary',
-  };
-  return variantMap[codigo] || 'secondary';
 }
 
 function formatarDataCurta(dataISO: string | null): string {
@@ -236,7 +224,7 @@ export const columns: ColumnDef<Pericia>[] = [
             {prazo ? formatarDataCurta(prazo) : '-'}
           </span>
           {/* Status/Situação */}
-          <AppBadge variant={getSituacaoVariant(situacao)}>
+          <AppBadge variant={getSemanticBadgeVariant('pericia_situacao', situacao)}>
             {SITUACAO_PERICIA_LABELS[situacao]}
           </AppBadge>
         </div>

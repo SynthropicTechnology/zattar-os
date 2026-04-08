@@ -30,29 +30,6 @@ export function formatarStatusRepasse(status: StatusRepasse): string {
   return map[status] || status;
 }
 
-export function getTipoColorClass(tipo: TipoObrigacao): string {
-  switch (tipo) {
-    case 'acordo': return 'bg-info/10 text-info';
-    case 'condenacao': return 'bg-destructive/10 text-destructive';
-    case 'custas_processuais': return 'bg-muted text-muted-foreground';
-    default: return 'bg-muted text-muted-foreground';
-  }
-}
-
-export function getDirecaoColorClass(direcao: DirecaoPagamento): string {
-  return direcao === 'recebimento' ? 'text-success' : 'text-destructive';
-}
-
-export function getStatusColorClass(status: StatusAcordo): string {
-  switch (status) {
-    case 'pendente': return 'bg-warning/10 text-warning';
-    case 'pago_parcial': return 'bg-warning/10 text-warning';
-    case 'pago_total': return 'bg-success/10 text-success';
-    case 'atrasado': return 'bg-destructive/10 text-destructive';
-    default: return 'bg-muted text-muted-foreground';
-  }
-}
-
 export function calcularDataVencimento(dataBase: string | Date, numeroParcela: number, intervalo: number = 30): string {
   // Converter dataBase para Date se for string
   let data: Date;
@@ -78,19 +55,19 @@ export function calcularDataVencimento(dataBase: string | Date, numeroParcela: n
 }
 
 export function calcularValorParcela(
-  valorTotal: number, 
-  numeroParcelas: number, 
+  valorTotal: number,
+  numeroParcelas: number,
   indiceZeroBased: number
 ): number {
   const valorBase = valorTotal / numeroParcelas;
-  
+
   if (indiceZeroBased === numeroParcelas - 1) {
     // Última parcela absorve diferença de arredondamento
     const somaAnteriores = parseFloat((valorBase * (numeroParcelas - 1)).toFixed(2));
     const resto = valorTotal - somaAnteriores;
     return parseFloat(resto.toFixed(2));
   }
-  
+
   return parseFloat(valorBase.toFixed(2));
 }
 

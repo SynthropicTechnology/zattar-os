@@ -2,7 +2,7 @@
 
 ## Why
 
-O projeto Sinesys esta em transicao para Feature-Sliced Design (FSD), mas apresenta **codigo legado critico** que viola os principios arquiteturais estabelecidos. Server Actions em `src/app/actions/` violam FSD, o arquivo monolitico `src/features/partes/repository.ts` com 2184 linhas compromete manutenibilidade, features duplicadas (`profiles` vs `perfil`) causam confusao, e o wrapper `safe-action` nao e utilizado consistentemente. Essas inconsistencias comprometem escalabilidade, manutenibilidade e qualidade do codigo.
+O projeto Synthropic esta em transicao para Feature-Sliced Design (FSD), mas apresenta **codigo legado critico** que viola os principios arquiteturais estabelecidos. Server Actions em `src/app/actions/` violam FSD, o arquivo monolitico `src/features/partes/repository.ts` com 2184 linhas compromete manutenibilidade, features duplicadas (`profiles` vs `perfil`) causam confusao, e o wrapper `safe-action` nao e utilizado consistentemente. Essas inconsistencias comprometem escalabilidade, manutenibilidade e qualidade do codigo.
 
 ## What Changes
 

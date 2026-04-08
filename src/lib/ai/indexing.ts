@@ -1,5 +1,5 @@
 /**
- * Pipeline de indexação de documentos para o Sinesys
+ * Pipeline de indexação de documentos para o Synthropic
  *
  * ⚠️ LEGACY: Este módulo está descontinuado.
  * Use src/features/ai/services/indexing.service.ts para novas implementações.

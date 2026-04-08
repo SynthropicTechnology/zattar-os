@@ -30,7 +30,7 @@ import {
   deletarLembrete as deletarLembreteRepo,
   contarLembretesPendentes,
   buscarLembretesVencidos,
-} from '../repositories';
+} from '../repository';
 
 /**
  * Lista lembretes de um usuário com validação

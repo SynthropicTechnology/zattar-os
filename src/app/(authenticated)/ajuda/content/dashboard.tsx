@@ -77,13 +77,13 @@ export default function DashboardDoc() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight font-heading">Dashboard</h1>
         <p className="text-muted-foreground text-lg">
-          Painel central do Sinesys com visão consolidada das principais métricas do escritório.
+          Painel central do Synthropic com visão consolidada das principais métricas do escritório.
         </p>
       </div>
 
       <DocSection title="Visão Geral">
         <p className="text-muted-foreground">
-          O Dashboard é a tela inicial do Sinesys após o login. Ele reúne indicadores-chave de desempenho
+          O Dashboard é a tela inicial do Synthropic após o login. Ele reúne indicadores-chave de desempenho
           (KPIs) em widgets interativos, permitindo que advogados e gestores acompanhem a saúde do escritório
           sem precisar navegar por cada módulo individualmente.
         </p>

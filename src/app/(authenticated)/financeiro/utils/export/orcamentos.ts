@@ -580,7 +580,7 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
             color: rgb(0.5, 0.5, 0.5),
         });
 
-        currentPage.drawText('Sistema Sinesys - Gestão de Orçamentos', {
+        currentPage.drawText('Sistema Synthropic - Gestão de Orçamentos', {
             x: margin,
             y: 20,
             size: 8,

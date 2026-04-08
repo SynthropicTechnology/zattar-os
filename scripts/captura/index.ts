@@ -169,7 +169,7 @@
  * - Arquitetura: docs/arquitetura-sistema.md
  * - Módulos de captura: backend/captura/
  * 
- * @see {@link https://sinesys.app/api/docs} Documentação da API
+ * @see {@link https://synthropic.app/api/docs} Documentação da API
  * @see {@link ../README.md} README principal de scripts
  */
 

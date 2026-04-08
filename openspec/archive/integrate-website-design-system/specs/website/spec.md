@@ -2,7 +2,7 @@
 
 ### Requirement: Website Layout Integration
 
-O sistema SHALL fornecer um layout para o website institucional integrado com o design system do Sinesys, garantindo consistencia visual e tecnica entre os apps.
+O sistema SHALL fornecer um layout para o website institucional integrado com o design system do Synthropic, garantindo consistencia visual e tecnica entre os apps.
 
 #### Scenario: Carregamento de fontes do sistema
 - **WHEN** o website e carregado
@@ -62,7 +62,7 @@ O botao "Consultar Processo" no Hero do website SHALL direcionar o usuario para 
 
 ### Requirement: Website Design System Alignment
 
-Os componentes UI do website SHALL seguir os tokens de design system do Sinesys para garantir consistencia visual.
+Os componentes UI do website SHALL seguir os tokens de design system do Synthropic para garantir consistencia visual.
 
 #### Scenario: Tokens de espacamento
 - **WHEN** componentes do website sao renderizados

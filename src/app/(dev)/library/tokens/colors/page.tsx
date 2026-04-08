@@ -49,7 +49,7 @@ export default function ColorsPage() {
       <DemoPageHeader
         eyebrow="Tokens"
         title="Cores semânticas"
-        description="Tokens canônicos do design system Sinesys. Definidos em globals.css com variantes light/dark automáticas. Use SEMPRE estes em vez de cores Tailwind cruas."
+        description="Tokens canônicos do design system Synthropic. Definidos em globals.css com variantes light/dark automáticas. Use SEMPRE estes em vez de cores Tailwind cruas."
       />
 
       <DemoSection

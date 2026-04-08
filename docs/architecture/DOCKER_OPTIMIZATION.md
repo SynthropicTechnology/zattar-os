@@ -192,7 +192,7 @@ Total (successful)   | N/A ❌  | ~6min ✅ | Success
    ```
 
 4. **Monitor:**
-   - Go to: https://github.com/SinesysTech/zattar-os/actions
+   - Go to: https://github.com/SynthropicTech/zattar-os/actions
    - Watch "Docker Build & Push" workflow
    - Expected time: ~6 minutes
    - Should succeed without OOM

@@ -39,7 +39,7 @@ export default function ApiDocsPage() {
             <h1 className="text-3xl font-bold tracking-tight">API REST</h1>
           </div>
           <p className="text-muted-foreground">
-            Documentação interativa da API REST do Sinesys
+            Documentação interativa da API REST do Synthropic
           </p>
         </div>
         <Card>
@@ -63,7 +63,7 @@ export default function ApiDocsPage() {
             <h1 className="text-3xl font-bold tracking-tight">API REST</h1>
           </div>
           <p className="text-muted-foreground">
-            Documentação interativa da API REST do Sinesys
+            Documentação interativa da API REST do Synthropic
           </p>
         </div>
         <Card className="border-destructive">
@@ -94,7 +94,7 @@ export default function ApiDocsPage() {
           <h1 className="text-3xl font-bold tracking-tight">API REST</h1>
         </div>
         <p className="text-muted-foreground">
-          Documentação interativa da API REST do Sinesys. Explore endpoints, teste requisições e veja exemplos.
+          Documentação interativa da API REST do Synthropic. Explore endpoints, teste requisições e veja exemplos.
         </p>
       </div>
 

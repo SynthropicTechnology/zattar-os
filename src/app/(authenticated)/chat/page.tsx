@@ -29,7 +29,7 @@ export default async function ChatPage({
 }) {
   const user = await getCurrentUser();
   if (!user) redirect('/app/login');
-  
+
   const usuarioId = user.id;
   const currentUserName = user.nome_exibicao || user.nome_completo || 'Usuário';
 
@@ -48,7 +48,7 @@ export default async function ChatPage({
   const params = await searchParams;
   const channelId = params.channelId ? parseInt(params.channelId) : null;
   let salaAtiva: ChatItem | null = null;
-  
+
   if (channelId) {
     salaAtiva = salas.find((s) => s.id === channelId) || null;
   }
@@ -70,15 +70,13 @@ export default async function ChatPage({
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <Suspense fallback={<Skeleton className="h-full w-full" />}>
-        <ChatLayout 
-          salas={salas} 
-          currentUserId={usuarioId}
-          currentUserName={currentUserName}
-          initialSelectedChat={salaAtiva}
-        />
-      </Suspense>
-    </div>
+    <Suspense fallback={<Skeleton className="h-full w-full" />}>
+      <ChatLayout
+        salas={salas}
+        currentUserId={usuarioId}
+        currentUserName={currentUserName}
+        initialSelectedChat={salaAtiva}
+      />
+    </Suspense>
   );
 }

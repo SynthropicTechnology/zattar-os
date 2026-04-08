@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Este documento define os requisitos para a Fase 2 da refatoração de consistência visual do Sinesys/Zattar OS. A Fase 1 migrou com sucesso os módulos **partes** (padrão ouro), **processos**, **contratos**, **assinatura-digital**, **audiências** e **expedientes**. A Fase 2 expande a refatoração para todos os módulos e páginas restantes do sistema, aplicando o mesmo padrão ouro para garantir consistência visual e arquitetural completa.
+Este documento define os requisitos para a Fase 2 da refatoração de consistência visual do Synthropic/Zattar OS. A Fase 1 migrou com sucesso os módulos **partes** (padrão ouro), **processos**, **contratos**, **assinatura-digital**, **audiências** e **expedientes**. A Fase 2 expande a refatoração para todos os módulos e páginas restantes do sistema, aplicando o mesmo padrão ouro para garantir consistência visual e arquitetural completa.
 
 ### Módulos Identificados para Migração
 

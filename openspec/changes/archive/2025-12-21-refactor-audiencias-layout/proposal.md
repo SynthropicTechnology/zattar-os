@@ -4,7 +4,7 @@
 
 O módulo de audiências está funcional mas apresenta inconsistências arquiteturais significativas que impactam manutenibilidade e experiência do usuário:
 
-1. **Tipos duplicados** em 3 locais diferentes (`domain.ts`, `types/ai-agent.types.ts`, `src/types/sinesys/audiencias.ts`) causando inconsistência e dificuldade de manutenção
+1. **Tipos duplicados** em 3 locais diferentes (`domain.ts`, `types/ai-agent.types.ts`, `src/types/synthropic/audiencias.ts`) causando inconsistência e dificuldade de manutenção
 2. **Layout divergente** do padrão estabelecido em Expedientes - usa `TemporalViewShell` ao invés de carrosséis integrados com tabs Chrome-style
 3. **Componentes de calendário** não seguem o padrão visual de Expedientes (carrosséis internos ao invés de gerenciados pelo parent)
 4. **Arquivos obsoletos** que não são mais necessários (`audiencias-calendar-filters.tsx`, `audiencias-calendar-week-view.tsx`)
@@ -14,7 +14,7 @@ O módulo de audiências está funcional mas apresenta inconsistências arquitet
 ### Consolidação de Tipos
 - Consolidar todos os tipos em `domain.ts`
 - Remover `types/ai-agent.types.ts` (mover tipos úteis para domain)
-- Remover `src/types/sinesys/audiencias.ts` (tipos legados)
+- Remover `src/types/synthropic/audiencias.ts` (tipos legados)
 - Atualizar imports em todos os arquivos do módulo
 
 ### Migração de Layout (padrão Expedientes)
@@ -40,7 +40,7 @@ O módulo de audiências está funcional mas apresenta inconsistências arquitet
 - Affected specs: `frontend-audiencias`
 - Affected code:
   - `src/features/audiencias/` (todo o módulo)
-  - `src/types/sinesys/audiencias.ts` (remover)
+  - `src/types/synthropic/audiencias.ts` (remover)
   - `src/app/(dashboard)/audiencias/` (páginas)
 - Nenhuma mudança de comportamento de backend (actions, service, repository mantidos)
 - Nenhuma mudança de API

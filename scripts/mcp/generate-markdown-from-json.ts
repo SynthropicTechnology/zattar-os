@@ -33,11 +33,11 @@ const moduleNames: Record<string, string> = {
   assinatura: 'Assinatura Digital',
 };
 
-let md = `# Referência Completa - Tools MCP Sinesys
+let md = `# Referência Completa - Tools MCP Synthropic
 
 ## Visão Geral
 
-O Sinesys expõe **${totalTools} ferramentas MCP** organizadas em ${totalModules} módulos funcionais. Estas ferramentas permitem que agentes de IA interajam com o sistema de forma estruturada e segura.
+O Synthropic expõe **${totalTools} ferramentas MCP** organizadas em ${totalModules} módulos funcionais. Estas ferramentas permitem que agentes de IA interajam com o sistema de forma estruturada e segura.
 
 ## Índice Rápido
 

@@ -38,7 +38,7 @@ export default function AssinaturaDigitalDocumentosDoc() {
           e quem está pendente.
         </p>
         <DocTip>
-          As assinaturas coletadas pelo Sinesys possuem validade jurídica nos termos da Lei
+          As assinaturas coletadas pelo Synthropic possuem validade jurídica nos termos da Lei
           14.063/2020 (assinatura eletrônica simples e avançada) e da MP 2.200-2/2001.
         </DocTip>
       </DocSection>

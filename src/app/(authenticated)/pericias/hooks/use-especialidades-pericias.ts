@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { actionListarEspecialidadesPericia } from '../actions/pericias-actions';
-import type { EspecialidadePericiaOption } from '../types';
+import type { EspecialidadePericiaOption } from '../domain';
 
 const isClient = typeof window !== 'undefined';
 

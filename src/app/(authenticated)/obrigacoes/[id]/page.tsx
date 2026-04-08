@@ -17,7 +17,7 @@ import {
   type AcordoComParcelas,
   type Parcela,
 } from '@/app/(authenticated)/obrigacoes';
-import { actionBuscarAcordo, actionDeletarAcordo } from '@/app/(authenticated)/obrigacoes/server-actions';
+import { actionBuscarAcordo, actionDeletarAcordo } from '@/app/(authenticated)/obrigacoes/actions';
 import { formatDate } from '@/lib/formatters';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import {

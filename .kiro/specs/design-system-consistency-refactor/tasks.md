@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Migração incremental de 5 módulos para o Design System Sinesys, usando o módulo **partes** como padrão ouro. A ordem de execução é: dependência compartilhada (variants.ts) → polimento do padrão ouro → migração módulo a módulo → testes de validação.
+Migração incremental de 5 módulos para o Design System Synthropic, usando o módulo **partes** como padrão ouro. A ordem de execução é: dependência compartilhada (variants.ts) → polimento do padrão ouro → migração módulo a módulo → testes de validação.
 
 ## Tarefas
 

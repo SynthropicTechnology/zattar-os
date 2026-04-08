@@ -37,18 +37,18 @@ export function AgingFunnel() {
     data.role === 'user'
       ? data.expedientes
       : {
-          total: data.metricas.totalExpedientes,
-          vencidos: data.metricas.expedientesVencidos,
-          venceHoje: 0, // admin não expõe esse campo diretamente
-          venceAmanha: 0,
-          proximos7dias: 0,
-          porTipo: [],
-        };
+        total: data.metricas.totalExpedientes,
+        vencidos: data.metricas.expedientesVencidos,
+        venceHoje: 0, // admin não expõe esse campo diretamente
+        venceAmanha: 0,
+        proximos7dias: 0,
+        porTipo: [],
+      };
 
-  const vencidos      = expedientes.vencidos;
-  const venceHoje     = expedientes.venceHoje;
+  const vencidos = expedientes.vencidos;
+  const venceHoje = expedientes.venceHoje;
   const prox7diasOnly = Math.max(expedientes.proximos7dias - venceHoje, 0);
-  const restantes     = Math.max(
+  const restantes = Math.max(
     expedientes.total - vencidos - expedientes.proximos7dias,
     0
   );
@@ -59,31 +59,31 @@ export function AgingFunnel() {
     level: 'critico' | 'alto' | 'medio' | 'baixo';
     color: string;
   }[] = [
-    {
-      label: 'Vencidos',
-      count: vencidos,
-      level: 'critico',
-      color: 'var(--destructive)',
-    },
-    {
-      label: 'Vencem Hoje',
-      count: venceHoje,
-      level: 'alto',
-      color: 'hsl(35 95% 58%)',
-    },
-    {
-      label: 'Próx. 7 dias',
-      count: prox7diasOnly,
-      level: 'medio',
-      color: 'hsl(217 91% 60%)',
-    },
-    {
-      label: 'Restantes',
-      count: restantes,
-      level: 'baixo',
-      color: 'oklch(from var(--muted-foreground) l c h / 0.55)',
-    },
-  ];
+      {
+        label: 'Vencidos',
+        count: vencidos,
+        level: 'critico',
+        color: 'var(--destructive)',
+      },
+      {
+        label: 'Vencem Hoje',
+        count: venceHoje,
+        level: 'alto',
+        color: 'hsl(35 95% 58%)',
+      },
+      {
+        label: 'Próx. 7 dias',
+        count: prox7diasOnly,
+        level: 'medio',
+        color: 'hsl(217 91% 60%)',
+      },
+      {
+        label: 'Restantes',
+        count: restantes,
+        level: 'baixo',
+        color: 'var(--chart-muted-soft)',
+      },
+    ];
 
   const maxCount = Math.max(...faixas.map((f) => f.count), 1);
   const totalExibido = faixas.reduce((s, f) => s + f.count, 0);

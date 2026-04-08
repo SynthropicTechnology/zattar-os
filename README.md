@@ -1,4 +1,4 @@
-# Zattar OS - Sistema de Gestão Jurídica by Sinesys
+# Zattar OS - Sistema de Gestão Jurídica by Synthropic
 
 Sistema de gestão jurídica corporativa focado em automação e IA.
 
@@ -69,7 +69,7 @@ zattar-os/
 
 ## Model Context Protocol (MCP) e IA
 
-O Sinesys está equipado para funcionar via controle automatizado de agentes.
+O Synthropic está equipado para funcionar via controle automatizado de agentes.
 A raiz do conector expõe o endpoint `/api/mcp`. As ferramentas controlam os *Server Actions* cadastrados em `src/lib/mcp/registry.ts`.
 
 - Testes de integridade de MCP: `npm run mcp:check`

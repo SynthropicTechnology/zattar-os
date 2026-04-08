@@ -3,7 +3,7 @@
 /**
  * Design System Playground
  * 
- * Interface de teste para componentes do Design System Sinesys.
+ * Interface de teste para componentes do Design System Synthropic.
  * Facilita o desenvolvimento e QA de componentes visuais.
  * 
  * FEATURES:
@@ -58,7 +58,7 @@ export default function PlaygroundPage() {
               <div>
                 <h1 className="text-2xl font-bold">Design System Playground</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Teste e explore os componentes do Sinesys
+                  Teste e explore os componentes do Synthropic
                 </p>
               </div>
               <div className="flex items-center gap-3">

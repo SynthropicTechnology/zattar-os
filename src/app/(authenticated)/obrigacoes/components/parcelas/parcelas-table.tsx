@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { CheckCircle2, Edit2, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { toast } from 'sonner';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Parcela } from '../../types';
@@ -40,53 +41,19 @@ export function ParcelasTable({
 }: ParcelasTableProps) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
-    const getStatusBadge = (status: Parcela['status']) => {
-      const styles: Record<string, { variant: 'warning' | 'success' | 'destructive' | 'outline' }> = {
-        pendente: { variant: 'warning' },
-        recebida: { variant: 'success' },
-        paga: { variant: 'success' },
-        atrasado: { variant: 'destructive' },
-      };
+  const PARCELA_STATUS_LABELS: Record<string, string> = {
+    pendente: 'Pendente',
+    recebida: 'Recebida',
+    paga: 'Paga',
+    atrasado: 'Atrasado',
+  };
 
-      const labels: Record<string, string> = {
-        pendente: 'Pendente',
-        recebida: 'Recebida',
-        paga: 'Paga',
-        atrasado: 'Atrasado',
-      };
-
-      const style = styles[status] || { variant: 'warning' };
-
-      return (
-        <Badge variant={style.variant}>
-          {labels[status] || status}
-        </Badge>
-      );
-    };
-
-    const getStatusRepasseBadge = (status: string) => {
-      const styles: Record<string, { variant: 'outline' | 'warning' | 'info' | 'success' }> = {
-        nao_aplicavel: { variant: 'outline' },
-        pendente_declaracao: { variant: 'warning' },
-        pendente_transferencia: { variant: 'info' },
-        repassado: { variant: 'success' },
-      };
-
-      const labels: Record<string, string> = {
-        nao_aplicavel: 'N/A',
-        pendente_declaracao: 'Pendente Declaração',
-        pendente_transferencia: 'Pendente Transferência',
-        repassado: 'Repassado',
-      };
-
-      const style = styles[status] || { variant: 'outline' };
-
-      return (
-        <Badge variant={style.variant}>
-          {labels[status] || status}
-        </Badge>
-      );
-    };
+  const REPASSE_STATUS_LABELS: Record<string, string> = {
+    nao_aplicavel: 'N/A',
+    pendente_declaracao: 'Pendente Declaração',
+    pendente_transferencia: 'Pendente Transferência',
+    repassado: 'Repassado',
+  };
 
   const handleMarcar = async (parcelaId: number, tipo: 'recebida' | 'paga') => {
     setLoadingId(parcelaId);
@@ -101,7 +68,7 @@ export function ParcelasTable({
         // Ideally we should have a 'Paga' action or pass a param. 
         // For now using the same action and assuming it handles status based on direction implicitly or we might need to update service.
         const response = await actionMarcarParcelaRecebida(parcelaId, {
-            dataRecebimento: new Date().toISOString()
+          dataRecebimento: new Date().toISOString()
         });
 
         if (response.success) {
@@ -157,12 +124,18 @@ export function ParcelasTable({
                 <TableCell>{formatCurrency(parcela.honorariosContratuais)}</TableCell>
                 <TableCell>{formatCurrency(parcela.honorariosSucumbenciais)}</TableCell>
                 <TableCell>{formatDate(parcela.dataVencimento)}</TableCell>
-                <TableCell>{getStatusBadge(parcela.status)}</TableCell>
+                <TableCell>
+                  <Badge variant={getSemanticBadgeVariant('parcela_status', parcela.status)}>
+                    {PARCELA_STATUS_LABELS[parcela.status] || parcela.status}
+                  </Badge>
+                </TableCell>
                 <TableCell className="text-xs">{parcela.formaPagamento?.replace(/_/g, ' ') || '-'}</TableCell>
                 {direcao === 'recebimento' && (
                   <TableCell>
                     <div className="flex flex-col gap-1">
-                      {getStatusRepasseBadge(parcela.statusRepasse)}
+                      <Badge variant={getSemanticBadgeVariant('repasse_status', parcela.statusRepasse)}>
+                        {REPASSE_STATUS_LABELS[parcela.statusRepasse] || parcela.statusRepasse}
+                      </Badge>
                       {parcela.valorRepasseCliente ? <span className="text-xs text-muted-foreground">{formatCurrency(parcela.valorRepasseCliente)}</span> : null}
                     </div>
                   </TableCell>

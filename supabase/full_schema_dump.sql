@@ -1,5 +1,5 @@
 -- =====================================================
--- Diego Barbosa Advocacia (SINESYS) - FULL SCHEMA DUMP
+-- Diego Barbosa Advocacia (SYNTHROPIC) - FULL SCHEMA DUMP
 -- Generated on: 2026-02-10
 -- PostgreSQL Database Schema Export
 -- =====================================================

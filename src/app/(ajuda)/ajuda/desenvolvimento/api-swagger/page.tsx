@@ -12,7 +12,7 @@ export default function ApiSwaggerPage() {
           <h1 className="text-3xl font-bold tracking-tight">Documentação Swagger</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Como usar e manter a documentação Swagger/OpenAPI da API do Sinesys.
+          Como usar e manter a documentação Swagger/OpenAPI da API do Synthropic.
         </p>
       </div>
 

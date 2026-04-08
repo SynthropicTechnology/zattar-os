@@ -19,7 +19,6 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { PageShell } from '@/components/shared/page-shell';
 import {
   AlertasInadimplencia,
   cancelarContaReceber,
@@ -38,6 +37,7 @@ import {
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   MoreHorizontal,
   CreditCard,
@@ -79,13 +79,13 @@ import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
 
-const STATUS_CONFIG: Record<StatusContaReceber, { label: string; tone: BadgeVariant }> = {
-  pendente: { label: 'Pendente', tone: 'warning' },
-  confirmado: { label: 'Recebido', tone: 'success' },
-  pago: { label: 'Pago', tone: 'success' },
-  recebido: { label: 'Recebido', tone: 'success' },
-  cancelado: { label: 'Cancelado', tone: 'secondary' },
-  estornado: { label: 'Estornado', tone: 'destructive' },
+const STATUS_LABELS: Record<StatusContaReceber, string> = {
+  pendente: 'Pendente',
+  confirmado: 'Recebido',
+  pago: 'Pago',
+  recebido: 'Recebido',
+  cancelado: 'Cancelado',
+  estornado: 'Estornado',
 };
 
 const CATEGORIAS = [
@@ -304,11 +304,11 @@ function criarColunas(
       size: 100,
       cell: ({ row }) => {
         const status = row.getValue('status') as StatusContaReceber;
-        const config = STATUS_CONFIG[status];
+        const label = STATUS_LABELS[status];
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={config.tone}>
-              {config.label}
+            <Badge variant={getSemanticBadgeVariant('payment_status', status)}>
+              {label}
             </Badge>
           </div>
         );
@@ -526,7 +526,7 @@ export default function ContasReceberPage() {
   );
 
   return (
-    <PageShell>
+    <>
       {/* Alertas de Inadimplência */}
       <AlertasInadimplencia
         resumo={resumoInadimplencia ?? null}
@@ -756,6 +756,6 @@ export default function ContasReceberPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </PageShell>
+    </>
   );
 }

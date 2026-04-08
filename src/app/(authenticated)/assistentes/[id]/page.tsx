@@ -13,12 +13,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!result.success || !result.data) {
     return {
-      title: 'Assistente não encontrado | Sinesys',
+      title: 'Assistente não encontrado | Synthropic',
     };
   }
 
   return {
-    title: `${result.data.nome} | Assistentes | Sinesys`,
+    title: `${result.data.nome} | Assistentes | Synthropic`,
     description: result.data.descricao || 'Detalhes do assistente',
   };
 }

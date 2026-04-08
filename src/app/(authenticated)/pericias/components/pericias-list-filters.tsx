@@ -17,9 +17,11 @@ import {
   CodigoTribunal,
   SituacaoPericiaCodigo,
   SITUACAO_PERICIA_LABELS,
+  type UsuarioOption,
+  type EspecialidadePericiaOption,
+  type PeritoOption,
 } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
-import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
 
 // =============================================================================
 // OPÇÕES DE FILTRO (estáticas)

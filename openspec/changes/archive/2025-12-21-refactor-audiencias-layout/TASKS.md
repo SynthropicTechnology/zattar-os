@@ -4,7 +4,7 @@
 
 - [x] 1.1 Consolidar tipos em `domain.ts` - adicionar TipoAudiencia, UseAudienciasResult, AudienciasPaginacao
 - [x] 1.2 Remover `src/features/audiencias/types/ai-agent.types.ts`
-- [x] 1.3 Remover `src/types/sinesys/audiencias.ts`
+- [x] 1.3 Remover `src/types/synthropic/audiencias.ts`
 - [x] 1.4 Atualizar imports em todos os arquivos do módulo
 - [x] 1.5 Atualizar barrel export em `index.ts`
 

@@ -2,7 +2,7 @@
 
 ## ⚠️ PADRÃO OBRIGATÓRIO
 
-Este é o **padrão oficial e obrigatório** para todas as visualizações de dados (tabelas/listas) no Sinesys.
+Este é o **padrão oficial e obrigatório** para todas as visualizações de dados (tabelas/listas) no Synthropic.
 
 ## 📋 Estrutura
 
@@ -160,7 +160,7 @@ Componente de paginação integrado.
 
 ## 🎨 Design System
 
-O DataShell segue o layout "flat" do Sinesys:
+O DataShell segue o layout "flat" do Synthropic:
 - Toolbar flutua acima da tabela (sem card envolvendo)
 - Tabela com borda própria (`rounded-md border bg-card`)
 - Paginação flutua abaixo da tabela

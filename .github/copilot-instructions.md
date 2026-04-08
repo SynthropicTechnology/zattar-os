@@ -1,6 +1,6 @@
 ## Project
 
-Sinesys (Zattar OS) — legal management system (gestao juridica) for a Brazilian law firm.
+Synthropic (Zattar OS) — legal management system (gestao juridica) for a Brazilian law firm.
 Codebase is primarily in Portuguese (variable names, business terms, UI labels).
 
 **Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5 (strict), Supabase (PostgreSQL + RLS + pgvector), Tailwind CSS 4, shadcn/ui (new-york style)

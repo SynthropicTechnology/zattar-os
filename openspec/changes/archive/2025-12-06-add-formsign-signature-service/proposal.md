@@ -2,7 +2,7 @@
 
 ## Why
 
-Completar a migracao da Assinatura Digital para o backend Sinesys, trazendo o fluxo de assinatura digital (preview de PDF, finalizacao, registro de assinaturas e integracao externa) sobre as tabelas criadas.
+Completar a migracao da Assinatura Digital para o backend Synthropic, trazendo o fluxo de assinatura digital (preview de PDF, finalizacao, registro de assinaturas e integracao externa) sobre as tabelas criadas.
 
 ## What Changes
 

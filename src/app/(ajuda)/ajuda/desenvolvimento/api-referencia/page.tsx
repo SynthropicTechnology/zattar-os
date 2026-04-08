@@ -128,7 +128,7 @@ export default function ApiReferenciaPage() {
           <h1 className="text-3xl font-bold tracking-tight">Referência de API</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Guia completo de todos os endpoints da API REST do Sinesys.
+          Guia completo de todos os endpoints da API REST do Synthropic.
         </p>
       </div>
 
@@ -144,7 +144,7 @@ export default function ApiReferenciaPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge>Produção</Badge>
-            <code className="bg-muted px-2 py-1 rounded text-sm">https://api.sinesys.com.br</code>
+            <code className="bg-muted px-2 py-1 rounded text-sm">https://api.synthropic.com.br</code>
           </div>
         </CardContent>
       </Card>
@@ -319,9 +319,9 @@ curl -X GET "http://localhost:3000/api/audiencias/cliente/cpf/12345678901" \\
           <div>
             <h4 className="font-semibold mb-2">Variáveis de Ambiente</h4>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• <code className="bg-muted px-1 rounded">{'{{$env.SINESYS_BASE_URL}}'}</code> - URL base da API</li>
-              <li>• <code className="bg-muted px-1 rounded">{'{{$env.SINESYS_API_TOKEN}}'}</code> - Token de autenticação</li>
-              <li>• <code className="bg-muted px-1 rounded">{'{{$env.SINESYS_SERVICE_KEY}}'}</code> - API Key de serviço</li>
+              <li>• <code className="bg-muted px-1 rounded">{'{{$env.SYNTHROPIC_BASE_URL}}'}</code> - URL base da API</li>
+              <li>• <code className="bg-muted px-1 rounded">{'{{$env.SYNTHROPIC_API_TOKEN}}'}</code> - Token de autenticação</li>
+              <li>• <code className="bg-muted px-1 rounded">{'{{$env.SYNTHROPIC_SERVICE_KEY}}'}</code> - API Key de serviço</li>
             </ul>
           </div>
 
@@ -330,12 +330,12 @@ curl -X GET "http://localhost:3000/api/audiencias/cliente/cpf/12345678901" \\
             <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
 {`{
   "method": "GET",
-  "url": "={{$env.SINESYS_BASE_URL}}/api/acervo",
+  "url": "={{$env.SYNTHROPIC_BASE_URL}}/api/acervo",
   "authentication": "genericCredentialType",
   "genericAuthType": "httpHeaderAuth",
   "options": {
     "headerName": "Authorization",
-    "headerValue": "Bearer {{$env.SINESYS_API_TOKEN}}"
+    "headerValue": "Bearer {{$env.SYNTHROPIC_API_TOKEN}}"
   }
 }`}
             </pre>

@@ -1,5 +1,7 @@
 {
-  "css.customData": [".vscode/css-custom-data.json"],
+  "css.customData": [
+    ".vscode/css-custom-data.json"
+  ],
   "css.lint.unknownAtRules": "ignore",
   "webhint.enableHints": {
     "no-inline-styles": "off"
@@ -14,11 +16,17 @@
     }
   },
   // Configuracao para extensao Lua ignorar arquivos de licenca e documentacao
-  "Lua.workspace.ignoreDir": ["LICENSE", "TRADEMARK", "NOTICE"],
+  "Lua.workspace.ignoreDir": [
+    "LICENSE",
+    "TRADEMARK",
+    "NOTICE"
+  ],
   "Lua.diagnostics.globals": [],
   // TypeScript: usar workspace tsdk e ignorar tsconfigs de node_modules
   "js/ts.tsserver.watchOptions": {
-    "excludeDirectories": ["node_modules"]
+    "excludeDirectories": [
+      "node_modules"
+    ]
   },
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
@@ -51,5 +59,6 @@
     "**/supabase/**",
     "**/node_modules/**"
   ],
-  "mssql.enableSqlDiagnostics": false
+  "mssql.enableSqlDiagnostics": false,
+  "typescript.autoClosingTags": false
 }

@@ -45,7 +45,7 @@ export default function PrimeirosPassosPage() {
           <h1 className="text-3xl font-bold tracking-tight">Primeiros Passos</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Guia rápido para começar a usar o Sinesys. Siga os passos abaixo para se familiarizar com o sistema.
+          Guia rápido para começar a usar o Synthropic. Siga os passos abaixo para se familiarizar com o sistema.
         </p>
       </div>
 

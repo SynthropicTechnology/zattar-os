@@ -8,10 +8,10 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 const withBundleAnalyzer =
   process.env.ANALYZE === "true"
     ? bundleAnalyzer({
-        enabled: true,
-        analyzerMode: "static",
-        openAnalyzer: false,
-      })
+      enabled: true,
+      analyzerMode: "static",
+      openAnalyzer: false,
+    })
     : (config: NextConfig) => config;
 
 const APP_MODULES = [
@@ -59,7 +59,7 @@ function getServerActionAllowedOrigins(): string[] {
     "http://127.0.0.1:3000",
     "https://zattaradvogados.com",
     "https://zattaradvogados.com.br",
-    "https://app.sinesys.com.br",
+    "https://app.synthropic.com.br",
   ];
 
   const configuredOrigins = [
@@ -160,7 +160,7 @@ const nextConfig: NextConfig = {
     // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
     // NOTA: `turbopackFileSystemCacheForBuild` (Next 16.2+ experimental) foi testado em 2026-04-07
-    // e causou crash silencioso no builder remoto do Cloudron (builder.sinesys.online), provavelmente
+    // e causou crash silencioso no builder remoto do Cloudron (builder.synthropic.online), provavelmente
     // por quota de disco do sandbox vs. cold seed multi-GB do cache Turbopack. Manter desabilitado
     // até que o builder tenha mais espaço livre ou a flag saia do experimental.
     // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
@@ -366,6 +366,8 @@ const nextConfig: NextConfig = {
     "192.168.1.100:3000",
     "192.168.1.103",
     "192.168.1.103:3000",
+    "192.168.1.146",
+    "192.168.1.146:3000",
     "192.168.1.150",
     "192.168.1.150:3000",
   ],

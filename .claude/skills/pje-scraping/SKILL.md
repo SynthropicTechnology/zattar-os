@@ -98,7 +98,7 @@ SCRAPING_TIMEOUT=600
 SCREENSHOT_ON_ERROR=true
 
 # 2FAuth (OTP)
-TWOFAUTH_API_URL=https://authenticator.platform.sinesys.app
+TWOFAUTH_API_URL=https://authenticator.platform.synthropic.app
 TWOFAUTH_API_TOKEN=<JWT_TOKEN>
 TWOFAUTH_ACCOUNT_ID=7
 ```

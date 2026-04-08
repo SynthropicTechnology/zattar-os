@@ -2,7 +2,7 @@
 
 ## Context
 
-O projeto Sinesys atualmente não possui um sistema de controle de permissões. Todos os usuários autenticados têm acesso total a todas as funcionalidades, o que representa um risco de segurança e dificulta a gestão de equipes com diferentes responsabilidades.
+O projeto Synthropic atualmente não possui um sistema de controle de permissões. Todos os usuários autenticados têm acesso total a todas as funcionalidades, o que representa um risco de segurança e dificulta a gestão de equipes com diferentes responsabilidades.
 
 Esta mudança introduz dois sistemas independentes:
 1. **Cargos**: Para organização e categorização de usuários (ex: "Advogado Sênior", "Estagiário")

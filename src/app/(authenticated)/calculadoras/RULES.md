@@ -1,7 +1,7 @@
 # Regras de Negócio - Calculadoras
 
 ## Contexto
-Módulo de calculadoras trabalhistas do Sinesys. Implementa **cálculos puros client-side** sem persistência — cada calculadora é um componente React isolado que recebe inputs do usuário e exibe o resultado em tempo real. Por não haver lógica de persistência, o módulo intencionalmente **não possui** `domain.ts`, `service.ts` ou `repository.ts`.
+Módulo de calculadoras trabalhistas do Synthropic. Implementa **cálculos puros client-side** sem persistência — cada calculadora é um componente React isolado que recebe inputs do usuário e exibe o resultado em tempo real. Por não haver lógica de persistência, o módulo intencionalmente **não possui** `domain.ts`, `service.ts` ou `repository.ts`.
 
 ## Calculadoras Implementadas
 - **Horas Extras** (`HorasExtrasCalculator`): Cálculo de valor de horas extras com DSR

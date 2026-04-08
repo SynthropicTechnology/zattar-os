@@ -1,5 +1,5 @@
 /**
- * Endpoint de Mensagens MCP do Sinesys
+ * Endpoint de Mensagens MCP do Synthropic
  *
  * Endpoint alternativo para comunicação MCP via requisições individuais
  */

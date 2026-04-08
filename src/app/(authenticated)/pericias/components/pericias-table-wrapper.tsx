@@ -28,15 +28,13 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 
-import type { Pericia } from '../domain';
+import type { Pericia, GrauTribunal, UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../domain';
 import { SituacaoPericiaCodigo, SITUACAO_PERICIA_LABELS } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
-import type { GrauTribunal } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
 import { usePeritos } from '../hooks/use-peritos';
-import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
 
 import { columns } from './columns';
 import { PericiaCriarDialog } from './pericia-criar-dialog';

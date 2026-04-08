@@ -160,7 +160,7 @@ return 'parte_contraria';
    }
 ```
 
-### Modelo de Dados PJE → Sinesys
+### Modelo de Dados PJE → Synthropic
 
 #### Parte PJE (API Response)
 ```typescript

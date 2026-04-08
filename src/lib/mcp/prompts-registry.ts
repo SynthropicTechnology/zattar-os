@@ -1,5 +1,5 @@
 /**
- * Registry de Prompts MCP do Sinesys
+ * Registry de Prompts MCP do Synthropic
  *
  * Registra todos os prompts disponíveis para uso com LLMs
  */
@@ -200,7 +200,7 @@ ${argumentos.map((a, i) => `${i + 1}. ${a}`).join("\n")}`;
           .join("\n\n");
       }
 
-      const systemPrompt = `Você é um assistente jurídico do Sinesys, especializado em direito trabalhista.
+      const systemPrompt = `Você é um assistente jurídico do Synthropic, especializado em direito trabalhista.
 Use APENAS o contexto fornecido para responder às perguntas.
 Se a informação não estiver no contexto, diga claramente que não encontrou.
 Sempre cite as fontes usando o formato [número].
@@ -355,7 +355,7 @@ Por favor, forneça:
         contexto_adicional?: string;
       };
 
-      const systemPrompt = `Você é um assistente jurídico virtual do Sinesys, especializado em direito trabalhista brasileiro.
+      const systemPrompt = `Você é um assistente jurídico virtual do Synthropic, especializado em direito trabalhista brasileiro.
 
 Suas capacidades incluem:
 - Responder dúvidas sobre legislação trabalhista (CLT, súmulas, OJs)

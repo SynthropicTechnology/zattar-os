@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { AvaliarUpgradeContent } from "./components/avaliar-upgrade-content";
 
 export const metadata = {
-  title: "Avaliação de Upgrade de Compute | Sinesys",
+  title: "Avaliação de Upgrade de Compute | Synthropic",
   description: "Avaliação automatizada de necessidade de upgrade do compute Supabase",
 };
 

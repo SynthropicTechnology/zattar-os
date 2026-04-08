@@ -39,7 +39,7 @@ export function useNavegacaoActions() {
   useFrontendTool({
     name: 'navegarPara',
     description:
-      'Navega para uma página específica do sistema Sinesys. Use para ir a módulos como processos, audiências, expedientes, dashboard, etc.',
+      'Navega para uma página específica do sistema Synthropic. Use para ir a módulos como processos, audiências, expedientes, dashboard, etc.',
     parameters: z.object({
       pagina: z.string().describe('Módulo/página de destino: dashboard, processos, audiencias, expedientes, obrigacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh'),
       id: z.number().optional().describe('ID do registro específico para ver detalhes (opcional)'),

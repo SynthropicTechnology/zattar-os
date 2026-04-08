@@ -27,7 +27,7 @@ import {
   buscarStatusCapturas,
   buscarPerformanceAdvogados,
   buscarUsuario,
-} from './repositories';
+} from './repository';
 import { checkPermission } from '@/lib/auth/authorization';
 import type {
   DashboardUsuarioData,
@@ -473,3 +473,18 @@ export async function obterStatusCapturas() {
 export async function verificarAdmin(): Promise<boolean> {
   return false;
 }
+
+// ============================================================================
+// Lembretes Service (re-export)
+// ============================================================================
+
+export {
+  listarLembretes,
+  obterLembrete,
+  criarNovoLembrete,
+  atualizarLembreteExistente,
+  alterarStatusLembrete,
+  removerLembrete,
+  obterContagemLembretesPendentes,
+  obterLembretesVencidos,
+} from './services/lembretes-service';

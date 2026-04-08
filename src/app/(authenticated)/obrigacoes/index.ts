@@ -1,5 +1,53 @@
+/**
+ * Obrigações Feature Module — Barrel Export (API Pública)
+ *
+ * Este é o ponto de entrada público do módulo de obrigações.
+ * Toda importação cross-módulo DEVE passar por este arquivo.
+ *
+ * ⚠️ OTIMIZAÇÃO DE BUILD:
+ * Server Actions devem ser importadas diretamente de `actions/`:
+ *   import { actionBuscarAcordo } from '@/app/(authenticated)/obrigacoes/actions';
+ *
+ * Repository e Service são server-only e devem ser importados diretamente:
+ *   import { ObrigacoesRepository } from '@/app/(authenticated)/obrigacoes/repository';
+ *   import * as ObrigacoesService from '@/app/(authenticated)/obrigacoes/service';
+ */
 
-// Types - Legal entities only (sync types moved to financeiro)
+// ============================================================================
+// Components
+// ============================================================================
+export { AcordoForm } from './components/dialogs/acordo-form';
+export { NovaObrigacaoDialog } from './components/dialogs/nova-obrigacao-dialog';
+export { ObrigacoesContent } from './components/obrigacoes-content';
+export { ObrigacoesTableWrapper } from './components/table/obrigacoes-table-wrapper';
+export { ObrigacoesMonthWrapper } from './components/calendar/obrigacoes-month-wrapper';
+export { ObrigacoesYearWrapper } from './components/calendar/obrigacoes-year-wrapper';
+export { ObrigacoesCalendarCompact } from './components/calendar/obrigacoes-calendar-compact';
+export { ObrigacoesDayList } from './components/calendar/obrigacoes-day-list';
+export { ResumoCards } from './components/shared/resumo-cards';
+export { AlertasObrigacoes } from './components/shared/alertas-obrigacoes';
+export { ParcelasTable } from './components/parcelas/parcelas-table';
+export { EditParcelaDialog } from './components/parcelas/edit-parcela-dialog';
+export { IntegracaoFinanceiraSection } from './components/parcelas/integracao-financeira-section';
+export { RepassesPendentesList } from './components/repasses/repasses-pendentes-list';
+export { UploadDeclaracaoDialog } from './components/repasses/upload-declaracao-dialog';
+export { UploadComprovanteDialog } from './components/repasses/upload-comprovante-dialog';
+
+// ============================================================================
+// Hooks
+// ============================================================================
+export { useRepassesPendentes } from './hooks/use-repasses-pendentes';
+
+// ============================================================================
+// Actions (Server Actions)
+// ============================================================================
+// NOTE: Server Actions não são re-exportadas no barrel público para evitar
+// bundling no browser. Importe diretamente de:
+//   import { actionX } from '@/app/(authenticated)/obrigacoes/actions';
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
 export type {
   AcordoCondenacao,
   Parcela,
@@ -23,10 +71,9 @@ export type {
   FiltrosRepasses,
   RegistrarRepasseParams,
   MarcarParcelaRecebidaParams,
-  AtualizarParcelaParams
+  AtualizarParcelaParams,
 } from './domain';
 
-// Domain - Schemas and Constants
 export {
   acordoCondenacaoSchema,
   parcelaSchema,
@@ -42,7 +89,6 @@ export {
   marcarParcelaRecebidaSchema,
 } from './domain';
 
-// Domain - Business Logic Functions (legal only, sync functions moved to financeiro)
 export {
   calcularSplitPagamento,
   podeIniciarRepasse,
@@ -54,46 +100,22 @@ export {
   determinarStatusSincronizacao,
 } from './domain';
 
+// ============================================================================
 // Utils
+// ============================================================================
 export {
   formatarTipo,
   formatarDirecao,
   formatarStatus,
   formatarStatusRepasse,
   formatarFormaPagamento,
-  getTipoColorClass,
-  getDirecaoColorClass,
-  getStatusColorClass,
   formatCurrency,
 } from './utils';
 
-// Repository (for internal financeiro usage)
-// NOTE: exports server-only removidos do barrel publico para evitar bundling no browser.
-// Use `@/app/(authenticated)/obrigacoes/server` (server-only) quando precisar de repository/service.
-
-// Actions
-// NOTE: exports de Server Actions removidos do barrel público para evitar bundling no browser.
-// Use `@/app/(authenticated)/obrigacoes/server-actions`.
-
-// Hooks
-export { useRepassesPendentes } from './hooks/use-repasses-pendentes';
-
-// Components
-export { AcordoForm } from './components/dialogs/acordo-form';
-export { NovaObrigacaoDialog } from './components/dialogs/nova-obrigacao-dialog';
-export { ObrigacoesContent } from './components/obrigacoes-content';
-export { ObrigacoesTableWrapper } from './components/table/obrigacoes-table-wrapper';
-export { ObrigacoesMonthWrapper } from './components/calendar/obrigacoes-month-wrapper';
-export { ObrigacoesYearWrapper } from './components/calendar/obrigacoes-year-wrapper';
-export { ObrigacoesCalendarCompact } from './components/calendar/obrigacoes-calendar-compact';
-export { ObrigacoesDayList } from './components/calendar/obrigacoes-day-list';
-export { ResumoCards } from './components/shared/resumo-cards';
-export { AlertasObrigacoes } from './components/shared/alertas-obrigacoes';
-
-export { ParcelasTable } from './components/parcelas/parcelas-table';
-export { EditParcelaDialog } from './components/parcelas/edit-parcela-dialog';
-export { IntegracaoFinanceiraSection } from './components/parcelas/integracao-financeira-section';
-
-export { RepassesPendentesList } from './components/repasses/repasses-pendentes-list';
-export { UploadDeclaracaoDialog } from './components/repasses/upload-declaracao-dialog';
-export { UploadComprovanteDialog } from './components/repasses/upload-comprovante-dialog';
+// ============================================================================
+// Server-only exports
+// ============================================================================
+// Repository e Service são server-only e devem ser importados diretamente:
+//   import { ObrigacoesRepository } from '@/app/(authenticated)/obrigacoes/repository';
+//   import * as ObrigacoesService from '@/app/(authenticated)/obrigacoes/service';
+// NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.

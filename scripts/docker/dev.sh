@@ -21,17 +21,17 @@ case $COMMAND in
       echo "Usage: ./dev.sh shell [service]"
       exit 1
     fi
-    docker exec -it "sinesys_$SERVICE" sh
+    docker exec -it "synthropic_$SERVICE" sh
     ;;
   migrate)
     cd docker/dev
     # Try supabase CLI if available, else warn
     echo "Running migrations..."
     # Placeholder for migration command
-    docker exec -it sinesys_app npm run migrate || echo "Migration command failed or not found."
+    docker exec -it synthropic_app npm run migrate || echo "Migration command failed or not found."
     ;;
   seed)
-    docker exec -it sinesys_app npm run populate:tabelas-audiencias
+    docker exec -it synthropic_app npm run populate:tabelas-audiencias
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|logs|shell|migrate|seed}"

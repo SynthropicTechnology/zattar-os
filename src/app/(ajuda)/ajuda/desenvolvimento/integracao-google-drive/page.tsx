@@ -81,7 +81,7 @@ export default function IntegracaoGoogleDrivePage() {
         <CardContent className="space-y-4">
           <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
 {`┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│     Sinesys     │     │       n8n       │     │  Google Drive   │
+│     Synthropic     │     │       n8n       │     │  Google Drive   │
 │   (Next.js)     │────▶│    Workflow     │────▶│     Storage     │
 │                 │     │                 │     │                 │
 │   POST /webhook │     │  Processa req   │     │  Upload/Delete  │
@@ -89,7 +89,7 @@ export default function IntegracaoGoogleDrivePage() {
 └─────────────────┘     └─────────────────┘     └─────────────────┘`}
           </pre>
           <p className="text-sm text-muted-foreground">
-            O Sinesys envia requisições POST para um webhook único no n8n,
+            O Synthropic envia requisições POST para um webhook único no n8n,
             que processa a operação e interage com a API do Google Drive.
           </p>
         </CardContent>

@@ -70,7 +70,7 @@ export default function LibraryIndexPage() {
           Dev Library
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Referência viva do Design System Sinesys. Cada componente exposto
+          Referência viva do Design System Synthropic. Cada componente exposto
           aqui é a forma <em>canônica</em> de uso — se você precisar de algo
           que não está documentado, prefira{' '}
           <strong className="text-foreground">criar/extender</strong> em vez

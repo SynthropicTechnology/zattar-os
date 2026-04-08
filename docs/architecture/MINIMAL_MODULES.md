@@ -1,10 +1,10 @@
 # Módulos Intencionalmente Minimais
 
-> **Propósito deste documento**: Registrar quais módulos do Sinesys são intencionalmente embrionários ou minimais, e **por quê**. Isto evita que desenvolvedores futuros (humanos ou IA) tentem "consertar" módulos cuja simplicidade é uma decisão arquitetural, não uma omissão.
+> **Propósito deste documento**: Registrar quais módulos do Synthropic são intencionalmente embrionários ou minimais, e **por quê**. Isto evita que desenvolvedores futuros (humanos ou IA) tentem "consertar" módulos cuja simplicidade é uma decisão arquitetural, não uma omissão.
 
 ## Princípio: YAGNI ≠ Abandono
 
-YAGNI (*You Aren't Gonna Need It*) é o princípio de não construir abstrações até que a necessidade seja real. Aplicado a módulos do Sinesys, isso significa:
+YAGNI (*You Aren't Gonna Need It*) é o princípio de não construir abstrações até que a necessidade seja real. Aplicado a módulos do Synthropic, isso significa:
 
 - **Não criar** `domain.ts`/`service.ts`/`repository.ts` quando o módulo não tem entidades de negócio ou persistência
 - **Não criar** stubs vazios "para padronizar" — eles viram dívida técnica disfarçada de FSD compliance

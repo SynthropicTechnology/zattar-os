@@ -1,6 +1,6 @@
-# Configuracao Multi-App do Sinesys
+# Configuracao Multi-App do Synthropic
 
-O Sinesys opera com tres aplicacoes distintas em um unico monorepo Next.js. Este documento descreve a arquitetura e configuracao necessaria.
+O Synthropic opera com tres aplicacoes distintas em um unico monorepo Next.js. Este documento descreve a arquitetura e configuracao necessaria.
 
 ## Arquitetura
 
@@ -134,7 +134,7 @@ import { getMeuProcessoUrl } from "@/lib/urls";
 
 ### Configuração de Produção (Domínios Separados)
 
-O Sinesys em produção utiliza **domínios separados** para cada app:
+O Synthropic em produção utiliza **domínios separados** para cada app:
 
 | App | Domínio de Produção |
 |-----|---------------------|

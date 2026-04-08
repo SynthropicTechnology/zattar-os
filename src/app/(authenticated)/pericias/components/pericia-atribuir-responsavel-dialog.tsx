@@ -12,8 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import type { Pericia } from '../domain';
-import type { UsuarioOption } from '../types';
+import type { Pericia, UsuarioOption } from '../domain';
 import { actionAtribuirResponsavel } from '../actions/pericias-actions';
 
 function getUsuarioNome(u: UsuarioOption): string {

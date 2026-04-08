@@ -2,7 +2,7 @@
 
 ## 1. Visão Geral da Solução
 
-A solução envolve tradução sistemática de todos os textos do módulo de agenda para português brasileiro, mantendo a estrutura e funcionalidade existentes. Aplicaremos também ajustes de layout para conformidade com o design system Sinesys.
+A solução envolve tradução sistemática de todos os textos do módulo de agenda para português brasileiro, mantendo a estrutura e funcionalidade existentes. Aplicaremos também ajustes de layout para conformidade com o design system Synthropic.
 
 ## 2. Arquitetura da Solução
 
@@ -572,5 +572,5 @@ const positionedEvents: PositionedEvent[] = [];
 - [date-fns Locale Documentation](https://date-fns.org/docs/I18n)
 - [shadcn/ui Components](https://ui.shadcn.com/)
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
-- Design System Sinesys: `.cursor/rules/design-system-protocols.mdc`
+- Design System Synthropic: `.cursor/rules/design-system-protocols.mdc`
 - AGENTS.md: Guia de arquitetura do projeto

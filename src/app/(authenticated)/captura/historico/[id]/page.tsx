@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/app/(authenticated)/captura';
 import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/app/(authenticated)/captura/server';
-import { PageShell } from '@/components/shared/page-shell';
+import { Heading } from '@/components/ui/typography';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -79,17 +79,18 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
   const isCompleted = captura.status === 'completed';
 
   return (
-    <PageShell
-      title={`Detalhes da Captura #${captura.id}`}
-      actions={
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/captura/historico">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar
-          </Link>
-        </Button>
-      }
-    >
+    <>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <Heading level="page">{`Detalhes da Captura #${captura.id}`}</Heading>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/captura/historico">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar
+            </Link>
+          </Button>
+        </div>
+      </div>
       {/* Informacoes da Captura */}
       <Card>
         <CardHeader>
@@ -174,6 +175,6 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           )}
         </TabsContent>
       </Tabs>
-    </PageShell>
+    </>
   );
 }

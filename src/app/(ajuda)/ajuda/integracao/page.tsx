@@ -39,7 +39,7 @@ export default function IntegracaoPage() {
           <h1 className="text-3xl font-bold tracking-tight">Integração</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Recursos de integração disponíveis para conectar o Sinesys com outros sistemas e ferramentas.
+          Recursos de integração disponíveis para conectar o Synthropic com outros sistemas e ferramentas.
         </p>
       </div>
 
@@ -70,7 +70,7 @@ export default function IntegracaoPage() {
         <h2 className="text-2xl font-semibold tracking-tight">Visão Geral</h2>
         <div className="prose prose-neutral dark:prose-invert max-w-none">
           <p>
-            O Sinesys oferece múltiplas formas de integração para atender diferentes
+            O Synthropic oferece múltiplas formas de integração para atender diferentes
             necessidades de automação e conexão com outros sistemas.
           </p>
 
@@ -89,7 +89,7 @@ export default function IntegracaoPage() {
           <h3>Model Context Protocol (MCP)</h3>
           <p>
             O servidor MCP permite que assistentes de IA como o Claude interajam
-            diretamente com o Sinesys, executando consultas e operações através
+            diretamente com o Synthropic, executando consultas e operações através
             de linguagem natural.
           </p>
           <ul>

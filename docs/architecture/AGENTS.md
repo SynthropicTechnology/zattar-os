@@ -117,7 +117,7 @@ npm run validate:design-system
 
 ### High-Level Overview
 
-Sinesys is a legal management system (gestão jurídica) using **Feature-Sliced Design (FSD)** with **Domain-Driven Design (DDD)** principles.
+Synthropic is a legal management system (gestão jurídica) using **Feature-Sliced Design (FSD)** with **Domain-Driven Design (DDD)** principles.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis, Tailwind CSS 4, shadcn/ui
 
@@ -861,7 +861,7 @@ function MyComponent() {
 - `AI_DEFAULT_MODEL`
 - `AI_EMBEDDING_PROVIDER=openai` (or `cohere`)
 - `AI_EMBEDDING_CACHE_ENABLED=true`
-- `SINESYS_API_TOKEN` (for MCP)
+- `SYNTHROPIC_API_TOKEN` (for MCP)
 - `OPENAI_API_KEY`
 
 #### Troubleshooting
@@ -908,5 +908,5 @@ function MyComponent() {
 ---
 
 **Last updated**: 2026-03-31
-**Maintained by**: Sinesys Team
+**Maintained by**: Synthropic Team
 **For AI agents**: This is the extended reference. For the concise cross-tool version, see the root `AGENTS.md`.

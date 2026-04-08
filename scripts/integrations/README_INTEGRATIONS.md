@@ -1,6 +1,6 @@
 # Scripts de Integrações
 
-Scripts para gerenciar a migração e configuração de integrações no Sinesys.
+Scripts para gerenciar a migração e configuração de integrações no Synthropic.
 
 ## 📁 Arquivos
 

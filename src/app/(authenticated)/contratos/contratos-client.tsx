@@ -13,7 +13,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, AlertCircle, FileText, GitBranch, Kanban, List } from 'lucide-react';
+import { Plus, AlertCircle, FileText, GitBranch, Kanban, List, Filter, X } from 'lucide-react';
 import {
   InsightBanner,
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
@@ -129,8 +129,8 @@ function mapContratoToCardData(
   const parteContrariaId = parteContrariaItem?.entidadeId;
   const parteContrariaNome = parteContrariaItem
     ? parteContrariaItem.nomeSnapshot ||
-      (parteContrariaId ? partesMap.get(parteContrariaId) : undefined) ||
-      `Parte #${parteContrariaId}`
+    (parteContrariaId ? partesMap.get(parteContrariaId) : undefined) ||
+    `Parte #${parteContrariaId}`
     : undefined;
 
   const responsavelNome = contrato.responsavelId
@@ -147,6 +147,9 @@ function mapContratoToCardData(
       clienteNome,
     );
 
+  // Primeiro processo vinculado (para exibir número e TRT)
+  const primeiroProcesso = contrato.processos?.[0]?.processo ?? null;
+
   return {
     id: contrato.id,
     cliente: clienteNome,
@@ -161,6 +164,9 @@ function mapContratoToCardData(
     responsavel: responsavelNome,
     diasNoEstagio: calcDiasNoEstagio(contrato),
     processosVinculados: contrato.processos?.length ?? 0,
+    numeroProcesso: primeiroProcesso?.numeroProcesso ?? undefined,
+    criadoEm: contrato.createdAt,
+    trtProcesso: primeiroProcesso?.trt ?? undefined,
   };
 }
 
@@ -199,6 +205,9 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('pipeline');
   const [search, setSearch] = useState('');
   const [activeSegmento, setActiveSegmento] = useState('todos');
+  const [filterStatus, setFilterStatus] = useState<string>('todos');
+  const [filterTipo, setFilterTipo] = useState<string>('todos');
+  const [filterCobranca, setFilterCobranca] = useState<string>('todos');
 
   const [contratos, setContratos] = useState<ContratoCardData[]>([]);
   const [stats, setStats] = useState<ContratosStatsData>(
@@ -349,23 +358,35 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
 
   const filteredContratos = contratos.filter((c) => {
     if (activeSegmento !== 'todos') {
-      // Compara pelo nome do segmento (tab id = segmento id numerico ou nome)
       const tabSelecionada = segmentoTabs.find((t) => t.id === activeSegmento);
       if (tabSelecionada && tabSelecionada.id !== 'todos') {
         if (c.segmento !== tabSelecionada.label) return false;
       }
     }
+    if (filterStatus !== 'todos' && c.status !== filterStatus) return false;
+    if (filterTipo !== 'todos' && c.tipo !== TIPO_CONTRATO_LABELS[filterTipo as keyof typeof TIPO_CONTRATO_LABELS]) return false;
+    if (filterCobranca !== 'todos' && c.cobranca !== TIPO_COBRANCA_LABELS[filterCobranca as keyof typeof TIPO_COBRANCA_LABELS]) return false;
     if (search) {
       const s = search.toLowerCase();
       return (
         c.cliente.toLowerCase().includes(s) ||
         c.parteContraria?.toLowerCase().includes(s) ||
         c.tipo.toLowerCase().includes(s) ||
-        c.segmento.toLowerCase().includes(s)
+        c.segmento.toLowerCase().includes(s) ||
+        c.numeroProcesso?.toLowerCase().includes(s) ||
+        c.responsavel.toLowerCase().includes(s)
       );
     }
     return true;
   });
+
+  const hasActiveFilters = filterStatus !== 'todos' || filterTipo !== 'todos' || filterCobranca !== 'todos';
+
+  function clearAllFilters() {
+    setFilterStatus('todos');
+    setFilterTipo('todos');
+    setFilterCobranca('todos');
+  }
 
   // Contratos parados em negociação há +30 dias
   const stuckContratos = contratos.filter(
@@ -395,9 +416,8 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {isLoading
               ? 'Carregando...'
-              : `${stats.total} contrato${stats.total !== 1 ? 's' : ''}${
-                  stats.novosMes > 0 ? ` · ${stats.novosMes} novo${stats.novosMes !== 1 ? 's' : ''} este mês` : ''
-                }`}
+              : `${stats.total} contrato${stats.total !== 1 ? 's' : ''}${stats.novosMes > 0 ? ` · ${stats.novosMes} novo${stats.novosMes !== 1 ? 's' : ''} este mês` : ''
+              }`}
           </p>
         </div>
         <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm">
@@ -436,19 +456,76 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
       )}
 
       {/* ── View Controls ─────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <TabPills tabs={segmentoTabs} active={activeSegmento} onChange={setActiveSegmento} />
-        <div className="flex items-center gap-2 flex-1 justify-end">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Buscar cliente, parte, tipo..."
-          />
-          <ViewToggle
-            mode={viewMode}
-            onChange={(m) => setViewMode(m as ViewMode)}
-            options={VIEW_OPTIONS}
-          />
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <TabPills tabs={segmentoTabs} active={activeSegmento} onChange={setActiveSegmento} />
+          <div className="flex items-center gap-2 flex-1 justify-end">
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Buscar cliente, parte, processo..."
+            />
+            <ViewToggle
+              mode={viewMode}
+              onChange={(m) => setViewMode(m as ViewMode)}
+              options={VIEW_OPTIONS}
+            />
+          </div>
+        </div>
+
+        {/* ── Filtros ──────────────────────────────────────────── */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <Filter className="size-3.5 text-muted-foreground/40" />
+
+          {/* Status */}
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            aria-label="Filtrar por status"
+            className="h-7 px-2 rounded-lg bg-white/4 border border-border/15 text-[11px] text-foreground/80 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all cursor-pointer"
+          >
+            <option value="todos">Status: Todos</option>
+            {PIPELINE_STAGES.map((s) => (
+              <option key={s.id} value={s.id}>{s.label}</option>
+            ))}
+          </select>
+
+          {/* Tipo */}
+          <select
+            value={filterTipo}
+            onChange={(e) => setFilterTipo(e.target.value)}
+            aria-label="Filtrar por tipo"
+            className="h-7 px-2 rounded-lg bg-white/4 border border-border/15 text-[11px] text-foreground/80 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all cursor-pointer"
+          >
+            <option value="todos">Tipo: Todos</option>
+            {Object.entries(TIPO_CONTRATO_LABELS).map(([key, label]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
+
+          {/* Cobrança */}
+          <select
+            value={filterCobranca}
+            onChange={(e) => setFilterCobranca(e.target.value)}
+            aria-label="Filtrar por cobrança"
+            className="h-7 px-2 rounded-lg bg-white/4 border border-border/15 text-[11px] text-foreground/80 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all cursor-pointer"
+          >
+            <option value="todos">Cobrança: Todos</option>
+            {Object.entries(TIPO_COBRANCA_LABELS).map(([key, label]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
+
+          {/* Limpar filtros */}
+          {hasActiveFilters && (
+            <button
+              onClick={clearAllFilters}
+              className="flex items-center gap-1 h-7 px-2 rounded-lg text-[11px] text-destructive/60 hover:text-destructive/80 hover:bg-destructive/6 transition-colors cursor-pointer"
+            >
+              <X className="size-3" />
+              Limpar
+            </button>
+          )}
         </div>
       </div>
 
@@ -460,12 +537,12 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
           {isLoading
             ? Array.from({ length: 4 }).map((_, i) => <KanbanColumnSkeleton key={i} />)
             : PIPELINE_STAGES.map((stage) => (
-                <KanbanColumn
-                  key={stage.id}
-                  stage={stage}
-                  contratos={filteredContratos.filter((c) => c.status === stage.id)}
-                />
-              ))}
+              <KanbanColumn
+                key={stage.id}
+                stage={stage}
+                contratos={filteredContratos.filter((c) => c.status === stage.id)}
+              />
+            ))}
         </div>
       )}
 
@@ -475,31 +552,48 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
           {isLoading
             ? Array.from({ length: 3 }).map((_, i) => <KanbanColumnSkeleton key={i} />)
             : PIPELINE_STAGES.filter((s) => s.id !== 'desistencia').map((stage) => (
-                <KanbanColumn
-                  key={stage.id}
-                  stage={stage}
-                  contratos={filteredContratos.filter((c) => c.status === stage.id)}
-                />
-              ))}
+              <KanbanColumn
+                key={stage.id}
+                stage={stage}
+                contratos={filteredContratos.filter((c) => c.status === stage.id)}
+              />
+            ))}
         </div>
       )}
 
       {/* Lista view */}
       {viewMode === 'lista' && (
         <div className="flex flex-col gap-1">
+          {/* Header da lista */}
+          {!isLoading && filteredContratos.length > 0 && (
+            <div className="flex items-center gap-3 px-4 py-2 text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+              <div className="size-2.5 shrink-0" />
+              <div className="size-8 shrink-0" />
+              <div className="flex-1">Cliente</div>
+              <span className="hidden lg:block w-40">Processo</span>
+              <span className="hidden sm:block w-16">Tipo</span>
+              <span className="hidden md:block w-16">Cobrança</span>
+              <span className="hidden xl:block w-20">Segmento</span>
+              <span className="hidden lg:block w-16 text-right">Cadastro</span>
+              <span className="hidden md:block w-24 text-right">Status</span>
+              <span className="w-24 text-right">Valor</span>
+              <span className="w-10 text-right">Dias</span>
+              <div className="size-3.5 shrink-0" />
+            </div>
+          )}
           {isLoading
             ? Array.from({ length: 8 }).map((_, i) => <ListRowSkeleton key={i} />)
             : filteredContratos.map((c) => {
-                const stage = PIPELINE_STAGES.find((s) => s.id === c.status);
-                return (
-                  <ContratoListRow
-                    key={c.id}
-                    contrato={c}
-                    stageColor={stage?.color}
-                    stageLabel={STATUS_CONTRATO_LABELS[c.status as StatusContrato] ?? c.status}
-                  />
-                );
-              })}
+              const stage = PIPELINE_STAGES.find((s) => s.id === c.status);
+              return (
+                <ContratoListRow
+                  key={c.id}
+                  contrato={c}
+                  stageColor={stage?.color}
+                  stageLabel={STATUS_CONTRATO_LABELS[c.status as StatusContrato] ?? c.status}
+                />
+              );
+            })}
 
           {!isLoading && filteredContratos.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -508,7 +602,7 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
                 Nenhum contrato encontrado
               </p>
               <p className="text-xs text-muted-foreground/55 mt-1">
-                {search ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
+                {search || hasActiveFilters ? 'Tente ajustar a busca ou os filtros' : 'Nenhum contrato cadastrado'}
               </p>
             </div>
           )}

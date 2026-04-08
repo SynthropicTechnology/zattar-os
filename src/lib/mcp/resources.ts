@@ -1,5 +1,5 @@
 /**
- * Sistema de Resources MCP do Sinesys
+ * Sistema de Resources MCP do Synthropic
  *
  * Resources permitem expor dados estruturados (documentos, arquivos, processos)
  * para clientes MCP que podem acessá-los via URI.
@@ -12,7 +12,7 @@
 // =============================================================================
 
 export interface MCPResourceConfig {
-  uri: string; // Ex: "sinesys://documentos/{id}"
+  uri: string; // Ex: "synthropic://documentos/{id}"
   name: string;
   description: string;
   mimeType?: string;
@@ -64,7 +64,7 @@ export function listMcpResources(): MCPResourceListItem[] {
 
 /**
  * Extrai parâmetros de uma URI
- * Ex: "sinesys://documentos/123" com template "sinesys://documentos/{id}"
+ * Ex: "synthropic://documentos/123" com template "synthropic://documentos/{id}"
  * Retorna: { id: "123" }
  */
 function extractParams(

@@ -26,7 +26,7 @@ export default function Notificacoes() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-heading">Notificações</h1>
         <p className="text-muted-foreground mt-2">
-          O sistema de notificações do Sinesys mantém você informado sobre eventos importantes
+          O sistema de notificações do Synthropic mantém você informado sobre eventos importantes
           como audiências, expedientes, prazos e atividades da equipe em tempo real.
         </p>
       </div>
@@ -142,7 +142,7 @@ export default function Notificacoes() {
               campo: 'No Sistema',
               tipo: 'Booleano',
               obrigatorio: false,
-              descricao: 'Exibe a notificação na central de notificações do Sinesys.',
+              descricao: 'Exibe a notificação na central de notificações do Synthropic.',
             },
             {
               campo: 'Por E-mail',
@@ -154,7 +154,7 @@ export default function Notificacoes() {
               campo: 'Push (Navegador)',
               tipo: 'Booleano',
               obrigatorio: false,
-              descricao: 'Envia notificação push para o navegador, mesmo quando o Sinesys não está aberto.',
+              descricao: 'Envia notificação push para o navegador, mesmo quando o Synthropic não está aberto.',
             },
             {
               campo: 'Antecedência (Prazos)',
@@ -206,7 +206,7 @@ export default function Notificacoes() {
           ]}
         />
         <DocTip>
-          As notificações push funcionam mesmo com o Sinesys minimizado ou em outra aba, desde
+          As notificações push funcionam mesmo com o Synthropic minimizado ou em outra aba, desde
           que o navegador esteja aberto. Não funcionam quando o navegador está completamente
           fechado.
         </DocTip>
@@ -235,7 +235,7 @@ export default function Notificacoes() {
               icon: Smartphone,
               nome: 'Notificações no Mobile',
               descricao:
-                'Ao acessar o Sinesys pelo celular, as notificações são exibidas em formato responsivo na central.',
+                'Ao acessar o Synthropic pelo celular, as notificações são exibidas em formato responsivo na central.',
             },
             {
               icon: Settings,

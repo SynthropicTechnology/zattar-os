@@ -4,7 +4,7 @@
 **Módulo intencionalmente minimal** — não tem regras de negócio. É um sistema de documentação dinâmica baseado em registry + lazy loading.
 
 ## O que este módulo é
-Central de Ajuda do Sinesys que serve documentação interna para usuários do sistema. Implementa:
+Central de Ajuda do Synthropic que serve documentação interna para usuários do sistema. Implementa:
 - **Rota dinâmica**: `[...slug]/page.tsx` resolve qualquer caminho como uma entrada do registry
 - **Registry**: `docs-registry.ts` lista todas as docs disponíveis em uma estrutura hierárquica
 - **Conteúdo**: Cada doc é um componente React em `content/<slug>.tsx` carregado via `lazy()`

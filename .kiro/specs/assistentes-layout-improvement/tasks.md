@@ -2,7 +2,7 @@
 
 ## Overview
 
-This implementation plan refactors the assistentes page to follow the PageShell/DataShell pattern used throughout Sinesys. The work is organized into discrete steps that build incrementally, with each step maintaining functionality while improving the design.
+This implementation plan refactors the assistentes page to follow the PageShell/DataShell pattern used throughout Synthropic. The work is organized into discrete steps that build incrementally, with each step maintaining functionality while improving the design.
 
 ## Tasks
 

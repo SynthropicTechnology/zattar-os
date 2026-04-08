@@ -24,13 +24,12 @@ import {
   YearCalendarGrid,
 } from '@/components/shared';
 
-import type { Pericia } from '../domain';
+import type { Pericia, UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../domain';
 import { SituacaoPericiaCodigo } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
 import { usePeritos } from '../hooks/use-peritos';
-import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
 
 import {
   PericiasListFilters,

@@ -1,5 +1,5 @@
 /**
- * Tipos compartilhados para a camada de IA do Sinesys
+ * Tipos compartilhados para a camada de IA do Synthropic
  */
 
 /**

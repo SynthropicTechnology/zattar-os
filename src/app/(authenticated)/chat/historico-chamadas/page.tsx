@@ -7,7 +7,6 @@ import {
   TipoChamada,
   StatusChamada
 } from '@/app/(authenticated)/chat';
-import { PageShell } from '@/components/shared/page-shell';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -54,10 +53,8 @@ async function HistoricoChamadasContent({ searchParams }: PageProps) {
 
 export default function HistoricoChamadasPage({ searchParams }: PageProps) {
   return (
-    <PageShell>
-      <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
-        <HistoricoChamadasContent searchParams={searchParams} />
-      </Suspense>
-    </PageShell>
+    <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
+      <HistoricoChamadasContent searchParams={searchParams} />
+    </Suspense>
   );
 }

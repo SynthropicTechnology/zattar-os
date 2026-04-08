@@ -1,7 +1,7 @@
 # Regras de Negocio - Chat
 
 ## Contexto
-Modulo de comunicacao interna do Sinesys responsavel por salas de chat (texto, midia), chamadas de audio/video (via Dyte) com transcricao e gravacao, e historico de conversas. Integra-se com Supabase Realtime para mensagens em tempo real e com IA para geracao de resumos de chamadas.
+Modulo de comunicacao interna do Synthropic responsavel por salas de chat (texto, midia), chamadas de audio/video (via Dyte) com transcricao e gravacao, e historico de conversas. Integra-se com Supabase Realtime para mensagens em tempo real e com IA para geracao de resumos de chamadas.
 
 ## Entidades Principais
 - **SalaChat**: Sala de conversa com tipo (geral, documento, privado, grupo), vinculacao opcional a documento ou participante, e flag de arquivamento

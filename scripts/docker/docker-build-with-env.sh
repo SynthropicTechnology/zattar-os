@@ -79,7 +79,7 @@ echo ""
 docker build --platform linux/amd64 \
     --no-cache \
     $BUILD_ARGS \
-    -t sinesystec/sinesys:latest \
+    -t synthropictec/synthropic:latest \
     .
 
 if [ $? -eq 0 ]; then
@@ -93,7 +93,7 @@ if [ $? -eq 0 ]; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo ""
         echo "📤 Fazendo push para Docker Hub..."
-        docker push sinesystec/sinesys:latest
+        docker push synthropictec/synthropic:latest
         
         if [ $? -eq 0 ]; then
             echo ""
@@ -102,7 +102,7 @@ if [ $? -eq 0 ]; then
             echo "Próximos passos:"
             echo "1. Acesse o CapRover"
             echo "2. Configure as variáveis runtime (SUPABASE_SECRET_KEY, etc.)"
-            echo "3. Faça deploy da imagem sinesystec/sinesys:latest"
+            echo "3. Faça deploy da imagem synthropictec/synthropic:latest"
         else
             echo -e "${RED}❌ Erro ao fazer push${NC}"
             exit 1

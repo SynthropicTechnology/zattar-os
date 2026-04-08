@@ -28,7 +28,7 @@ DOCKERFILE="Dockerfile.cloudron"
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
 CLOUDRON_APP="zattaradvogados.com"
-REGISTRY="registry.sinesys.online"
+REGISTRY="registry.synthropic.online"
 IMAGE_NAME="zattar-os"
 DOCKER_REPOSITORY="${REGISTRY}/${IMAGE_NAME}"
 

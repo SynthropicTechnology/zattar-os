@@ -4,7 +4,7 @@ Este documento provê diretrizes cruciais para agentes de inteligência artifici
 
 ## Dados do Projeto
 
-**Sinesys (Zattar OS)** — Sistema corporativo de gestão jurídica.
+**Synthropic (Zattar OS)** — Sistema corporativo de gestão jurídica.
 A base de banco de dados e termos de negócio está em Português.
 
 **Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5 (estrito), Supabase (PostgreSQL + RLS + pgvector), Tailwind CSS 4, shadcn/ui.

@@ -33,7 +33,7 @@ export default function DesignSystemPage() {
           <h1 className="text-3xl font-bold tracking-tight">Design System</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Padrões visuais, tipografia e componentes utilizados no Sinesys.
+          Padrões visuais, tipografia e componentes utilizados no Synthropic.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export default function DesignSystemPage() {
         <h2 className="text-2xl font-semibold tracking-tight">Visão Geral</h2>
         <div className="prose prose-neutral dark:prose-invert max-w-none">
           <p>
-            O Design System do Sinesys é baseado no <strong>shadcn/ui</strong>, uma
+            O Design System do Synthropic é baseado no <strong>shadcn/ui</strong>, uma
             coleção de componentes reutilizáveis construídos com Radix UI e Tailwind CSS.
           </p>
 

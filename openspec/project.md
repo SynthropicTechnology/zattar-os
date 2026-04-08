@@ -1,10 +1,10 @@
-# Project Specification: Sinesys 2.0
+# Project Specification: Synthropic 2.0
 
 ## 1. Project Overview
 
 ### 1.1. Introduction
 
-Sinesys is a legal management system developed with an **AI-First architecture**, utilizing Next.js 16, React 19, Supabase, and **MCP (Model Context Protocol)** integration. It focuses on client management, contract and legal process handling, automated data capture (PJE-TRT), and integrates advanced AI capabilities for document drafting and semantic search.
+Synthropic is a legal management system developed with an **AI-First architecture**, utilizing Next.js 16, React 19, Supabase, and **MCP (Model Context Protocol)** integration. It focuses on client management, contract and legal process handling, automated data capture (PJE-TRT), and integrates advanced AI capabilities for document drafting and semantic search.
 
 ### 1.2. Key Features
 

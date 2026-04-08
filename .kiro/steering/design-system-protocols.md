@@ -2,9 +2,9 @@
 inclusion: always
 ---
 
-# Design System Sinesys - Protocolos AI-First
+# Design System Synthropic - Protocolos AI-First
 
-Este documento define as regras que agentes de IA devem seguir ao gerar ou modificar codigo no Sinesys.
+Este documento define as regras que agentes de IA devem seguir ao gerar ou modificar codigo no Synthropic.
 
 ## 1. Layout & Shells
 

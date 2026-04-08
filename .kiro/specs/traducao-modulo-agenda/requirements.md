@@ -2,7 +2,7 @@
 
 ## 1. Visão Geral
 
-Realizar tradução completa do módulo de agenda (calendar) do inglês para o português brasileiro, mantendo a funcionalidade existente e aplicando ajustes de layout conforme os padrões do design system Sinesys.
+Realizar tradução completa do módulo de agenda (calendar) do inglês para o português brasileiro, mantendo a funcionalidade existente e aplicando ajustes de layout conforme os padrões do design system Synthropic.
 
 ## 2. Contexto
 
@@ -18,7 +18,7 @@ O módulo de agenda (`src/features/calendar/`) atualmente possui diversos textos
 ## 3. Objetivos
 
 1. Traduzir 100% dos textos visíveis ao usuário para português brasileiro
-2. Manter consistência terminológica com outros módulos do Sinesys
+2. Manter consistência terminológica com outros módulos do Synthropic
 3. Aplicar padrões de layout do design system (PageShell, espaçamento, cores)
 4. Garantir que a funcionalidade existente permaneça intacta
 5. Manter acessibilidade (aria-labels, sr-only texts)
@@ -32,7 +32,7 @@ O módulo de agenda (`src/features/calendar/`) atualmente possui diversos textos
 - Datas e horários seguem formato brasileiro
 - Mensagens de feedback (toasts) estão em português
 
-### US-2: Como usuário, quero que o layout da agenda siga os padrões do Sinesys
+### US-2: Como usuário, quero que o layout da agenda siga os padrões do Synthropic
 **Critérios de Aceitação:**
 - Página usa PageShell para estrutura consistente
 - Espaçamento segue grid de 4px
@@ -150,7 +150,7 @@ O módulo de agenda (`src/features/calendar/`) atualmente possui diversos textos
 
 - Componentes UI do shadcn/ui
 - Biblioteca date-fns (já configurada)
-- Design system Sinesys
+- Design system Synthropic
 - PageShell component
 
 ## 9. Critérios de Sucesso

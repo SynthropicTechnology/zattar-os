@@ -10,7 +10,7 @@
 - [x] 1.4 Verificar e corrigir imports em `src/app/(website)/components/hero.tsx`
 - [x] 1.5 Verificar e corrigir imports em todos os componentes restantes
 
-## 2. Integrar Design System do Sinesys
+## 2. Integrar Design System do Synthropic
 
 - [x] 2.1 Atualizar layout do website para usar fontes do sistema (Inter, Montserrat, Geist_Mono)
 - [x] 2.2 Atualizar componentes para usar tokens de espacamento (`gap-4`, `space-y-6`, etc.)

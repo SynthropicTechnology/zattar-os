@@ -18,11 +18,11 @@ const SEGMENT_COLORS = [
   'var(--warning)',
   'var(--success)',
   'var(--info, var(--primary))',
-  'oklch(from var(--muted-foreground) l c h / 0.4)',
+  'var(--chart-muted-soft)',
 ];
 
 function getSegmentColor(index: number): string {
-  return SEGMENT_COLORS[index] ?? 'oklch(from var(--muted-foreground) l c h / 0.4)';
+  return SEGMENT_COLORS[index] ?? 'var(--chart-muted-soft)';
 }
 
 // ─── Empty State ──────────────────────────────────────────────────────────────

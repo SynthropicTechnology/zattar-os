@@ -50,39 +50,39 @@ interface NavItem {
 }
 
 const navEscritorio: NavItem[] = [
-  { id: 'dashboard',   title: 'Dashboard',   url: '/app/dashboard',         icon: LayoutDashboard, shortcut: '⌘1', description: 'Visão geral' },
-  { id: 'processos',   title: 'Processos',   url: '/app/processos',         icon: Scale,           shortcut: '⌘2', description: '127 ativos' },
-  { id: 'contratos',   title: 'Contratos',   url: '/app/contratos',         icon: FileText,        shortcut: '⌘3', description: '42 vigentes' },
-  { id: 'partes',      title: 'Partes',      url: '/app/partes',            icon: Users,           shortcut: '⌘4', description: 'Clientes e partes' },
-  { id: 'expedientes', title: 'Expedientes', url: '/app/expedientes',       icon: Inbox,           shortcut: '⌘5', description: '14 pendentes' },
-  { id: 'audiencias',  title: 'Audiências',  url: '/app/audiencias/semana', icon: Gavel,           shortcut: '⌘6', description: '3 esta semana' },
-  { id: 'obrigacoes',  title: 'Obrigações',  url: '/app/obrigacoes',          icon: ScrollText,    shortcut: '⌘7', description: 'Acordos e prazos' },
-  { id: 'pericias',    title: 'Perícias',    url: '/app/pericias',          icon: Microscope,      shortcut: '⌘8', description: '5 em andamento' },
+  { id: 'dashboard', title: 'Dashboard', url: '/app/dashboard', icon: LayoutDashboard, shortcut: '⌘1', description: 'Visão geral' },
+  { id: 'processos', title: 'Processos', url: '/app/processos', icon: Scale, shortcut: '⌘2', description: '127 ativos' },
+  { id: 'contratos', title: 'Contratos', url: '/app/contratos', icon: FileText, shortcut: '⌘3', description: '42 vigentes' },
+  { id: 'partes', title: 'Partes', url: '/app/partes', icon: Users, shortcut: '⌘4', description: 'Clientes e partes' },
+  { id: 'expedientes', title: 'Expedientes', url: '/app/expedientes', icon: Inbox, shortcut: '⌘5', description: '14 pendentes' },
+  { id: 'audiencias', title: 'Audiências', url: '/app/audiencias/semana', icon: Gavel, shortcut: '⌘6', description: '3 esta semana' },
+  { id: 'obrigacoes', title: 'Obrigações', url: '/app/obrigacoes', icon: ScrollText, shortcut: '⌘7', description: 'Acordos e prazos' },
+  { id: 'pericias', title: 'Perícias', url: '/app/pericias', icon: Microscope, shortcut: '⌘8', description: '5 em andamento' },
 ];
 
 const navServicos: NavItem[] = [
-  { id: 'agenda',         title: 'Agenda',             url: '/app/agenda',                              icon: Calendar,    description: 'Compromissos' },
-  { id: 'assinatura',     title: 'Assinatura Digital', url: '/app/assinatura-digital/documentos/lista', icon: PenTool,     description: 'Assinar docs' },
-  { id: 'assistentes',    title: 'Assistentes IA',     url: '/app/assistentes',                         icon: Bot,         description: 'Agentes inteligentes' },
-  { id: 'chat',           title: 'Chat',               url: '/app/chat',                                icon: MessageCircle, description: 'Mensagens' },
-  { id: 'diario',         title: 'Diário Oficial',     url: '/app/comunica-cnj',                        icon: Newspaper,   description: 'Publicações' },
-  { id: 'documentos',     title: 'Documentos',         url: '/app/documentos',                          icon: FileEdit,    description: 'Editor colaborativo' },
-  { id: 'email',          title: 'E-mail',             url: '/app/mail',                                icon: Mail,        description: 'Caixa de entrada' },
-  { id: 'jurisprudencia', title: 'Jurisprudência',     url: '/app/pangea',                              icon: BookOpen,    description: 'Pesquisa legal' },
-  { id: 'notas',          title: 'Notas',              url: '/app/notas',                               icon: StickyNote,  description: 'Anotações rápidas' },
-  { id: 'pecas',          title: 'Peças Jurídicas',    url: '/app/pecas-juridicas',                     icon: ScrollText,  description: 'Gerar peças com IA' },
-  { id: 'projetos',       title: 'Projetos',           url: '/app/project-management',                  icon: FolderKanban, description: 'Gestão de projetos' },
+  { id: 'agenda', title: 'Agenda', url: '/app/agenda', icon: Calendar, description: 'Compromissos' },
+  { id: 'assinatura', title: 'Assinatura Digital', url: '/app/assinatura-digital/documentos/lista', icon: PenTool, description: 'Assinar docs' },
+  { id: 'assistentes', title: 'Assistentes IA', url: '/app/assistentes', icon: Bot, description: 'Agentes inteligentes' },
+  { id: 'chat', title: 'Chat', url: '/app/chat', icon: MessageCircle, description: 'Mensagens' },
+  { id: 'diario', title: 'Diário Oficial', url: '/app/comunica-cnj', icon: Newspaper, description: 'Publicações' },
+  { id: 'documentos', title: 'Documentos', url: '/app/documentos', icon: FileEdit, description: 'Editor colaborativo' },
+  { id: 'email', title: 'E-mail', url: '/app/mail', icon: Mail, description: 'Caixa de entrada' },
+  { id: 'jurisprudencia', title: 'Jurisprudência', url: '/app/pangea', icon: BookOpen, description: 'Pesquisa legal' },
+  { id: 'notas', title: 'Notas', url: '/app/notas', icon: StickyNote, description: 'Anotações rápidas' },
+  { id: 'pecas', title: 'Peças Jurídicas', url: '/app/pecas-juridicas', icon: ScrollText, description: 'Gerar peças com IA' },
+  { id: 'projetos', title: 'Projetos', url: '/app/project-management', icon: FolderKanban, description: 'Gestão de projetos' },
 ];
 
 const navGestao: NavItem[] = [
-  { id: 'captura',    title: 'Captura',    url: '/app/captura',    icon: Radar,  description: 'Automação PJE/TRT' },
+  { id: 'captura', title: 'Captura', url: '/app/captura', icon: Radar, description: 'Automação PJE/TRT' },
   { id: 'financeiro', title: 'Financeiro', url: '/app/financeiro', icon: Wallet, description: 'Contas e fluxo' },
 ];
 
 const allSections = [
   { label: 'Escritório', items: navEscritorio },
-  { label: 'Serviços',   items: navServicos },
-  { label: 'Gestão',     items: navGestao },
+  { label: 'Serviços', items: navServicos },
+  { label: 'Gestão', items: navGestao },
 ];
 
 // ─── Recents (simulação) ───────────────────────────────────────────────
@@ -110,13 +110,13 @@ function CommandHub({
   // Filter items based on search
   const filteredSections = search.trim()
     ? [{
-        label: 'Resultados',
-        items: [...navEscritorio, ...navServicos, ...navGestao].filter(
-          (item) =>
-            item.title.toLowerCase().includes(search.toLowerCase()) ||
-            item.description?.toLowerCase().includes(search.toLowerCase())
-        ),
-      }]
+      label: 'Resultados',
+      items: [...navEscritorio, ...navServicos, ...navGestao].filter(
+        (item) =>
+          item.title.toLowerCase().includes(search.toLowerCase()) ||
+          item.description?.toLowerCase().includes(search.toLowerCase())
+      ),
+    }]
     : allSections;
 
   const allFilteredItems = filteredSections.flatMap((s) => s.items);
@@ -302,7 +302,7 @@ function CommandHub({
                         size-8 rounded-lg flex items-center justify-center shrink-0
                         transition-all duration-200
                         ${isActive
-                          ? 'bg-primary/15 text-primary shadow-[0_0_12px_oklch(from var(--primary) l c h / 0.15)]'
+                          ? 'bg-primary/15 text-primary shadow-[0_0_12px_var(--glow-primary)]'
                           : 'bg-muted/30 text-muted-foreground/60 group-hover:text-foreground/80'
                         }
                       `}>
@@ -360,7 +360,7 @@ function CommandHub({
           </div>
           <div className="flex items-center gap-1 text-[10px] text-muted-foreground/30">
             <Sparkles className="size-3" />
-            <span>Sinesys v2</span>
+            <span>Synthropic v2</span>
           </div>
         </div>
       </div>

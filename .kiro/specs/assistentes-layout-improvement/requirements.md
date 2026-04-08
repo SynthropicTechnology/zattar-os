@@ -2,7 +2,7 @@
 
 ## 1. Visão Geral
 
-Refatorar a página de assistentes para seguir os padrões de design estabelecidos no Sinesys, aplicando PageShell e DataShell, melhorando a experiência visual dos cards de assistentes com design moderno e profissional.
+Refatorar a página de assistentes para seguir os padrões de design estabelecidos no Synthropic, aplicando PageShell e DataShell, melhorando a experiência visual dos cards de assistentes com design moderno e profissional.
 
 **IMPORTANTE**: Não utilizamos descrições/subtítulos nas páginas. O título e botão de ação ficam na mesma linha via DataTableToolbar.
 

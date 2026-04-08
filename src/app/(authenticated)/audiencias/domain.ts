@@ -134,7 +134,7 @@ export type AllowedUpdateFieldCapturada = typeof ALLOWED_UPDATE_FIELDS_CAPTURADA
 
 /**
  * Identifica se uma audiência foi capturada do PJE (origem PJE) ou criada
- * manualmente no Sinesys. Usado para impor que registros capturados não
+ * manualmente no Synthropic. Usado para impor que registros capturados não
  * podem ser editados localmente fora do whitelist permitido.
  */
 export function isAudienciaCapturada(

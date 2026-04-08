@@ -6,7 +6,7 @@ O sistema SHALL exibir uma página de ajuda em `/app/ajuda` com visão geral do 
 
 #### Scenario: Acesso à página de ajuda
 - **WHEN** o usuário navegar para `/app/ajuda`
-- **THEN** o sistema exibe a página inicial da documentação com uma descrição geral do Sinesys, cards de acesso rápido para cada categoria de módulos (Principal, Serviços, Gestão), e um campo de busca no topo
+- **THEN** o sistema exibe a página inicial da documentação com uma descrição geral do Synthropic, cards de acesso rápido para cada categoria de módulos (Principal, Serviços, Gestão), e um campo de busca no topo
 
 #### Scenario: Busca de funcionalidade
 - **WHEN** o usuário digitar um termo no campo de busca (ex: "cliente", "contrato", "DRE")

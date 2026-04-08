@@ -234,8 +234,8 @@ export function StackedBar({
 
 export function UrgencyDot({ level }: { level: 'critico' | 'alto' | 'medio' | 'baixo' | 'ok' }) {
   const styles: Record<string, string> = {
-    critico: 'bg-destructive shadow-[0_0_8px_color-mix(in_oklch,var(--destructive)_50%,transparent)] animate-pulse',
-    alto: 'bg-warning shadow-[0_0_6px_color-mix(in_oklch,var(--warning)_40%,transparent)]',
+    critico: 'bg-destructive shadow-[0_0_8px_var(--glow-destructive)] animate-pulse',
+    alto: 'bg-warning shadow-[0_0_6px_var(--glow-warning)]',
     medio: 'bg-primary/50',
     baixo: 'bg-muted-foreground/30',
     ok: 'bg-success/60',

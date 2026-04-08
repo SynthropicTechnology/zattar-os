@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable, RowSelectionState } from '@tanstack/react-table';
 import { Plus, PowerOff, Power } from 'lucide-react';
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
-import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   AlertDialog,
@@ -323,7 +322,7 @@ export default function CredenciaisPage() {
   );
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           table ? (
@@ -525,6 +524,6 @@ export default function CredenciaisPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </PageShell>
+    </>
   );
 }

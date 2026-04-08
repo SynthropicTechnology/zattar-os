@@ -1,4 +1,4 @@
-# Política de Uso da Marca Sinesys
+# Política de Uso da Marca Synthropic
 
 **Versão:** 1.0  
 **Data:** Dezembro 2025
@@ -7,9 +7,9 @@
 
 ## 📋 Sobre Este Documento
 
-O código-fonte do **Sinesys** é licenciado sob **GNU Affero General Public License v3.0 (AGPL v3)**.
+O código-fonte do **Synthropic** é licenciado sob **GNU Affero General Public License v3.0 (AGPL v3)**.
 
-A marca "**Sinesys**" e seus logotipos são propriedade da **Sinesys**.
+A marca "**Synthropic**" e seus logotipos são propriedade da **Synthropic**.
 
 Este documento esclarece como você pode usar o código-fonte e a marca registrada.
 
@@ -37,18 +37,18 @@ Sob a licença AGPL v3, você tem total liberdade para:
 
 ### Você NÃO PODE:
 
-❌ Usar "**Sinesys**" como nome do seu produto ou serviço derivado  
-❌ Usar "**Sinesys**" de forma que sugira endosso oficial da Sinesys  
-❌ Registrar domínios contendo "Sinesys" (ex: sinesys-pro.com)  
-❌ Criar produtos chamados "Sinesys Pro", "Sinesys Cloud", "Sinesys Plus", etc.  
-❌ Usar logotipos ou elementos visuais da marca Sinesys
+❌ Usar "**Synthropic**" como nome do seu produto ou serviço derivado  
+❌ Usar "**Synthropic**" de forma que sugira endosso oficial da Synthropic  
+❌ Registrar domínios contendo "Synthropic" (ex: synthropic-pro.com)  
+❌ Criar produtos chamados "Synthropic Pro", "Synthropic Cloud", "Synthropic Plus", etc.  
+❌ Usar logotipos ou elementos visuais da marca Synthropic
 
 ### Você PODE:
 
-✅ Dizer que seu serviço é "**Baseado em Sinesys**"  
-✅ Dizer que seu serviço é "**Powered by Sinesys**"  
-✅ Indicar que usa "**tecnologia Sinesys**" ou "**código Sinesys**"  
-✅ Referenciar Sinesys em documentação técnica
+✅ Dizer que seu serviço é "**Baseado em Synthropic**"  
+✅ Dizer que seu serviço é "**Powered by Synthropic**"  
+✅ Indicar que usa "**tecnologia Synthropic**" ou "**código Synthropic**"  
+✅ Referenciar Synthropic em documentação técnica
 
 ---
 
@@ -58,20 +58,20 @@ Sob a licença AGPL v3, você tem total liberdade para:
 
 | Nome do Serviço | Descrição Permitida |
 |-----------------|---------------------|
-| **JurídicoXYZ** | "Sistema de gestão baseado em Sinesys" |
-| **AdvocaciaCloud** | "Powered by Sinesys" |
-| **LegalTech Pro** | "Plataforma construída com tecnologia Sinesys" |
-| **EscritorioApp** | "Baseado no projeto open source Sinesys" |
+| **JurídicoXYZ** | "Sistema de gestão baseado em Synthropic" |
+| **AdvocaciaCloud** | "Powered by Synthropic" |
+| **LegalTech Pro** | "Plataforma construída com tecnologia Synthropic" |
+| **EscritorioApp** | "Baseado no projeto open source Synthropic" |
 
 ### ❌ Nomes de Serviços NÃO PERMITIDOS
 
 | Nome PROIBIDO | Por quê? |
 |---------------|----------|
-| **Sinesys Pro** | Usa a marca "Sinesys" diretamente |
-| **Sinesys Cloud** | Sugere ser produto oficial |
-| **Sinesys by EmpresaX** | Confunde com produto oficial |
-| **Sinesys Premium** | Uso direto da marca registrada |
-| **Sinesys Plus** | Uso direto da marca registrada |
+| **Synthropic Pro** | Usa a marca "Synthropic" diretamente |
+| **Synthropic Cloud** | Sugere ser produto oficial |
+| **Synthropic by EmpresaX** | Confunde com produto oficial |
+| **Synthropic Premium** | Uso direto da marca registrada |
+| **Synthropic Plus** | Uso direto da marca registrada |
 
 ---
 
@@ -84,8 +84,8 @@ Ao distribuir o software ou oferecer como serviço, você DEVE:
 Todos os avisos de copyright do código original devem ser preservados:
 
 ```
-Sinesys - Sistema de Gestão Jurídica
-Copyright (C) 2024-2025 Sinesys
+Synthropic - Sistema de Gestão Jurídica
+Copyright (C) 2024-2025 Synthropic
 Desenvolvido para Zattar Advogados
 Licensed under AGPL v3
 ```
@@ -95,7 +95,7 @@ Licensed under AGPL v3
 Se você modificou o código, deve indicar claramente:
 
 ```
-Este software é baseado em Sinesys (https://github.com/sinesys)
+Este software é baseado em Synthropic (https://github.com/synthropic)
 Modificações feitas por [Seu Nome/Empresa]
 ```
 
@@ -107,7 +107,7 @@ Se oferecer como serviço web, deve disponibilizar link visível para o código-
 
 ## ⚖️ Isenção de Responsabilidade
 
-### A Sinesys NÃO é responsável por:
+### A Synthropic NÃO é responsável por:
 
 ❌ Serviços de terceiros baseados neste software  
 ❌ Bugs, falhas ou perda de dados em implementações derivadas  
@@ -120,8 +120,8 @@ Se oferecer como serviço web, deve disponibilizar link visível para o código-
 Serviços derivados devem incluir aviso claro:
 
 ```
-Este serviço é baseado em Sinesys, mas NÃO é desenvolvido, 
-mantido ou endossado pela Sinesys. Sinesys não se responsabiliza 
+Este serviço é baseado em Synthropic, mas NÃO é desenvolvido, 
+mantido ou endossado pela Synthropic. Synthropic não se responsabiliza 
 por este serviço, seus dados ou funcionamento.
 ```
 
@@ -130,31 +130,31 @@ por este serviço, seus dados ou funcionamento.
 ## 🔍 Casos de Uso Comuns
 
 ### Caso 1: Escritório quer usar internamente
-**Situação:** Escritório X baixa Sinesys e usa internamente sem modificações
+**Situação:** Escritório X baixa Synthropic e usa internamente sem modificações
 
 ✅ **Permitido:** Sim, sem restrições  
 📋 **Requisitos:** Nenhum (uso interno)  
-🏷️ **Nome:** Pode manter "Sinesys"
+🏷️ **Nome:** Pode manter "Synthropic"
 
 ---
 
-### Caso 2: Empresa oferece SaaS baseado em Sinesys
-**Situação:** Empresa Y modifica Sinesys e oferece como serviço pago "AdvocaciaCloud"
+### Caso 2: Empresa oferece SaaS baseado em Synthropic
+**Situação:** Empresa Y modifica Synthropic e oferece como serviço pago "AdvocaciaCloud"
 
 ✅ **Permitido:** Sim, sob AGPL v3  
 📋 **Requisitos:**
 - Disponibilizar código-fonte completo (incluindo modificações)
-- Manter atribuição à Sinesys
+- Manter atribuição à Synthropic
 - Incluir aviso de isenção de responsabilidade
-- Não usar nome "Sinesys" no serviço
+- Não usar nome "Synthropic" no serviço
 
-🏷️ **Nome:** "AdvocaciaCloud - Powered by Sinesys" ✅  
-❌ **Proibido:** "Sinesys Pro by Empresa Y"
+🏷️ **Nome:** "AdvocaciaCloud - Powered by Synthropic" ✅  
+❌ **Proibido:** "Synthropic Pro by Empresa Y"
 
 ---
 
 ### Caso 3: Desenvolvedor cria módulo adicional
-**Situação:** Dev Z cria módulo de IA para Sinesys e vende separadamente
+**Situação:** Dev Z cria módulo de IA para Synthropic e vende separadamente
 
 ✅ **Permitido:** Sim  
 📋 **Requisitos:**
@@ -162,7 +162,7 @@ por este serviço, seus dados ou funcionamento.
 - Código do módulo deve ser aberto
 - Pode cobrar pelo desenvolvimento/suporte
 
-🏷️ **Nome:** "Módulo IA para Sinesys" ✅
+🏷️ **Nome:** "Módulo IA para Synthropic" ✅
 
 ---
 
@@ -170,7 +170,7 @@ por este serviço, seus dados ou funcionamento.
 
 Para solicitar exceções ou esclarecer dúvidas sobre uso da marca:
 
-**Email:** contato@sinesys.com.br _(atualizar com email real)_
+**Email:** contato@synthropic.com.br _(atualizar com email real)_
 
 ### Exceções Possíveis
 
@@ -184,7 +184,7 @@ Podemos conceder permissões especiais para:
 ## 📜 Fundamento Legal
 
 - **Licença do Software:** AGPL v3 (veja arquivo LICENSE)
-- **Marca Registrada:** Sinesys™ (registro em andamento)
+- **Marca Registrada:** Synthropic™ (registro em andamento)
 - **Lei de Propriedade Industrial:** Lei 9.279/96 (Brasil)
 - **Lei de Software:** Lei 9.609/98 (Brasil)
 

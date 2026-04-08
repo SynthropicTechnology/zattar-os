@@ -1,6 +1,6 @@
 'use client';
 
-// Documentação das Ferramentas MCP do Sinesys
+// Documentação das Ferramentas MCP do Synthropic
 
 import * as React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -730,7 +730,7 @@ export default function MCPDocsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Ferramentas MCP</h1>
         </div>
         <p className="text-muted-foreground">
-          Ferramentas disponíveis no servidor MCP do Sinesys para integração com assistentes de IA
+          Ferramentas disponíveis no servidor MCP do Synthropic para integração com assistentes de IA
         </p>
       </div>
 
@@ -870,7 +870,7 @@ export default function MCPDocsPage() {
         <CardHeader>
           <CardTitle>Configuração do MCP</CardTitle>
           <CardDescription>
-            Como conectar o servidor MCP do Sinesys ao Claude Desktop
+            Como conectar o servidor MCP do Synthropic ao Claude Desktop
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -889,12 +889,12 @@ export default function MCPDocsPage() {
             <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
 {`{
   "mcpServers": {
-    "sinesys": {
+    "synthropic": {
       "command": "node",
       "args": ["E:\\\\Development\\\\mcp\\\\dist\\\\index.js"],
       "env": {
-        "SINESYS_API_URL": "http://localhost:3000",
-        "SINESYS_API_KEY": "sinesys_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        "SYNTHROPIC_API_URL": "http://localhost:3000",
+        "SYNTHROPIC_API_KEY": "synthropic_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       }
     }
   }
@@ -906,10 +906,10 @@ export default function MCPDocsPage() {
             <p className="text-sm font-medium">3. Variáveis de Ambiente:</p>
             <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>
-                <code className="bg-muted px-1 rounded">SINESYS_API_URL</code>: URL base da API do Sinesys
+                <code className="bg-muted px-1 rounded">SYNTHROPIC_API_URL</code>: URL base da API do Synthropic
               </li>
               <li>
-                <code className="bg-muted px-1 rounded">SINESYS_API_KEY</code>: Chave de autenticação (Perfil → API Keys)
+                <code className="bg-muted px-1 rounded">SYNTHROPIC_API_KEY</code>: Chave de autenticação (Perfil → API Keys)
               </li>
             </ul>
           </div>

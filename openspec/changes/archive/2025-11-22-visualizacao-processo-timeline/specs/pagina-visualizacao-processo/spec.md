@@ -132,11 +132,11 @@ O sistema SHALL fornecer metadata apropriada para SEO e compartilhamento.
 
 #### Scenario: Metadata dinâmica gerada
 **Given** processo carregado
-**Then** a página deve ter Title "Processo [número] - [Autora] vs [Ré] | Sinesys" e Description "Processo trabalhista [número] no [TRT] - [Classe Judicial]"
+**Then** a página deve ter Title "Processo [número] - [Autora] vs [Ré] | Synthropic" e Description "Processo trabalhista [número] no [TRT] - [Classe Judicial]"
 
 #### Scenario: Metadata de fallback
 **Given** processo não foi carregado ainda (erro)
-**Then** usar metadata padrão Title "Processo | Sinesys" e Description "Visualização de processo no Sinesys"
+**Then** usar metadata padrão Title "Processo | Synthropic" e Description "Visualização de processo no Synthropic"
 
 ---
 

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { PericiasClient } from '@/app/(authenticated)/pericias/components/pericias-client';
-import { PageShell } from '@/components/shared';
 
 export const metadata: Metadata = {
   title: 'Perícias | Lista',
@@ -10,11 +9,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default function PericiasListaPage() {
-  return (
-    <PageShell>
-      <PericiasClient initialView="lista" />
-    </PageShell>
-  );
+  return <PericiasClient initialView="lista" />;
 }
 
 

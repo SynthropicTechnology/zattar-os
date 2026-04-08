@@ -1,5 +1,5 @@
 /**
- * Auditoria de chamadas MCP do Sinesys
+ * Auditoria de chamadas MCP do Synthropic
  *
  * Registra todas as chamadas MCP para fins de auditoria,
  * conformidade e análise de uso.

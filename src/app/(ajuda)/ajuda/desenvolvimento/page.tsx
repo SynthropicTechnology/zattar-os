@@ -101,7 +101,7 @@ export default function DesenvolvimentoPage() {
           <h1 className="text-3xl font-bold tracking-tight">Desenvolvimento</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Documentação técnica para desenvolvedores do Sinesys.
+          Documentação técnica para desenvolvedores do Synthropic.
         </p>
       </div>
 
@@ -210,8 +210,8 @@ npm run lint       # ESLint`}
           <div>
             <h4 className="font-semibold mb-2">1. Clone e instale</h4>
             <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`git clone https://github.com/seu-repo/sinesys.git
-cd sinesys
+{`git clone https://github.com/seu-repo/synthropic.git
+cd synthropic
 npm install`}
             </pre>
           </div>

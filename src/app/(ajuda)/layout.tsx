@@ -2,8 +2,8 @@ import { DocsHeader } from '@/components/layout/docs/docs-header';
 import { DocsSidebar } from '@/components/layout/docs/docs-sidebar';
 
 export const metadata = {
-  title: 'Documentação - Sinesys',
-  description: 'Central de ajuda e documentação do Sinesys',
+  title: 'Documentação - Synthropic',
+  description: 'Central de ajuda e documentação do Synthropic',
 };
 
 export default function DocsLayout({

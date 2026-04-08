@@ -1,7 +1,7 @@
 # Regras de Negócio - Dashboard
 
 ## Contexto
-Módulo de painel consolidado do Sinesys. Agrega métricas de todos os módulos principais (processos, audiências, expedientes, financeiro, contratos) em duas visões: **Dashboard Usuário** (dados pessoais filtrados por responsável) e **Dashboard Admin** (visão global do escritório). Integra-se com o sistema de permissões para exibir apenas dados autorizados.
+Módulo de painel consolidado do Synthropic. Agrega métricas de todos os módulos principais (processos, audiências, expedientes, financeiro, contratos) em duas visões: **Dashboard Usuário** (dados pessoais filtrados por responsável) e **Dashboard Admin** (visão global do escritório). Integra-se com o sistema de permissões para exibir apenas dados autorizados.
 
 ## Entidades Principais
 - **DashboardUsuarioData**: Visão consolidada para usuário comum — processos, audiências, expedientes, produtividade, financeiro, contratos, lembretes

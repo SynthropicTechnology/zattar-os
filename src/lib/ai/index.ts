@@ -1,5 +1,5 @@
 /**
- * Camada de Inteligência Artificial do Sinesys
+ * Camada de Inteligência Artificial do Synthropic
  *
  * Exporta funções para:
  * - Geração de embeddings

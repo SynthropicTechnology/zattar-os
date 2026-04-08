@@ -43,7 +43,7 @@ const TRUSTED_DOMAINS = {
   // Images
   images: ["https://images.unsplash.com"],
   // Chatwoot
-  chatwoot: ["https://chatwoot-web.platform.sinesys.app"],
+  chatwoot: ["https://chatwoot-web.platform.synthropic.app"],
   // CopilotKit
   copilotkit: ["https://api.cloud.copilotkit.ai", "https://cdn.copilotkit.ai"],
   // Cloudflare Stream - Video hosting (usado no hero da landing page)

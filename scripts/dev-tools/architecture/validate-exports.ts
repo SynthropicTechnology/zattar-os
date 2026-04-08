@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * Script de Validacao de Exports para Sinesys
+ * Script de Validacao de Exports para Synthropic
  *
  * Detecta simbolos duplicados em barrels (index.ts) que podem causar
  * conflitos de export ao usar star exports (`export * from`).
@@ -736,7 +736,7 @@ function printReport(report: ValidationReport): void {
   }
 
   console.log("\n" + "=".repeat(70));
-  console.log(" VALIDACAO DE EXPORTS - SINESYS");
+  console.log(" VALIDACAO DE EXPORTS - SYNTHROPIC");
   console.log("=".repeat(70));
   console.log(`\nBarrels analisados: ${report.barrelsAnalyzed}`);
   console.log(`Total de exports: ${report.totalExports}`);

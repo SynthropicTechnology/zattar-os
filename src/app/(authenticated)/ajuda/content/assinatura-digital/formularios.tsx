@@ -37,7 +37,7 @@ export default function AssinaturaDigitalFormulariosDoc() {
       <DocSection title="Visão Geral">
         <p className="text-muted-foreground">
           Os Formulários permitem criar páginas de coleta de dados acessíveis por um link público,
-          sem que o usuário precise ter uma conta no Sinesys. É possível combinar campos de
+          sem que o usuário precise ter uma conta no Synthropic. É possível combinar campos de
           preenchimento com um template de documento para que, ao final do preenchimento, o próprio
           usuário assine o documento gerado com seus dados. As respostas ficam registradas no sistema
           para consulta e exportação.

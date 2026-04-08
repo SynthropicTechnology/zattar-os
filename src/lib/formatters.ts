@@ -1,5 +1,5 @@
 /**
- * Sinesys - Formatadores de Dados Brasileiros
+ * Synthropic - Formatadores de Dados Brasileiros
  *
  * ⚠️ Legado/Compat:
  * - O "single source of truth" de formatação é o Design System em `@/lib/design-system`.

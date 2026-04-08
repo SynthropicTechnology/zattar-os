@@ -1,5 +1,5 @@
 /**
- * Design System Sinesys
+ * Design System Synthropic
  *
  * Sistema de Design Determinístico para aplicações AI-First.
  * Este módulo centraliza tokens, variantes e utilitários para garantir
@@ -58,6 +58,9 @@ export {
   EXPEDIENTE_TIPO_VARIANTS,
   CAPTURA_STATUS_VARIANTS,
   COMUNICACAO_CNJ_VARIANTS,
+  PERICIA_SITUACAO_VARIANTS,
+  PARCELA_STATUS_VARIANTS,
+  REPASSE_STATUS_VARIANTS,
 
   // Função principal
   getSemanticBadgeVariant,

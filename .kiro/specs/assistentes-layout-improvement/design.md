@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design refactors the assistentes page to follow the established Sinesys design patterns, implementing PageShell and DataShell components for consistency with other pages in the system. The refactoring focuses on improving visual design, maintaining all existing functionality, and ensuring responsive behavior across all device sizes.
+This design refactors the assistentes page to follow the established Synthropic design patterns, implementing PageShell and DataShell components for consistency with other pages in the system. The refactoring focuses on improving visual design, maintaining all existing functionality, and ensuring responsive behavior across all device sizes.
 
 ### Goals
 

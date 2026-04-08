@@ -192,7 +192,7 @@ export default function ProcessosDoc() {
 
       <DocSection title="Visão Geral">
         <p className="text-muted-foreground">
-          O módulo de Processos é o núcleo do Sinesys. Aqui são gerenciados todos os processos
+          O módulo de Processos é o núcleo do Synthropic. Aqui são gerenciados todos os processos
           judiciais do escritório, desde o cadastro inicial até o acompanhamento de movimentações,
           audiências, expedientes e perícias vinculadas.
         </p>

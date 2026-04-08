@@ -24,7 +24,7 @@ import {
   removerLembrete,
   obterContagemLembretesPendentes,
   obterLembretesVencidos,
-} from '../services/lembretes-service';
+} from '../service';
 
 interface ActionResult<T> {
   success: boolean;

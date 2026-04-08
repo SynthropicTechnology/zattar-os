@@ -34,10 +34,10 @@ import {
 
 const COLORS = {
   critico: 'var(--destructive)',
-  alto:    'hsl(35 95% 58%)',   // warning amber
-  medio:   'hsl(217 91% 60%)',  // blue
-  baixo:   'oklch(from var(--muted-foreground) l c h / 0.55)',
-  ok:      'hsl(142 71% 45%)',  // success green
+  alto: 'hsl(35 95% 58%)',   // warning amber
+  medio: 'hsl(217 91% 60%)',  // blue
+  baixo: 'var(--chart-muted-soft)',
+  ok: 'hsl(142 71% 45%)',  // success green
   parcial: 'hsl(35 95% 58%)',
 };
 
@@ -83,16 +83,16 @@ const URGENCY_LIST_DATA = [
 ];
 
 const ORIGIN_BADGE_STYLES: Record<string, string> = {
-  PJE:    'bg-primary/10 text-primary/70',
-  CNJ:    'bg-warning/10 text-warning/70',
+  PJE: 'bg-primary/10 text-primary/70',
+  CNJ: 'bg-warning/10 text-warning/70',
   Manual: 'bg-muted/30 text-muted-foreground/50',
 };
 
 const URGENCY_LABELS: Record<string, string> = {
   critico: 'Vencido',
-  alto:    'Hoje',
-  medio:   'Em 3d',
-  baixo:   '7d+',
+  alto: 'Hoje',
+  medio: 'Em 3d',
+  baixo: '7d+',
 };
 
 export function UrgencyList() {
@@ -130,10 +130,10 @@ export function UrgencyList() {
 // Barras horizontais mostrando distribuição de prazos por janela de urgência.
 
 const AGING_DATA = [
-  { label: 'Vencidos',       count: 4,  color: COLORS.critico, level: 'critico' as const },
-  { label: 'Vencem Hoje',    count: 2,  color: COLORS.alto,    level: 'alto' as const },
-  { label: 'Próx. 7 dias',   count: 5,  color: COLORS.medio,   level: 'medio' as const },
-  { label: 'Próx. 30 dias',  count: 8,  color: COLORS.baixo,   level: 'baixo' as const },
+  { label: 'Vencidos', count: 4, color: COLORS.critico, level: 'critico' as const },
+  { label: 'Vencem Hoje', count: 2, color: COLORS.alto, level: 'alto' as const },
+  { label: 'Próx. 7 dias', count: 5, color: COLORS.medio, level: 'medio' as const },
+  { label: 'Próx. 30 dias', count: 8, color: COLORS.baixo, level: 'baixo' as const },
 ];
 
 const AGING_MAX = Math.max(...AGING_DATA.map((d) => d.count));
@@ -186,9 +186,9 @@ export function AgingFunnel() {
 // MiniDonut mostrando de onde os expedientes estão sendo capturados.
 
 const ORIGEM_DATA = [
-  { label: 'Captura PJE',   value: 45, color: COLORS.medio },
-  { label: 'Comunica CNJ',  value: 22, color: COLORS.alto },
-  { label: 'Manual',        value: 12, color: COLORS.baixo },
+  { label: 'Captura PJE', value: 45, color: COLORS.medio },
+  { label: 'Comunica CNJ', value: 22, color: COLORS.alto },
+  { label: 'Manual', value: 12, color: COLORS.baixo },
 ];
 
 const ORIGEM_TOTAL = ORIGEM_DATA.reduce((s, d) => s + d.value, 0);
@@ -239,9 +239,9 @@ export function OrigemDistribution() {
 // StackedBar + breakdown mostrando resultado das decisões dos expedientes.
 
 const RESULTADO_DATA = [
-  { label: 'Favoravel',             value: 28, color: COLORS.ok },
-  { label: 'Parc. Favoravel',       value: 15, color: COLORS.parcial },
-  { label: 'Desfavoravel',          value: 8,  color: COLORS.critico },
+  { label: 'Favoravel', value: 28, color: COLORS.ok },
+  { label: 'Parc. Favoravel', value: 15, color: COLORS.parcial },
+  { label: 'Desfavoravel', value: 8, color: COLORS.critico },
 ];
 
 const RESULTADO_TOTAL = RESULTADO_DATA.reduce((s, d) => s + d.value, 0);

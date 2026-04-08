@@ -1036,7 +1036,7 @@ npx tsx src/features/captura/services/partes/__tests__/identificacao-partes.test
 
 **Última atualização**: 2025-11-25  
 **Versão do módulo**: 2.0.0  
-**Autor**: Sistema Sinesys - Zattar Advogados  
+**Autor**: Sistema Synthropic - Zattar Advogados  
 **Changelog**:
 
 - v2.0.0 (2025-11-25): Processamento paralelo, retry, distributed locking, logging estruturado

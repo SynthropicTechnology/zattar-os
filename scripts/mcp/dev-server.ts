@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Servidor MCP de Desenvolvimento - Sinesys
+ * Servidor MCP de Desenvolvimento - Synthropic
  *
  * Inicia o servidor MCP via stdio para testes locais.
  *

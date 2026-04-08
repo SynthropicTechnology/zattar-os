@@ -1,5 +1,5 @@
 /**
- * Sistema de Quotas MCP do Sinesys
+ * Sistema de Quotas MCP do Synthropic
  *
  * Implementa checagem e atualização de quotas por usuário
  */

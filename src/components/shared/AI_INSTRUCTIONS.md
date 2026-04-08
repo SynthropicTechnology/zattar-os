@@ -2,14 +2,14 @@
 
 ## LEITURA OBRIGATÓRIA
 
-Este documento contém os padrões obrigatórios para construir páginas no Sinesys.
+Este documento contém os padrões obrigatórios para construir páginas no Synthropic.
 Agentes de IA **DEVEM** seguir estes padrões exatamente.
 
 ---
 
 ## 🚨 SYSTEM DESIGN MANDATÓRIO: "NEON MAGISTRATE" (Glass Briefing)
 
-**O Zattar OS (Sinesys) evoluiu seu padrão arquitetural para o "Neon Magistrate". O uso isolado e simplório das classes nativas do Shadcn (ex: `bg-card border-border/20`) em Dashboards, Painéis Hero ou Módulos Principais ESTÁ DEPRECADO.**
+**O Zattar OS (Synthropic) evoluiu seu padrão arquitetural para o "Neon Magistrate". O uso isolado e simplório das classes nativas do Shadcn (ex: `bg-card border-border/20`) em Dashboards, Painéis Hero ou Módulos Principais ESTÁ DEPRECADO.**
 
 Você **SEMPRE** deve priorizar a injeção do pacote de primitivas avançadas (Glass Effects, Micro-tipografia) implementadas atualmente nos módulos mais densos.
 

@@ -2,7 +2,7 @@
 
 /**
  * =============================================================================
- * DataTable - Padrão de Visualização de Dados do Sinesys
+ * DataTable - Padrão de Visualização de Dados do Synthropic
  * =============================================================================
  *
  * IMPORTANTE: Este componente faz parte do padrão DataShell/DataTable.

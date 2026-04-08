@@ -1,7 +1,7 @@
 # Regras de Negócio - Notas
 
 ## Contexto
-Módulo de notas pessoais do Sinesys. Permite que cada usuário crie, edite, arquive e exclua notas com suporte a três tipos (texto, checklist, imagem) e organização por etiquetas coloridas. Dados são isolados por usuário via RLS.
+Módulo de notas pessoais do Synthropic. Permite que cada usuário crie, edite, arquive e exclua notas com suporte a três tipos (texto, checklist, imagem) e organização por etiquetas coloridas. Dados são isolados por usuário via RLS.
 
 ## Entidades Principais
 - **Note**: Nota com título, conteúdo, tipo, itens de checklist, imagem e etiquetas

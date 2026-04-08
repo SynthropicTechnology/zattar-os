@@ -87,12 +87,12 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id={gradientReceitas} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--success)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--success)" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id={gradientDespesas} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--destructive)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--destructive)" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id={gradientSaldo} x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
@@ -136,20 +136,20 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
                 <Area
                   type="monotone"
                   dataKey="receitas"
-                  stroke="#22c55e"
+                  stroke="var(--success)"
                   strokeWidth={2}
                   fill={`url(#${gradientReceitas})`}
                   dot={false}
-                  activeDot={{ r: 4, fill: '#22c55e' }}
+                  activeDot={{ r: 4, fill: 'var(--success)' }}
                 />
                 <Area
                   type="monotone"
                   dataKey="despesas"
-                  stroke="#ef4444"
+                  stroke="var(--destructive)"
                   strokeWidth={2}
                   fill={`url(#${gradientDespesas})`}
                   dot={false}
-                  activeDot={{ r: 4, fill: '#ef4444' }}
+                  activeDot={{ r: 4, fill: 'var(--destructive)' }}
                 />
                 <Area
                   type="monotone"

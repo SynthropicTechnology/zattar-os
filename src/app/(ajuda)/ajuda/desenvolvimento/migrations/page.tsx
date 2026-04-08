@@ -23,7 +23,7 @@ export default function MigrationsPage() {
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
             Migrations são usadas para versionar alterações no schema do banco de dados.
-            No Sinesys, usamos migrations do Supabase localizadas em:
+            No Synthropic, usamos migrations do Supabase localizadas em:
           </p>
           <pre className="text-sm bg-muted p-3 rounded-md">
             supabase/migrations/

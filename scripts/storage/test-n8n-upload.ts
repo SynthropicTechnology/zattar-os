@@ -29,7 +29,7 @@ async function testarUploadN8N() {
     // 2. Fazer upload via N8N
     console.log('📤 [2/2] Enviando para Google Drive via N8N...\n');
 
-    const webhookUrl = 'https://webhook.sinesys.app/webhook/drive';
+    const webhookUrl = 'https://webhook.synthropic.app/webhook/drive';
     
     // Converter PDF para base64
     const pdfBase64 = pdfBuffer.toString('base64');

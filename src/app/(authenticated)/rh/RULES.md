@@ -1,7 +1,7 @@
 # Regras de Negocio - RH
 
 ## Contexto
-Modulo de Recursos Humanos do Sinesys responsavel pela gestao de salarios e folhas de pagamento. Integra-se com o modulo financeiro para geracao automatica de lancamentos ao aprovar folhas. Subdivide-se em dois subdominios: Salarios (vigencia e cadastro) e Folhas de Pagamento (geracao, aprovacao, pagamento e cancelamento).
+Modulo de Recursos Humanos do Synthropic responsavel pela gestao de salarios e folhas de pagamento. Integra-se com o modulo financeiro para geracao automatica de lancamentos ao aprovar folhas. Subdivide-se em dois subdominios: Salarios (vigencia e cadastro) e Folhas de Pagamento (geracao, aprovacao, pagamento e cancelamento).
 
 ## Entidades Principais
 - **Salario**: Registro salarial de um funcionario com vigencia, valor bruto e vinculacao a cargo

@@ -30,18 +30,18 @@ echo "Restoring from $EXTRACTED_PATH..."
 # 1. Restore Postgres
 if [ -f "$EXTRACTED_PATH/postgres_dump.sql.gz" ]; then
     echo "Restoring Postgres..."
-    gunzip -c "$EXTRACTED_PATH/postgres_dump.sql.gz" | docker exec -i sinesys_postgres psql -U postgres
+    gunzip -c "$EXTRACTED_PATH/postgres_dump.sql.gz" | docker exec -i synthropic_postgres psql -U postgres
 fi
 
 # 2. Restore Redis
 if [ -f "$EXTRACTED_PATH/redis_dump.rdb" ]; then
     echo "Restoring Redis..."
     echo "Stopping Redis..."
-    docker stop sinesys_redis
+    docker stop synthropic_redis
     echo "Copying dump..."
-    docker cp "$EXTRACTED_PATH/redis_dump.rdb" sinesys_redis:/data/dump.rdb
+    docker cp "$EXTRACTED_PATH/redis_dump.rdb" synthropic_redis:/data/dump.rdb
     echo "Starting Redis..."
-    docker start sinesys_redis
+    docker start synthropic_redis
 fi
 
 # Cleanup

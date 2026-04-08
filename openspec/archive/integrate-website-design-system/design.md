@@ -2,7 +2,7 @@
 
 ## Context
 
-O Sinesys opera com tres apps distintos em um monorepo Next.js:
+O Synthropic opera com tres apps distintos em um monorepo Next.js:
 1. **Dashboard Principal** (`src/app/(dashboard)/`) - Sistema interno para advogados
 2. **Meu Processo** (`src/app/meu-processo/`) - Portal do cliente
 3. **Website** (`src/app/website/`) - Site institucional da Atar Advogados

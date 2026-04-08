@@ -17,7 +17,7 @@ const faqItems = [
       },
       {
         question: 'O sistema funciona em dispositivos móveis?',
-        answer: 'Sim, o Sinesys é responsivo e funciona em tablets e smartphones. No entanto, para melhor experiência, recomendamos o uso em desktop ou notebook.',
+        answer: 'Sim, o Synthropic é responsivo e funciona em tablets e smartphones. No entanto, para melhor experiência, recomendamos o uso em desktop ou notebook.',
       },
       {
         question: 'Como altero o tema para modo escuro?',
@@ -114,7 +114,7 @@ export default function FAQPage() {
           <h1 className="text-3xl font-bold tracking-tight">Perguntas Frequentes</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Encontre respostas para as dúvidas mais comuns sobre o Sinesys.
+          Encontre respostas para as dúvidas mais comuns sobre o Synthropic.
         </p>
       </div>
 

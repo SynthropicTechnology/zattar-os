@@ -10,7 +10,7 @@ import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
-  title: 'Documentos | Sinesys',
+  title: 'Documentos | Synthropic',
   description: 'Gerencie seus documentos e arquivos',
 };
 

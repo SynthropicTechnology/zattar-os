@@ -14,7 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
-import type { Lancamento, StatusLancamento } from '@/app/(authenticated)/financeiro/domain/lancamentos';
+import type { Lancamento, StatusLancamento } from '@/app/(authenticated)/financeiro/domain';
 
 interface ContratoFinanceiroCardProps {
   lancamentos: Lancamento[];

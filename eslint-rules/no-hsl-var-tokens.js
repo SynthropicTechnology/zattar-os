@@ -5,7 +5,7 @@
  *
  * MOTIVO (por que isto é um bug, não um lint cosmético):
  *
- *   O design system Sinesys define todos os tokens de cor em OKLCH no
+ *   O design system Synthropic define todos os tokens de cor em OKLCH no
  *   globals.css (--primary, --success, --background, etc.). Por exemplo:
  *
  *     --primary: oklch(0.48 0.26 281);

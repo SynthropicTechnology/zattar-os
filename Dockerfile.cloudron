@@ -52,7 +52,7 @@ ARG NODE_VERSION=22
 LABEL org.opencontainers.image.title="Zattar OS"
 LABEL org.opencontainers.image.description="Sistema de gestao juridica"
 LABEL org.opencontainers.image.vendor="Zattar Advogados"
-LABEL org.opencontainers.image.source="https://github.com/sinesystec/zattar-os"
+LABEL org.opencontainers.image.source="https://github.com/synthropictec/zattar-os"
 
 # Atualizar Node.js 18 -> 22
 # cloudron/base tem node 18 em /usr/local/node-18.18.0/bin/ que aparece primeiro no PATH.

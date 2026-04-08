@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 import { PecaModeloEditor } from '@/app/(authenticated)/pecas-juridicas';
 
 export const metadata: Metadata = {
-  title: 'Novo Modelo de Peça | Sinesys',
+  title: 'Novo Modelo de Peça | Synthropic',
   description: 'Crie um novo modelo de peça jurídica',
 };
 

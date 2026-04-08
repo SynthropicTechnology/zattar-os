@@ -31,7 +31,6 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { PageShell } from '@/components/shared/page-shell';
 import {
   AlertasConciliacao,
   calcularPeriodo,
@@ -314,7 +313,7 @@ export default function ConciliacaoBancariaPage() {
   }));
 
   return (
-    <PageShell>
+    <>
       <div className="space-y-4">
         {/* Linha 1: Título + Botão Importar Extrato */}
         <div className="flex items-center justify-between">
@@ -423,6 +422,6 @@ export default function ConciliacaoBancariaPage() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-    </PageShell>
+    </>
   );
 }

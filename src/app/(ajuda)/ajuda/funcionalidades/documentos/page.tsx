@@ -86,7 +86,7 @@ export default function DocumentosPage() {
           <h1 className="text-3xl font-bold tracking-tight">Editor de Documentos</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Guia completo para criar, editar e compartilhar documentos no Sinesys.
+          Guia completo para criar, editar e compartilhar documentos no Synthropic.
         </p>
       </div>
 
@@ -97,7 +97,7 @@ export default function DocumentosPage() {
         </CardHeader>
         <CardContent>
           <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
-            <li>Faça login no Sinesys</li>
+            <li>Faça login no Synthropic</li>
             <li>No menu lateral, clique em <strong className="text-foreground">Serviços</strong> → <strong className="text-foreground">Editor de Documentos</strong></li>
             <li>Você verá a lista de seus documentos</li>
           </ol>

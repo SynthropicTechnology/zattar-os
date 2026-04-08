@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Este documento define os requisitos para a refatoração de consistência visual dos módulos do Sinesys/Zattar OS. O módulo **partes** já foi refatorado e serve como padrão ouro (gold standard). O objetivo é revisar e polir o módulo partes, e em seguida alinhar os módulos **contratos**, **assinatura-digital**, **processos**, **audiências** e **expedientes** ao mesmo padrão visual e arquitetural definido pelo Design System Sinesys.
+Este documento define os requisitos para a refatoração de consistência visual dos módulos do Synthropic/Zattar OS. O módulo **partes** já foi refatorado e serve como padrão ouro (gold standard). O objetivo é revisar e polir o módulo partes, e em seguida alinhar os módulos **contratos**, **assinatura-digital**, **processos**, **audiências** e **expedientes** ao mesmo padrão visual e arquitetural definido pelo Design System Synthropic.
 
 ## Glossário
 

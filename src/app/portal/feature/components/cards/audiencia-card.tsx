@@ -13,7 +13,7 @@ interface AudienciaCardProps {
 }
 
 export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick, actions }) => {
-  // Combinar data e hora se possível (embora Sinesys tenha campos separados, para validação rápida)
+  // Combinar data e hora se possível (embora Synthropic tenha campos separados, para validação rápida)
   // New domain has dataInicio (ISO)
   const dataHoraString = audiencia.dataInicio;
   const isValidDate = !isNaN(new Date(dataHoraString).getTime());

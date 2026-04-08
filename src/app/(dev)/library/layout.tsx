@@ -2,7 +2,7 @@
  * DEV LIBRARY — Layout
  * ============================================================================
  * Layout com sidebar de navegação para a biblioteca visual de componentes
- * do Sinesys. Vive sob (dev)/ — não vai pro build de produção.
+ * do Synthropic. Vive sob (dev)/ — não vai pro build de produção.
  *
  * Estrutura: index categorizado (Foundations, Shared, Badges, Portal,
  * Domain Mocks). Cada categoria tem sub-rotas próprias.
@@ -74,7 +74,7 @@ export default function LibraryLayout({ children }: { children: ReactNode }) {
         <aside className="sticky top-0 hidden h-svh w-64 shrink-0 overflow-y-auto border-r border-border bg-surface-container-low p-6 lg:block">
           <Link href="/library" className="block">
             <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
-              Sinesys
+              Synthropic
             </div>
             <div className="font-headline text-lg font-bold tracking-tight">
               Dev Library
