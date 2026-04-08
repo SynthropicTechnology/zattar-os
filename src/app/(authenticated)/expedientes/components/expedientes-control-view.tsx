@@ -10,6 +10,8 @@ import {
   ExternalLink,
   X,
   SearchX,
+  Copy,
+  Check,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -129,9 +131,39 @@ function InfoRow({
 }) {
   return (
     <div className="flex items-start justify-between gap-3">
-      <span className="shrink-0 text-[11px] text-muted-foreground/45">{label}</span>
-      <span className="text-right text-[11px] font-medium text-foreground/80">{value}</span>
+      <span className="shrink-0 text-[9px] text-muted-foreground/55 uppercase tracking-wider">{label}</span>
+      <span className="text-right text-[11px] font-medium">{value}</span>
     </div>
+  );
+}
+
+// ─── Inline Copy Button ─────────────────────────────────────────────────────
+
+function InlineCopy({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = React.useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {});
+  }, [text]);
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      title={copied ? 'Copiado!' : label}
+      className="inline-flex items-center justify-center size-4 rounded hover:bg-muted/50 transition-colors shrink-0 opacity-0 group-hover:opacity-100 cursor-pointer"
+    >
+      {copied ? (
+        <Check className="size-2.5 text-success" />
+      ) : (
+        <Copy className="size-2.5 text-muted-foreground/50" />
+      )}
+    </button>
   );
 }
 
@@ -160,23 +192,27 @@ function QueueCard({
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onSelect}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }}
+    <GlassPanel
+      depth={1}
       className={cn(
-        'group w-full cursor-pointer rounded-xl border bg-card p-3.5 text-left shadow-sm transition-all duration-200',
+        'group w-full cursor-pointer text-left transition-all duration-200 p-0',
         'border-border/40 hover:border-primary/30 hover:bg-accent/50 hover:shadow-md',
         URGENCY_BORDER[urgencyLevel],
-        selected && 'border-primary/40 bg-primary/[0.06] ring-1 ring-primary/20',
+        selected && 'border-primary/40 bg-primary/5 ring-1 ring-primary/20',
       )}
     >
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={onSelect}
+        onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }}
+        className="p-4 focus:outline-none"
+      >
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <UrgencyDot level={urgencyLevel} />
-          <span className="truncate text-sm font-medium">
+          <span className="truncate text-sm font-semibold">
             {tipoNome || 'Sem tipo'}
           </span>
         </div>
@@ -185,43 +221,57 @@ function QueueCard({
         </span>
       </div>
 
-      {/* Cabeçalho: Partes (autora vs ré) */}
-      {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
-        <p className="mt-2 text-sm font-medium text-foreground">
-          <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
-          <span className="mx-1.5 font-normal text-muted-foreground/60">vs</span>
-          <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
-        </p>
+      {/* Identificação do Processo (Seção 2) */}
+      <div className="mt-3 pt-3 border-t border-border/10">
+        {/* Partes (autora vs ré) */}
+        {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
+          <div className="flex items-center gap-1.5 min-w-0 mb-1.5">
+            <p className="text-sm font-medium text-foreground truncate">
+              <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
+              <span className="mx-1.5 font-normal text-muted-foreground/60">vs</span>
+              <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
+            </p>
+            <InlineCopy 
+              text={`${expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || ''} vs ${expediente.nomeParteReOrigem || expediente.nomeParteRe || ''}`} 
+              label="Copiar parte" 
+            />
+          </div>
+        )}
+
+        {/* Número do processo */}
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-[11px] text-muted-foreground/70 truncate">
+            Nº {expediente.numeroProcesso}
+          </span>
+          <InlineCopy text={expediente.numeroProcesso || ''} label="Copiar número do processo" />
+        </div>
+
+        {/* Órgão jurisdicional */}
+        {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
+          <p className="mt-0.5 text-[11px] text-muted-foreground/55">
+            {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
+          </p>
+        )}
+      </div>
+
+      {/* Corpo: Resumo e Observações (Seção 3) */}
+      {(expediente.descricaoArquivos || expediente.observacoes) && (
+        <div className="mt-3 space-y-1.5">
+          {expediente.descricaoArquivos && (
+            <p className="text-[11px] leading-relaxed text-muted-foreground/70 whitespace-pre-wrap">
+              {expediente.descricaoArquivos}
+            </p>
+          )}
+          {expediente.observacoes && (
+            <p className="text-[11px] leading-relaxed text-muted-foreground/55 whitespace-pre-wrap">
+              {expediente.observacoes}
+            </p>
+          )}
+        </div>
       )}
 
-      {/* Cabeçalho: Número do processo (sem font-mono) */}
-      <p className="mt-1 text-xs text-foreground/75">
-        Nº {expediente.numeroProcesso}
-      </p>
-
-      {/* Cabeçalho: Órgão jurisdicional */}
-      {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
-        </p>
-      )}
-
-      {/* Corpo: Resumo (descrição IA) — só renderiza se houver */}
-      {expediente.descricaoArquivos && (
-        <p className="mt-2.5 text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap">
-          {expediente.descricaoArquivos}
-        </p>
-      )}
-
-      {/* Corpo: Observações — só renderiza se houver */}
-      {expediente.observacoes && (
-        <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground/75 whitespace-pre-wrap">
-          {expediente.observacoes}
-        </p>
-      )}
-
-      {/* Badges + responsavel */}
-      <div className="mt-2.5 flex items-center gap-1.5">
+      {/* Badges + responsavel (Seção 4) */}
+      <div className="mt-3 pt-3 border-t border-border/10 flex items-center gap-1.5">
         {expediente.trt && (
           <SemanticBadge
             category="tribunal"
@@ -239,7 +289,7 @@ function QueueCard({
           {grauLabel}
         </SemanticBadge>
         {responsavelNome && (
-          <span className="ml-auto truncate text-[10px] text-muted-foreground/45">
+          <span className="ml-auto truncate text-[9px] text-muted-foreground/50">
             {responsavelNome}
           </span>
         )}
@@ -270,7 +320,8 @@ function QueueCard({
           )}
         </div>
       )}
-    </div>
+      </div>
+    </GlassPanel>
   );
 }
 
@@ -325,7 +376,7 @@ function DetailPanel({
           <h3 className="truncate text-sm font-semibold">
             {tipoNome || 'Expediente'}
           </h3>
-          <p className="mt-0.5 font-mono text-[11px] text-muted-foreground/55">
+          <p className="mt-0.5 tabular-nums text-[11px] text-muted-foreground/55">
             {expediente.numeroProcesso}
           </p>
         </div>
@@ -333,7 +384,7 @@ function DetailPanel({
           type="button"
           onClick={onClose}
           aria-label="Fechar painel de detalhes"
-          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-foreground/4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <X className="size-3.5 text-muted-foreground/50" />
         </button>

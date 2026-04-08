@@ -12,7 +12,7 @@ export default defineConfig({
   reporter: [['list']],
   use: {
     baseURL: 'http://localhost:3000',
-    trace: 'on',
+    trace: 'retain-on-failure',
   },
   webServer: {
     command: 'npm run dev',

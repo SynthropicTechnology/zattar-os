@@ -94,12 +94,12 @@ export function ExpedienteListRow({
             )}
           </div>
           
-          <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground/70 truncate">
-            <span className="font-mono tracking-tight">{expediente.numeroProcesso || 'Sem processo vinculado'}</span>
+          <div className="mt-0.5 flex items-center gap-2 text-xs truncate">
+            <span className="tabular-nums tracking-tight text-muted-foreground/70">{expediente.numeroProcesso || 'Sem processo vinculado'}</span>
             {expediente.nomeParteAutora && expediente.nomeParteRe && (
               <>
-                <span className="opacity-50">•</span>
-                <span className="truncate">
+                <span className="opacity-50 text-muted-foreground/55">•</span>
+                <span className="truncate text-muted-foreground/55">
                   {expediente.nomeParteAutora} x {expediente.nomeParteRe}
                 </span>
               </>
@@ -120,7 +120,7 @@ export function ExpedienteListRow({
       {/* 2. Responsável e Prazo (Desktop) */}
       <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 min-w-30">
         <span className={cn(
-          "text-xs font-medium px-2 py-0.5 rounded-md",
+          "text-[11px] font-medium px-2 py-0.5 rounded-md",
           isUrgenteCor ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"
         )}>
           {prazoLabel}

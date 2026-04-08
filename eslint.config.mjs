@@ -4,6 +4,7 @@ import tsParser from "@typescript-eslint/parser";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import nextPlugin from "@next/eslint-plugin-next";
+import unusedImports from "eslint-plugin-unused-imports";
 import noHardcodedSecrets from "./eslint-rules/no-hardcoded-secrets.js";
 import noHslVarTokens from "./eslint-rules/no-hsl-var-tokens.js";
 
@@ -25,6 +26,7 @@ const eslintConfig = defineConfig([
       react: reactPlugin,
       "react-hooks": reactHooksPlugin,
       "@next/next": nextPlugin,
+      "unused-imports": unusedImports,
     },
     settings: {
       react: {
@@ -89,9 +91,10 @@ const eslintConfig = defineConfig([
   },
   {
     rules: {
+      "unused-imports/no-unused-imports": "error",
       // Permitir variáveis não utilizadas com prefixo underscore (ex: _description, _program)
       "@typescript-eslint/no-unused-vars": [
-        "warn",
+        "error",
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",

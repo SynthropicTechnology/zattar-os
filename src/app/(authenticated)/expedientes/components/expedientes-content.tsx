@@ -249,13 +249,13 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            className="h-9 gap-2"
+          <button
             onClick={() => setIsCreateOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
           >
-            <Plus className="size-4" />
+            <Plus className="size-3.5" />
             Novo Expediente
-          </Button>
+          </button>
         </div>
       </div>
 

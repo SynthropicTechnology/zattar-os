@@ -39,6 +39,7 @@ import {
   DetailSheetFooter,
   DetailSheetEmpty,
 } from '@/components/shared/detail-sheet';
+import { EditarAudienciaDialog } from './editar-audiencia-dialog';
 
 // =============================================================================
 // HELPER
@@ -71,6 +72,7 @@ export function AudienciaDetailSheet({
   const [fetchedAudiencia, setFetchedAudiencia] = React.useState<Audiencia | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
 
   const { usuarios } = useUsuarios();
 
@@ -147,6 +149,7 @@ export function AudienciaDetailSheet({
   const isRealizada = audiencia?.status === StatusAudiencia.Finalizada;
 
   return (
+    <>
     <DetailSheet
       open={open}
       onOpenChange={onOpenChange}
@@ -322,10 +325,31 @@ export function AudienciaDetailSheet({
 
       {/* Footer */}
       <DetailSheetFooter>
-        <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
-          Fechar
-        </Button>
+        <div className="flex w-full items-center justify-between">
+          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+            Fechar
+          </Button>
+          {audiencia && (
+            <Button size="sm" onClick={() => setIsEditDialogOpen(true)}>
+              Editar
+            </Button>
+          )}
+        </div>
       </DetailSheetFooter>
     </DetailSheet>
+
+    {audiencia && (
+      <EditarAudienciaDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        onSuccess={() => {
+          setIsEditDialogOpen(false);
+          // O hook useAudiencias externa tratará de revalidar quando a página for fechada ou pela promise.
+          onOpenChange(false);
+        }}
+        audiencia={audiencia}
+      />
+    )}
+    </>
   );
 }

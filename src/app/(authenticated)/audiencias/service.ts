@@ -70,9 +70,9 @@ export async function listarAudiencias(
     ...params,
     pagina: params.pagina && params.pagina > 0 ? params.pagina : 1,
     limite:
-      params.limite && params.limite > 0 && params.limite <= 100
+      params.limite && params.limite > 0 && params.limite <= 1000
         ? params.limite
-        : 10,
+        : 100,
     ordenarPor: params.ordenarPor || "dataInicio",
     ordem: params.ordem || "asc",
   };

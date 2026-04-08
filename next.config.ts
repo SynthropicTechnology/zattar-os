@@ -96,7 +96,6 @@ const nextConfig: NextConfig = {
     // Logging
     "pino",
     "pino-pretty",
-    "thread-stream",
     // Avoid bundling Playwright (Turbopack can choke on recorder assets like .ttf)
     "playwright",
     "playwright-core",
@@ -116,7 +115,6 @@ const nextConfig: NextConfig = {
     "papaparse",
     "ofx-js",
     // Storage clients - Node.js only
-    "minio",
     "@aws-sdk/client-s3",
     "@aws-sdk/s3-request-presigner",
     // AI/ML libraries - Node.js only

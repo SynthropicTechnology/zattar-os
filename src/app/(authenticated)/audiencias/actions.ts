@@ -391,6 +391,37 @@ export async function actionCriarAudienciaPayload(
   };
 }
 
+export async function actionAtualizarAudienciaPayload(
+  id: number,
+  payload: z.infer<typeof updateAudienciaSchema>
+): Promise<ActionResult<Audiencia>> {
+  const validation = updateAudienciaSchema.safeParse(payload);
+  if (!validation.success) {
+    return {
+      success: false,
+      error: 'Erro de validação.',
+      errors: formatZodErrors(validation.error),
+      message: 'Por favor, corrija os erros no formulário.',
+    };
+  }
+
+  const result = await service.atualizarAudiencia(id, validation.data);
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao atualizar audiência.',
+    };
+  }
+
+  revalidateAudienciasPaths();
+  return {
+    success: true,
+    data: result.data,
+    message: 'Audiência atualizada com sucesso.',
+  };
+}
+
 // =============================================================================
 // BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
 // =============================================================================

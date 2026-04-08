@@ -198,10 +198,13 @@ export function DataTableToolbar<TData>({
           )}
           {!title && <div />}
           {actionButton && (
-            <Button className="h-9" onClick={actionButton.onClick}>
-              {actionButton.icon ?? <Plus className="h-4 w-4" />}
+            <button
+              onClick={actionButton.onClick}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors shadow-sm"
+            >
+              {actionButton.icon ?? <Plus className="size-3.5" />}
               {actionButton.label}
-            </Button>
+            </button>
           )}
         </div>
       )}

@@ -925,13 +925,13 @@ export function ProcessosTableWrapper({
         {/* Linha 1: Título à esquerda, botão de criar à direita */}
         <div className="flex items-center justify-between py-4">
           <Heading level="page">Processos</Heading>
-          <Button
-            className="h-9"
+          <button
             onClick={() => setCreateProcessoOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-3.5" />
             Novo Processo
-          </Button>
+          </button>
         </div>
 
         {/* Linha 2: Filtros à esquerda, Config + Colunas à direita */}

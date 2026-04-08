@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge } from '@/components/ui/app-badge';
 import { EmptyState } from '@/components/shared/empty-state';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 import type { Expediente } from '../domain';
 
@@ -116,27 +117,28 @@ export function ExpedientesDayList({
                 const status = getStatus(expediente);
 
                 return (
-                  <div
+                  <GlassPanel
                     key={expediente.id}
-                    className="p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors space-y-1.5"
+                    depth={1}
+                    className="p-3 hover:border-primary/30 hover:bg-accent/50 transition-colors space-y-1.5 group"
                   >
                     {/* Primeira linha: número do processo + badge status */}
                     <div className="flex items-start justify-between gap-2">
-                      <span className="text-sm font-medium truncate">
+                      <span className="text-sm font-medium truncate group-hover:text-primary transition-colors">
                         {expediente.numeroProcesso}
                       </span>
-                      <AppBadge variant={status.variant} className="shrink-0 text-xs">
+                      <AppBadge variant={status.variant} className="shrink-0 text-[10px] px-1.5 py-0">
                         {status.label}
                       </AppBadge>
                     </div>
 
                     {/* Segunda linha: tipo expediente + descrição arquivos */}
-                    <div className="text-xs text-muted-foreground">
-                      <span className="font-medium">
+                    <div className="text-[11px]">
+                      <span className="text-muted-foreground/70">
                         {(expediente as Expediente & { tipoExpediente?: { tipoExpediente?: string } }).tipoExpediente?.tipoExpediente || 'Sem tipo'}
                       </span>
                       {expediente.descricaoArquivos && (
-                        <span className="ml-1.5">
+                        <span className="ml-1.5 text-muted-foreground/55">
                           • {expediente.descricaoArquivos.length > 50
                               ? `${expediente.descricaoArquivos.slice(0, 50)}...`
                               : expediente.descricaoArquivos}
@@ -145,12 +147,12 @@ export function ExpedientesDayList({
                     </div>
 
                     {/* Terceira linha: partes */}
-                    <div className="text-xs text-muted-foreground/80 truncate">
+                    <div className="pt-2 mt-2 border-t border-border/10 text-[11px] text-muted-foreground/55 truncate">
                       {expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '-'}
                       {' vs '}
                       {expediente.nomeParteReOrigem || expediente.nomeParteRe || '-'}
                     </div>
-                  </div>
+                  </GlassPanel>
                 );
               })}
             </div>

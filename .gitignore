@@ -13,6 +13,9 @@ node_modules
 # testing
 /coverage
 /dist-test
+/test-results/
+/tmp/
+*.backup
 
 # next.js
 /.next/

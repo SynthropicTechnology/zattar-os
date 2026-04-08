@@ -38,6 +38,8 @@ export { AudienciaForm } from './audiencia-form';
 export { AudienciaDetailSheet } from './audiencia-detail-sheet';
 export { AudienciasDiaDialog } from './audiencias-dia-dialog';
 export { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
+export { NovaAudienciaDialog } from './nova-audiencia-dialog';
+export { EditarAudienciaDialog } from './editar-audiencia-dialog';
 
 // Settings
 export { TiposAudienciasList } from './tipos-audiencias-list';
