@@ -179,32 +179,32 @@ Migração incremental de 5 módulos para o Design System Sinesys, usando o mód
 - [x] 10. Checkpoint — Todos os módulos migrados
   - Garantir que todos os testes passam. Perguntar ao usuário se há dúvidas.
 
-- [ ] 11. Validação cross-módulo de importações FSD
-  - [ ] 11.1 Verificar regras de importação cross-módulo
+- [x] 11. Validação cross-módulo de importações FSD
+  - [x] 11.1 Verificar regras de importação cross-módulo
     - Garantir que nenhum módulo externo importa diretamente de subpastas de outro módulo
     - Toda importação cross-módulo deve passar pelo barrel export (`index.ts`)
     - Executar `npm run check:architecture` para validar
     - _Requisitos: 7.4_
 
-  - [ ] 11.2 Verificar RULES.md em todos os módulos
+  - [x] 11.2 Verificar RULES.md em todos os módulos
     - Garantir que cada módulo possui `RULES.md` atualizado com entidades, regras de validação, regras de negócio, filtros, integrações e revalidação de cache
     - _Requisitos: 7.5_
 
-- [ ] 12. Testes de validação
-  - [ ] 12.1 Escrever property test — Cobertura completa de variantes de badge
+- [x] 12. Testes de validação
+  - [x] 12.1 Escrever property test — Cobertura completa de variantes de badge
     - **Property 1: Cobertura completa de variantes de badge para todos os valores de domínio**
     - Para qualquer categoria registrada e qualquer valor válido do domínio, `getSemanticBadgeVariant(categoria, valor)` retorna variante diferente de `'neutral'`
     - Usar fast-check com mínimo 100 iterações
     - Gerar pares (categoria, valor) a partir dos enums de domínio registrados
     - **Valida: Requisitos 2.5, 3.4, 4.2, 8.5**
 
-  - [ ] 12.2 Escrever property test — Idempotência da normalização de badge variant
+  - [x] 12.2 Escrever property test — Idempotência da normalização de badge variant
     - **Property 2: Idempotência da normalização de badge variant**
     - Para qualquer categoria e valor de entrada (incluindo variações de case/espaçamento), `getSemanticBadgeVariant(cat, val) === getSemanticBadgeVariant(cat, val)`
     - Usar fast-check com mínimo 100 iterações
     - **Valida: Requisitos 8.5**
 
-  - [ ] 12.3 Escrever smoke tests de análise estática
+  - [x] 12.3 Escrever smoke tests de análise estática
     - Verificar ausência de `bg-{cor}-{shade}` em componentes de feature (grep/regex)
     - Verificar ausência de funções `getXXXColorClass()` locais
     - Verificar ausência de `shadow-xl` e `oklch()` direto
@@ -213,7 +213,7 @@ Migração incremental de 5 módulos para o Design System Sinesys, usando o mód
     - Verificar que barrel exports estão organizados por seção
     - **Valida: Requisitos 8.1, 8.2, 8.3, 8.4, 7.1**
 
-- [ ] 13. Checkpoint final — Validação completa
+- [x] 13. Checkpoint final — Validação completa
   - Executar `npm run check:architecture`, `npm run validate:exports`, `npm test`, `npm run lint`
   - Garantir que todos os testes passam. Perguntar ao usuário se há dúvidas.
 
