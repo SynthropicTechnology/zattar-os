@@ -503,7 +503,7 @@ Migração incremental dos 32 módulos restantes para o Design System ZattarOS, 
     - Verificar existência de `domain.ts`, `service.ts`, `repository.ts`, `actions/`, `index.ts`, `RULES.md` em cada módulo
     - **Valida: Requisitos 22.2, 22.3, 22.4, 22.5**
 
-- [-] 29. Checkpoint final — Validação completa da Fase 2
+- [x] 29. Checkpoint final — Validação completa da Fase 2
   - Executar `npm run check:architecture`, `npm run validate:exports`, `npm test`, `npm run lint`
   - Garantir que todos os testes passam. Perguntar ao usuário se há dúvidas.
 
