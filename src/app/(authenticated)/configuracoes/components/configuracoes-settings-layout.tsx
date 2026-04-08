@@ -12,6 +12,7 @@ import { MetricasDBContent } from '@/app/(authenticated)/admin/metricas-db/compo
 import { BlockedIpsContent } from '@/app/(authenticated)/admin/security/blocked-ips/components/blocked-ips-content';
 import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard, EditorIAIntegrationCard } from '@/lib/integracoes';
 import { PromptsIAContent } from '@/lib/system-prompts';
+import { TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
 import { AparenciaContent } from './aparencia-content';
 import { SettingsNav } from './settings-nav';
 import { SettingsMobileNav } from './settings-mobile-nav';
@@ -166,6 +167,8 @@ export function ConfiguracoesSettingsLayout({
           {activeTab === 'aparencia' && <AparenciaContent />}
 
           {activeTab === 'prompts-ia' && <PromptsIAContent systemPrompts={systemPrompts} />}
+
+          {activeTab === 'tipos-expedientes' && <TiposExpedientesList />}
         </div>
       </div>
     </div>

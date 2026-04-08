@@ -185,43 +185,43 @@ function QueueCard({
         </span>
       </div>
 
-      {/* Resumo (descrição IA) — só renderiza se houver */}
+      {/* Cabeçalho: Partes (autora vs ré) */}
+      {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
+        <p className="mt-2 text-sm font-medium text-foreground">
+          <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
+          <span className="mx-1.5 font-normal text-muted-foreground/60">vs</span>
+          <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
+        </p>
+      )}
+
+      {/* Cabeçalho: Número do processo (sem font-mono) */}
+      <p className="mt-1 text-xs text-foreground/75">
+        Nº {expediente.numeroProcesso}
+      </p>
+
+      {/* Cabeçalho: Órgão jurisdicional */}
+      {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
+        </p>
+      )}
+
+      {/* Corpo: Resumo (descrição IA) — só renderiza se houver */}
       {expediente.descricaoArquivos && (
-        <p className="mt-2 text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap">
+        <p className="mt-2.5 text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap">
           {expediente.descricaoArquivos}
         </p>
       )}
 
-      {/* Observações — só renderiza se houver */}
+      {/* Corpo: Observações — só renderiza se houver */}
       {expediente.observacoes && (
         <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground/75 whitespace-pre-wrap">
           {expediente.observacoes}
         </p>
       )}
 
-      {/* Partes (autora vs ré) */}
-      {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
-        <p className="mt-2 text-[11px] text-foreground/70">
-          <span className="font-medium">{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
-          <span className="mx-1.5 text-muted-foreground/50">vs</span>
-          <span className="font-medium">{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
-        </p>
-      )}
-
-      {/* Número do processo (sem font-mono) */}
-      <p className="mt-2 text-[11px] text-muted-foreground/65">
-        Nº {expediente.numeroProcesso}
-      </p>
-
-      {/* Órgão jurisdicional */}
-      {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
-        <p className="mt-0.5 text-[11px] text-muted-foreground/55">
-          {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
-        </p>
-      )}
-
       {/* Badges + responsavel */}
-      <div className="mt-2 flex items-center gap-1.5">
+      <div className="mt-2.5 flex items-center gap-1.5">
         {expediente.trt && (
           <SemanticBadge
             category="tribunal"

@@ -1,28 +1,25 @@
 'use client';
 
-// Componente Sheet para visualizar detalhes completos de um expediente
+// Componente Dialog (modal centralizado) para visualizar detalhes completos de um expediente.
+// Os helpers DetailSheetSection/InfoRow/MetaGrid/MetaItem/Separator/Audit são apenas
+// containers visuais (divs com classes Tailwind) — não dependem do Sheet pai e podem
+// ser usados standalone dentro do Dialog.
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle } from 'lucide-react';
+import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle, AlertTriangle } from 'lucide-react';
 import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
 import type { Usuario } from '@/app/(authenticated)/usuarios';
 import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import {
-  DetailSheet,
-  DetailSheetHeader,
-  DetailSheetTitle,
-  DetailSheetDescription,
-  DetailSheetContent,
   DetailSheetSection,
   DetailSheetInfoRow,
   DetailSheetSeparator,
   DetailSheetMetaGrid,
   DetailSheetMetaItem,
   DetailSheetAudit,
-  DetailSheetFooter,
-  DetailSheetEmpty,
 } from '@/components/shared/detail-sheet';
 
 
@@ -76,20 +73,22 @@ export function ExpedienteVisualizarDialog({
 }: ExpedienteVisualizarDialogProps) {
   if (!expediente) {
     return (
-      <DetailSheet open={open} onOpenChange={onOpenChange}>
-        <DetailSheetHeader>
-          <DetailSheetTitle>Expediente</DetailSheetTitle>
-        </DetailSheetHeader>
-        <DetailSheetEmpty
-          title="Expediente não encontrado"
-          description="Os detalhes do expediente não estão disponíveis."
-        />
-        <DetailSheetFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Fechar
-          </Button>
-        </DetailSheetFooter>
-      </DetailSheet>
+      <DialogFormShell
+        open={open}
+        onOpenChange={onOpenChange}
+        title="Expediente"
+        maxWidth="2xl"
+      >
+        <div className="flex flex-col items-center justify-center gap-3 px-6 py-12 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
+            <AlertTriangle className="h-6 w-6 text-muted-foreground/60" />
+          </div>
+          <h3 className="text-base font-medium">Expediente não encontrado</h3>
+          <p className="text-sm text-muted-foreground max-w-sm">
+            Os detalhes do expediente não estão disponíveis.
+          </p>
+        </div>
+      </DialogFormShell>
     );
   }
 
@@ -125,15 +124,16 @@ export function ExpedienteVisualizarDialog({
     </div>
   );
 
-  return (
-    <DetailSheet open={open} onOpenChange={onOpenChange}>
-      <DetailSheetHeader>
-        <DetailSheetTitle badge={statusBadge}>
+  // Header customizado: título com badge alinhado à direita + linha de metadados
+  const dialogTitle = (
+    <div className="flex items-start justify-between gap-3">
+      <div className="flex-1 min-w-0">
+        <div className="text-base font-heading font-semibold tracking-tight truncate">
           {expediente.classeJudicial
             ? `${expediente.classeJudicial} ${expediente.numeroProcesso}`
             : expediente.numeroProcesso}
-        </DetailSheetTitle>
-        <DetailSheetDescription>
+        </div>
+        <div className="flex items-center gap-1.5 mt-1 flex-wrap text-xs font-normal text-muted-foreground/65">
           <Scale className="h-3.5 w-3.5" />
           <span>{expediente.trt}</span>
           <span>·</span>
@@ -145,10 +145,27 @@ export function ExpedienteVisualizarDialog({
               <span>{formatarData(expediente.dataCriacaoExpediente)}</span>
             </>
           )}
-        </DetailSheetDescription>
-      </DetailSheetHeader>
+        </div>
+      </div>
+      <div className="shrink-0">{statusBadge}</div>
+    </div>
+  );
 
-      <DetailSheetContent>
+  return (
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={dialogTitle}
+      maxWidth="4xl"
+      bodyClassName="px-6 py-4 space-y-4 overflow-y-auto"
+      footer={
+        <Button onClick={handleAbrirPagina}>
+          <ExternalLink className="h-4 w-4 mr-2" />
+          Abrir Expediente
+        </Button>
+      }
+    >
+      <>
         {/* Informações do Processo */}
         <DetailSheetSection icon={<Scale className="h-4 w-4" />} title="Informações do Processo">
           <DetailSheetInfoRow label="Número do Processo">
@@ -344,17 +361,7 @@ export function ExpedienteVisualizarDialog({
           createdAt={expediente.createdAt}
           updatedAt={expediente.updatedAt}
         />
-      </DetailSheetContent>
-
-      <DetailSheetFooter>
-        <Button variant="outline" onClick={() => onOpenChange(false)}>
-          Fechar
-        </Button>
-        <Button onClick={handleAbrirPagina}>
-          <ExternalLink className="h-4 w-4 mr-2" />
-          Abrir Expediente
-        </Button>
-      </DetailSheetFooter>
-    </DetailSheet>
+      </>
+    </DialogFormShell>
   );
 }

@@ -9,21 +9,19 @@ import {
   List,
   Sparkles,
   Plus,
-  Settings,
 } from 'lucide-react';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { EmptyState } from '@/components/shared';
-import { type ViewType, ViewModePopover, type ViewModeOption } from '@/components/shared';
+import { type ViewType } from '@/components/shared';
+import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { useWeekNavigator } from '@/components/shared';
 import { FileSearch } from 'lucide-react';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
-import { useTiposExpedientes, TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
+import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { actionListarExpedientes } from '../actions';
 import type { Expediente } from '../domain';
@@ -59,14 +57,14 @@ const VIEW_ROUTES: Record<ViewType, string> = {
   quadro: `${APP_BASE_ROUTE}/quadro`,
 };
 
-// ─── View mode options (popover, como Audiências) ─────────────────────────────
+// ─── View mode options ────────────────────────────────────────────────────────
 
-const VIEW_MODE_OPTIONS: ViewModeOption[] = [
-  { value: 'quadro', label: 'Quadro', icon: Sparkles },
-  { value: 'semana', label: 'Semana', icon: CalendarDays },
-  { value: 'mes', label: 'Mês', icon: CalendarRange },
-  { value: 'ano', label: 'Ano', icon: Calendar },
-  { value: 'lista', label: 'Lista', icon: List },
+const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'quadro', label: 'Quadro', icon: Sparkles },
+  { id: 'semana', label: 'Semana', icon: CalendarDays },
+  { id: 'mes', label: 'Mês', icon: CalendarRange },
+  { id: 'ano', label: 'Ano', icon: Calendar },
+  { id: 'lista', label: 'Lista', icon: List },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -93,7 +91,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
   const viewFromUrl = ROUTE_TO_VIEW[pathname] ?? initialView;
   const [viewMode, setViewMode] = useState<ViewType>(viewFromUrl);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
@@ -205,16 +202,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     router.push(VIEW_ROUTES[view as ViewType]);
   }, [router]);
 
-  // ─── ViewModePopover (slot passado para cada view wrapper) ──────────────────
-
-  const viewModePopover = useMemo(() => (
-    <ViewModePopover
-      value={viewMode}
-      onValueChange={(v) => handleViewChange(v)}
-      options={VIEW_MODE_OPTIONS}
-    />
-  ), [viewMode, handleViewChange]);
-
   // ─── Dynamic subtitle ─────────────────────────────────────────────────────────
 
   const subtitle = useMemo(() => {
@@ -260,21 +247,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         </div>
 
         <div className="flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 bg-card"
-                onClick={() => setIsSettingsOpen(true)}
-                aria-label="Configurações de tipos de expediente"
-              >
-                <Settings className="size-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Tipos de expediente</TooltipContent>
-          </Tooltip>
-
           <Button
             className="h-9 gap-2"
             onClick={() => setIsCreateOpen(true)}
@@ -311,25 +283,27 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
       </div>
 
-      {/* 4. View Controls — lista tem toolbar própria, então esconde TabPills + Search */}
-      {viewMode !== 'lista' && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <TabPills
-            tabs={tabs}
-            active={activeTab}
-            onChange={(id) => setActiveTab(id as typeof activeTab)}
-          />
+      {/* 4. View Controls — sempre visível conforme Glass Briefing */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <TabPills
+          tabs={tabs}
+          active={activeTab}
+          onChange={(id) => setActiveTab(id as typeof activeTab)}
+        />
 
-          <div className="flex items-center gap-2 ml-auto">
-            <SearchInput
-              value={search}
-              onChange={setSearch}
-              placeholder="Buscar processo, parte..."
-            />
-            {viewModePopover}
-          </div>
+        <div className="flex items-center gap-2 flex-1 justify-end">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Buscar processo, parte..."
+          />
+          <ViewToggle
+            mode={viewMode}
+            onChange={(v) => handleViewChange(v)}
+            options={VIEW_OPTIONS}
+          />
         </div>
-      )}
+      </div>
 
       {/* 5. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
@@ -380,7 +354,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
 
         {viewMode === 'lista' && (
-          <ExpedientesListWrapper viewModeSlot={viewModePopover} />
+          <ExpedientesListWrapper />
         )}
 
         {!isLoading && viewMode === 'semana' && filteredExpedientes.length > 0 && (
@@ -435,22 +409,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           onSuccess={handleBaixaSuccess}
         />
       )}
-
-      <DialogFormShell
-        open={isSettingsOpen}
-        onOpenChange={setIsSettingsOpen}
-        title="Tipos de Expediente"
-        maxWidth="4xl"
-        footer={
-          <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
-            Fechar
-          </Button>
-        }
-      >
-        <div className="flex-1 overflow-auto h-[60vh]">
-          <TiposExpedientesList />
-        </div>
-      </DialogFormShell>
 
     </div>
   );

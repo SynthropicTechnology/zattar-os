@@ -18,10 +18,11 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { columns, type ExpedientesTableMeta } from './columns';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
+import { ExpedienteDialog } from './expediente-dialog';
+import { columns, type ExpedientesTableMeta } from './columns';
 import {
   ExpedientesListFilters,
   type StatusFiltro,
@@ -32,21 +33,12 @@ import type {
   GrauTribunal,
   OrigemExpediente,
 } from '../domain';
-
-// ─── Props ───────────────────────────────────────────────────────────────────
-
-export interface ExpedientesListWrapperProps {
-  /** ViewModePopover vindo do parent — renderizado dentro do DataTableToolbar */
-  viewModeSlot?: React.ReactNode;
-}
-
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export function ExpedientesListWrapper({
-  viewModeSlot,
-}: ExpedientesListWrapperProps) {
+export function ExpedientesListWrapper() {
   // ─── Table instance ──────────────────────────────────────────────────────
   const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // ─── Pagination (0-based no UI, convertido para 1-based no hook) ─────────
@@ -122,10 +114,12 @@ export function ExpedientesListWrapper({
 
   // ─── Render ──────────────────────────────────────────────────────────────
   return (
-    <DataShell
+    <>
+      <DataShell
       header={
         <DataTableToolbar
           table={table ?? undefined}
+          title="Expedientes"
           density={density}
           onDensityChange={setDensity}
           searchValue={globalFilter}
@@ -134,7 +128,7 @@ export function ExpedientesListWrapper({
             setPageIndex(0);
           }}
           searchPlaceholder="Buscar por processo, parte, classe..."
-          viewModeSlot={viewModeSlot}
+          actionButton={{ label: 'Novo Expediente', onClick: () => setIsCreateOpen(true) }}
           filtersSlot={
             <ExpedientesListFilters
               statusFiltro={statusFiltro}
@@ -200,5 +194,11 @@ export function ExpedientesListWrapper({
         striped
       />
     </DataShell>
+      <ExpedienteDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSuccess={() => { setIsCreateOpen(false); refetch(); }}
+      />
+    </>
   );
 }

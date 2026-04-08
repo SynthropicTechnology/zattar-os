@@ -68,8 +68,6 @@ interface ExpedientesTableWrapperProps {
   hideDateFilters?: boolean;
   /** Props para renderizar o WeekNavigator dentro do wrapper */
   weekNavigatorProps?: Omit<WeekNavigatorProps, 'className' | 'variant'>;
-  /** Slot para o seletor de modo de visualização (ViewModePopover) */
-  viewModeSlot?: React.ReactNode;
   /** Dados de usuários pré-carregados (evita fetch duplicado) */
   usuariosData?: UsuarioData[];
   /** Dados de tipos de expediente pré-carregados (evita fetch duplicado) */
@@ -89,7 +87,6 @@ export function ExpedientesTableWrapper({
   fixedDate,
   hideDateFilters,
   weekNavigatorProps,
-  viewModeSlot,
   usuariosData,
   tiposExpedientesData,
 }: ExpedientesTableWrapperProps) {
@@ -400,7 +397,6 @@ export function ExpedientesTableWrapper({
                   label: 'Novo Expediente',
                   onClick: () => setIsCreateDialogOpen(true),
                 }}
-                viewModeSlot={viewModeSlot}
                 filtersSlot={
                   <>
                     <ExpedientesListFilters
