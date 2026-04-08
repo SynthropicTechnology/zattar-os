@@ -12,6 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 import { ENTITY_FIELD_CATEGORIES, type EntityFieldDefinition } from './entity-fields-mapping';
 
 interface FieldDefinition {
@@ -115,7 +116,7 @@ export default function FieldPalette() {
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
       <div className="shrink-0 px-3 pt-3 pb-2 space-y-2 border-b">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Campos Disponíveis</h3>
+        <Heading level="card" className="text-xs uppercase tracking-wider text-muted-foreground">Campos Disponíveis</Heading>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
           <Input

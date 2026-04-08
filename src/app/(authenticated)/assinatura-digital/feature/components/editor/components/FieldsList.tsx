@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import type { EditorField } from '../types';
+import { Heading } from '@/components/ui/typography';
 
 interface FieldsListProps {
   fields: EditorField[];
@@ -190,9 +191,9 @@ export default function FieldsList({
       <div className="p-3 space-y-4">
         {pages.map((page) => (
           <div key={page}>
-            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+            <Heading level="subsection" className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-1">
               Página {page}
-            </h4>
+            </Heading>
             <div className="space-y-1">
               {fieldsByPage[page].map((field) => (
                 <FieldsListItem

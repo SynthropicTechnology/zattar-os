@@ -8,7 +8,7 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { actionBulkTransferirResponsavel, type ActionResult } from '../actions-bulk';
+import { actionBulkTransferirResponsavel, type ActionResult } from '../actions';
 
 interface Usuario {
   id: number;

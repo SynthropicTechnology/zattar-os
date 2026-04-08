@@ -11,6 +11,7 @@ import { useMemo } from 'react';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { TimelineItem } from './timeline-item';
 import { Card } from '@/components/ui/card';
+import { Heading } from '@/components/ui/typography';
 
 interface TimelineContainerProps {
   items: TimelineItemEnriquecido[];
@@ -54,7 +55,7 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
     <div className="space-y-0">
       {/* Header da timeline */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold">Timeline do Processo</h2>
+        <Heading level="section">Timeline do Processo</Heading>
         <p className="text-sm text-muted-foreground">
           {sortedItems.length} {sortedItems.length === 1 ? 'item' : 'itens'} •{' '}
           {sortedItems.filter((i) => i.documento).length} documentos •{' '}

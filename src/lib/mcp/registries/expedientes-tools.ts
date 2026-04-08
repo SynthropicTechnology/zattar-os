@@ -31,7 +31,7 @@ export async function registerExpedientesTools(): Promise<void> {
   const {
     actionBulkTransferirResponsavel,
     actionBulkBaixar,
-  } = await import('@/app/(authenticated)/expedientes/actions-bulk');
+  } = await import('@/app/(authenticated)/expedientes/actions');
 
   /**
    * Lista expedientes do sistema com filtros por responsável, prazo, tipo, processo

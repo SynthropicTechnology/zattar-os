@@ -50,6 +50,7 @@ import {
   validateTextLength,
 } from '../../utils';
 import FormStepLayout from './form-step-layout';
+import { Heading } from '@/components/ui/typography';
 
 export default function DadosPessoais() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -340,7 +341,7 @@ export default function DadosPessoais() {
         >
           {/* Seção: Informações Pessoais */}
           <div className="space-y-6">
-            <h3 className="text-base font-semibold">Informações Pessoais</h3>
+            <Heading level="card" className="text-base">Informações Pessoais</Heading>
 
             {/* Linha 1: Nome Completo */}
             <FormField
@@ -521,7 +522,7 @@ export default function DadosPessoais() {
 
           {/* Seção: Contatos */}
           <div className="space-y-6">
-            <h3 className="text-base font-semibold">Contatos</h3>
+            <Heading level="card" className="text-base">Contatos</Heading>
 
             {/* Linha 1: Celular + Telefone de Contato */}
             <div className="flex flex-col md:flex-row gap-6">
@@ -595,7 +596,7 @@ export default function DadosPessoais() {
 
           {/* Seção: Endereço */}
           <div className="space-y-6">
-            <h3 className="text-base font-semibold">Endereço</h3>
+            <Heading level="card" className="text-base">Endereço</Heading>
 
             {/* Linha 1: CEP */}
             <FormField

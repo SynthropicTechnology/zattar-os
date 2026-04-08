@@ -16,6 +16,7 @@ import {
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
 import { ProgressRing } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { Heading } from '@/components/ui/typography';
 import type { DocumentoCardData } from "../adapters/documento-card-adapter";
 import { STATUS_CONFIG, getSignerProgress, timeAgo } from "./documento-card";
 
@@ -38,9 +39,9 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             <Icon className={`size-5 ${cfg.color}`} />
           </IconContainer>
           <div className="min-w-0">
-            <h2 className="text-sm font-heading font-semibold leading-tight">
+            <Heading level="section" className="text-sm leading-tight">
               {doc.titulo}
-            </h2>
+            </Heading>
             <div className="flex items-center gap-2 mt-1">
               <span
                 className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}
@@ -95,10 +96,10 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Signers list */}
       <div className="mb-4">
-        <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
+        <Heading level="card" className="text-xs mb-2 flex items-center gap-1.5">
           <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
-        </h3>
+        </Heading>
         <div className="space-y-1.5">
           {doc.assinantes.map((a, i) => {
             const isDone = a.status === "concluido";

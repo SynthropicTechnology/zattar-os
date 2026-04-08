@@ -24,8 +24,8 @@ import type {
 } from '@/app/(authenticated)/contratos';
 import {
   STATUS_CONTRATO_LABELS,
-  getStatusVariant,
 } from '@/app/(authenticated)/contratos';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import type { Lancamento } from '@/app/(authenticated)/financeiro/domain/lancamentos';
 import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/app/(authenticated)/entrevistas-trabalhistas';
 import { EntrevistaTab } from '@/app/(authenticated)/entrevistas-trabalhistas';
@@ -155,7 +155,7 @@ function AtividadeRecenteSection({ historico }: { historico: ContratoStatusHisto
             const fromLabel = item.fromStatus
               ? STATUS_CONTRATO_LABELS[item.fromStatus] || item.fromStatus
               : null;
-            const variant = getStatusVariant(item.toStatus);
+            const variant = getSemanticBadgeVariant('status_contrato', item.toStatus);
 
             return (
               <div key={item.id} className="flex items-center justify-between gap-2">

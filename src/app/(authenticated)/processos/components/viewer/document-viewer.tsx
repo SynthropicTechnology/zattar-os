@@ -251,7 +251,7 @@ export function DocumentViewer({
           // Exibição do PDF com renderer controlado
           <div
             className={cn(
-              'h-full w-full overflow-auto px-3 pb-18 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
+              'h-full w-full overflow-auto px-3 pb-20 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
               annotationsOpen && 'lg:pr-6'
             )}
           >

@@ -8,6 +8,7 @@ import { CopyButton } from '@/app/(authenticated)/partes';
 import { timeAgo } from '@/components/dashboard/entity-card';
 import { cn } from '@/lib/utils';
 import { IconContainer } from '@/components/ui/icon-container';
+import { Heading } from '@/components/ui/typography';
 import type { ProcessoUnificado } from '../domain';
 import { GRAU_LABELS } from '@/lib/design-system';
 
@@ -80,7 +81,7 @@ export function ProcessoCard({
             <Scale className={cn('size-5', statusClasses.text)} />
           </IconContainer>
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold truncate">{tituloPartes}</h3>
+            <Heading level="card" className="text-sm truncate">{tituloPartes}</Heading>
             <div className="flex items-center gap-1 mt-0.5">
               <span className="text-[10px] font-mono text-muted-foreground/55 tabular-nums truncate">
                 {processo.numeroProcesso}

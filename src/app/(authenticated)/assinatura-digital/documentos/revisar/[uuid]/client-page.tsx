@@ -125,9 +125,9 @@ function SectionHeader({
         <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
           <Icon className="size-4 text-primary" />
         </div>
-        <h2 className="text-sm font-heading font-semibold text-foreground">
+        <Heading level="section" className="text-sm">
           {title}
-        </h2>
+        </Heading>
       </div>
       {action}
     </div>

@@ -27,6 +27,7 @@ import {
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Heading } from '@/components/ui/typography';
 
 interface TimelineItemProps {
   item: TimelineItemEnriquecido & { grauOrigem?: GrauProcesso };
@@ -154,7 +155,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                 {formatarGrauComOrdinal(grauOrigem)}
               </SemanticBadge>
             )}
-            <h3 className="font-semibold text-base flex-1">{item.titulo}</h3>
+            <Heading level="card" className="text-base flex-1">{item.titulo}</Heading>
             {item.documentoSigiloso && (
               <TooltipProvider>
                 <Tooltip>

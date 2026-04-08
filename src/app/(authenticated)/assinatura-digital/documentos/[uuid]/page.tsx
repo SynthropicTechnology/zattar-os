@@ -10,6 +10,7 @@ import type {
   SignatarioVerificacaoData,
 } from "../../feature/types/types";
 import { DocumentoVerificacaoClient } from "./client-page";
+import { PageShell } from "@/components/shared/page-shell";
 import { Loader2 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -171,19 +172,21 @@ export default async function DocumentoVerificacaoPage({
   }
 
   return (
-    <Suspense
-      fallback={
-        <div className="flex h-96 w-full items-center justify-center">
-          <div className="flex flex-col items-center gap-2">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              Carregando verificação...
-            </p>
+    <PageShell>
+      <Suspense
+        fallback={
+          <div className="flex h-96 w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                Carregando verificação...
+              </p>
+            </div>
           </div>
-        </div>
-      }
-    >
-      <DocumentoVerificacaoClient data={data} />
-    </Suspense>
+        }
+      >
+        <DocumentoVerificacaoClient data={data} />
+      </Suspense>
+    </PageShell>
   );
 }

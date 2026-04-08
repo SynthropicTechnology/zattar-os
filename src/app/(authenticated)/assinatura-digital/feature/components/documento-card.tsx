@@ -31,7 +31,7 @@ export const STATUS_CONFIG: Record<
   rascunho: {
     label: "Rascunho",
     color: "text-muted-foreground/50",
-    cssColor: "oklch(from var(--muted-foreground) l c h / 0.55)",
+    cssColor: "var(--muted-foreground)",
     icon: FileText,
     bg: "bg-muted-foreground/8",
   },

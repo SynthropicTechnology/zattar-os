@@ -11,8 +11,8 @@ import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   PAPEL_CONTRATUAL_LABELS,
-  getTipoContratoVariant,
 } from '@/app/(authenticated)/contratos';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import type { SegmentoDetalhado } from '@/app/(authenticated)/contratos';
 
 interface ContratoTagsCardProps {
@@ -31,7 +31,7 @@ export function ContratoTagsCard({
   const tipoContratoLabel = TIPO_CONTRATO_LABELS[tipoContrato] || tipoContrato;
   const tipoCobrancaLabel = TIPO_COBRANCA_LABELS[tipoCobranca] || tipoCobranca;
   const papelLabel = PAPEL_CONTRATUAL_LABELS[papelClienteNoContrato] || papelClienteNoContrato;
-  const tipoContratoVariant = getTipoContratoVariant(tipoContrato);
+  const tipoContratoVariant = getSemanticBadgeVariant('tipo_contrato', tipoContrato);
 
   return (
     <Card>

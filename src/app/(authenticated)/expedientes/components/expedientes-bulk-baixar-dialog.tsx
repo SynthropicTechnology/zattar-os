@@ -8,7 +8,7 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { actionBulkBaixar, type ActionResult } from '../actions-bulk';
+import { actionBulkBaixar, type ActionResult } from '../actions';
 
 interface ExpedientesBulkBaixarDialogProps {
   open: boolean;

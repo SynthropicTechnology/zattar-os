@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, RotateCcw } from 'lucide-react';
+import { Heading } from '@/components/ui/typography';
 
 export default function ErrorBoundary({
     error,
@@ -23,7 +24,7 @@ export default function ErrorBoundary({
             </div>
 
             <div className="text-center space-y-2 max-w-md">
-                <h2 className="text-2xl font-bold tracking-tight">Algo deu errado!</h2>
+                <Heading level="section" className="text-2xl tracking-tight">Algo deu errado!</Heading>
                 <p className="text-muted-foreground">
                     Não foi possível carregar o editor de documentos.
                 </p>

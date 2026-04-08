@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { PageShell } from "@/components/shared/page-shell";
 import { EditarDocumentoClient } from "./client-page";
 
 export const metadata: Metadata = {
@@ -15,15 +16,17 @@ export default async function EditarDocumentoPage({
   const { uuid } = await params;
 
   return (
-    <Suspense fallback={
-      <div className="flex h-96 w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-sm text-muted-foreground">Carregando editor...</p>
+    <PageShell>
+      <Suspense fallback={
+        <div className="flex h-96 w-full items-center justify-center">
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="text-sm text-muted-foreground">Carregando editor...</p>
+          </div>
         </div>
-      </div>
-    }>
-      <EditarDocumentoClient uuid={uuid} />
-    </Suspense>
+      }>
+        <EditarDocumentoClient uuid={uuid} />
+      </Suspense>
+    </PageShell>
   );
 }

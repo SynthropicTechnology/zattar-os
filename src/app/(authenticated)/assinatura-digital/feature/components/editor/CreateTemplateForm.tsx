@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Heading } from '@/components/ui/typography';
 
 
 interface CreateTemplateFormProps {
@@ -93,7 +94,7 @@ export default function CreateTemplateForm({
         {/* Header */}
         <div className="flex items-center gap-2 pb-3 border-b">
           <FileText className="h-4 w-4" />
-          <h3 className="text-sm font-semibold">Informações do Novo Template</h3>
+          <Heading level="card" className="text-sm">Informações do Novo Template</Heading>
         </div>
 
         {/* Nome */}

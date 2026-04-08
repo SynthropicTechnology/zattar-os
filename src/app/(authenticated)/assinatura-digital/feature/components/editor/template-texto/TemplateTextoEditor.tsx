@@ -25,6 +25,7 @@ import { ExitBreakKit } from '@/components/editor/plate/exit-break-kit';
 
 import { TEMPLATE_VARIABLES, CATEGORY_LABELS } from './types';
 import type { VariableCategory } from './types';
+import { Heading } from '@/components/ui/typography';
 
 interface TemplateTextoEditorProps {
   value?: Descendant[];
@@ -130,7 +131,7 @@ export function TemplateTextoEditor({
 
       {/* Variable insertion helper */}
       <div className="mt-4 rounded-lg border bg-muted/30 p-4">
-        <h4 className="mb-2 text-sm font-medium">Inserir Variáveis</h4>
+        <Heading level="subsection" className="mb-2 text-sm">Inserir Variáveis</Heading>
         <p className="mb-3 text-xs text-muted-foreground">
           Digite <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">@</kbd> no editor para inserir variáveis dinâmicas.
         </p>

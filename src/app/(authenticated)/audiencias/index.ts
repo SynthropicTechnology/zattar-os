@@ -78,13 +78,30 @@ export {
   actionCriarAudiencia,
   actionAtualizarAudiencia,
   actionAtualizarStatusAudiencia,
+  actionAtualizarObservacoes,
+  actionAtualizarUrlVirtual,
+  actionAtualizarEnderecoPresencial,
   actionListarAudiencias,
+  actionBuscarAudienciaPorId,
+  actionCriarAudienciaPayload,
+  actionAtualizarAudienciaPayload,
+  actionListarTiposAudiencia,
+  actionListarSalasAudiencia,
+  actionBuscarAudienciasPorCPF,
+  actionBuscarAudienciasPorCNPJ,
+  actionBuscarAudienciasPorNumeroProcesso,
 } from "./actions";
 
 export type { ActionResult } from "./actions";
 
 // ============================================================================
-// Service
+// Services (especializados)
+// ============================================================================
+// NOTE: Serviços especializados (AI Agent, Responsável, Virtual) são server-only.
+// Import via: import { buscarAudienciasClientePorCpf } from '@/app/(authenticated)/audiencias/services';
+
+// ============================================================================
+// Service (principal)
 // ============================================================================
 // NOTE: Service functions are NOT exported here because service.ts imports
 // repository.ts which uses Redis cache-utils with 'server-only'.

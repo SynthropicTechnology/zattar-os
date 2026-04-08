@@ -11,6 +11,7 @@ import type { DynamicFormSchema, FormSectionSchema, FormFieldSchema } from '../.
 import { FormFieldType } from '../../types/domain';
 import { Edit, Trash2, Copy, GripVertical, Plus, AlertCircle, CheckCircle, Info, Type, Hash, Calendar, List, FileText, Phone, MapPin, CreditCard, Building, Mail, CheckSquare, Search, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 
 interface SchemaCanvasProps {
   schema: DynamicFormSchema;
@@ -189,7 +190,7 @@ function DroppableSectionCard({
     >
       <div className="flex items-start justify-between gap-2 px-3 pt-3 pb-2">
         <div className="flex-1 min-w-0">
-          <h4 className="text-xs font-semibold">{section.title}</h4>
+          <Heading level="subsection" className="text-xs">{section.title}</Heading>
           {section.description && (
             <p className="text-[11px] text-muted-foreground mt-0.5">{section.description}</p>
           )}

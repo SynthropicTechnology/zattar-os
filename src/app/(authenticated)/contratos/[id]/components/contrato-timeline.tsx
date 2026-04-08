@@ -6,7 +6,8 @@ import { History, ArrowRight, Circle, CheckCircle2, XCircle, Clock } from 'lucid
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import type { ContratoStatusHistorico, StatusContrato } from '@/app/(authenticated)/contratos';
-import { STATUS_CONTRATO_LABELS, getStatusVariant } from '@/app/(authenticated)/contratos';
+import { STATUS_CONTRATO_LABELS } from '@/app/(authenticated)/contratos';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 
 interface ContratoTimelineProps {
@@ -77,7 +78,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                 const fromStatusLabel = item.fromStatus
                   ? STATUS_CONTRATO_LABELS[item.fromStatus] || item.fromStatus
                   : null;
-                const variant = getStatusVariant(item.toStatus);
+                const variant = getSemanticBadgeVariant('status_contrato', item.toStatus);
 
                 return (
                   <div key={item.id} className="relative pl-10">

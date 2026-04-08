@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { PAPEL_CONTRATUAL_LABELS } from '@/app/(authenticated)/contratos';
+import { Heading } from '@/components/ui/typography';
 import type { ParteDisplay } from './contrato-partes-card';
 
 interface ParteViewSheetProps {
@@ -85,9 +86,9 @@ export function ParteViewSheet({ open, onOpenChange, parte }: ParteViewSheetProp
 
           {/* Informações básicas */}
           <div className="space-y-4">
-            <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+            <Heading level="subsection" className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
               Informações
-            </h4>
+            </Heading>
 
             <div className="space-y-3">
               {/* Tipo de pessoa */}

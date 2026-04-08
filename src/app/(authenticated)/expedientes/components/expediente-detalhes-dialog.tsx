@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { AppBadge } from '@/components/ui/app-badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -29,10 +30,6 @@ const formatarData = (dataISO: string | null): string => {
   } catch {
     return '-';
   }
-};
-
-const getStatusBadgeStyle = (baixadoEm: string | null): { variant: 'default' | 'secondary' | 'destructive' | 'outline' } => {
-  return baixadoEm ? { variant: 'secondary' } : { variant: 'default' };
 };
 
 const getStatusTexto = (baixadoEm: string | null): string => {
@@ -137,9 +134,9 @@ function ExpedienteListItem({
               {exp.numeroProcesso}
             </div>
             <div className="flex gap-2">
-              <AppBadge {...getStatusBadgeStyle(exp.baixadoEm)}>
+              <SemanticBadge category="expediente_status" value={getStatusTexto(exp.baixadoEm)}>
                 {getStatusTexto(exp.baixadoEm)}
-              </AppBadge>
+              </SemanticBadge>
               <AppBadge variant={exp.prazoVencido ? 'destructive' : 'outline'}>
                 {exp.prazoVencido ? 'Vencido' : 'No Prazo'}
               </AppBadge>
@@ -211,9 +208,9 @@ function ExpedienteSingleDetails({
             <div>
               <div className="text-xs uppercase text-muted-foreground font-bold tracking-wider mb-1">Status</div>
               <div className="flex gap-2">
-                <AppBadge {...getStatusBadgeStyle(expediente.baixadoEm)}>
+                <SemanticBadge category="expediente_status" value={getStatusTexto(expediente.baixadoEm)}>
                   {getStatusTexto(expediente.baixadoEm)}
-                </AppBadge>
+                </SemanticBadge>
                 <AppBadge variant={expediente.prazoVencido ? 'destructive' : 'outline'}>
                   {expediente.prazoVencido ? 'Vencido' : 'No Prazo'}
                 </AppBadge>

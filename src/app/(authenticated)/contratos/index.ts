@@ -1,16 +1,94 @@
 /**
- * CONTRATOS FEATURE - Public API
+ * Contratos Feature Module — Barrel Export (API Pública)
  *
- * Re-exporta todos os módulos públicos da feature contratos.
- * Este é o ponto de entrada principal para importar funcionalidades de contratos.
+ * Este é o ponto de entrada público do módulo de contratos.
+ * Toda importação cross-módulo DEVE passar por este arquivo.
  *
- * Uso:
- * import { ContratosTableWrapper, listarContratos, Contrato } from '@/app/(authenticated)/contratos';
+ * Entidades: Contratos, Segmentos, Pipelines, Tipos Configuráveis
  */
 
-// =============================================================================
-// TYPES & SCHEMAS (Domain)
-// =============================================================================
+// ============================================================================
+// Components
+// ============================================================================
+export {
+  getContratosColumns,
+  ContratosTableWrapper,
+  ContratoForm,
+  ContratoDeleteDialog,
+  SegmentosDialog,
+  SegmentosFilter,
+  // Pipeline UI
+  ContratoCard,
+  ContratoListRow,
+  PipelineFunnel,
+  FinancialStrip,
+  KanbanColumn,
+} from './components';
+
+export type {
+  ContratoCardData,
+  ContratoCardProps,
+  ContratoListRowProps,
+  PipelineStageData,
+  PipelineFunnelProps,
+  ContratosStatsData,
+  FinancialStripProps,
+  KanbanColumnProps,
+} from './components';
+
+// ============================================================================
+// Hooks
+// ============================================================================
+export { useContratos } from './hooks';
+export { useSegmentos } from './hooks';
+export type { SegmentoOption } from './hooks';
+export { useKanbanContratos, SEM_ESTAGIO_KEY } from './hooks';
+export type { KanbanContrato, KanbanColumns } from './hooks';
+export { useContratosPage } from './hooks';
+export type { UseContratosPageParams, UseContratosPageResult } from './hooks';
+export { useContratosStats } from './hooks';
+export type { UseContratosStatsResult } from './hooks';
+
+// ============================================================================
+// Actions (Server Actions)
+// ============================================================================
+export type { ActionResult } from './actions';
+export {
+  actionCriarContrato,
+  actionAtualizarContrato,
+  actionListarContratos,
+  actionBuscarContrato,
+  actionBuscarContratoCompleto,
+  actionContarContratosPorStatus,
+  actionContarContratosComEstatisticas,
+  actionResolverNomesEntidadesContrato,
+  actionExcluirContrato,
+  actionAlterarStatusContratosEmMassa,
+  actionAtribuirResponsavelContratosEmMassa,
+  actionAlterarSegmentoContratosEmMassa,
+  actionExcluirContratosEmMassa,
+  actionAlterarResponsavelContrato,
+  actionContratosStats,
+} from './actions';
+
+// --- Segmentos Actions ---
+export type {
+  Segmento,
+  CreateSegmentoInput,
+  UpdateSegmentoInput,
+} from './actions';
+export {
+  actionListarSegmentos,
+  actionCriarSegmento,
+  actionAtualizarSegmento,
+  actionDeletarSegmento,
+} from './actions';
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
+
+// --- Core domain types ---
 export type {
   SegmentoTipo,
   TipoContrato,
@@ -47,9 +125,7 @@ export {
   PAPEL_CONTRATUAL_LABELS,
 } from './domain';
 
-// =============================================================================
-// TYPES (Auxiliary - API Response, Filters, etc.)
-// =============================================================================
+// --- Frontend-specific types (types/) ---
 export type {
   ContratosApiResponse,
   BuscarContratosParams,
@@ -60,20 +136,9 @@ export type {
   SegmentoInfo,
 } from './types';
 
-// =============================================================================
-// SERVICES
-// =============================================================================
-export {
-  criarContrato,
-  buscarContrato,
-  listarContratos,
-  atualizarContrato,
-  listarContratosPorClienteId,
-} from './service';
-
-// =============================================================================
-// QUERIES (Data fetching for Server Components)
-// =============================================================================
+// ============================================================================
+// Queries (Data fetching for Server Components)
+// ============================================================================
 export type {
   ContratoCompleto,
   ContratoCompletoStats,
@@ -83,31 +148,14 @@ export type {
 } from './queries';
 export { fetchContratoCompleto } from './queries';
 
-// =============================================================================
-// ACTIONS (Server Actions)
-// =============================================================================
-export type {
-  ActionResult,
-} from './actions';
-export {
-  actionCriarContrato,
-  actionAtualizarContrato,
-  actionListarContratos,
-  actionBuscarContrato,
-  actionBuscarContratoCompleto,
-  actionContarContratosPorStatus,
-  actionContarContratosComEstatisticas,
-  actionContratosStats,
-} from './actions';
+// ============================================================================
+// Adapters
+// ============================================================================
+export { contratoToCardData } from './adapters/contrato-card-adapter';
 
-// =============================================================================
-// HOOKS
-// =============================================================================
-export { useContratos } from './hooks';
-
-// =============================================================================
-// UTILS
-// =============================================================================
+// ============================================================================
+// Utils
+// ============================================================================
 export {
   formatarSegmentoTipo,
   formatarTipoContrato,
@@ -116,15 +164,11 @@ export {
   formatarStatusContrato,
   formatarData,
   formatarDataHora,
-  getStatusBadgeStyle,
-  getTipoContratoBadgeStyle,
-  getStatusVariant,
-  getTipoContratoVariant,
 } from './utils';
 
-// =============================================================================
-// ERRORS
-// =============================================================================
+// ============================================================================
+// Errors
+// ============================================================================
 export {
   // Error factories
   contratoNotFoundError,
@@ -141,36 +185,9 @@ export {
   isContratoValidationError,
 } from './errors';
 
-// =============================================================================
-// COMPONENTS
-// =============================================================================
-export {
-  getContratosColumns,
-  ContratosTableWrapper,
-  ContratoForm,
-  ContratoDeleteDialog,
-  // Pipeline UI
-  ContratoCard,
-  ContratoListRow,
-  PipelineFunnel,
-  FinancialStrip,
-  KanbanColumn,
-} from './components';
-
-export type {
-  ContratoCardData,
-  ContratoCardProps,
-  ContratoListRowProps,
-  PipelineStageData,
-  PipelineFunnelProps,
-  ContratosStatsData,
-  FinancialStripProps,
-  KanbanColumnProps,
-} from './components';
-
-// =============================================================================
-// PIPELINES
-// =============================================================================
+// ============================================================================
+// Pipelines (Sub-módulo)
+// ============================================================================
 export type {
   ContratoPipeline,
   ContratoPipelineEstagio,
@@ -182,9 +199,9 @@ export type {
   ListarPipelinesParams,
 } from './pipelines/types';
 
-// =============================================================================
-// TIPOS CONFIG
-// =============================================================================
+// ============================================================================
+// Tipos Config (Sub-módulo)
+// ============================================================================
 export type {
   ContratoTipo,
   ContratoTipoCobranca,
@@ -192,3 +209,10 @@ export type {
   UpdateContratoTipoInput,
   ListarTiposParams,
 } from './tipos-config/types';
+
+// ============================================================================
+// Server-only exports
+// ============================================================================
+// Services e Repositories devem ser importados diretamente:
+//   import { criarContrato } from '@/app/(authenticated)/contratos/service';
+// NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.

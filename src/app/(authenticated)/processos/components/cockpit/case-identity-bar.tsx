@@ -19,6 +19,7 @@ import { GRAU_LABELS } from '@/lib/design-system';
 import { ProcessosAlterarResponsavelDialog } from '../processos-alterar-responsavel-dialog';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 import { useState } from 'react';
 
 interface InstanciaInfo {
@@ -107,9 +108,9 @@ export function CaseIdentityBar({
         <ArrowLeft className="size-4" />
       </Button>
 
-      <h1 className="text-base font-heading font-semibold tracking-tight truncate max-w-[35%] min-w-0">
+      <Heading level="page" className="text-base tracking-tight truncate max-w-[35%] min-w-0">
         {tituloPartes}
-      </h1>
+      </Heading>
 
       {segredoJustica && (
         <TooltipProvider>

@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
 
 import type { Audiencia } from '../../domain';
 import { StatusAudiencia } from '../../domain';
@@ -309,7 +310,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <Gavel className="size-3 text-primary/40 shrink-0" />
-              <h3 className="text-[13px] font-medium text-foreground truncate">{audiencia.tipoDescricao || 'Audiência'}</h3>
+              <Heading level="card" className="text-[13px] font-medium truncate">{audiencia.tipoDescricao || 'Audiência'}</Heading>
               {isOngoing && <span className="text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10">Agora</span>}
               <span className={cn(
                 'inline-flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold tabular-nums shrink-0',

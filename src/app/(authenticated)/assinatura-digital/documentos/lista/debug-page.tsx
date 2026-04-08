@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { actionListDocumentos } from "../../feature";
+import { Heading } from "@/components/ui/typography";
 
 export function DebugPage() {
   const [loading, setLoading] = useState(true);
@@ -46,11 +47,11 @@ export function DebugPage() {
 
   return (
     <div className="p-8 space-y-4">
-      <h1 className="text-2xl font-bold">Debug - Lista de Documentos</h1>
+      <Heading level="page" className="text-2xl">Debug - Lista de Documentos</Heading>
       
       {error && (
         <div className="p-4 bg-destructive text-destructive rounded">
-          <h2 className="font-bold">Erro:</h2>
+          <Heading level="section">Erro:</Heading>
           <pre className="mt-2 text-sm">{error}</pre>
         </div>
       )}
@@ -58,13 +59,13 @@ export function DebugPage() {
       {hasResult ? (
         <div className="space-y-4">
           <div className="p-4 bg-info rounded">
-            <h2 className="font-bold">Success:</h2>
+            <Heading level="section">Success:</Heading>
             <p>{resultObject?.success ? "✅ true" : "❌ false"}</p>
           </div>
 
           {Boolean(resultObject?.data) && (
             <div className="p-4 bg-success rounded">
-              <h2 className="font-bold">Data:</h2>
+              <Heading level="section">Data:</Heading>
               <pre className="mt-2 text-xs overflow-auto max-h-96">
                 {JSON.stringify(resultObject?.data, null, 2)}
               </pre>

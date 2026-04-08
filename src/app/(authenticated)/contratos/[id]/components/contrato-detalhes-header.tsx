@@ -20,10 +20,10 @@ import type { Contrato, ResponsavelDetalhado } from '@/app/(authenticated)/contr
 import {
   formatarStatusContrato,
   formatarTipoContrato,
-  getStatusVariant,
   TIPO_COBRANCA_LABELS,
   ContratoDeleteDialog,
 } from '@/app/(authenticated)/contratos';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { Heading } from '@/components/ui/typography';
 
 function getInitials(nome: string): string {
@@ -75,7 +75,7 @@ export function ContratoDetalhesHeader({
   const statusLabel = formatarStatusContrato(contrato.status);
   const tipoContratoLabel = formatarTipoContrato(contrato.tipoContrato);
   const tipoCobrancaLabel = TIPO_COBRANCA_LABELS[contrato.tipoCobranca] || contrato.tipoCobranca;
-  const statusVariant = getStatusVariant(contrato.status);
+  const statusVariant = getSemanticBadgeVariant('status_contrato', contrato.status);
   const parteContrariaNome = getParteContrariaNome(contrato);
 
   const [deleteOpen, setDeleteOpen] = React.useState(false);

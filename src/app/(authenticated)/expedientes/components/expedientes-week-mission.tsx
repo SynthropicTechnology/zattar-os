@@ -30,6 +30,7 @@ import {
   InsightBanner,
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { AppBadge } from '@/components/ui/app-badge';
+import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 
@@ -453,7 +454,7 @@ export function ExpedientesWeekMission({
         {doDia.length === 0 ? (
           <GlassPanel depth={1} className="flex min-h-45 flex-col items-center justify-center p-8 text-center">
             <CalendarClock className="size-10 text-muted-foreground/20" />
-            <h3 className="mt-4 text-sm font-semibold">Nenhum expediente neste dia</h3>
+            <Heading level="card" className="mt-4 text-sm">Nenhum expediente neste dia</Heading>
             <p className="mt-1.5 max-w-sm text-sm text-muted-foreground/55">
               Selecione outro dia na barra de semana acima.
             </p>

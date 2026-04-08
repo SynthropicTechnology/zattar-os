@@ -19,6 +19,7 @@ import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Heading } from '@/components/ui/typography';
 import {
   Dialog,
   DialogContent,
@@ -157,9 +158,9 @@ export function ClienteDocumentosViewer({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-muted-foreground">
+        <Heading level="subsection" className="text-sm text-muted-foreground">
           {documentos.length} documento{documentos.length !== 1 ? 's' : ''}
-        </h3>
+        </Heading>
       </div>
 
       <ScrollArea className="h-100">

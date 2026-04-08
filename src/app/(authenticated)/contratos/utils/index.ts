@@ -12,8 +12,4 @@ export {
   formatarPapelContratual,
   formatarData,
   formatarDataHora,
-  getStatusBadgeStyle,
-  getTipoContratoBadgeStyle,
-  getStatusVariant,
-  getTipoContratoVariant,
 } from './formatters';

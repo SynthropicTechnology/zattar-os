@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import {
   Loader2,
@@ -884,7 +885,7 @@ export function ClienteFormDialog({
         </div>
 
         <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
-          <h4 className="font-medium mb-3">Resumo do cadastro</h4>
+          <Heading level="subsection" className="mb-3">Resumo do cadastro</Heading>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Tipo</dt>

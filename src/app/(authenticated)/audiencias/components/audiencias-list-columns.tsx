@@ -22,6 +22,7 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ParteBadge } from '@/components/ui/parte-badge';
+import { Heading } from '@/components/ui/typography';
 
 import { Input } from '@/components/ui/input';
 import type { Audiencia, EnderecoPresencial, GrauTribunal } from '../domain';
@@ -68,7 +69,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-success" />
-            <h4 className="font-semibold text-sm">Ata de Audiência</h4>
+            <Heading level="subsection" className="text-sm">Ata de Audiência</Heading>
           </div>
           <p className="text-xs text-muted-foreground">
             A ata desta audiência está disponível para visualização.
@@ -200,7 +201,7 @@ function ObservacoesCell({
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <MessageSquareText className="h-4 w-4 text-primary" />
-            <h4 className="font-semibold text-sm">Observações</h4>
+            <Heading level="subsection" className="text-sm">Observações</Heading>
           </div>
           <Textarea
             value={value}
@@ -336,10 +337,10 @@ function ModalidadeCell({
           {/* Seção Virtual */}
           {isVirtual && (
             <div className="space-y-2">
-              <h4 className="font-semibold text-sm flex items-center gap-2">
+              <Heading level="subsection" className="text-sm flex items-center gap-2">
                 <ExternalLink className="h-4 w-4 text-primary" />
                 Link da Audiência Virtual
-              </h4>
+              </Heading>
               {audiencia.urlAudienciaVirtual ? (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
@@ -391,10 +392,10 @@ function ModalidadeCell({
           {isPresencial && (
             <div className="space-y-2">
               {isVirtual && <div className="border-t pt-3" />}
-              <h4 className="font-semibold text-sm flex items-center gap-2">
+              <Heading level="subsection" className="text-sm flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
                 Endereço Presencial
-              </h4>
+              </Heading>
               {audiencia.enderecoPresencial ? (
                 <div className="flex items-start gap-2">
                   <p className="text-xs text-muted-foreground flex-1">

@@ -59,7 +59,6 @@ export {
   // Template utils
   formatFileSize,
   formatTemplateStatus,
-  getStatusBadgeVariant,
   getTemplateDisplayName,
   // Segmento utils
   getSegmentoDisplayName,
@@ -70,10 +69,8 @@ export {
   truncateText,
   formatAtivoBadge,
   formatAtivoStatus,
-  getAtivoBadgeVariant,
   getAtivoBadgeTone,
   formatBooleanBadge,
-  getBooleanBadgeVariant,
 } from "./display";
 
 // Slug Helpers

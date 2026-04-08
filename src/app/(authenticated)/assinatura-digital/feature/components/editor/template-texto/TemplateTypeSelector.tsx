@@ -2,6 +2,7 @@
 
 import { FileText, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 
 export type TemplateType = 'pdf' | 'texto';
 
@@ -91,7 +92,7 @@ export function TemplateTypeSelector({
 
             {/* Content */}
             <div className="space-y-1 pr-6">
-              <h4 className="font-medium">{option.title}</h4>
+              <Heading level="subsection">{option.title}</Heading>
               <p className="text-sm text-muted-foreground">{option.description}</p>
             </div>
           </button>

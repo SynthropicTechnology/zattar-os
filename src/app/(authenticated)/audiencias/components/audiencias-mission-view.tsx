@@ -522,9 +522,9 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <Gavel className="size-3 text-primary/40 shrink-0" />
-              <h3 className="text-[13px] font-medium text-foreground truncate">
+              <Heading level="card" className="text-[13px] font-medium truncate">
                 {audiencia.tipoDescricao || 'Audiência'}
-              </h3>
+              </Heading>
               {isOngoing && <span className="text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10">Agora</span>}
               {/* Prep Badge */}
               <span className={cn(

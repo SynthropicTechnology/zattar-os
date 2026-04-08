@@ -18,10 +18,10 @@ import {
 } from '@/components/ui/tooltip';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { FilterPopover } from '@/app/(authenticated)/partes';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   formatFileSize,
   formatTemplateStatus,
-  getStatusBadgeVariant,
   truncateText,
   getTemplateDisplayName,
   type Template,
@@ -197,7 +197,7 @@ function criarColunas(
         const status = row.getValue('status') as 'ativo' | 'inativo' | 'rascunho';
         return (
           <div className="flex items-center">
-            <Badge variant={getStatusBadgeVariant(status)} className="capitalize">
+            <Badge variant={getSemanticBadgeVariant('template_status', status)} className="capitalize">
               {formatTemplateStatus(status)}
             </Badge>
           </div>

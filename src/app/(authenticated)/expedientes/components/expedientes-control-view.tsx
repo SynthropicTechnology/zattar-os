@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Heading } from '@/components/ui/typography';
 import { UrgencyDot } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { GRAU_TRIBUNAL_LABELS, type Expediente, getExpedientePartyNames } from '../domain';
 
@@ -361,9 +362,9 @@ function SectionHeader({
   return (
     <div className="flex items-center gap-2 mb-3">
       <Icon className={cn('size-4', accentClass)} />
-      <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground/50">
+      <Heading level="subsection" as="h3" className="text-xs font-medium uppercase tracking-wider text-muted-foreground/50">
         {label}
-      </h3>
+      </Heading>
       <span className="text-[10px] tabular-nums text-muted-foreground/40">{count}</span>
     </div>
   );
@@ -393,9 +394,9 @@ function DetailPanel({
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="truncate text-sm font-semibold">
+          <Heading level="card" className="truncate text-sm">
             {tipoNome || 'Expediente'}
-          </h3>
+          </Heading>
           <p className="mt-0.5 tabular-nums text-[11px] text-muted-foreground/55">
             {expediente.numeroProcesso}
           </p>
@@ -609,9 +610,9 @@ export function ExpedientesControlView({
     return (
       <GlassPanel depth={1} className="flex min-h-52 flex-col items-center justify-center p-8 text-center">
         <SearchX className="size-8 text-muted-foreground/20" />
-        <h3 className="mt-4 text-sm font-medium text-muted-foreground/50">
+        <Heading level="card" className="mt-4 text-sm text-muted-foreground/50">
           Nenhum expediente encontrado
-        </h3>
+        </Heading>
         <p className="mt-1.5 max-w-sm text-xs text-muted-foreground/30">
           Ajuste os filtros ou a busca para ampliar o recorte operacional.
         </p>

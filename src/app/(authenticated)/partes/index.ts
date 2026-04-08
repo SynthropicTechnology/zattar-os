@@ -1,5 +1,8 @@
 /**
- * Partes Feature Module - Main barrel export
+ * Partes Feature Module — Barrel Export (API Pública)
+ *
+ * Este é o ponto de entrada público do módulo de partes processuais.
+ * Toda importação cross-módulo DEVE passar por este arquivo.
  *
  * ⚠️ OTIMIZAÇÃO DE BUILD:
  * Prefira imports diretos quando possível para melhor tree-shaking:
@@ -11,24 +14,7 @@
  * ⚠️ Use com moderação (barrel export):
  * import { useClientes, ClientesTableWrapper } from '@/app/(authenticated)/partes';
  *
- * Este modulo centraliza toda a funcionalidade relacionada a partes processuais:
- * - Clientes
- * - Partes Contrarias
- * - Terceiros
- * - Representantes (Advogados)
- *
- * @example
- * // Importar componentes
- * import { ClientesTableWrapper, ClienteForm } from '@/app/(authenticated)/partes';
- *
- * // Importar hooks
- * import { usePartesContrarias, useTerceiros } from '@/app/(authenticated)/partes';
- *
- * // Importar utils
- * import { formatarCpf, formatarNome } from '@/app/(authenticated)/partes';
- *
- * // Importar tipos
- * import type { Cliente, ParteContraria } from '@/app/(authenticated)/partes';
+ * Entidades: Clientes, Partes Contrárias, Terceiros, Representantes (Advogados)
  */
 
 // ============================================================================
@@ -69,25 +55,98 @@ export {
 export type { TipoEntidade, UsePartesParams, UsePartesResult } from "./hooks";
 
 // ============================================================================
-// Utils
+// Actions (Server Actions)
 // ============================================================================
+
+// --- Client-safe actions (wrapped with 'use server' in actions.ts) ---
 export {
-  formatarCpf,
-  formatarCnpj,
-  formatarTelefone,
-  formatarCep,
-  formatarNome,
-  formatarEnderecoCompleto,
-  formatarData,
-  formatarTipoPessoa,
-  calcularIdade,
-} from "./utils";
+  actionListarClientes,
+  actionCriarCliente,
+  actionAtualizarClienteForm,
+  actionDesativarCliente,
+  actionDesativarClientesEmMassa,
+  actionContarClientesComEstatisticas,
+  actionContarClientesPorEstado,
+  actionContarPartesContrariasComEstatisticas,
+  actionBuscarPartesPorProcessoEPolo,
+  actionCriarParteContraria,
+  actionAtualizarParteContraria,
+  actionCriarTerceiro,
+  actionAtualizarTerceiro,
+} from "./actions";
+
+// --- Safe Actions (com validação next-safe-action) ---
+export {
+  actionListarClientesSafe,
+  actionBuscarClienteSafe,
+  actionListarClientesSugestoesSafe,
+  actionCriarClienteSafe,
+  actionAtualizarClienteSafe,
+  actionDesativarClienteSafe,
+  actionListarPartesContrariasSafe,
+  actionBuscarParteContrariaSafe,
+  actionCriarParteContrariaSafe,
+  actionAtualizarParteContrariaSafe,
+  actionDesativarPartesContrariasEmMassa,
+  actionListarTerceirosSafe,
+  actionBuscarTerceiroSafe,
+  actionCriarTerceiroSafe,
+  actionAtualizarTerceiroSafe,
+  actionDesativarTerceirosEmMassa,
+} from "./actions/index";
+
+// --- Direct Actions (MCP, server-only, etc.) ---
+export {
+  actionBuscarCliente,
+  actionAtualizarCliente,
+  actionListarClientesSugestoes,
+  actionBuscarClientePorCPF,
+  actionBuscarClientePorCNPJ,
+  actionContarClientes,
+  actionBuscarParteContraria,
+  actionBuscarTerceiro,
+  actionBuscarProcessosPorEntidade,
+  actionBuscarRepresentantesPorCliente,
+  actionBuscarClientesPorRepresentante,
+} from "./actions/index";
+
+// --- Representantes Actions ---
+export {
+  actionListarRepresentantes,
+  actionBuscarRepresentantePorId,
+  actionCriarRepresentante,
+  actionAtualizarRepresentante,
+  actionDeletarRepresentante,
+  actionUpsertRepresentantePorCPF,
+  actionBuscarRepresentantePorNome,
+  actionBuscarRepresentantesPorOAB,
+  actionDeletarRepresentantesEmMassa,
+} from "./actions/index";
+
+// --- Stats Actions ---
+export {
+  actionContarPartesPorTipo,
+} from "./actions/index";
+
+export type {
+  ContarPartesPorTipoData,
+  PartesTipoCounts,
+} from "./actions/index";
+
+// --- Form Actions (useActionState) ---
+export {
+  actionListarPartesContrarias,
+  actionListarTerceiros,
+} from "./actions/index";
+
+export type { ActionResult } from "./actions/index";
 
 // ============================================================================
-// Types
+// Types / Domain
 // ============================================================================
+
+// --- Core domain types ---
 export type {
-  // Core types
   TipoPessoa,
   SituacaoPJE,
   GrauProcesso,
@@ -97,9 +156,12 @@ export type {
   ClientePessoaFisica,
   ClientePessoaJuridica,
   ParteContraria,
+  ParteContrariaBase,
   ParteContrariaPessoaFisica,
   ParteContrariaPessoaJuridica,
+  ParteContrariaComEndereco,
   Terceiro,
+  TerceiroBase,
   TerceiroPessoaFisica,
   TerceiroPessoaJuridica,
   TipoParteTerceiro,
@@ -107,65 +169,32 @@ export type {
   ListarClientesParams,
   ListarPartesContrariasParams,
   ListarTerceirosParams,
-  // Extended types
-  ParteEndereco,
-  PaginationInfo,
-  // Params types
-  BuscarPartesContrariasParams,
-  BuscarTerceirosParams,
-  BuscarRepresentantesParams,
-  // API response types
-  PartesContrariasApiResponse,
-  TerceirosApiResponse,
-  // Filter types
-  ClientesFilters,
-  PartesContrariasFilters,
-  TerceirosFilters,
-  RepresentantesFilters,
-  // Representante types
-  Representante,
-  InscricaoOAB,
-  SituacaoOAB,
-  TipoRepresentante,
-  RepresentanteComEndereco,
-  ListarRepresentantesResult,
-} from "./types";
-
-export type { ParteComDadosCompletos } from "./types";
-export type { TipoParteProcesso, PoloProcessoParte } from "./types";
-export { TIPOS_PARTE_PROCESSO_VALIDOS } from "./types";
-
-// ============================================================================
-// Domain (Schemas, Validation, Types)
-// ============================================================================
-// Additional domain types
-export type {
+  // Input types (schemas)
   CreateClientePFInput,
   CreateClientePJInput,
   CreateClienteInput,
   UpdateClienteInput,
-  ParteContrariaBase,
   CreateParteContrariaPFInput,
   CreateParteContrariaPJInput,
   CreateParteContrariaInput,
   UpdateParteContrariaInput,
-  TerceiroBase,
   CreateTerceiroPFInput,
   CreateTerceiroPJInput,
   CreateTerceiroInput,
   UpdateTerceiroInput,
+  // Ordering
   OrdenarPorParte,
   Ordem,
   OrdenarPorTerceiro,
+  // Extended types (com endereço e processos)
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
-  ParteContrariaComEndereco,
   ParteContrariaComEnderecoEProcessos,
   TerceiroComEndereco,
   TerceiroComEnderecoEProcessos,
 } from "./domain";
 
-// Functions and Schemas
+// --- Domain schemas & validation functions ---
 export {
   normalizarDocumento,
   validarCpfFormato,
@@ -192,59 +221,68 @@ export {
   updateTerceiroSchema,
 } from "./domain";
 
-// ============================================================================
-// Actions (Server Actions — safe for client bundles via 'use server')
-// ============================================================================
-// Re-exports do wrapper "use server" (actions.ts — subconjunto seguro para Client Components)
-export {
-  actionListarClientes,
-  actionCriarCliente,
-  actionAtualizarClienteForm,
-  actionDesativarCliente,
-  actionDesativarClientesEmMassa,
-  actionContarClientesComEstatisticas,
-  actionContarClientesPorEstado,
-  actionContarPartesContrariasComEstatisticas,
-  actionBuscarPartesPorProcessoEPolo,
-  actionCriarParteContraria,
-  actionAtualizarParteContraria,
-  actionCriarTerceiro,
-  actionAtualizarTerceiro,
-} from "./actions";
+// --- Frontend-specific types (types/) ---
+export type {
+  ParteComDadosCompletos,
+  TipoParteProcesso,
+  PoloProcessoParte,
+  ParteEndereco,
+  PaginationInfo,
+  BuscarPartesContrariasParams,
+  BuscarTerceirosParams,
+  BuscarRepresentantesParams,
+  PartesContrariasApiResponse,
+  TerceirosApiResponse,
+  ClientesFilters,
+  PartesContrariasFilters,
+  TerceirosFilters,
+  RepresentantesFilters,
+  Representante,
+  InscricaoOAB,
+  SituacaoOAB,
+  TipoRepresentante,
+  Polo,
+  RepresentanteComEndereco,
+  ListarRepresentantesResult,
+} from "./types";
 
-// Re-exports do diretório actions/ (actions completas — MCP, server-only, etc.)
-export {
-  actionBuscarCliente,
-  actionAtualizarCliente,
-  actionBuscarParteContraria,
-  actionBuscarTerceiro,
-  actionBuscarRepresentantePorId,
-  actionBuscarProcessosPorEntidade,
-  actionBuscarRepresentantesPorCliente,
-  actionBuscarClientesPorRepresentante,
-  actionListarRepresentantes,
-  actionCriarRepresentante,
-  actionAtualizarRepresentante,
-} from "./actions/index";
+export { TIPOS_PARTE_PROCESSO_VALIDOS } from "./types";
 
 // ============================================================================
-// Server-only exports
+// Utils
 // ============================================================================
-// Services e Repositories devem ser importados via server entrypoint:
-//   import { findClienteById } from '@/app/(authenticated)/partes/server';
-// NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.
+export {
+  formatarCpf,
+  formatarCnpj,
+  formatarTelefone,
+  formatarCep,
+  formatarNome,
+  formatarEnderecoCompleto,
+  formatarData,
+  formatarTipoPessoa,
+  calcularIdade,
+} from "./utils";
+
+export {
+  validarInput,
+  verificarDuplicidadeDocumento,
+  verificarDuplicidadeDocumentoUpdate,
+} from "./utils";
 
 // ============================================================================
 // Errors
 // ============================================================================
 export {
+  // Error classes
   DocumentoDuplicadoError,
   DocumentoInvalidoError,
   TipoPessoaIncompativelError,
   EntidadeNaoEncontradaError,
   CampoObrigatorioError,
   EmailInvalidoError,
+  // Conversion helpers
   toAppError,
+  // Type guards
   isDocumentoDuplicadoError,
   isDocumentoInvalidoError,
   isTipoPessoaIncompativelError,
@@ -252,6 +290,7 @@ export {
   isCampoObrigatorioError,
   isEmailInvalidoError,
   isPartesError,
+  // Error factories
   clienteCpfDuplicadoError,
   clienteCnpjDuplicadoError,
   parteContrariaCpfDuplicadoError,
@@ -261,6 +300,14 @@ export {
   clienteNaoEncontradoError,
   parteContrariaNaoEncontradaError,
   terceiroNaoEncontradoError,
+  // HTTP helpers
   errorCodeToHttpStatus,
   appErrorToHttpResponse,
 } from "./errors";
+
+// ============================================================================
+// Server-only exports
+// ============================================================================
+// Services e Repositories devem ser importados via server entrypoint:
+//   import { findClienteById } from '@/app/(authenticated)/partes/server';
+// NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.

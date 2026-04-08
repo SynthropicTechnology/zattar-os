@@ -12,11 +12,6 @@ import type { Segmento, Template, Formulario, StatusTemplate } from '../types';
 // ============================================================================
 
 /**
- * Tipo das variantes disponíveis para o componente Badge
- */
-type BadgeVariant = 'default' | 'destructive' | 'outline' | 'secondary';
-
-/**
  * Formata o tamanho de um arquivo em bytes para uma representação legível
  *
  * @param bytes - Tamanho do arquivo em bytes
@@ -55,29 +50,6 @@ export function formatTemplateStatus(status: StatusTemplate): string {
       return 'Rascunho';
     default:
       return status;
-  }
-}
-
-/**
- * Retorna a variante apropriada do Badge baseada no status do template
- *
- * @param status - Status do template
- * @returns Variante do Badge
- *
- * @example
- * getStatusBadgeVariant('ativo') // "default"
- * getStatusBadgeVariant('inativo') // "destructive"
- */
-export function getStatusBadgeVariant(status: StatusTemplate): BadgeVariant {
-  switch (status) {
-    case 'ativo':
-      return 'default';
-    case 'inativo':
-      return 'destructive';
-    case 'rascunho':
-      return 'outline';
-    default:
-      return 'outline';
   }
 }
 
@@ -181,16 +153,6 @@ export function formatAtivoBadge(ativo: boolean): string {
 export const formatAtivoStatus = formatAtivoBadge;
 
 /**
- * Returns the badge variant for the ativo status.
- *
- * @param ativo - Boolean indicating if the item is active
- * @returns 'default' for active, 'secondary' for inactive
- */
-export function getAtivoBadgeVariant(ativo: boolean): 'default' | 'secondary' {
-  return ativo ? 'default' : 'secondary';
-}
-
-/**
  * Returns the badge tone for the ativo status.
  * Use with <Badge tone={...}> instead of variant.
  */
@@ -203,11 +165,4 @@ export function getAtivoBadgeTone(ativo: boolean): 'success' | 'neutral' {
  */
 export function formatBooleanBadge(value: boolean): string {
   return value ? 'Sim' : 'Não';
-}
-
-/**
- * Returns the badge variant for a boolean value.
- */
-export function getBooleanBadgeVariant(value: boolean): 'default' | 'secondary' {
-  return value ? 'default' : 'secondary';
 }

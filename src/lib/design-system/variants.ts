@@ -62,6 +62,9 @@ export type BadgeCategory =
   | 'project_status'
   | 'task_status'
   | 'priority'
+  | 'template_status'
+  | 'ativo_status'
+  | 'expediente_status'
   | 'payment_status'
   | 'financial_alert'
   | 'error_type';
@@ -79,6 +82,9 @@ export function getSemanticBadgeTone(category: BadgeCategory, _value?: string | 
     'captura_status',
     'status_contrato',
     'audiencia_status',
+    'template_status',
+    'ativo_status',
+    'expediente_status',
     'document_signature_status',
     'task_status',
     'payment_status',
@@ -724,6 +730,18 @@ export function getSemanticBadgeVariant(
       return OBRIGACAO_DIRECAO_VARIANTS[key as string] ??
         OBRIGACAO_DIRECAO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
+    case 'expediente_status':
+      return EXPEDIENTE_STATUS_VARIANTS[key as string] ??
+        EXPEDIENTE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'template_status':
+      return TEMPLATE_STATUS_VARIANTS[key as string] ??
+        TEMPLATE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'ativo_status':
+      return ATIVO_STATUS_VARIANTS[key as string] ??
+        ATIVO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
     case 'document_signature_status':
       return DOCUMENT_SIGNATURE_STATUS_VARIANTS[key as string] ??
         DOCUMENT_SIGNATURE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
@@ -756,6 +774,52 @@ export function getSemanticBadgeVariant(
       return 'neutral';
   }
 }
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE TEMPLATE (ASSINATURA DIGITAL)
+// =============================================================================
+
+/**
+ * Mapeamento de status de template para variantes visuais.
+ */
+export const TEMPLATE_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  ativo: 'success',
+  ATIVO: 'success',
+  inativo: 'destructive',
+  INATIVO: 'destructive',
+  rascunho: 'neutral',
+  RASCUNHO: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS ATIVO/INATIVO (BOOLEANO)
+// =============================================================================
+
+/**
+ * Mapeamento de status ativo (booleano) para variantes visuais.
+ * Usado em templates e outros contextos onde o status é true/false.
+ */
+export const ATIVO_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  true: 'success',
+  TRUE: 'success',
+  false: 'neutral',
+  FALSE: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE EXPEDIENTE
+// =============================================================================
+
+/**
+ * Mapeamento de status de expediente para variantes visuais.
+ * Usado em expediente-detalhes-dialog e outros contextos de expedientes.
+ */
+export const EXPEDIENTE_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pendente: 'warning',
+  PENDENTE: 'warning',
+  baixado: 'neutral',
+  BAIXADO: 'neutral',
+} as const;
 
 // =============================================================================
 // MAPEAMENTO DE STATUS DE ASSINATURA DIGITAL
@@ -842,6 +906,8 @@ export const PAYMENT_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
   PAGO: 'success',
   recebido: 'success',
   RECEBIDO: 'success',
+  confirmado: 'success',
+  CONFIRMADO: 'success',
   pendente: 'warning',
   PENDENTE: 'warning',
   atrasado: 'destructive',
@@ -852,6 +918,8 @@ export const PAYMENT_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
   PARCIAL: 'info',
   cancelado: 'neutral',
   CANCELADO: 'neutral',
+  estornado: 'secondary',
+  ESTORNADO: 'secondary',
 } as const;
 
 // =============================================================================
@@ -1008,6 +1076,9 @@ export const VARIANTS = {
   obrigacaoStatus: OBRIGACAO_STATUS_VARIANTS,
   obrigacaoTipo: OBRIGACAO_TIPO_VARIANTS,
   obrigacaoDirecao: OBRIGACAO_DIRECAO_VARIANTS,
+  templateStatus: TEMPLATE_STATUS_VARIANTS,
+  ativoStatus: ATIVO_STATUS_VARIANTS,
+  expedienteStatus: EXPEDIENTE_STATUS_VARIANTS,
   documentSignatureStatus: DOCUMENT_SIGNATURE_STATUS_VARIANTS,
   projectStatus: PROJECT_STATUS_VARIANTS,
   taskStatus: TASK_STATUS_VARIANTS,

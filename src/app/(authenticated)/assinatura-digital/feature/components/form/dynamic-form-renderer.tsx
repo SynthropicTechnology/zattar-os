@@ -41,6 +41,7 @@ import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Cliente, ParteContraria } from '@/app/(authenticated)/partes/types';
 import { UseFormReturn } from 'react-hook-form';
+import { Heading } from '@/components/ui/typography';
 
 interface DynamicFormRendererProps {
   schema: DynamicFormSchema;
@@ -529,7 +530,7 @@ export default function DynamicFormRenderer({
     return (
       <div key={section.id} className="space-y-4">
         <div>
-          <h3 className="text-base font-semibold">{section.title}</h3>
+          <Heading level="card" className="text-base">{section.title}</Heading>
           {section.description && (
             <p className="text-sm text-muted-foreground">
               {section.description}

@@ -37,15 +37,13 @@ export default async function ProcessosPage({ searchParams: _ }: ProcessosPagePr
   }));
 
   return (
-    <div className="space-y-5 py-6">
-      <ProcessosClient
-        initialProcessos={processos}
-        initialTotal={total}
-        initialStats={stats}
-        tribunais={tribunais}
-        usuarios={usuarios}
-        currentUserId={session?.id ?? 0}
-      />
-    </div>
+    <ProcessosClient
+      initialProcessos={processos}
+      initialTotal={total}
+      initialStats={stats}
+      tribunais={tribunais}
+      usuarios={usuarios}
+      currentUserId={session?.id ?? 0}
+    />
   );
 }

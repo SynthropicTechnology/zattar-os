@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import {
   Loader2,
@@ -1024,7 +1025,7 @@ export function TerceiroFormDialog({
       </div>
 
       <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
-        <h4 className="font-medium mb-2">Resumo do cadastro</h4>
+        <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <dt className="text-muted-foreground">Tipo:</dt>
           <dd className="font-medium">{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>

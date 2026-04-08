@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import * as service from './service';
+import * as service from '../service';
 import {
   createAudienciaSchema,
   EnderecoPresencial,
@@ -10,9 +10,8 @@ import {
   StatusAudiencia,
   updateAudienciaSchema,
   Audiencia,
-} from './domain';
+} from '../domain';
 import { PaginatedResponse } from '@/types';
-import { createDbClient } from '@/lib/supabase';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
@@ -299,68 +298,6 @@ export async function actionBuscarAudienciaPorId(
   };
 }
 
-export async function actionListarTiposAudiencia(params?: {
-  limite?: number;
-}): Promise<ActionResult<Array<{ id: number; descricao: string; is_virtual: boolean }>>> {
-  try {
-    const db = createDbClient();
-    const limit = Math.min(Math.max(params?.limite ?? 200, 1), 1000);
-
-    const { data, error } = await db
-      .from('tipo_audiencia')
-      .select('id, descricao, is_virtual')
-      .order('descricao', { ascending: true })
-      .limit(limit);
-
-    if (error) {
-      return { success: false, error: error.message, message: 'Falha ao listar tipos de audiência.' };
-    }
-
-    return { success: true, data: (data as Array<{ id: number; descricao: string; is_virtual: boolean }>) ?? [], message: 'Tipos listados com sucesso.' };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro interno',
-      message: 'Falha ao listar tipos de audiência.',
-    };
-  }
-}
-
-export async function actionListarSalasAudiencia(params?: {
-  trt?: string;
-  grau?: string;
-  orgao_julgador_id?: number;
-  limite?: number;
-}): Promise<ActionResult<Array<{ id: number; nome: string }>>> {
-  try {
-    const db = createDbClient();
-    const limit = Math.min(Math.max(params?.limite ?? 500, 1), 2000);
-
-    let query = db
-      .from('sala_audiencia')
-      .select('id, nome')
-      .order('nome', { ascending: true })
-      .limit(limit);
-
-    if (params?.trt) query = query.eq('trt', params.trt);
-    if (params?.grau) query = query.eq('grau', params.grau);
-    if (params?.orgao_julgador_id) query = query.eq('orgao_julgador_id', params.orgao_julgador_id);
-
-    const { data, error } = await query;
-    if (error) {
-      return { success: false, error: error.message, message: 'Falha ao listar salas de audiência.' };
-    }
-
-    return { success: true, data: (data as Array<{ id: number; nome: string }>) ?? [], message: 'Salas listadas com sucesso.' };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro interno',
-      message: 'Falha ao listar salas de audiência.',
-    };
-  }
-}
-
 export async function actionCriarAudienciaPayload(
   payload: z.infer<typeof createAudienciaSchema>
 ): Promise<ActionResult<Audiencia>> {
@@ -420,133 +357,4 @@ export async function actionAtualizarAudienciaPayload(
     data: result.data,
     message: 'Audiência atualizada com sucesso.',
   };
-}
-
-// =============================================================================
-// BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
-// =============================================================================
-
-/**
- * Busca audiências vinculadas a um cliente por CPF
- */
-export async function actionBuscarAudienciasPorCPF(
-  cpf: string,
-  status?: StatusAudiencia
-): Promise<ActionResult<Audiencia[]>> {
-  try {
-    if (!cpf || !cpf.trim()) {
-      return {
-        success: false,
-        error: 'CPF invalido',
-        message: 'CPF e obrigatorio',
-      };
-    }
-
-    const result = await service.buscarAudienciasPorClienteCPF(cpf, status);
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    return {
-      success: true,
-      data: result.data,
-      message: `${result.data.length} audiência(s) encontrada(s)`,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro interno',
-      message: 'Erro ao buscar audiências.',
-    };
-  }
-}
-
-/**
- * Busca audiências vinculadas a um cliente por CNPJ
- */
-export async function actionBuscarAudienciasPorCNPJ(
-  cnpj: string,
-  status?: StatusAudiencia
-): Promise<ActionResult<Audiencia[]>> {
-  try {
-    if (!cnpj || !cnpj.trim()) {
-      return {
-        success: false,
-        error: 'CNPJ invalido',
-        message: 'CNPJ e obrigatorio',
-      };
-    }
-
-    const result = await service.buscarAudienciasPorClienteCNPJ(cnpj, status);
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    return {
-      success: true,
-      data: result.data,
-      message: `${result.data.length} audiência(s) encontrada(s)`,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro interno',
-      message: 'Erro ao buscar audiências.',
-    };
-  }
-}
-
-// =============================================================================
-// BUSCAS POR NUMERO DE PROCESSO (para MCP Tools - FASE 2)
-// =============================================================================
-
-/**
- * Busca audiências de um processo específico pelo número processual
- */
-export async function actionBuscarAudienciasPorNumeroProcesso(
-  numeroProcesso: string,
-  status?: StatusAudiencia
-): Promise<ActionResult<Audiencia[]>> {
-  try {
-    if (!numeroProcesso || !numeroProcesso.trim()) {
-      return {
-        success: false,
-        error: 'Numero invalido',
-        message: 'Numero do processo e obrigatorio',
-      };
-    }
-
-    const result = await service.buscarAudienciasPorNumeroProcesso(
-      numeroProcesso.trim(),
-      status
-    );
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    return {
-      success: true,
-      data: result.data,
-      message: `${result.data.length} audiência(s) encontrada(s)`,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro interno',
-      message: 'Erro ao buscar audiências.',
-    };
-  }
 }

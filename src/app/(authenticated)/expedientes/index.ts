@@ -1,12 +1,15 @@
-export * from './domain';
+/**
+ * Expedientes Feature Module — Barrel Export (API Pública)
+ *
+ * Este é o ponto de entrada público do módulo de expedientes.
+ * Toda importação cross-módulo DEVE passar por este arquivo.
+ *
+ * Entidades: Expedientes (CRUD, baixa, reversão, bulk actions)
+ */
 
-// Actions
-export * from './actions';
-
-// Hooks
-export { useExpedientes } from './hooks';
-
+// ============================================================================
 // Components
+// ============================================================================
 export { ExpedientesContent } from './components/expedientes-content';
 export { ExpedientesListWrapper } from './components/expedientes-list-wrapper';
 export { ExpedientesTableWrapper } from './components/expedientes-table-wrapper';
@@ -27,3 +30,49 @@ export { ExpedientesReverterBaixaDialog } from './components/expedientes-reverte
 export { ExpedienteDetalhesDialog } from './components/expediente-detalhes-dialog';
 export { ParteDetalheDialog } from './components/parte-detalhe-dialog';
 export { PdfViewerDialog } from './components/pdf-viewer-dialog';
+
+// ============================================================================
+// Hooks
+// ============================================================================
+export { useExpedientes } from './hooks';
+export type { BuscarExpedientesParams, UseExpedientesOptions, UseExpedientesResult } from './hooks';
+
+// ============================================================================
+// Actions (Server Actions)
+// ============================================================================
+export {
+  actionCriarExpediente,
+  actionAtualizarExpediente,
+  actionBaixarExpediente,
+  actionReverterBaixa,
+  actionListarExpedientes,
+  actionBulkTransferirResponsavel,
+  actionBulkBaixar,
+} from './actions';
+
+export type { ActionResult } from './actions';
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
+export type {
+  Expediente,
+  ExpedienteSortBy,
+  ListarExpedientesParams,
+  ExpedientesFilters,
+} from './domain';
+
+export {
+  OrigemExpediente,
+  GrauTribunal,
+  CodigoTribunal,
+  ORIGEM_EXPEDIENTE_LABELS,
+  GRAU_TRIBUNAL_LABELS,
+  ResultadoDecisao,
+  RESULTADO_DECISAO_LABELS,
+  createExpedienteSchema,
+  updateExpedienteSchema,
+  baixaExpedienteSchema,
+  reverterBaixaSchema,
+  getExpedientePartyNames,
+} from './domain';

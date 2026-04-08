@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
+import { Heading } from '@/components/ui/typography';
 
 type TimelineItemWithGrau = TimelineItemEnriquecido & {
   grauOrigem?: GrauProcesso;
@@ -210,7 +211,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
                 {formatarGrauComOrdinal(item.grauOrigem)}
               </SemanticBadge>
             )}
-            <h3 className="font-semibold text-sm truncate">{item.titulo}</h3>
+            <Heading level="card" className="text-sm truncate">{item.titulo}</Heading>
             {item.documentoSigiloso && (
               <Lock className="h-3.5 w-3.5 text-destructive shrink-0" />
             )}

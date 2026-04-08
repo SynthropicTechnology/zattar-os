@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { ResponsiveFilterPanel } from '@/components/ui/responsive-filter-panel';
 import { AppBadge } from '@/components/ui/app-badge';
+import { Heading } from '@/components/ui/typography';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
@@ -310,13 +311,13 @@ export function ExpedientesCalendar() {
             >
                 <div className="p-4 bg-muted/10 border-b">
                     <div className="flex items-center justify-between">
-                        <h3 className="font-semibold flex items-center gap-2">
+                        <Heading level="card" className="flex items-center gap-2">
                             <CalendarIcon className="h-4 w-4" />
                             Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
                             <AppBadge variant="secondary" className="ml-2">
                                 {total}
                             </AppBadge>
-                        </h3>
+                        </Heading>
                         {(semDataCount > 0 || vencidosCount > 0) && (
                             <div className="flex items-center gap-2">
                                 {semDataCount > 0 && (

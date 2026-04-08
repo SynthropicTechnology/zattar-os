@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { PageShell } from "@/components/shared/page-shell";
 import { RevisarDocumentoClient } from "./client-page";
 
 export const metadata = {
@@ -14,19 +15,21 @@ export default async function RevisarDocumentoPage({ params }: PageProps) {
   const { uuid } = await params;
 
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center min-h-100">
-          <div className="flex flex-col items-center gap-2">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <p className="text-sm text-muted-foreground">
-              Carregando revisão...
-            </p>
+    <PageShell>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-100">
+            <div className="flex flex-col items-center gap-2">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+              <p className="text-sm text-muted-foreground">
+                Carregando revisão...
+              </p>
+            </div>
           </div>
-        </div>
-      }
-    >
-      <RevisarDocumentoClient uuid={uuid} />
-    </Suspense>
+        }
+      >
+        <RevisarDocumentoClient uuid={uuid} />
+      </Suspense>
+    </PageShell>
   );
 }

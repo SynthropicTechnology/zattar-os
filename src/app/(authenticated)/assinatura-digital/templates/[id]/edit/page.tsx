@@ -16,7 +16,9 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { FieldMappingEditor, type Template } from '../../../feature';
+import { PageShell } from '@/components/shared/page-shell';
 import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/typography';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePermissoes } from '@/providers/user-provider';
 
@@ -128,71 +130,77 @@ export default function EditTemplatePage({ params }: PageProps) {
 
   if (loading || isLoadingPermissoes) {
     return (
-      <div className="h-full flex flex-col gap-6">
-        <div className="shrink-0 space-y-2">
-          <Skeleton className="h-9 w-64" />
-          <Skeleton className="h-4 w-96" />
-        </div>
-
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
-          <div className="space-y-4">
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-48 w-full" />
+      <PageShell>
+        <div className="h-full flex flex-col gap-6">
+          <div className="shrink-0 space-y-2">
+            <Skeleton className="h-9 w-64" />
+            <Skeleton className="h-4 w-96" />
           </div>
 
-          <Skeleton className="h-full w-full" />
+          <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+            <div className="space-y-4">
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-48 w-full" />
+            </div>
+
+            <Skeleton className="h-full w-full" />
+          </div>
         </div>
-      </div>
+      </PageShell>
     );
   }
 
   if (!isLoadingPermissoes && !canEdit) {
     return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="flex justify-center">
-            <div className="rounded-full bg-destructive/10 p-3">
-              <AlertCircle className="h-10 w-10 text-destructive" />
+      <PageShell>
+        <div className="h-full flex items-center justify-center">
+          <div className="text-center space-y-4 max-w-md">
+            <div className="flex justify-center">
+              <div className="rounded-full bg-destructive/10 p-3">
+                <AlertCircle className="h-10 w-10 text-destructive" />
+              </div>
             </div>
+            <div className="space-y-2">
+              <Heading level="card" className="text-lg text-foreground">
+                Acesso negado
+              </Heading>
+              <p className="text-sm text-muted-foreground">
+                Você não tem permissão para editar templates.
+              </p>
+            </div>
+            <Button onClick={() => router.push('/app/assinatura-digital/templates')} variant="outline">
+              Voltar para lista
+            </Button>
           </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">
-              Acesso negado
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              Você não tem permissão para editar templates.
-            </p>
-          </div>
-          <Button onClick={() => router.push('/app/assinatura-digital/templates')} variant="outline">
-            Voltar para lista
-          </Button>
         </div>
-      </div>
+      </PageShell>
     );
   }
 
   if (error) {
     return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="flex justify-center">
-            <div className="rounded-full bg-destructive/10 p-3">
-              <AlertCircle className="h-10 w-10 text-destructive" />
+      <PageShell>
+        <div className="h-full flex items-center justify-center">
+          <div className="text-center space-y-4 max-w-md">
+            <div className="flex justify-center">
+              <div className="rounded-full bg-destructive/10 p-3">
+                <AlertCircle className="h-10 w-10 text-destructive" />
+              </div>
             </div>
+            <div className="space-y-2">
+              <Heading level="card" className="text-lg text-foreground">
+                Erro ao carregar template
+              </Heading>
+              <p className="text-sm text-muted-foreground">{error}</p>
+            </div>
+            <Button onClick={handleRetry} variant="outline" className="gap-2">
+              <RefreshCw className="h-4 w-4" />
+              Tentar novamente
+            </Button>
           </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">
-              Erro ao carregar template
-            </h3>
-            <p className="text-sm text-muted-foreground">{error}</p>
-          </div>
-          <Button onClick={handleRetry} variant="outline" className="gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Tentar novamente
-          </Button>
         </div>
-      </div>
+      </PageShell>
     );
   }
 
@@ -201,9 +209,11 @@ export default function EditTemplatePage({ params }: PageProps) {
   }
 
   return (
-    <FieldMappingEditor
-      template={template}
-      onCancel={() => router.push('/app/assinatura-digital/templates')}
-    />
+    <PageShell>
+      <FieldMappingEditor
+        template={template}
+        onCancel={() => router.push('/app/assinatura-digital/templates')}
+      />
+    </PageShell>
   );
 }

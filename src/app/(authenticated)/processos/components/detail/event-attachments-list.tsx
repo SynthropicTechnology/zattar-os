@@ -2,6 +2,7 @@
 
 import { FileText, Download, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 import type { TimelineItemUnificado } from '../timeline/types';
 
 interface EventAttachmentsListProps {
@@ -35,7 +36,7 @@ export function EventAttachmentsList({
 
   return (
     <div className="px-6 py-6">
-      <h3 className="text-sm font-semibold mb-4 tracking-tight">Arquivos Anexos</h3>
+      <Heading level="card" className="text-sm mb-4">Arquivos Anexos</Heading>
 
       {!temArquivo ? (
         /* Estado vazio */

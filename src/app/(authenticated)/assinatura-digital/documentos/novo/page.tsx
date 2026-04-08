@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { PageShell } from "@/components/shared/page-shell";
 import { NovoDocumentoClient } from "./client-page";
 
 export const metadata: Metadata = {
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default function NovoDocumentoPage() {
-  return <NovoDocumentoClient />;
+  return (
+    <PageShell>
+      <NovoDocumentoClient />
+    </PageShell>
+  );
 }

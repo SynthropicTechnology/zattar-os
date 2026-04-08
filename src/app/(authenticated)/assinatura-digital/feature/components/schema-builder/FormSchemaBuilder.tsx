@@ -20,6 +20,7 @@ import { Eye, Code, Save, X, AlertTriangle, Pencil } from 'lucide-react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Heading } from '@/components/ui/typography';
 
 interface FormSchemaBuilderProps {
   initialSchema?: DynamicFormSchema;
@@ -510,7 +511,7 @@ export function FormSchemaBuilder({
       {/* Header */}
       <div className="shrink-0 flex items-center justify-between rounded-lg border bg-card px-4 py-2.5">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold">{formularioNome}</h2>
+          <Heading level="section" className="text-sm">{formularioNome}</Heading>
           {isDirty && <Badge variant="outline" className="text-[10px]">Não salvo</Badge>}
         </div>
 

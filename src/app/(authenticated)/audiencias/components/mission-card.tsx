@@ -31,6 +31,7 @@ import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
+import { Heading } from '@/components/ui/typography';
 
 import type { Audiencia } from '../domain';
 import { MODALIDADE_AUDIENCIA_LABELS } from '../domain';
@@ -175,9 +176,9 @@ export function MissionCard({
                 </span>
                 {isOngoing && <span className="size-1.5 rounded-full bg-success animate-pulse" />}
               </div>
-              <h3 className="text-base font-heading font-semibold tracking-tight mt-0.5">
+              <Heading level="card" className="mt-0.5">
                 {audiencia.tipoDescricao || 'Audiência'}
-              </h3>
+              </Heading>
             </div>
           </div>
 

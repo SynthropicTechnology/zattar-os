@@ -12,6 +12,7 @@ import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS, getExpedientePartyNames
 import type { Usuario } from '@/app/(authenticated)/usuarios';
 import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Heading } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import {
   DetailSheetSection,
@@ -83,7 +84,7 @@ export function ExpedienteVisualizarDialog({
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
             <AlertTriangle className="h-6 w-6 text-muted-foreground/60" />
           </div>
-          <h3 className="text-base font-medium">Expediente não encontrado</h3>
+          <Heading level="card" className="text-base">Expediente não encontrado</Heading>
           <p className="text-sm text-muted-foreground max-w-sm">
             Os detalhes do expediente não estão disponíveis.
           </p>

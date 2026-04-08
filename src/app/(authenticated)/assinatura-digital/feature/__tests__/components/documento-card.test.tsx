@@ -36,7 +36,7 @@ describe('STATUS_CONFIG', () => {
     }
   });
 
-  it('deve usar tokens válidos em cssColor (var(--token) ou oklch(from var(--token))', () => {
+  it('deve usar tokens válidos em cssColor (var(--token) apenas)', () => {
     // IMPORTANTE: o padrão hsl(var(--token)) é CSS INVÁLIDO porque globals.css
     // define tokens em OKLCH — hsl(oklch(...)) não renderiza. Esta asserção
     // bloqueia regressão do bug que afetava 36 arquivos antes da migração.
@@ -44,10 +44,12 @@ describe('STATUS_CONFIG', () => {
       // Não deve usar o padrão buggy
       expect(cfg.cssColor).not.toMatch(/hsl\(\s*var\(\s*--/);
 
-      // Deve usar var(--token) direto OU oklch(from var(--token) ...)
+      // Não deve usar oklch() direto (Design System proíbe oklch direto)
+      expect(cfg.cssColor).not.toMatch(/oklch\(/);
+
+      // Deve usar var(--token) direto
       const usesVar = /^var\(--[a-z0-9-]+\)$/.test(cfg.cssColor);
-      const usesRelativeOklch = /^oklch\(from\s+var\(--[a-z0-9-]+\)/.test(cfg.cssColor);
-      expect(usesVar || usesRelativeOklch).toBe(true);
+      expect(usesVar).toBe(true);
     }
   });
 });

@@ -19,6 +19,7 @@ import { todayDateString } from '@/lib/date-utils';
 import { Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Heading } from '@/components/ui/typography';
 import { actionCriarProcessoManual, actionAtualizarProcesso, type ActionResult } from '../actions';
 import type { Processo, GrauProcesso, OrigemAcervo } from '../domain';
 import { GRAU_LABELS, TRIBUNAIS } from '../domain';
@@ -187,7 +188,7 @@ export function ProcessoForm({
       <form ref={formRef} action={formAction} className="space-y-6">
         {/* Seção 1 - Dados Básicos */}
         <div>
-          <h3 className="text-lg font-medium font-heading mb-4">Dados Básicos</h3>
+          <Heading level="card" className="mb-4">Dados Básicos</Heading>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2 space-y-2">
               <Label htmlFor="numeroProcesso">Número do Processo <span className="text-destructive">*</span></Label>
@@ -273,7 +274,7 @@ export function ProcessoForm({
 
         {/* Seção 2 - Partes */}
         <div>
-          <h3 className="text-lg font-medium font-heading mb-4">Partes Envolvidas</h3>
+          <Heading level="card" className="mb-4">Partes Envolvidas</Heading>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="nomeParteAutora">Parte Autora <span className="text-destructive">*</span></Label>
@@ -303,7 +304,7 @@ export function ProcessoForm({
 
         {/* Seção 3 - Tribunal/Órgão */}
         <div>
-          <h3 className="text-lg font-medium font-heading mb-4">Órgão Julgador</h3>
+          <Heading level="card" className="mb-4">Órgão Julgador</Heading>
           <div className="space-y-2">
             <Label htmlFor="descricaoOrgaoJulgador">Descrição <span className="text-destructive">*</span></Label>
             <Input

@@ -364,9 +364,9 @@ export function DocumentoVerificacaoClient({
               <section className="mt-6 space-y-3">
                 <div className="flex items-center gap-2">
                   <Info className="h-4 w-4 text-muted-foreground" />
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/90">
+                  <Heading level="section" className="text-sm uppercase tracking-[0.14em] text-foreground/90">
                     Documento
-                  </h2>
+                  </Heading>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -404,9 +404,9 @@ export function DocumentoVerificacaoClient({
                   <section className="space-y-3">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="h-4 w-4 text-muted-foreground" />
-                      <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground/90">
+                      <Heading level="section" className="text-sm uppercase tracking-[0.14em] text-foreground/90">
                         Integridade
-                      </h2>
+                      </Heading>
                     </div>
 
                     <div className="rounded-lg border border-border/60 bg-muted/20 p-4 space-y-3">
@@ -436,10 +436,10 @@ export function DocumentoVerificacaoClient({
 
               <section className="space-y-3">
                 <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <Heading level="section" className="text-lg flex items-center gap-2">
                     <Users className="h-5 w-5" />
                     Assinantes ({data.signatarios.length})
-                  </h2>
+                  </Heading>
                 </div>
 
                 <div className="space-y-3">

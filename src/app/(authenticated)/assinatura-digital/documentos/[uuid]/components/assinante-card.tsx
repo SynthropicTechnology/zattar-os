@@ -37,6 +37,7 @@ import {
 import type { SignatarioVerificacaoData } from "../../../feature/types/types";
 import { actionGetPresignedPdfUrl } from "../../../feature/actions/documentos-actions";
 import { SegurancaSection } from "./seguranca-section";
+import { Heading } from "@/components/ui/typography";
 
 interface AssinanteCardProps {
   signatario: SignatarioVerificacaoData;
@@ -238,10 +239,10 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           <>
             <Separator />
             <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-              <h4 className="mb-3 flex items-center gap-1.5 text-sm font-medium">
+              <Heading level="subsection" className="mb-3 flex items-center gap-1.5 text-sm">
                 <ImageIcon className="h-3.5 w-3.5" />
                 Evidências Visuais
-              </h4>
+              </Heading>
               <div className="flex flex-wrap gap-3">
                 <ImagePreview
                   originalUrl={signatario.assinaturaUrl}
@@ -268,10 +269,10 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           <>
             <Separator />
             <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-              <h4 className="mb-3 flex items-center gap-1.5 text-sm font-medium">
+              <Heading level="subsection" className="mb-3 flex items-center gap-1.5 text-sm">
                 <Shield className="h-3.5 w-3.5" />
                 Dados de Segurança
-              </h4>
+              </Heading>
               <SegurancaSection signatario={signatario} />
             </div>
           </>

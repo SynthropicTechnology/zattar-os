@@ -10,6 +10,7 @@ import { FileSearch, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/typography';
 
 export function TimelineEmpty() {
   const router = useRouter();
@@ -22,9 +23,9 @@ export function TimelineEmpty() {
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold">
+          <Heading level="card">
             Nenhuma movimentação ou documento encontrado
-          </h3>
+          </Heading>
           <p className="text-muted-foreground max-w-md">
             Este processo não possui timeline no PJE ou os dados ainda não foram
             disponibilizados.

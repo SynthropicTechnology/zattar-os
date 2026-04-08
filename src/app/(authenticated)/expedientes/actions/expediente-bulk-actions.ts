@@ -3,9 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { createClient as createSupabaseClient } from "@/lib/supabase/server";
 import { authenticateRequest } from "@/lib/auth";
-import { realizarBaixa } from "./service";
-import { atribuirResponsavel } from "./service";
+import { realizarBaixa } from "../service";
+import { atribuirResponsavel } from "../service";
 import { z } from "zod";
+import type { ActionResult } from "./expediente-actions";
 
 // =============================================================================
 // SCHEMAS
@@ -33,7 +34,6 @@ export async function actionBulkTransferirResponsavel(
   try {
     await authenticateRequest();
 
-    // useActionState pode passar FormData ou o estado anterior
     if (!(formData instanceof FormData)) {
       return prevState || {
         success: false,
@@ -89,7 +89,6 @@ export async function actionBulkTransferirResponsavel(
       };
     }
 
-    // Transferir responsável para cada expediente
     const results = await Promise.allSettled(
       expedienteIds.map((id) => atribuirResponsavel(id, responsavelId, usuario.id))
     );
@@ -135,7 +134,6 @@ export async function actionBulkBaixar(
   try {
     await authenticateRequest();
 
-    // useActionState pode passar FormData ou o estado anterior
     if (!(formData instanceof FormData)) {
       return prevState || {
         success: false,
@@ -188,7 +186,6 @@ export async function actionBulkBaixar(
       };
     }
 
-    // Baixar cada expediente com a mesma justificativa
     const results = await Promise.allSettled(
       expedienteIds.map((id) =>
         realizarBaixa(
@@ -196,7 +193,6 @@ export async function actionBulkBaixar(
           {
             expedienteId: id,
             justificativaBaixa,
-            // Não incluir protocoloId para baixa sem protocolo
           },
           usuario.id
         )
@@ -235,14 +231,3 @@ export async function actionBulkBaixar(
     };
   }
 }
-
-// Re-exportar tipo ActionResult
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | {
-      success: false;
-      error: string;
-      errors?: Record<string, string[]>;
-      message: string;
-    };
-

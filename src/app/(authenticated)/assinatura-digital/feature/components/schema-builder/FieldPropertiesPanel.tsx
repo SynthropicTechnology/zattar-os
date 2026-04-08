@@ -20,6 +20,7 @@ import { FormFieldType, fieldRequiresOptions } from '../../types/domain';
 import { ChevronDown, Trash2, Plus, Info, Save, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Heading } from '@/components/ui/typography';
 
 const fieldPropertiesSchema = z.object({
   id: z.string().min(1, 'ID é obrigatório'),
@@ -285,7 +286,7 @@ export default function FieldPropertiesPanel({
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
       <div className="shrink-0 px-3 pt-3 pb-2 border-b">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Propriedades do Campo</h3>
+        <Heading level="card" className="text-xs uppercase tracking-wider text-muted-foreground">Propriedades do Campo</Heading>
         <p className="text-xs text-foreground mt-0.5 truncate font-medium">{field.label}</p>
       </div>
 

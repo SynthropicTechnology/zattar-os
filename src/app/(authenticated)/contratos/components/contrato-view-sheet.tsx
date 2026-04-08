@@ -39,6 +39,7 @@ import {
 import { formatarData, formatarDataHora } from '../utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { AppBadge } from '@/components/ui/app-badge';
+import { Heading } from '@/components/ui/typography';
 
 // =============================================================================
 // TIPOS
@@ -85,10 +86,10 @@ interface SectionProps {
 function Section({ title, icon, children }: SectionProps) {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
+      <Heading level="card" className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
         {icon}
         {title}
-      </h3>
+      </Heading>
       <div className="grid gap-4">{children}</div>
     </div>
   );
@@ -252,10 +253,10 @@ export function ContratoViewSheet({
             {/* Documentos / Peças Jurídicas */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
+                <Heading level="card" className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
                   <FileText className="h-4 w-4" />
                   Documentos
-                </h3>
+                </Heading>
                 <Button
                   variant="outline"
                   size="sm"

@@ -22,7 +22,7 @@ import { GRAU_LABELS } from '@/lib/design-system';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-import { Text } from '@/components/ui/typography';
+import { Text, Heading } from '@/components/ui/typography';
 
 /**
  * Informações de instância para exibição
@@ -207,9 +207,9 @@ export function ProcessoHeader({
 
             <div className="min-w-0 space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-semibold tracking-tight text-foreground min-w-0 sm:text-[2rem]">
+                <Heading level="page" className="min-w-0 sm:text-[2rem]">
                   <span className="block truncate">{tituloPartes}</span>
-                </h1>
+                </Heading>
                 {segredoJustica && (
                   <TooltipProvider>
                     <Tooltip>

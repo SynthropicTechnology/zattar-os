@@ -6,6 +6,7 @@ import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { useDebounce } from '@/hooks/use-debounce';
+import { DataPagination } from '@/components/shared/data-shell';
 import { ProcessosPulseStrip } from './components/processos-pulse-strip';
 import { ProcessosInsightBanner } from './components/processos-insight-banner';
 import { ProcessoCard } from './components/processo-card';
@@ -200,30 +201,18 @@ export function ProcessosClient({
       )}
 
       {totalFiltered > pageSize && (
-        <div className="flex items-center justify-between pt-2">
-          <p className="text-xs text-muted-foreground/50">
-            {pageIndex * pageSize + 1}–{Math.min((pageIndex + 1) * pageSize, totalFiltered)} de {totalFiltered}
-          </p>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
-              disabled={pageIndex === 0}
-              className="size-8 rounded-lg hover:bg-white/4 disabled:opacity-30 flex items-center justify-center cursor-pointer"
-            >
-              ‹
-            </button>
-            <span className="text-xs font-medium tabular-nums px-2">
-              {pageIndex + 1} / {totalPages}
-            </span>
-            <button
-              onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
-              disabled={pageIndex >= totalPages - 1}
-              className="size-8 rounded-lg hover:bg-white/4 disabled:opacity-30 flex items-center justify-center cursor-pointer"
-            >
-              ›
-            </button>
-          </div>
-        </div>
+        <DataPagination
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          total={totalFiltered}
+          totalPages={totalPages}
+          onPageChange={setPageIndex}
+          onPageSizeChange={(size) => {
+            setPageIndex(0);
+            // pageSize is const in this view, but DataPagination requires the callback
+            void size;
+          }}
+        />
       )}
 
       <ProcessoDetailSheet

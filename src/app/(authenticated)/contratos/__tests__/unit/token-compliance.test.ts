@@ -7,14 +7,35 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+const CONTRATOS_ROOT = path.resolve(__dirname, '../../');
 const CONTRATOS_COMPONENTS_DIR = path.resolve(__dirname, '../../components');
 const CONTRATOS_CLIENT = path.resolve(__dirname, '../../../../(authenticated)/contratos/contratos-client.tsx');
 
+/** Diretórios de feature que devem ser escaneados para violações */
+const FEATURE_DIRS = [
+  CONTRATOS_COMPONENTS_DIR,
+  path.resolve(CONTRATOS_ROOT, '[id]/components'),
+  path.resolve(CONTRATOS_ROOT, 'kanban'),
+  path.resolve(CONTRATOS_ROOT, 'pipelines'),
+  path.resolve(CONTRATOS_ROOT, 'tipos'),
+  path.resolve(CONTRATOS_ROOT, 'tipos-cobranca'),
+  path.resolve(CONTRATOS_ROOT, 'tipos-config'),
+];
+
+const HARDCODED_COLORS = String.raw`(red|green|blue|orange|amber|emerald|sky|pink|gray|yellow|purple|indigo|violet|teal|cyan|lime|rose|fuchsia|zinc|stone|neutral|slate)`;
+
 const FORBIDDEN_COLOR_PATTERNS = [
-  /\btext-(red|green|blue|orange|amber|emerald|sky|pink|gray)-\d{2,3}\b/,
-  /\bbg-(red|green|blue|orange|amber|emerald|sky|pink|gray)-\d{2,3}\b/,
-  /\bfill-(red|green|blue|orange|amber|emerald|sky|pink|gray)-\d{2,3}\b/,
+  new RegExp(String.raw`\btext-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bbg-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bborder-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bfill-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bstroke-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bring-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bfrom-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bto-${HARDCODED_COLORS}-\d{2,3}\b`),
+  new RegExp(String.raw`\bvia-${HARDCODED_COLORS}-\d{2,3}\b`),
   /\bshadow-xl\b/,
+  /oklch\(/,
 ];
 
 // Labels de UI que devem ter acentuação correta
@@ -55,13 +76,24 @@ function findTsxFiles(dir: string): string[] {
 }
 
 describe('Contratos Token Compliance', () => {
-  const componentFiles = findTsxFiles(CONTRATOS_COMPONENTS_DIR);
-  const allFiles = [...componentFiles];
-
-  const clientContent = readFileIfExists(CONTRATOS_CLIENT);
-  if (clientContent) {
-    allFiles.push(CONTRATOS_CLIENT);
+  /** Coleta todos os .tsx/.ts de todos os diretórios de feature */
+  const allFeatureFiles: string[] = [];
+  for (const dir of FEATURE_DIRS) {
+    allFeatureFiles.push(...findTsxFiles(dir));
   }
+
+  // Inclui contratos-client.tsx e contrato-detalhes-client.tsx na raiz
+  const rootClients = [
+    CONTRATOS_CLIENT,
+    path.resolve(CONTRATOS_ROOT, '[id]/contrato-detalhes-client.tsx'),
+  ];
+  for (const clientPath of rootClients) {
+    if (readFileIfExists(clientPath)) {
+      allFeatureFiles.push(clientPath);
+    }
+  }
+
+  const allFiles = [...allFeatureFiles];
 
   it('deve encontrar arquivos para verificar', () => {
     expect(allFiles.length).toBeGreaterThan(0);

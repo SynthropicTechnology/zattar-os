@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import type { Lancamento, StatusLancamento } from '@/app/(authenticated)/financeiro/domain/lancamentos';
 
 interface ContratoFinanceiroCardProps {
@@ -41,18 +42,6 @@ function formatDate(dateStr: string | null): string {
   } catch {
     return '-';
   }
-}
-
-function getStatusBadgeVariant(status: StatusLancamento): 'default' | 'secondary' | 'destructive' | 'outline' {
-  const variants: Record<StatusLancamento, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-    pendente: 'outline',
-    confirmado: 'default',
-    pago: 'default',
-    recebido: 'default',
-    cancelado: 'destructive',
-    estornado: 'secondary',
-  };
-  return variants[status] || 'outline';
 }
 
 function getStatusLabel(status: StatusLancamento): string {
@@ -142,7 +131,7 @@ export function ContratoFinanceiroCard({
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getStatusBadgeVariant(lancamento.status)}>
+                      <Badge variant={getSemanticBadgeVariant('payment_status', lancamento.status)}>
                         {getStatusLabel(lancamento.status)}
                       </Badge>
                     </TableCell>

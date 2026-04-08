@@ -14,9 +14,8 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/shared/data-shell';
+import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TablePagination } from '@/components/shared/table-pagination';
 import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
 import {
   GrauBadgesSimple,
@@ -39,14 +38,7 @@ import {
 } from './processos-toolbar-filters';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
-import { Eye, Lock, CheckCircle, XCircle, Link2, Settings, Search, Columns, Plus } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Eye, Lock, CheckCircle, XCircle, Link2, Settings } from 'lucide-react';
 import { CopyButton } from '@/app/(authenticated)/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
@@ -64,7 +56,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import type { ColumnDef, Row, RowSelectionState, Table as TanstackTable } from '@tanstack/react-table';
-import { Heading } from '@/components/ui/typography';
 
 // =============================================================================
 // TIPOS
@@ -921,113 +912,94 @@ export function ProcessosTableWrapper({
 
   return (
     <>
-      <div className="w-full">
-        {/* Linha 1: Título à esquerda, botão de criar à direita */}
-        <div className="flex items-center justify-between py-4">
-          <Heading level="page">Processos</Heading>
-          <button
-            onClick={() => setCreateProcessoOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-          >
-            <Plus className="size-3.5" />
-            Novo Processo
-          </button>
-        </div>
-
-        {/* Linha 2: Filtros à esquerda, Config + Colunas à direita */}
-        <div className="flex items-center gap-4 pb-4">
-          <div className="flex gap-2 flex-1">
-            <div className="relative flex-1 max-w-80 min-w-40">
-              <Search
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Input
-                placeholder="Buscar processos..."
-                value={globalFilter}
-                onChange={(e) => {
-                  setGlobalFilter(e.target.value);
-                  setPageIndex(0);
-                }}
-                className="h-9 w-full pl-9 bg-card"
-              />
-            </div>
-            <FilterPopoverMulti
-              label="Tribunais"
-              placeholder="Buscar tribunal..."
-              options={tribunaisOptions}
-              value={trtFilter}
-              onValueChange={(val) => {
-                setTrtFilter(val);
+      <DataShell
+        header={
+          table ? (
+            <DataTableToolbar
+              table={table}
+              title="Processos"
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
                 setPageIndex(0);
               }}
+              searchPlaceholder="Buscar processos..."
+              actionButton={{
+                label: 'Novo Processo',
+                onClick: () => setCreateProcessoOpen(true),
+              }}
+              actionSlot={
+                <>
+                  <ProcessosBulkActions
+                    selectedRows={processos.filter((p) => rowSelection[p.id.toString()])}
+                    usuarios={usuarios}
+                    onSuccess={() => {
+                      setRowSelection({});
+                      refetch();
+                    }}
+                  />
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          aria-label="Configurações"
+                          onClick={() => setConfigAtribuicaoOpen(true)}
+                        >
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Configurar atribuição automática</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </>
+              }
+              filtersSlot={
+                <>
+                  <FilterPopoverMulti
+                    label="Tribunais"
+                    placeholder="Buscar tribunal..."
+                    options={tribunaisOptions}
+                    value={trtFilter}
+                    onValueChange={(val) => {
+                      setTrtFilter(val);
+                      setPageIndex(0);
+                    }}
+                  />
+                  <FilterPopover
+                    label="Origem"
+                    options={ORIGEM_OPTIONS}
+                    value={origemFilter}
+                    onValueChange={(val) => {
+                      setOrigemFilter(val);
+                      setPageIndex(0);
+                    }}
+                  />
+                </>
+              }
             />
-            <FilterPopover
-              label="Origem"
-              options={ORIGEM_OPTIONS}
-              value={origemFilter}
-              onValueChange={(val) => {
-                setOrigemFilter(val);
+          ) : (
+            <div className="p-6" />
+          )
+        }
+        footer={
+          totalPages > 0 ? (
+            <DataPagination
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              onPageChange={setPageIndex}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
                 setPageIndex(0);
               }}
+              isLoading={isLoading}
             />
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <ProcessosBulkActions
-              selectedRows={processos.filter((p) => rowSelection[p.id.toString()])}
-              usuarios={usuarios}
-              onSuccess={() => {
-                setRowSelection({});
-                refetch();
-              }}
-            />
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon" aria-label="Configurações"
-                    className="h-9 w-9 bg-card"
-                    onClick={() => setConfigAtribuicaoOpen(true)}
-                  >
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Configurar atribuição automática</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {table && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-9 w-9 bg-card"
-                    aria-label="Visibilidade de colunas"
-                  >
-                    <Columns className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {table
-                    .getAllColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) => column.toggleVisibility(value)}
-                      >
-                        {(column.columnDef.meta as { headerLabel?: string } | undefined)?.headerLabel || column.id}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-        </div>
-
+          ) : null
+        }
+      >
         {error && (
           <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
             {error}
@@ -1070,21 +1042,7 @@ export function ProcessosTableWrapper({
             }}
           />
         )}
-
-        <TablePagination
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          total={total}
-          totalPages={totalPages}
-          onPageChange={setPageIndex}
-          onPageSizeChange={(size) => {
-            setPageSize(size);
-            setPageIndex(0);
-          }}
-          isLoading={isLoading}
-          variant="integrated"
-        />
-      </div>
+      </DataShell>
 
       <ConfigAtribuicaoDialog
         open={configAtribuicaoOpen}

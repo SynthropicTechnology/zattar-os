@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { actionCriarExpediente, type ActionResult } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../domain';
@@ -398,7 +399,7 @@ export function ExpedienteDialog({
                 )}>
                   <CheckCircle2 className="h-4 w-4" />
                 </div>
-                <h3 className="text-sm font-medium">Processo Vinculado</h3>
+                <Heading level="subsection" as="h3" className="text-sm">Processo Vinculado</Heading>
               </div>
               <div className="text-lg font-semibold mb-2">
                 {processoSelecionado && processoSelecionado.numeroProcesso}
@@ -423,7 +424,7 @@ export function ExpedienteDialog({
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
                   3
                 </div>
-                <h3 className="text-sm font-medium">Dados do Expediente</h3>
+                <Heading level="subsection" as="h3" className="text-sm">Dados do Expediente</Heading>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -604,7 +605,7 @@ export function ExpedienteDialog({
               )}>
                 {trtComboboxValue && grauComboboxValue ? <CheckCircle2 className="h-4 w-4" /> : '1'}
               </div>
-              <h3 className="text-sm font-medium">Selecione o Tribunal e Grau</h3>
+              <Heading level="subsection" as="h3" className="text-sm">Selecione o Tribunal e Grau</Heading>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -670,7 +671,7 @@ export function ExpedienteDialog({
                 )}>
                   {processoSelecionado ? <CheckCircle2 className="h-4 w-4" /> : '2'}
                 </div>
-                <h3 className="text-sm font-medium">Selecione o Processo</h3>
+                <Heading level="subsection" as="h3" className="text-sm">Selecione o Processo</Heading>
               </div>
 
               <div className="space-y-2">
@@ -741,7 +742,7 @@ export function ExpedienteDialog({
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
                   3
                 </div>
-                <h3 className="text-sm font-medium">Dados do Expediente</h3>
+                <Heading level="subsection" as="h3" className="text-sm">Dados do Expediente</Heading>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

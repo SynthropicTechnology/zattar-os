@@ -23,6 +23,7 @@ import {
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { TabPills } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
+import { Heading } from '@/components/ui/typography';
 
 // ============================================================================
 // CONTRATOS MOCK — "Contract Pipeline Intelligence"
@@ -114,7 +115,7 @@ function PipelineFunnel() {
     <GlassPanel className="p-5">
       <div className="flex items-center gap-2 mb-5">
         <GitBranch className="size-4 text-muted-foreground/50" />
-        <h2 className="text-widget-title">Pipeline de Conversão</h2>
+        <Heading level="widget">Pipeline de Conversão</Heading>
         <span className="text-[10px] text-muted-foreground/55 ml-auto">
           {desistencias.length} desistência{desistencias.length !== 1 ? 's' : ''} ({fmtMoeda(getStageTotal('desistencia'))})
         </span>
@@ -365,7 +366,7 @@ export default function ContratosMockPage() {
       {/* ── Header ──────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Contratos</h1>
+          <Heading level="page">Contratos</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {STATS.total} contratos &middot; {fmtMoeda(STATS.emCarteira)} em carteira
           </p>

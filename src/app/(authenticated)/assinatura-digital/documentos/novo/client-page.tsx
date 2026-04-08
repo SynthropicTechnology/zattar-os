@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { DocumentFlowShell } from "../../feature/components/flow";
 import { DocumentUploadDropzone } from "../../feature/components/upload";
+import { Heading } from "@/components/ui/typography";
 
 // ─── Context Panel ─────────────────────────────────────────────────────
 
@@ -49,9 +50,9 @@ function ContextPanel() {
   return (
     <div className="flex flex-col justify-center space-y-6">
       <div>
-        <h2 className="text-lg font-heading font-semibold text-foreground">
+        <Heading level="section" className="text-lg">
           Como funciona
-        </h2>
+        </Heading>
         <p className="text-sm text-muted-foreground mt-1">
           Envie, configure e compartilhe em 3 passos simples.
         </p>

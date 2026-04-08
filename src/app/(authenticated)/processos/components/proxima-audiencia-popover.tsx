@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 
 interface ProximaAudienciaPopoverProps {
   dataAudiencia: string | null;
@@ -128,7 +129,7 @@ export function ProximaAudienciaPopover({
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Calendar className={cn('h-4 w-4', getUrgenciaColor())} />
-            <h4 className="font-medium text-sm">Próxima Audiência</h4>
+            <Heading level="subsection" className="text-sm">Próxima Audiência</Heading>
           </div>
           {clientData && (
             <div className="space-y-1 text-sm">

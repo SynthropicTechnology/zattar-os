@@ -6,6 +6,7 @@ import { ptBR } from "date-fns/locale";
 import { User, Camera, PenLine } from "lucide-react";
 import { PublicStepLayout } from "../layout/PublicStepLayout";
 import { PublicDocumentCard } from "../shared/PublicDocumentCard";
+import { Heading } from "@/components/ui/typography";
 
 export interface WelcomeStepProps {
   documento: {
@@ -87,9 +88,9 @@ export function WelcomeStep({ documento, selfieHabilitada = false, onNext }: Wel
 
         {/* Steps List */}
         <div className="space-y-2 sm:space-y-3">
-          <h3 className="text-xs sm:text-sm font-medium text-foreground">
+          <Heading level="card" className="text-xs sm:text-sm text-foreground">
             O que você precisará fazer:
-          </h3>
+          </Heading>
           <div className="bg-muted dark:bg-muted/50 rounded-lg p-3 sm:p-4 border border-border">
             <div className="space-y-3" role="list" aria-label="Etapas do processo">
               {steps.map((step, index) => (
@@ -102,9 +103,9 @@ export function WelcomeStep({ documento, selfieHabilitada = false, onNext }: Wel
                     {step.icon}
                   </div>
                   <div className="flex-1 min-w-0 pt-0.5">
-                    <h4 className="text-xs sm:text-sm font-medium text-foreground">
+                    <Heading level="subsection" className="text-xs sm:text-sm text-foreground">
                       {step.label}
-                    </h4>
+                    </Heading>
                     <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">
                       {step.description}
                     </p>

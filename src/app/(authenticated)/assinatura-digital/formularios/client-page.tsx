@@ -24,10 +24,10 @@ import {
 } from '@/components/ui/alert-dialog';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   getFormularioDisplayName,
   formatBooleanBadge,
-  getBooleanBadgeVariant,
   formatAtivoStatus,
   getTemplatePreviewText,
   type AssinaturaDigitalFormulario,
@@ -216,7 +216,7 @@ function criarColunas(onEdit: (formulario: AssinaturaDigitalFormulario) => void,
           <div className="flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge variant={getBooleanBadgeVariant(fotoNecessaria)} className="capitalize">
+                <Badge variant={getSemanticBadgeVariant('ativo_status', String(fotoNecessaria))} className="capitalize">
                   Foto
                 </Badge>
               </TooltipTrigger>
@@ -226,7 +226,7 @@ function criarColunas(onEdit: (formulario: AssinaturaDigitalFormulario) => void,
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge variant={getBooleanBadgeVariant(geolocationNecessaria)} className="capitalize">
+                <Badge variant={getSemanticBadgeVariant('ativo_status', String(geolocationNecessaria))} className="capitalize">
                   Geo
                 </Badge>
               </TooltipTrigger>

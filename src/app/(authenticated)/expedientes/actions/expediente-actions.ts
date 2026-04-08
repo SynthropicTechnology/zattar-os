@@ -8,14 +8,14 @@ import {
   updateExpedienteSchema,
   ListarExpedientesParams,
   ResultadoDecisao,
-} from "./domain";
+} from "../domain";
 import {
   criarExpediente,
   atualizarExpediente,
   realizarBaixa,
   reverterBaixa,
   listarExpedientes,
-} from "./service";
+} from "../service";
 import { after } from "next/server";
 import { indexDocument } from "@/lib/ai/services/indexing.service";
 import { authenticateRequest } from "@/lib/auth";
@@ -129,7 +129,6 @@ export async function actionCriarExpediente(
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
     revalidatePath("/app/expedientes/lista");
-    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     // 🆕 AI Indexing Hook
     if (result.success && user) {
@@ -139,10 +138,9 @@ export async function actionCriarExpediente(
 
       after(async () => {
         try {
-          // Se tiver documento vinculado, tentar encontrar o arquivo para indexar
           if (idDocumento) {
             const { uploads } = await listarUploads(idDocumento, user.id);
-            const latestUpload = uploads[0]; // Pega o mais recente
+            const latestUpload = uploads[0];
 
             if (latestUpload && latestUpload.b2_key) {
               console.log(
@@ -151,20 +149,18 @@ export async function actionCriarExpediente(
               await indexDocument({
                 entity_type: "expediente",
                 entity_id: expedienteId,
-                parent_id: null, // Expediente é raiz? Ou vinculado a processo?
+                parent_id: null,
                 storage_provider: "backblaze",
                 storage_key: latestUpload.b2_key,
                 content_type: latestUpload.tipo_mime,
                 metadata: {
-                  ...result.data, // Metadados do expediente
+                  ...result.data,
                   indexed_by: user.id,
                   linked_document_id: idDocumento,
                 },
               });
             }
           }
-          // TODO: Se não tiver documento, poderíamos indexar apenas os metadados como texto?
-          // Por enquanto, seguimos o padrão de indexar se houver conteúdo/arquivo.
         } catch (error) {
           console.error(
             `❌ [AI] Erro ao indexar expediente ${expedienteId}:`,
@@ -249,9 +245,8 @@ export async function actionAtualizarExpediente(
         } else if (trimmed === 'false') {
           rawData[key] = false;
         } else if (key.includes('Id')) {
-          // Handle IDs: if empty/0 check if we should send null or undefined
           if (trimmed === '' || trimmed === '0') {
-            rawData[key] = null; // Send null to clear the FK
+            rawData[key] = null;
           } else {
             const num = parseInt(trimmed, 10);
             if (!isNaN(num)) {
@@ -267,15 +262,11 @@ export async function actionAtualizarExpediente(
         ) {
           rawData[key] = parseInt(trimmed, 10);
         } else if (trimmed === '') {
-          // If empty string, send null (to allow clearing text fields if supported by schema)
-          // or send empty string depending on domain. 
-          // Safest for most optional fields is null or undefined, but let's try null.
           rawData[key] = null;
         } else {
           rawData[key] = trimmed;
         }
       } else {
-        // File or other types
         rawData[key] = value;
       }
     }
@@ -307,7 +298,6 @@ export async function actionAtualizarExpediente(
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
     revalidatePath("/app/expedientes/lista");
-    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,
@@ -330,7 +320,6 @@ export async function actionBaixarExpediente(
   formData: FormData
 ): Promise<ActionResult> {
   try {
-    // Ler o ID do expediente do FormData (enviado via hidden input)
     const expedienteIdStr = formData.get("expedienteId") as string | null;
     const id = expedienteIdStr ? parseInt(expedienteIdStr, 10) : 0;
 
@@ -357,7 +346,6 @@ export async function actionBaixarExpediente(
       };
     }
 
-    // Buscar o ID numérico do usuário usando o auth_user_id
     const { data: usuario, error: usuarioError } = await supabase
       .from("usuarios")
       .select("id")
@@ -372,7 +360,6 @@ export async function actionBaixarExpediente(
       };
     }
 
-    // Monta objeto com tipagem superficial - validação será feita no service
     const resultadoDecisao = formData.get("resultadoDecisao");
 
     const rawData = {
@@ -389,11 +376,9 @@ export async function actionBaixarExpediente(
       dataBaixa: (formData.get("dataBaixa") as string | null) || undefined,
     };
 
-    // Delega validação para o service realizarBaixa
     const result = await realizarBaixa(id, rawData, usuario.id);
 
     if (!result.success) {
-      // Mapeia erros de validação do service para ActionResult
       if (result.error.code === "VALIDATION_ERROR" && result.error.details) {
         return {
           success: false,
@@ -415,11 +400,10 @@ export async function actionBaixarExpediente(
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
     revalidatePath("/app/expedientes/lista");
-    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,
-      data: { id: result.data.id }, // Simplifica o retorno para evitar erro de Flight no Next.js
+      data: { id: result.data.id },
       message: "Expediente baixado com sucesso",
     };
   } catch (error) {
@@ -462,7 +446,6 @@ export async function actionReverterBaixa(
       };
     }
 
-    // Buscar o ID numérico do usuário usando o auth_user_id
     const { data: usuario, error: usuarioError } = await supabase
       .from("usuarios")
       .select("id")
@@ -493,7 +476,6 @@ export async function actionReverterBaixa(
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
     revalidatePath("/app/expedientes/lista");
-    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,

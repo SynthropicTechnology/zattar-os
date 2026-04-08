@@ -16,6 +16,7 @@ import * as React from 'react';
 import { ShieldCheck, TrendingDown, Activity } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { GaugeMeter } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 // =============================================================================
@@ -62,7 +63,7 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Saude</p>
-          <h2 className="mt-1 text-sm font-semibold">Score operacional</h2>
+          <Heading level="widget" className="mt-1 text-sm">Score operacional</Heading>
         </div>
         <ShieldCheck className="size-4 text-muted-foreground/45" />
       </div>
@@ -125,7 +126,7 @@ export function AgingFunnel({
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Distribuicao</p>
-          <h2 className="mt-1 text-sm font-semibold">Funil de prazos</h2>
+          <Heading level="widget" className="mt-1 text-sm">Funil de prazos</Heading>
         </div>
         <TrendingDown className="size-4 text-muted-foreground/45" />
       </div>
@@ -210,12 +211,12 @@ export function ActivityHeatmap({ baixasPorDia }: ActivityHeatmapProps) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Atividade</p>
-          <h2 className="mt-1 text-sm font-semibold">Baixas 35 dias</h2>
+          <Heading level="widget" className="mt-1 text-sm">Baixas 35 dias</Heading>
         </div>
         <Activity className="size-4 text-muted-foreground/45" />
       </div>
 
-      <div className="mt-4 grid grid-cols-7 gap-0.75">
+      <div className="mt-4 grid grid-cols-7 gap-1">
         {dias.map((dia) => {
           const valor = baixasPorDia.get(dia) ?? 0;
           return (

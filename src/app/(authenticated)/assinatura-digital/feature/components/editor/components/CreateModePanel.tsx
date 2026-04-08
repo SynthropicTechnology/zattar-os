@@ -3,6 +3,7 @@
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import CreateTemplateForm from '../CreateTemplateForm';
+import { Heading } from '@/components/ui/typography';
 
 interface CreateModePanelUploadProps {
   onFileUpload: (file: File) => void;
@@ -51,9 +52,9 @@ export function CreateModePanelUpload({ onFileUpload }: CreateModePanelUploadPro
           >
             <input {...getInputProps()} />
             <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-3" />
-            <h3 className="text-base font-semibold mb-1">
+            <Heading level="card" className="text-base mb-1">
               {isDragActive ? 'Solte o arquivo aqui' : 'Faça upload do PDF do template'}
-            </h3>
+            </Heading>
             <p className="text-sm text-muted-foreground mb-2">
               Arraste um arquivo PDF ou clique para selecionar
             </p>
@@ -80,7 +81,7 @@ export function CreateModePanelForm({
           {/* Dropzone with preview */}
           <div className="border-2 border-primary/50 rounded-lg p-6 text-center bg-primary/5">
             <Upload className="mx-auto h-10 w-10 text-primary mb-2" />
-            <h3 className="text-sm font-semibold mb-1">PDF carregado com sucesso!</h3>
+            <Heading level="card" className="text-sm mb-1">PDF carregado com sucesso!</Heading>
             <p className="text-xs text-muted-foreground">
               {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
             </p>

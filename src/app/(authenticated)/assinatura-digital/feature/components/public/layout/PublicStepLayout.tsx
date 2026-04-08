@@ -9,6 +9,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Heading } from "@/components/ui/typography";
 
 export interface PublicStepLayoutProps {
   title: string;
@@ -76,9 +77,9 @@ export function PublicStepLayout({
 
         {/* Title and Description */}
         <div className="space-y-1">
-          <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          <Heading level="section" className="font-display text-xl sm:text-2xl tracking-tight text-foreground">
             {title}
-          </h2>
+          </Heading>
           {description && (
             <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
               {description}

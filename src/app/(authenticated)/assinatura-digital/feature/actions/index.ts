@@ -2,21 +2,33 @@
 
 /**
  * ASSINATURA DIGITAL ACTIONS - Export Central
- * 
+ *
  * Re-exporta todas as server actions do módulo de assinatura digital.
+ * Organizado por domínio seguindo o padrão FSD.
  */
 
-// Documentos (Novo Fluxo)
+// =============================================================================
+// Segmentos
+// =============================================================================
 export {
-  actionCreateDocumento,
-  actionGetDocumento,
-  actionSetDocumentoAnchors,
-  actionListDocumentos,
-  actionGetPresignedPdfUrl,
-  actionGetAssinatura,
-} from "./documentos-actions";
+  listarSegmentosAction,
+  criarSegmentoAction,
+  atualizarSegmentoAction,
+} from "./segmentos-actions";
 
-// Templates
+// =============================================================================
+// Templates (Legacy - fluxo original)
+// =============================================================================
+export {
+  listarTemplatesAction,
+  criarTemplateAction,
+  processarTemplateAction,
+  gerarPdfDeMarkdownAction,
+} from "./legacy-templates-actions";
+
+// =============================================================================
+// Templates (Novo Padrão - authenticatedAction)
+// =============================================================================
 export {
   actionCreateTemplate,
   actionUpdateTemplate,
@@ -25,3 +37,37 @@ export {
   actionGetTemplateById,
   actionGetTemplateByUuid,
 } from "./templates-actions";
+
+// =============================================================================
+// Documentos (Novo Fluxo)
+// =============================================================================
+export {
+  actionCreateDocumento,
+  actionGetDocumento,
+  actionSetDocumentoAnchors,
+  actionAddDocumentoSigner,
+  actionRemoveDocumentoSigner,
+  actionUpdateDocumentoSettings,
+  actionDeleteDocumento,
+  actionFinalizeDocumento,
+  actionListDocumentos,
+  actionDocumentosStats,
+  actionGetPresignedPdfUrl,
+  actionGetAssinatura,
+} from "./documentos-actions";
+
+// =============================================================================
+// Partes / Clientes (Busca)
+// =============================================================================
+export {
+  searchClienteByCPF,
+  searchParteContraria,
+  searchPartesContrariasList,
+} from "./partes-actions";
+
+// =============================================================================
+// Formulários
+// =============================================================================
+export {
+  listarFormulariosAction,
+} from "./formularios-actions";

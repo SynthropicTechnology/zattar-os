@@ -1008,7 +1008,7 @@ function TimelineSectionHeader({ label, icon: Icon }: { label: string; icon: typ
 
 function TimelineBuffer() {
   return (
-    <div className="flex items-center gap-2 py-1 pl-13">
+    <div className="flex items-center gap-2 py-1 pl-12">
       <div className="w-px h-4 bg-border/10 ml-0.5" />
       <span className="text-[8px] text-muted-foreground/35">~30min buffer</span>
     </div>

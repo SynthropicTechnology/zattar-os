@@ -129,7 +129,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
             )}
           </div>
           <div>
-            <h2 className="text-base font-heading font-semibold">{data.nome}</h2>
+            <Heading level="card">{data.nome}</Heading>
             <div className="flex items-center gap-2 mt-0.5">
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}

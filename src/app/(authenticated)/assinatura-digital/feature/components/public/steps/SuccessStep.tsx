@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Download, ArrowLeft, FileText, Eye, Share2, CheckCircle, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography";
 
 export interface SuccessStepProps {
   documento: {
@@ -92,9 +93,9 @@ export function SuccessStep({
           </div>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        <Heading level="page" className="text-2xl sm:text-3xl tracking-tight text-foreground">
           Assinatura Confirmada!
-        </h1>
+        </Heading>
 
         <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
           Documento assinado com sucesso e protegido. Uma cópia foi enviada para
@@ -120,9 +121,9 @@ export function SuccessStep({
         {/* Informações do Documento */}
         <div className="p-3 sm:p-4 space-y-2">
           <div>
-            <h3 className="font-medium text-sm text-foreground truncate">
+            <Heading level="card" className="text-sm text-foreground truncate">
               {fileName}
-            </h3>
+            </Heading>
             <p className="text-xs text-muted-foreground mt-0.5">
               Assinado agora
             </p>

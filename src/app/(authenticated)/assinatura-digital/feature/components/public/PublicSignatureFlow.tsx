@@ -4,6 +4,7 @@ import * as React from "react";
 import { useMemo, useCallback, useEffect, useRef } from "react";
 import { AlertCircle, RefreshCcw, FileX2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography";
 import { PublicSignatureProvider, usePublicSignature } from "./PublicSignatureContext";
 import type { SignatureMetrics } from "./PublicSignatureContext";
 import type { AssinaturaMetrics } from "../../utils/signature-metrics";
@@ -57,9 +58,9 @@ function ErrorState({ error, onRetry }: ErrorStateProps) {
         <AlertCircle className="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
       </div>
       <div className="text-center space-y-1.5 max-w-sm">
-        <h2 className="text-base sm:text-lg font-semibold text-foreground">
+        <Heading level="section" className="text-base sm:text-lg text-foreground">
           Erro ao carregar
-        </h2>
+        </Heading>
         <p className="text-xs sm:text-sm text-muted-foreground">{error}</p>
       </div>
       {onRetry && (
@@ -79,9 +80,9 @@ function DocumentNotReadyState() {
         <FileX2 className="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
       </div>
       <div className="text-center space-y-1.5 max-w-sm">
-        <h2 className="text-base sm:text-lg font-semibold text-foreground">
+        <Heading level="section" className="text-base sm:text-lg text-foreground">
           Documento indisponível
-        </h2>
+        </Heading>
         <p className="text-xs sm:text-sm text-muted-foreground">
           Este documento ainda não está pronto para assinatura. Por favor, tente
           novamente mais tarde ou entre em contato com o remetente.
@@ -427,9 +428,9 @@ export function PublicSignatureFlow({ token }: PublicSignatureFlowProps) {
             <AlertCircle className="w-8 h-8" aria-hidden="true" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-foreground">
+            <Heading level="section" className="text-lg text-foreground">
               Token inválido
-            </h2>
+            </Heading>
             <p className="text-sm text-muted-foreground">
               O link de assinatura é inválido ou expirado.
             </p>

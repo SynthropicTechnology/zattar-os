@@ -33,6 +33,7 @@ import {
 import { TabPills } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { Heading } from '@/components/ui/typography';
 
 // ============================================================================
 // ASSINATURA DIGITAL MOCK — "Signature Command Center"
@@ -153,7 +154,7 @@ const STATS = {
 // ─── Helpers ────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<DocStatus, { label: string; color: string; cssColor: string; icon: typeof Clock; bg: string }> = {
-  rascunho: { label: 'Rascunho', color: 'text-muted-foreground/50', cssColor: 'oklch(from var(--muted-foreground) l c h / 0.55)', icon: FileText, bg: 'bg-muted-foreground/8' },
+  rascunho: { label: 'Rascunho', color: 'text-muted-foreground/50', cssColor: 'var(--muted-foreground)', icon: FileText, bg: 'bg-muted-foreground/8' },
   pronto: { label: 'Aguardando', color: 'text-warning/70', cssColor: 'var(--warning)', icon: Send, bg: 'bg-warning/8' },
   concluido: { label: 'Concluído', color: 'text-success/70', cssColor: 'var(--success)', icon: CheckCircle2, bg: 'bg-success/8' },
   cancelado: { label: 'Cancelado', color: 'text-destructive/50', cssColor: 'var(--destructive)', icon: XCircle, bg: 'bg-destructive/8' },
@@ -188,7 +189,7 @@ function SignaturePipeline() {
     <GlassPanel className="p-5">
       <div className="flex items-center gap-2 mb-4">
         <GitBranch className="size-4 text-muted-foreground/50" />
-        <h2 className="text-widget-title">Pipeline de Assinaturas</h2>
+        <Heading level="section" className="text-widget-title">Pipeline de Assinaturas</Heading>
         <span className="text-[10px] text-muted-foreground/55 ml-auto">
           {STATS.cancelados} cancelado{STATS.cancelados !== 1 ? 's' : ''}
         </span>
@@ -378,7 +379,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
             <Icon className={`size-5 ${cfg.color}`} />
           </div>
           <div className="min-w-0">
-            <h2 className="text-sm font-heading font-semibold leading-tight">{doc.titulo}</h2>
+            <Heading level="section" className="text-sm leading-tight">{doc.titulo}</Heading>
             <div className="flex items-center gap-2 mt-1">
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}>
                 {cfg.label}
@@ -420,10 +421,10 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
 
       {/* Signers list */}
       <div className="mb-4">
-        <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
+        <Heading level="card" className="text-xs mb-2 flex items-center gap-1.5">
           <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
-        </h3>
+        </Heading>
         <div className="space-y-1.5">
           {doc.assinantes.map((a, i) => {
             const isDone = a.status === 'concluido';
@@ -588,7 +589,7 @@ export default function AssinaturaDigitalMockPage() {
       {/* ── Header ──────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Assinatura Digital</h1>
+          <Heading level="page" className="text-2xl tracking-tight">Assinatura Digital</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {STATS.total} documentos &middot; {STATS.aguardando} aguardando assinatura
           </p>

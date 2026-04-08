@@ -6,6 +6,7 @@ import { UrgencyDot } from '@/app/(authenticated)/dashboard/mock/widgets/primiti
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
 import type { Expediente } from '../domain';
 
 interface ExpedienteListRowProps {
@@ -79,9 +80,9 @@ export function ExpedienteListRow({
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="truncate font-semibold text-sm text-foreground">
+            <Heading level="card" as="h3" className="truncate text-sm text-foreground">
               {tipoExpedienteNome || 'Expediente sem tipo'}
-            </h3>
+            </Heading>
             {expediente.observacoes && (
               <Tooltip>
                 <TooltipTrigger>
