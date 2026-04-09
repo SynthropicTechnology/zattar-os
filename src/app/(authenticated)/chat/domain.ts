@@ -98,6 +98,7 @@ export interface SalaChat {
   createdAt: string;
   updatedAt: string;
   isArchive?: boolean; // Novo campo
+  fixada?: boolean; // Per-user pinned state (from salas_chat_participantes)
 }
 
 /**
@@ -292,6 +293,7 @@ export interface SalaChatRow {
   created_at: string;
   updated_at: string;
   is_archive?: boolean;
+  fixada?: boolean;
   last_message?: Array<{
     conteudo: string;
     created_at: string;
