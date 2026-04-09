@@ -10,16 +10,8 @@ import {
   fmtMoeda,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
+import { fmtMes } from '../shared/fmt-mes';
 import { useFluxoCaixa } from '../../hooks';
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function fmtMes(mesStr: string): string {
-  // Aceita formatos: "2026-03", "2026-03-01", etc.
-  const date = new Date(mesStr + (mesStr.length === 7 ? '-01' : ''));
-  if (isNaN(date.getTime())) return mesStr || '—';
-  return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
-}
 
 // ─── Tab config ───────────────────────────────────────────────────────────────
 

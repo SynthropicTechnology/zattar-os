@@ -118,7 +118,6 @@ export async function buscarFinanceiroDetalhado(
   }
 
   const data = lancamentos || [];
-  const mesesLabel = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
   // --- Fluxo de caixa mensal e DRE (últimos 12 meses → último 6 para fluxo) ---
   const receitaMensal: number[] = [];
