@@ -31,21 +31,20 @@ Declared values (must be multiples of 4):
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| xs | 4px | Waveform bar gap (2px exception), msg-meta gaps, bubble corner radius small side |
-| sm | 8px | Message group vertical gap (2px sub-token), bubble internal padding vertical |
-| md | 16px | Messages area horizontal padding (24px override), header horizontal padding (20px override) |
-| lg | 24px | Messages area padding (1.5rem), header padding-x (1.25rem = 20px) |
-| xl | 32px | Audio play button size, messages area vertical padding top |
+| xs | 4px | Waveform bar gap, msg-meta gaps, bubble corner radius small side, waveform bar width |
+| sm | 8px | Message group vertical gap, bubble internal padding vertical, image bubble padding, online indicator dot |
+| md | 16px | Messages area horizontal padding, bubble horizontal padding |
+| lg | 24px | Messages area padding (1.5rem), header padding-x (20px override) |
+| xl | 32px | Audio play button size, action button size, messages area vertical padding top |
 | 2xl | 48px | Not used in this phase |
 | 3xl | 64px | Not used in this phase |
 
 Exceptions:
 - Header padding: 12px vertical, 20px horizontal (0.75rem / 1.25rem) -- tighter than standard to save vertical space
-- Bubble padding: 10px vertical, 14px horizontal (0.625rem / 0.875rem) -- chat-specific density
+- Bubble padding: 8px vertical, 16px horizontal -- chat-specific density, multiples of 4
 - Message avatar: 28px (non-standard, required for compact chat layout)
 - Header avatar: 36px (non-standard, smaller than standard 40px IconContainer lg)
-- Audio play button: 32px circle (non-standard, circular for play affordance)
-- Waveform bar: 3px width, 2px gap (sub-token, decorative element)
+- Audio play button: 32px circle (standard token, circular for play affordance)
 
 ---
 
@@ -53,18 +52,27 @@ Exceptions:
 
 | Role | Size | Weight | Line Height | Font Family |
 |------|------|--------|-------------|-------------|
-| Header name | 13.6px (0.85rem) | 600 | 1.2 | Inter |
-| Header status | 10.4px (0.65rem) | 400 | 1.4 | Inter |
-| Message body | 13.2px (0.825rem) | 400 | 1.5 | Inter |
-| Sender name (groups) | 10px (0.625rem) | 600 | 1.0 | Inter |
-| Timestamp | 9.2px (0.575rem) | 400 | 1.0 | Geist Mono |
-| Date separator | 9.6px (0.6rem) | 500 | 1.0 | Inter |
-| File name | 12px (0.75rem) | 500 | 1.3 | Inter |
-| File size | 9.6px (0.6rem) | 400 | 1.0 | Inter |
-| Audio duration | 9.6px (0.6rem) | 400 | 1.0 | Geist Mono |
+| Small | 10px (0.625rem) | 400 or 600 | 1.0 | Inter / Geist Mono |
+| Medium | 12px (0.75rem) | 600 | 1.3 | Inter |
+| Body | 13px (0.8125rem) | 400 or 600 | 1.5 (body) / 1.2 (header) | Inter |
+| Display | 20px (1.25rem) | 600 | 1.2 | Montserrat |
 
-Font sizes used: 9.2px, 9.6px, 10px, 10.4px, 12px, 13.2px, 13.6px (7 contextual sizes; 4 primary scale points: ~9.6, ~10.4, ~12, ~13.2).
-Font weights used: 400 (regular), 500 (medium for file name/date separator), 600 (semibold for header name/sender name).
+Font sizes used: 10px, 12px, 13px, 20px (4 sizes).
+Font weights used: 400 (regular), 600 (semibold).
+
+### Role Mapping
+
+| Element | Size | Weight | Line Height | Font |
+|---------|------|--------|-------------|------|
+| Header name | 13px | 600 | 1.2 | Inter |
+| Header status | 10px | 400 | 1.4 | Inter |
+| Message body | 13px | 400 | 1.5 | Inter |
+| Sender name (groups) | 10px | 600 | 1.0 | Inter |
+| Timestamp | 10px | 400 | 1.0 | Geist Mono |
+| Date separator | 10px | 600 | 1.0 | Inter |
+| File name | 12px | 600 | 1.3 | Inter |
+| File size | 10px | 400 | 1.0 | Inter |
+| Audio duration | 10px | 400 | 1.0 | Geist Mono |
 
 ---
 
@@ -142,19 +150,19 @@ Accent reserved for:
 
 - Size: 36px x 36px
 - Border-radius: `0.625rem` (10px) -- rounded-xl, NOT circular
-- Online indicator: 6px dot, `bg-success`, positioned absolute bottom-right
+- Online indicator: 8px dot, `bg-success`, positioned absolute bottom-right
 - Fallback: initials in `bg-primary/10 text-primary text-xs font-semibold`
 
 ### Header Info
 
-- Name: `text-[0.85rem] font-semibold text-foreground` (13.6px, weight 600)
-- Status online: `text-[0.65rem]` with 6px green dot + "Online" in `rgba(52,211,153,0.7)`
-- Status offline: `text-[0.65rem] text-muted-foreground/50` "Visto por ultimo {date}" or "Offline"
-- Group: `text-[0.65rem] text-muted-foreground/50` "Sala Geral" or "Grupo"
+- Name: `text-[0.8125rem] font-semibold text-foreground` (13px, weight 600)
+- Status online: `text-[0.625rem]` with 8px green dot + "Online" in `rgba(52,211,153,0.7)`
+- Status offline: `text-[0.625rem] text-muted-foreground/50` "Visto por ultimo {date}" or "Offline"
+- Group: `text-[0.625rem] text-muted-foreground/50` "Sala Geral" or "Grupo"
 
 ### Action Buttons (HEAD-03, HEAD-04)
 
-- Size: 34px x 34px
+- Size: 32px x 32px
 - Style: `ghost` variant, no background by default
 - Icon size: 16px
 - Color: `rgba(161,161,170,0.55)` (muted-foreground with reduced opacity)
@@ -185,26 +193,26 @@ Received:                           Sent:
 - Sent: `self-end flex-direction: row-reverse`
 - Received: `self-start`
 - Avatar: 28px x 28px, `rounded-[0.5rem]`, aligned to bottom (`self-end`)
-- Avatar fallback: `bg-primary/10 text-primary text-[0.55rem] font-semibold` with initials
+- Avatar fallback: `bg-primary/10 text-primary text-[0.625rem] font-semibold` with initials
 - Sent avatar: `invisible` (hidden but reserves space for alignment)
-- Stack: `flex flex-col gap-[0.125rem]` (2px between consecutive bubbles)
+- Stack: `flex flex-col gap-1` (4px between consecutive bubbles)
 
 ### Sender Name (MSG-03 -- group chats only)
 
 - Visible only in group/geral rooms, only on first message of a group
-- Style: `text-[0.625rem] font-semibold text-primary opacity-60 mb-[0.125rem] pl-[0.125rem]`
+- Style: `text-[0.625rem] font-semibold text-primary opacity-60 mb-1 pl-[0.125rem]`
 
 ### Asymmetric Bubble Corners (MSG-04)
 
 **Received bubbles:**
-- Default radius: `0.125rem 0.875rem 0.875rem 0.875rem` (2px top-left, 14px others)
+- Default radius: `0.25rem 0.875rem 0.875rem 0.875rem` (4px top-left, 14px others)
 - First bubble in group: `border-top-left-radius: 0.875rem` (14px all)
 - Background: `var(--chat-bubble-received)`
 - Border: `1px solid rgba(255,255,255,0.05)` (dark only)
 - Text color: `rgba(250,250,250,0.88)` (dark) / `var(--foreground)` (light)
 
 **Sent bubbles:**
-- Default radius: `0.875rem 0.125rem 0.875rem 0.875rem` (14px all except 2px top-right)
+- Default radius: `0.875rem 0.25rem 0.875rem 0.875rem` (14px all except 4px top-right)
 - First bubble in group: `border-top-right-radius: 0.875rem` (14px all)
 - Background: `var(--primary)` (var(--chat-bubble-sent))
 - Text color: `white`
@@ -213,15 +221,15 @@ Received:                           Sent:
 
 ### Bubble Padding (MSG-04)
 
-- Text bubble: `0.625rem 0.875rem` (10px 14px)
-- Font: `text-[0.825rem] leading-[1.5]` (13.2px body)
+- Text bubble: `0.5rem 1rem` (8px 16px)
+- Font: `text-[0.8125rem] leading-[1.5]` (13px body)
 - Word wrap: `break-word` with `overflow-wrap: anywhere`
 
 ### Timestamps & Status (MSG-05)
 
-- Container: `flex items-center gap-[0.3rem] mt-[0.25rem] px-[0.125rem]`
+- Container: `flex items-center gap-[0.25rem] mt-[0.25rem] px-[0.125rem]`
 - Sent: `justify-end`
-- Time: `text-[0.575rem] text-muted-foreground/35 tabular-nums font-mono` (Geist Mono)
+- Time: `text-[0.625rem] text-muted-foreground/35 tabular-nums font-mono` (Geist Mono, 10px)
 - Status icon: 12px x 12px (NOT 16px -- reduced from current)
   - Sending: Loader2, `animate-spin text-muted-foreground`
   - Sent: Check, `text-primary/50`
@@ -237,7 +245,7 @@ Received:                           Sent:
 
 - Container: `flex items-center gap-4 my-4`
 - Lines: `flex-1 h-px bg-foreground/[0.04]` (pseudo-elements ::before and ::after)
-- Label: `text-[0.6rem] font-medium uppercase tracking-[0.08em] text-muted-foreground/35 whitespace-nowrap`
+- Label: `text-[0.625rem] font-semibold uppercase tracking-[0.08em] text-muted-foreground/35 whitespace-nowrap`
 - Format: "Hoje, DD de MMMM" for today, "DD de MMMM" for other dates, "DD de MMMM de YYYY" for different year
 
 ---
@@ -259,8 +267,8 @@ Received:                           Sent:
 - Icon container: 36px x 36px, `rounded-lg`
   - Received: `bg-info/10` with `text-info` icon (16px)
   - Sent: `bg-primary/12` with `text-primary` icon (16px)
-- File name: `text-[0.75rem] font-medium text-foreground truncate`
-- File size: `text-[0.6rem] text-muted-foreground/40 mt-0.5`
+- File name: `text-[0.75rem] font-semibold text-foreground truncate` (12px, weight 600)
+- File size: `text-[0.625rem] text-muted-foreground/40 mt-0.5` (10px)
 - Download button: 28px x 28px, `rounded-md bg-foreground/[0.04] text-muted-foreground/50`
   - Hover: `bg-foreground/[0.08] text-foreground`
   - Icon: Download, 14px
@@ -274,21 +282,21 @@ Received:                           Sent:
 ```
 
 - Container: inherits from msg-bubble + `flex items-center gap-[0.625rem] min-w-[220px]`
-- Padding override: `0.5rem 0.875rem` (8px 14px, tighter than text)
+- Padding override: `0.5rem 1rem` (8px 16px, matches text bubble padding)
 - Play button: 32px circle (`rounded-full`)
   - Received: `bg-primary/15 text-primary`
   - Sent: `bg-white/20 text-white`
   - Icon: Play (triangle), 14px, filled
-- Waveform: `flex-1 h-6 flex items-center gap-[2px]`
-  - Bars: 3px wide, random heights (4-20px), `rounded-full`
+- Waveform: `flex-1 h-6 flex items-center gap-1`
+  - Bars: 4px wide, random heights (4-20px), `rounded-full`
   - Received bars: `bg-primary/30`
   - Sent bars: `bg-white/35`
-  - Generated dynamically: ~35 bars with random heights
-- Duration: `text-[0.6rem] tabular-nums opacity-60 shrink-0 font-mono`
+  - Generated dynamically: ~30 bars with random heights
+- Duration: `text-[0.625rem] tabular-nums opacity-60 shrink-0 font-mono` (10px)
 
 ### Image Message (MEDIA-03)
 
-- Bubble padding override: `0.375rem` (6px, minimal padding around image)
+- Bubble padding override: `8px` (consistent with spacing scale)
 - Image container: `rounded-xl overflow-hidden max-w-[280px]`
 - Image: `w-full h-auto block rounded-xl object-cover`
 - Max height: no explicit max (aspect ratio preserved)
@@ -302,7 +310,7 @@ Received:                           Sent:
 ### System Messages (MEDIA-05 -- future, placeholder only)
 
 - Center-aligned text, no bubble
-- Style: `text-[0.6rem] text-muted-foreground/40 text-center py-2`
+- Style: `text-[0.625rem] text-muted-foreground/40 text-center py-2` (10px)
 - Example: "Chamada de video -- 15min"
 
 ---
@@ -337,7 +345,7 @@ Received:                           Sent:
 | File download button | (icon-only, no text) |
 | Audio fallback text | "Seu navegador nao suporta audio." |
 | Message menu: forward | "Encaminhar" |
-| Message menu: delete | "Deletar" |
+| Message menu: delete | "Deletar" -- confirmation: undo toast with 5s window ("Mensagem deletada. Desfazer?") |
 | Error: message failed | "Falha ao enviar. Toque para tentar novamente." |
 | Empty state (no chat selected) | "Selecione uma conversa para comecar" |
 
