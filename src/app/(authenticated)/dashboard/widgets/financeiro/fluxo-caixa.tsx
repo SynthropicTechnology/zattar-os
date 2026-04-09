@@ -35,7 +35,7 @@ export function WidgetFluxoCaixa() {
   }
 
   const barData = fluxo.map((item) => ({
-    label: item.mes,
+    label: fmtMes(item.mes),
     value: item.receita,
     value2: item.despesa,
   }));
@@ -67,7 +67,7 @@ export function WidgetFluxoCaixa() {
         {/* Last month summary */}
         {lastMonth && (
           <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/10">
-            <span className="text-muted-foreground/50">{lastMonth.mes}</span>
+            <span className="text-muted-foreground/50">{fmtMes(lastMonth.mes)}</span>
             <div className="flex items-center gap-3">
               <span className="text-success/70 font-medium">{fmtMoeda(lastMonth.receita)}</span>
               <span className="text-destructive/60 font-medium">{fmtMoeda(lastMonth.despesa)}</span>
