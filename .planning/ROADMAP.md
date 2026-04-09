@@ -59,7 +59,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 02-01-PLAN.md — Header glassmorphic + MessageStatusIcon resize
+- [x] 02-01-PLAN.md — Header glassmorphic + MessageStatusIcon resize
 - [ ] 02-02-PLAN.md — DateSeparator + MessageGroup + text bubble asymmetric corners
 - [ ] 02-03-PLAN.md — Media bubbles: file, audio waveform, image, video
 
@@ -169,7 +169,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1. Layout Shell & Sidebar | v1.0 | 0/0 | Not started | - |
-| 2. Header, Messages & Media | v1.0 | 0/0 | Not started | - |
+| 2. Header, Messages & Media | v1.0 | 1/3 | In Progress|  |
 | 3. Input, Context Bar & Empty State | v1.0 | 0/0 | Not started | - |
 | 4. Detail Panel & Preservation | v1.0 | 0/0 | Not started | - |
 | 5. Indicadores & Detail Dialog | v1.1 | 0/0 | Not started | - |
