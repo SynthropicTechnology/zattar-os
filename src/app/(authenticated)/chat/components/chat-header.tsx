@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Ellipsis, Video, Phone, Monitor } from "lucide-react";
+import { ArrowLeft, Ellipsis, Video, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateAvatarFallback } from "@/lib/utils";
 import useChatStore from "../hooks/use-chat-store";
@@ -18,7 +18,7 @@ interface ChatHeaderProps {
   onScreenshare?: () => void | Promise<void>;
 }
 
-export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: ChatHeaderProps) {
+export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onScreenshare }: ChatHeaderProps) {
   const { setSelectedChat } = useChatStore();
 
   const isGroup = sala.tipo === 'grupo' || sala.tipo === 'geral';
@@ -28,72 +28,98 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
   const lastSeen = sala.usuario?.lastSeen;
 
   return (
-    <div className="flex justify-between gap-4 px-4 py-2 border-b bg-card">
-      <div className="flex gap-4 items-center">
+    <div
+      className="relative z-10 flex items-center justify-between px-5 py-3 border-b border-white/[0.06] dark:border-white/[0.06] light:border-border backdrop-blur-[20px]"
+      style={{
+        backgroundColor: 'rgba(22,18,34,0.8)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+    >
+      <div className="flex gap-3 items-center">
         <Button
-          size="sm"
-          variant="outline"
-          className="flex size-10 p-0 lg:hidden"
-          onClick={() => setSelectedChat(null)}>
-          <ArrowLeft />
+          size="icon"
+          variant="ghost"
+          className="size-8 lg:hidden text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+          onClick={() => setSelectedChat(null)}
+        >
+          <ArrowLeft className="size-4" />
         </Button>
-        <Avatar className="overflow-visible lg:size-10">
-          <AvatarImage src={image} alt={name} />
-          {!isGroup && <AvatarIndicator variant={onlineStatus} />}
-          <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold">{name}</span>
+        <div className="relative size-9 rounded-xl overflow-hidden shrink-0">
+          <Avatar
+            className="size-9 rounded-xl overflow-visible"
+          >
+            <AvatarImage src={image} alt={name} />
+            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold rounded-xl">
+              {generateAvatarFallback(name)}
+            </AvatarFallback>
+            {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+          </Avatar>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[0.8125rem] font-semibold text-foreground leading-[1.2]">{name}</span>
           {!isGroup && (
             onlineStatus === "online" ? (
-              <span className="text-xs text-success">Online</span>
+              <span
+                className="text-[0.625rem] leading-[1.4]"
+                style={{ color: 'rgba(52,211,153,0.7)' }}
+              >
+                Online
+              </span>
             ) : (
-              <span className="text-muted-foreground text-xs">
-                {lastSeen ? `Visto por último ${new Date(lastSeen).toLocaleString()}` : 'Offline'}
+              <span className="text-[0.625rem] text-muted-foreground/50 leading-[1.4]">
+                {lastSeen ? `Visto por ultimo ${new Date(lastSeen).toLocaleString()}` : 'Offline'}
               </span>
             )
           )}
           {isGroup && (
-            <span className="text-muted-foreground text-xs">
+            <span className="text-[0.625rem] text-muted-foreground/50 leading-[1.4]">
               {sala.tipo === 'geral' ? 'Sala Geral' : 'Grupo'}
             </span>
           )}
         </div>
       </div>
-      <div className="flex gap-2 items-center">
-        <div className="hidden lg:flex lg:gap-2">
+      <div className="flex gap-1 items-center">
+        <div className="hidden lg:flex lg:gap-1">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" aria-label="Câmera" variant="secondary" onClick={onVideoCall}>
-                  <Video className="h-4 w-4" />
+                <Button
+                  size="icon"
+                  aria-label="Chamada de Video"
+                  variant="ghost"
+                  className="size-8 text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+                  onClick={onVideoCall}
+                >
+                  <Video className="size-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Chamada de Vídeo</TooltipContent>
+              <TooltipContent side="bottom">Chamada de Video</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" aria-label="Ligar" variant="secondary" onClick={onAudioCall}>
-                  <Phone className="h-4 w-4" />
+                <Button
+                  size="icon"
+                  aria-label="Chamada de Audio"
+                  variant="ghost"
+                  className="size-8 text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+                  onClick={onAudioCall}
+                >
+                  <Phone className="size-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Chamada de Áudio</TooltipContent>
+              <TooltipContent side="bottom">Chamada de Audio</TooltipContent>
             </Tooltip>
-            {onScreenshare && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button size="icon" aria-label="Compartilhar tela" variant="secondary" onClick={onScreenshare}>
-                    <Monitor className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">Compartilhar Tela</TooltipContent>
-              </Tooltip>
-            )}
           </TooltipProvider>
         </div>
         <ChatUserDropdown chat={sala}>
-          <Button size="icon" aria-label="Mais opções" variant="ghost">
-            <Ellipsis />
+          <Button
+            size="icon"
+            aria-label="Mais opcoes"
+            variant="ghost"
+            className="size-8 text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+          >
+            <Ellipsis className="size-4" />
           </Button>
         </ChatUserDropdown>
       </div>
