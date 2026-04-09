@@ -1,3 +1,5 @@
+'use client';
+
 import { useViewport } from "@/hooks/use-viewport";
 import { useEffect, useState } from "react";
 

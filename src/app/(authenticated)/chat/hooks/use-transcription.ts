@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import type DyteClient from '@dytesdk/web-core';
 

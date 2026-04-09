@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState, useMemo } from "react";
 import type DyteClient from "@dytesdk/web-core";
 import { debounce } from "lodash-es";

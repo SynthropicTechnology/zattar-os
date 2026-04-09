@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type DyteClient from '@dytesdk/web-core';
 import { handleCallError } from '../utils';

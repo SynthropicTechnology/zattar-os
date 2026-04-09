@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, useState } from "react";
 import type DyteClient from "@dytesdk/web-core";
 import { toast } from "sonner";

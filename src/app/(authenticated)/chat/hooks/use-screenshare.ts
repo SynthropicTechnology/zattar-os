@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useCallback, useEffect } from "react";
 import type DyteClient from "@dytesdk/web-core";
 import type { DyteParticipant } from "@dytesdk/web-core";
