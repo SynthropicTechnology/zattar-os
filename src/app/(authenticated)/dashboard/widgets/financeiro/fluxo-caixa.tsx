@@ -9,6 +9,7 @@ import { TrendingUp } from 'lucide-react';
 import { WidgetContainer, MiniBar, fmtMoeda } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
+import { fmtMes } from '../shared/fmt-mes';
 
 export function WidgetFluxoCaixa() {
   const { data, isLoading } = useDashboard();

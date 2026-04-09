@@ -145,7 +145,8 @@ export async function buscarFinanceiroDetalhado(
     resultadoMensal.push(receita - despesa);
 
     if (i < 6) {
-      fluxoCaixaMensal.push({ mes: mesesLabel[mes], receita, despesa });
+      const mesISO = `${ano}-${String(mes + 1).padStart(2, '0')}`;
+      fluxoCaixaMensal.push({ mes: mesISO, receita, despesa });
     }
   }
 
