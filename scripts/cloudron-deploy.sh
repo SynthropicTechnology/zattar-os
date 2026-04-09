@@ -8,14 +8,17 @@ set -e
 #   ./scripts/cloudron-deploy.sh                  # Build + Update + Env Set
 #   ./scripts/cloudron-deploy.sh --skip-build     # Update + Env Set
 #   ./scripts/cloudron-deploy.sh --env-only       # Apenas Env Set
-#   ./scripts/cloudron-deploy.sh --no-cache       # Build sem cache
 #   ./scripts/cloudron-deploy.sh --dry-run        # Simula sem executar
 #
-# NOTA: O build remoto usa o Build Service do Cloudron (builder.allhands.com.br).
-# Se o build remoto falhar por falta de memoria, use cloudron-deploy-local.sh.
+# O script configura automaticamente o Build Service e o repository em
+# ~/.cloudron.json antes de buildar, garantindo que opere no servidor
+# correto mesmo que o CLI esteja configurado para outra instancia.
 #
 # Variaveis NEXT_PUBLIC_* sao lidas do .env.production pelo Next.js no build.
 # Variaveis de runtime sao lidas do .env.local e setadas via cloudron env set.
+#
+# Ref: https://docs.cloudron.io/packaging/cli
+#      https://docs.cloudron.io/packages/docker-builder
 # =============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,22 +27,23 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 # -----------------------------------------------------------------------------
 # Configuracao
 # -----------------------------------------------------------------------------
-DOCKERFILE="Dockerfile.cloudron"
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
 CLOUDRON_APP="zattaradvogados.com"
-REGISTRY="registry.synthropic.online"
+REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
 DOCKER_REPOSITORY="${REGISTRY}/${IMAGE_NAME}"
 
+# Build Service remoto (configurado automaticamente em ~/.cloudron.json)
+BUILD_SERVICE_URL="https://builder.sinesys.online"
+BUILD_SERVICE_TOKEN="bde253a143ffa41cbe512632df128fc87f59029953c26333"
+
 # Autenticacao CI/CD (via env vars ou flags)
-# Setar CLOUDRON_SERVER e CLOUDRON_TOKEN para automacao completa sem login interativo
-CLOUDRON_SERVER="${CLOUDRON_SERVER:-}"
+# --server recebe dominio sem protocolo (ref: docs.cloudron.io/packaging/cli)
+CLOUDRON_SERVER="${CLOUDRON_SERVER:-my.sinesys.online}"
 CLOUDRON_TOKEN="${CLOUDRON_TOKEN:-}"
 
 # Variaveis providas automaticamente pelos addons do Cloudron (nao setar)
-# Redis: mapeadas pelo start.sh de CLOUDRON_REDIS_* -> REDIS_*
-# Mail:  mapeadas pelo start.sh de CLOUDRON_MAIL_*  -> SYSTEM_SMTP_* / SYSTEM_MAIL_*
 ADDON_VARS="ENABLE_REDIS_CACHE REDIS_URL REDIS_PASSWORD SYSTEM_SMTP_HOST SYSTEM_SMTP_PORT SYSTEM_SMTP_USER SYSTEM_SMTP_PASS SYSTEM_SMTP_SECURE SYSTEM_MAIL_FROM SYSTEM_MAIL_DISPLAY_NAME SYSTEM_MAIL_DOMAIN"
 
 # Variaveis que nao fazem sentido em runtime
@@ -47,6 +51,9 @@ SKIP_VARS="PUPPETEER_SKIP_DOWNLOAD PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD"
 
 # Variaveis que sao apenas de build (ja estao no .env.production)
 BUILD_ONLY_VARS="NEXT_PUBLIC_SUPABASE_URL NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
+
+# Caminho do config do Cloudron CLI
+CLOUDRON_CONFIG="$HOME/.cloudron.json"
 
 # -----------------------------------------------------------------------------
 # Cores
@@ -65,33 +72,30 @@ NC='\033[0m'
 SKIP_BUILD=false
 SKIP_UPDATE=false
 ENV_ONLY=false
-NO_CACHE=""
 DRY_RUN=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --skip-build)   SKIP_BUILD=true; shift ;;
-        --skip-update)  SKIP_UPDATE=true; shift ;;
-        --env-only)     ENV_ONLY=true; SKIP_BUILD=true; SKIP_UPDATE=true; shift ;;
-        --no-cache)     NO_CACHE="--no-cache"; shift ;;
-        --dry-run)      DRY_RUN=true; shift ;;
-        --server)       CLOUDRON_SERVER="$2"; shift 2 ;;
-        --token)        CLOUDRON_TOKEN="$2"; shift 2 ;;
+        --skip-build)     SKIP_BUILD=true; shift ;;
+        --skip-update)    SKIP_UPDATE=true; shift ;;
+        --env-only)       ENV_ONLY=true; SKIP_BUILD=true; SKIP_UPDATE=true; shift ;;
+        --dry-run)        DRY_RUN=true; shift ;;
+        --server)         CLOUDRON_SERVER="$2"; shift 2 ;;
+        --token)          CLOUDRON_TOKEN="$2"; shift 2 ;;
         --help|-h)
             echo "Uso: $0 [opcoes]"
             echo ""
             echo "Opcoes:"
-            echo "  --skip-build     Pula o build (faz update + env set)"
-            echo "  --skip-update    Pula o update (faz build + env set)"
-            echo "  --env-only       Apenas seta as variaveis de ambiente"
-            echo "  --no-cache       Build sem cache"
-            echo "  --dry-run        Simula sem executar"
-            echo "  --server <url>   Cloudron server (ou env CLOUDRON_SERVER)"
-            echo "  --token <token>  Cloudron token (ou env CLOUDRON_TOKEN)"
-            echo "  --help           Mostra esta ajuda"
+            echo "  --skip-build       Pula o build (faz update + env set)"
+            echo "  --skip-update      Pula o update (faz build + env set)"
+            echo "  --env-only         Apenas seta as variaveis de ambiente"
+            echo "  --dry-run          Simula sem executar"
+            echo "  --server <domain>  Cloudron server domain (ou env CLOUDRON_SERVER)"
+            echo "  --token <token>    Cloudron token (ou env CLOUDRON_TOKEN)"
+            echo "  --help             Mostra esta ajuda"
             echo ""
             echo "CI/CD (nao-interativo):"
-            echo "  CLOUDRON_SERVER=my.cloudron.com CLOUDRON_TOKEN=xxx $0"
+            echo "  CLOUDRON_SERVER=my.sinesys.online CLOUDRON_TOKEN=xxx $0"
             echo ""
             echo "NOTA: Se o build remoto falhar por memoria, use:"
             echo "  ./scripts/cloudron-deploy-local.sh"
@@ -105,9 +109,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Montar flags globais do Cloudron CLI para autenticacao
-CLOUDRON_AUTH_FLAGS=""
-if [ -n "$CLOUDRON_SERVER" ] && [ -n "$CLOUDRON_TOKEN" ]; then
-    CLOUDRON_AUTH_FLAGS="--server ${CLOUDRON_SERVER} --token ${CLOUDRON_TOKEN}"
+# --server e sempre passado para garantir que operamos no Cloudron correto
+CLOUDRON_AUTH_FLAGS="--server ${CLOUDRON_SERVER}"
+if [ -n "$CLOUDRON_TOKEN" ]; then
+    CLOUDRON_AUTH_FLAGS="${CLOUDRON_AUTH_FLAGS} --token ${CLOUDRON_TOKEN}"
 fi
 
 # -----------------------------------------------------------------------------
@@ -126,7 +131,6 @@ info()    { echo -e "${DIM}   $1${NC}"; }
 
 run() {
     if [ "$DRY_RUN" = true ]; then
-        # Mascarar valores de env vars no output do dry-run
         local cmd_display="$*"
         if [[ "$cmd_display" == *"env set"* ]]; then
             local keys
@@ -190,6 +194,56 @@ wait_for_health() {
     return 1
 }
 
+# Configura o Build Service e o repository no ~/.cloudron.json automaticamente.
+# Isso garante que o build remoto use o builder correto (builder.sinesys.online),
+# mesmo que o CLI tenha sido usado com outro servidor (ex: allhands) recentemente.
+configure_build_service() {
+    if ! command -v jq &> /dev/null; then
+        error "jq nao encontrado! Instale com: brew install jq"
+        return 1
+    fi
+
+    if [ ! -f "$CLOUDRON_CONFIG" ]; then
+        error "~/.cloudron.json nao existe. Execute: cloudron login ${CLOUDRON_SERVER}"
+        return 1
+    fi
+
+    local current_builder
+    current_builder=$(jq -r '.buildService.url // ""' "$CLOUDRON_CONFIG" 2>/dev/null)
+    local current_repo
+    current_repo=$(jq -r --arg dir "$PROJECT_DIR" '.apps[$dir].repository // ""' "$CLOUDRON_CONFIG" 2>/dev/null)
+
+    local changed=false
+
+    # Corrigir Build Service URL se necessario
+    if [ "$current_builder" != "$BUILD_SERVICE_URL" ]; then
+        jq --arg url "$BUILD_SERVICE_URL" --arg token "$BUILD_SERVICE_TOKEN" \
+            '.buildService = {"type": "remote", "url": $url, "token": $token}' \
+            "$CLOUDRON_CONFIG" > "${CLOUDRON_CONFIG}.tmp" && mv "${CLOUDRON_CONFIG}.tmp" "$CLOUDRON_CONFIG"
+        changed=true
+        warn "Build Service atualizado: ${current_builder:-nenhum} -> ${BUILD_SERVICE_URL}"
+    else
+        success "Build Service: ${BUILD_SERVICE_URL}"
+    fi
+
+    # Corrigir repository do app se necessario
+    if [ "$current_repo" != "$DOCKER_REPOSITORY" ]; then
+        jq --arg dir "$PROJECT_DIR" --arg repo "$DOCKER_REPOSITORY" \
+            '.apps[$dir].repository = $repo' \
+            "$CLOUDRON_CONFIG" > "${CLOUDRON_CONFIG}.tmp" && mv "${CLOUDRON_CONFIG}.tmp" "$CLOUDRON_CONFIG"
+        changed=true
+        warn "Repository atualizado: ${current_repo:-nenhum} -> ${DOCKER_REPOSITORY}"
+    else
+        success "Repository: ${DOCKER_REPOSITORY}"
+    fi
+
+    if [ "$changed" = true ]; then
+        info "~/.cloudron.json atualizado automaticamente"
+    fi
+
+    return 0
+}
+
 # =============================================================================
 # INICIO
 # =============================================================================
@@ -199,11 +253,13 @@ echo ""
 echo -e "${BOLD}Zattar OS - Cloudron Deploy (Build Remoto)${NC}"
 echo "============================================================"
 echo -e "  Git:       ${DIM}${GIT_SHA}${NC}"
+echo -e "  Server:    ${CYAN}${CLOUDRON_SERVER}${NC}"
 echo -e "  Registry:  ${CYAN}${DOCKER_REPOSITORY}${NC}"
+echo -e "  Builder:   ${CYAN}${BUILD_SERVICE_URL}${NC}"
 echo -e "  Build:     $([ "$SKIP_BUILD" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron build (remoto)${NC}")"
 echo -e "  Update:    $([ "$SKIP_UPDATE" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron update${NC}")"
 echo -e "  Env set:   ${GREEN}cloudron env set${NC}"
-echo -e "  Auth:      $([ -n "$CLOUDRON_AUTH_FLAGS" ] && echo -e "${GREEN}token (CI/CD)${NC}" || echo -e "${DIM}login local${NC}")"
+echo -e "  Auth:      $([ -n "$CLOUDRON_TOKEN" ] && echo -e "${GREEN}token (CI/CD)${NC}" || echo -e "${DIM}login local${NC}")"
 [ "$DRY_RUN" = true ] && echo -e "  Modo:      ${YELLOW}DRY RUN (sem execucao real)${NC}"
 echo "============================================================"
 
@@ -236,6 +292,13 @@ else
     [ "$SKIP_BUILD" = false ] && success ".env.production encontrado"
 fi
 
+# Configurar Build Service automaticamente (corrige builder e repository)
+if [ "$SKIP_BUILD" = false ]; then
+    if ! configure_build_service; then
+        PREREQ_OK=false
+    fi
+fi
+
 if [ "$PREREQ_OK" = false ]; then
     echo ""
     error "Pre-requisitos nao atendidos. Abortando."
@@ -257,15 +320,39 @@ done < <(parse_env_file "$ENV_FILE")
 success "${RUNTIME_COUNT} variaveis de runtime carregadas"
 
 # =============================================================================
-# STEP 1: Cloudron Build (remoto)
+# STEP 1: Cloudron Build (remoto via Build Service)
 # =============================================================================
 if [ "$SKIP_BUILD" = false ]; then
     header "STEP 1/3: Cloudron Build (remoto)"
     BUILD_START=$(date +%s)
 
     cd "$PROJECT_DIR"
-    # --repository: evita prompt interativo (armazena para builds futuros)
-    run cloudron build build -f "$DOCKERFILE" --repository "$DOCKER_REPOSITORY" ${NO_CACHE}
+
+    # cloudron build le "Dockerfile" do diretorio atual (nao aceita -f).
+    # Como o projeto usa Dockerfile.cloudron, criamos um symlink temporario.
+    CREATED_SYMLINK=false
+    if [ ! -f "Dockerfile" ] && [ -f "Dockerfile.cloudron" ]; then
+        ln -s Dockerfile.cloudron Dockerfile
+        CREATED_SYMLINK=true
+        info "Symlink temporario: Dockerfile -> Dockerfile.cloudron"
+    fi
+
+    # Cleanup do symlink em caso de erro (trap)
+    cleanup_symlink() {
+        if [ "$CREATED_SYMLINK" = true ] && [ -L "Dockerfile" ]; then
+            rm -f Dockerfile
+        fi
+    }
+    trap cleanup_symlink EXIT
+
+    # cloudron build: usa o Build Service configurado em ~/.cloudron.json
+    # --repository: define o registry/imagem (salvo para builds futuros)
+    # Ref: https://docs.cloudron.io/packages/docker-builder
+    run cloudron build --repository "$DOCKER_REPOSITORY"
+
+    # Limpar symlink temporario
+    cleanup_symlink
+    trap - EXIT
 
     BUILD_END=$(date +%s)
     BUILD_DURATION=$(( BUILD_END - BUILD_START ))
@@ -283,6 +370,9 @@ fi
 if [ "$SKIP_UPDATE" = false ]; then
     header "STEP 2/3: Cloudron Update"
 
+    # cloudron update: usa a ultima imagem buildada (salva pelo cloudron build)
+    # --server: garante operacao no Cloudron correto
+    # Ref: https://docs.cloudron.io/packaging/cli
     # shellcheck disable=SC2086
     run cloudron update --app "$CLOUDRON_APP" $CLOUDRON_AUTH_FLAGS
 

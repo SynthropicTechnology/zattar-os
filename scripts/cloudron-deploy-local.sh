@@ -26,13 +26,14 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 DOCKERFILE="Dockerfile.cloudron"
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
-REGISTRY="registry.synthropic.online"
+REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
 CLOUDRON_APP="zattaradvogados.com"
 KEEP_IMAGES=5  # Numero de imagens locais antigas para manter
 
 # Autenticacao CI/CD (via env vars ou flags)
-CLOUDRON_SERVER="${CLOUDRON_SERVER:-}"
+# --server recebe dominio sem protocolo (ref: docs.cloudron.io/packaging/cli)
+CLOUDRON_SERVER="${CLOUDRON_SERVER:-my.sinesys.online}"
 CLOUDRON_TOKEN="${CLOUDRON_TOKEN:-}"
 
 # Variaveis providas automaticamente pelos addons do Cloudron (nao setar)
@@ -87,12 +88,12 @@ while [[ $# -gt 0 ]]; do
             echo "  --no-cache       Build sem cache Docker"
             echo "  --dry-run        Simula sem executar (mostra o que faria)"
             echo "  --cleanup        Remove imagens antigas apos deploy (mantem ${KEEP_IMAGES})"
-            echo "  --server <url>   Cloudron server (ou env CLOUDRON_SERVER)"
-            echo "  --token <token>  Cloudron token (ou env CLOUDRON_TOKEN)"
-            echo "  --help           Mostra esta ajuda"
+            echo "  --server <domain>  Cloudron server domain (ou env CLOUDRON_SERVER)"
+            echo "  --token <token>    Cloudron token (ou env CLOUDRON_TOKEN)"
+            echo "  --help             Mostra esta ajuda"
             echo ""
             echo "CI/CD (nao-interativo):"
-            echo "  CLOUDRON_SERVER=my.cloudron.com CLOUDRON_TOKEN=xxx $0"
+            echo "  CLOUDRON_SERVER=my.sinesys.online CLOUDRON_TOKEN=xxx $0"
             exit 0
             ;;
         *)
@@ -103,9 +104,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Montar flags globais do Cloudron CLI para autenticacao
-CLOUDRON_AUTH_FLAGS=""
-if [ -n "$CLOUDRON_SERVER" ] && [ -n "$CLOUDRON_TOKEN" ]; then
-    CLOUDRON_AUTH_FLAGS="--server ${CLOUDRON_SERVER} --token ${CLOUDRON_TOKEN}"
+# --server e sempre passado para garantir que operamos no Cloudron correto,
+# mesmo que o CLI esteja logado em outra instancia
+CLOUDRON_AUTH_FLAGS="--server ${CLOUDRON_SERVER}"
+if [ -n "$CLOUDRON_TOKEN" ]; then
+    CLOUDRON_AUTH_FLAGS="${CLOUDRON_AUTH_FLAGS} --token ${CLOUDRON_TOKEN}"
 fi
 
 # -----------------------------------------------------------------------------
@@ -230,6 +233,7 @@ FULL_IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
 echo ""
 echo -e "${BOLD}Zattar OS - Cloudron Deploy (Build Local)${NC}"
 echo "============================================================"
+echo -e "  Server:    ${CYAN}${CLOUDRON_SERVER}${NC}"
 echo -e "  Registry:  ${CYAN}${REGISTRY}${NC}"
 echo -e "  Image:     ${CYAN}${FULL_IMAGE}${NC}"
 echo -e "  Git:       ${DIM}${GIT_SHA}${NC}"
