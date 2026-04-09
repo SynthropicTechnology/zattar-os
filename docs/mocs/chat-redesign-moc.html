@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZattarOS Chat — MOC Glass Briefing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS (Mirroring ZattarOS Dark Theme) ─── */
+    :root {
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-heading: 'Montserrat', system-ui, sans-serif;
+      --font-mono: 'Geist Mono', monospace;
+
+      /* OKLCH-mapped to hex approximations for the MOC */
+      --background: #1a1625;
+      --foreground: #fafafa;
+      --card: #221e30;
+      --card-foreground: #fafafa;
+      --primary: #8b5cf6;
+      --primary-foreground: #1a1030;
+      --primary-dim: #6d3fe0;
+      --muted: #2a2538;
+      --muted-foreground: #a1a1aa;
+      --border: rgba(255,255,255,0.12);
+      --border-subtle: rgba(255,255,255,0.06);
+      --success: #34d399;
+      --warning: #fbbf24;
+      --destructive: #f87171;
+      --info: #60a5fa;
+      --surface-container: #252035;
+      --surface-container-low: #1e1a2e;
+
+      /* Chat-specific */
+      --chat-thread-bg: #161222;
+      --chat-bubble-received: rgba(255,255,255,0.04);
+      --chat-bubble-sent: var(--primary);
+      --chat-sidebar-active: rgba(139,92,246,0.08);
+
+      /* Glass */
+      --glass-widget-bg: rgba(255,255,255,0.04);
+      --glass-widget-border: rgba(255,255,255,0.08);
+      --glass-kpi-bg: rgba(255,255,255,0.06);
+      --glass-kpi-border: rgba(255,255,255,0.12);
+
+      /* Glow */
+      --glow-primary: rgba(139,92,246,0.35);
+      --glow-primary-subtle: rgba(139,92,246,0.04);
+      --glow-primary-faint: rgba(139,92,246,0.02);
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--background);
+      color: var(--foreground);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* ─── UTILITIES ─── */
+    .font-heading { font-family: var(--font-heading); }
+    .font-mono { font-family: var(--font-mono); }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+    /* ─── LAYOUT SHELL ─── */
+    .chat-shell {
+      display: flex;
+      height: calc(100vh - 2rem);
+      margin: 1rem;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface-container-low);
+    }
+
+    /* ─── SIDEBAR ─── */
+    .chat-sidebar {
+      width: 360px;
+      min-width: 360px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border-subtle);
+      background: var(--surface-container-low);
+    }
+
+    .sidebar-header {
+      padding: 1.25rem 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sidebar-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.65rem;
+      color: rgba(161,161,170,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    .btn-new-chat {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.75rem;
+      background: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(139,92,246,0.25);
+    }
+    .btn-new-chat:hover { background: #7c4ddb; transform: translateY(-1px); }
+
+    /* Search */
+    .search-container {
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: rgba(161,161,170,0.55);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--foreground);
+      font-size: 0.75rem;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .search-input::placeholder { color: rgba(161,161,170,0.55); }
+    .search-input:focus {
+      border-color: rgba(139,92,246,0.3);
+      box-shadow: 0 0 0 2px rgba(139,92,246,0.08);
+    }
+
+    /* Tab Pills */
+    .tab-pills {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      background: rgba(255,255,255,0.03);
+      margin: 0 1.25rem 0.75rem;
+    }
+    .tab-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: rgba(161,161,170,0.5);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-pill.active {
+      background: rgba(139,92,246,0.12);
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .tab-pill:hover:not(.active) { color: rgba(161,161,170,0.7); }
+    .tab-pill .count {
+      font-size: 0.6rem;
+      opacity: 0.5;
+      font-variant-numeric: tabular-nums;
+    }
+    .tab-pill.active .count { opacity: 0.6; color: var(--primary); }
+
+    /* Conversation List */
+    .conversation-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 0.5rem;
+    }
+
+    .conversation-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .conversation-item:hover { background: rgba(255,255,255,0.03); }
+    .conversation-item.active {
+      background: var(--chat-sidebar-active);
+      border: 1px solid rgba(139,92,246,0.08);
+    }
+    .conversation-item:not(.active) { border: 1px solid transparent; }
+
+    .conv-avatar {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .conv-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .conv-avatar-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(139,92,246,0.12);
+      color: var(--primary);
+    }
+
+    .online-dot {
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--success);
+      border: 2px solid var(--surface-container-low);
+      z-index: 2;
+    }
+    .online-dot.offline { background: rgba(161,161,170,0.3); }
+
+    .conv-info { flex: 1; min-width: 0; }
+    .conv-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .conv-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--foreground);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .conv-time {
+      font-size: 0.6rem;
+      color: rgba(161,161,170,0.4);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+    .conv-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+    .conv-preview {
+      font-size: 0.7rem;
+      color: rgba(161,161,170,0.5);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .unread-badge {
+      min-width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5px;
+      flex-shrink: 0;
+    }
+
+    /* Sidebar section label */
+    .section-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: rgba(161,161,170,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.75rem 0.75rem 0.375rem;
+    }
+
+    /* ─── MAIN CHAT AREA ─── */
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--chat-thread-bg);
+      position: relative;
+    }
+
+    /* Ambient glow (like MissionCard) */
+    .chat-main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .chat-main::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(139,92,246,0.02) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Chat Header */
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(22,18,34,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 10;
+      position: relative;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 0.625rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .header-info { display: flex; flex-direction: column; gap: 0.125rem; }
+    .header-name { font-size: 0.85rem; font-weight: 600; }
+    .header-status {
+      font-size: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .header-status .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--success);
+    }
+    .header-status .status-text { color: rgba(52,211,153,0.7); }
+    .header-status .status-text.offline { color: rgba(161,161,170,0.5); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .header-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: rgba(161,161,170,0.55);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .header-btn:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--foreground);
+    }
+    .header-btn svg { width: 16px; height: 16px; }
+
+    /* Context Bar (under header - shows process info) */
+    .context-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(139,92,246,0.03);
+      z-index: 9;
+      position: relative;
+    }
+    .context-badge {
+      font-size: 0.6rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.375rem;
+      background: rgba(139,92,246,0.08);
+      color: rgba(139,92,246,0.7);
+    }
+    .context-text {
+      font-size: 0.65rem;
+      color: rgba(161,161,170,0.5);
+    }
+    .context-link {
+      font-size: 0.65rem;
+      color: var(--primary);
+      opacity: 0.6;
+      text-decoration: none;
+      margin-left: auto;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .context-link:hover { opacity: 1; }
+
+    /* ─── MESSAGES AREA ─── */
+    .messages-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 1.5rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Date Separator */
+    .date-separator {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .date-separator::before,
+    .date-separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.04);
+    }
+    .date-separator span {
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: rgba(161,161,170,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    /* Message Group */
+    .msg-group {
+      display: flex;
+      gap: 0.625rem;
+      max-width: 70%;
+      margin-bottom: 0.125rem;
+    }
+    .msg-group.sent {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .msg-group.received { align-self: flex-start; }
+
+    .msg-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      flex-shrink: 0;
+      align-self: flex-end;
+    }
+    .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .msg-avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(139,92,246,0.1);
+      color: var(--primary);
+      font-size: 0.55rem;
+      font-weight: 600;
+    }
+    .msg-avatar.invisible { visibility: hidden; }
+
+    .msg-stack { display: flex; flex-direction: column; gap: 0.125rem; }
+
+    /* Sender name (in groups) */
+    .msg-sender {
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: var(--primary);
+      opacity: 0.6;
+      margin-bottom: 0.125rem;
+      padding-left: 0.125rem;
+    }
+
+    /* Bubble */
+    .msg-bubble {
+      padding: 0.625rem 0.875rem;
+      font-size: 0.825rem;
+      line-height: 1.5;
+      word-wrap: break-word;
+      position: relative;
+    }
+
+    .msg-group.received .msg-bubble {
+      background: var(--chat-bubble-received);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 0.125rem 0.875rem 0.875rem 0.875rem;
+      color: rgba(250,250,250,0.88);
+    }
+    .msg-group.received .msg-bubble:first-of-type {
+      border-top-left-radius: 0.875rem;
+    }
+
+    .msg-group.sent .msg-bubble {
+      background: var(--primary);
+      color: white;
+      border-radius: 0.875rem 0.125rem 0.875rem 0.875rem;
+      border: none;
+      box-shadow: 0 2px 12px rgba(139,92,246,0.2);
+    }
+    .msg-group.sent .msg-bubble:first-of-type {
+      border-top-right-radius: 0.875rem;
+    }
+
+    /* Message Meta (time + status) */
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.25rem;
+      padding: 0 0.125rem;
+    }
+    .msg-group.sent .msg-meta { justify-content: flex-end; }
+    .msg-time {
+      font-size: 0.575rem;
+      color: rgba(161,161,170,0.35);
+      font-variant-numeric: tabular-nums;
+    }
+    .msg-status {
+      width: 12px;
+      height: 12px;
+      color: rgba(139,92,246,0.5);
+    }
+    .msg-status.read { color: rgba(52,211,153,0.6); }
+
+    /* File Bubble */
+    .file-bubble {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      min-width: 240px;
+    }
+    .file-icon-container {
+      width: 36px;
+      height: 36px;
+      border-radius: 0.5rem;
+      background: rgba(96,165,250,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .file-icon-container svg { width: 16px; height: 16px; color: var(--info); }
+    .file-info { flex: 1; min-width: 0; }
+    .file-name { font-size: 0.75rem; font-weight: 500; color: var(--foreground); }
+    .file-size { font-size: 0.6rem; color: rgba(161,161,170,0.4); margin-top: 0.125rem; }
+    .file-download {
+      width: 28px;
+      height: 28px;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.04);
+      border: none;
+      color: rgba(161,161,170,0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .file-download:hover { background: rgba(255,255,255,0.08); color: var(--foreground); }
+
+    /* Audio Bubble */
+    .audio-bubble {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0.875rem;
+      min-width: 220px;
+    }
+    .audio-play-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .msg-group.received .audio-play-btn {
+      background: rgba(139,92,246,0.15);
+      color: var(--primary);
+    }
+    .msg-group.sent .audio-play-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    .audio-play-btn svg { width: 14px; height: 14px; }
+    .audio-waveform {
+      flex: 1;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .waveform-bar {
+      width: 3px;
+      border-radius: 999px;
+      transition: height 0.1s;
+    }
+    .msg-group.received .waveform-bar { background: rgba(139,92,246,0.3); }
+    .msg-group.sent .waveform-bar { background: rgba(255,255,255,0.35); }
+    .audio-duration {
+      font-size: 0.6rem;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    /* Image Bubble */
+    .img-bubble {
+      border-radius: 0.75rem;
+      overflow: hidden;
+      max-width: 280px;
+    }
+    .img-bubble img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+    }
+
+    /* ─── INPUT AREA ─── */
+    .input-area {
+      padding: 0.75rem 1.25rem 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .typing-indicator {
+      font-size: 0.65rem;
+      color: rgba(161,161,170,0.5);
+      padding: 0 0.5rem;
+      margin-bottom: 0.375rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .typing-dots {
+      display: flex;
+      gap: 2px;
+    }
+    .typing-dots span {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(139,92,246,0.4);
+      animation: typingBounce 1.4s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-4px); }
+    }
+
+    .input-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.25rem 0.25rem 0.25rem 0.875rem;
+      transition: all 0.25s;
+      min-height: 44px;
+    }
+    .input-wrapper:focus-within {
+      border-color: rgba(139,92,246,0.25);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.06);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .input-field {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--foreground);
+      font-size: 0.825rem;
+      font-family: var(--font-sans);
+      outline: none;
+      resize: none;
+      min-height: 32px;
+      max-height: 120px;
+      line-height: 1.5;
+      padding: 0.25rem 0;
+    }
+    .input-field::placeholder { color: rgba(161,161,170,0.4); }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+    }
+
+    .input-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: rgba(161,161,170,0.4);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .input-btn:hover { color: rgba(161,161,170,0.7); background: rgba(255,255,255,0.04); }
+    .input-btn.mic:hover { color: var(--destructive); background: rgba(248,113,113,0.08); }
+    .input-btn svg { width: 16px; height: 16px; }
+
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 0.625rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 2px 10px rgba(139,92,246,0.3);
+      flex-shrink: 0;
+    }
+    .send-btn:hover {
+      background: #7c4ddb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(139,92,246,0.4);
+    }
+    .send-btn svg { width: 16px; height: 16px; }
+
+    /* ─── EMPTY STATE (No Chat Selected) ─── */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .empty-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 1.25rem;
+      background: rgba(139,92,246,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+    .empty-logo svg { width: 28px; height: 28px; color: var(--primary); opacity: 0.5; }
+
+    .empty-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+    .empty-desc {
+      font-size: 0.8rem;
+      color: rgba(161,161,170,0.5);
+      text-align: center;
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
+    /* Suggestion Cards */
+    .suggestion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.625rem;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .suggestion-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.625rem;
+      padding: 0.875rem;
+      border-radius: 0.875rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .suggestion-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(139,92,246,0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .suggestion-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .suggestion-icon svg { width: 14px; height: 14px; }
+    .suggestion-icon.purple { background: rgba(139,92,246,0.1); color: var(--primary); }
+    .suggestion-icon.blue { background: rgba(96,165,250,0.1); color: var(--info); }
+    .suggestion-icon.green { background: rgba(52,211,153,0.1); color: var(--success); }
+    .suggestion-icon.amber { background: rgba(251,191,36,0.1); color: var(--warning); }
+
+    .suggestion-text { min-width: 0; }
+    .suggestion-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 0.2rem;
+    }
+    .suggestion-desc {
+      font-size: 0.6rem;
+      color: rgba(161,161,170,0.45);
+      line-height: 1.4;
+    }
+
+    /* ─── DETAIL PANEL (Right side) ─── */
+    .detail-panel {
+      width: 320px;
+      min-width: 320px;
+      border-left: 1px solid var(--border-subtle);
+      background: var(--surface-container-low);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .detail-header-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--foreground);
+    }
+    .detail-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: rgba(161,161,170,0.5);
+      cursor: pointer;
+    }
+    .detail-close:hover { background: rgba(255,255,255,0.04); }
+
+    .detail-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1.25rem;
+      gap: 0.75rem;
+    }
+    .detail-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    .detail-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-name { font-size: 0.9rem; font-weight: 700; }
+    .detail-role { font-size: 0.7rem; color: rgba(161,161,170,0.5); }
+
+    .detail-section {
+      padding: 0.875rem 1.25rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .detail-section-title {
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(161,161,170,0.35);
+      margin-bottom: 0.75rem;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0;
+    }
+    .detail-item-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(139,92,246,0.06);
+    }
+    .detail-item-icon svg { width: 12px; height: 12px; color: rgba(139,92,246,0.5); }
+    .detail-item-label { font-size: 0.6rem; color: rgba(161,161,170,0.4); }
+    .detail-item-value { font-size: 0.725rem; font-weight: 500; color: var(--foreground); }
+
+    /* Media grid in detail */
+    .media-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.375rem;
+    }
+    .media-thumb {
+      aspect-ratio: 1;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: rgba(255,255,255,0.04);
+    }
+    .media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Linked process cards in detail */
+    .linked-card {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0.625rem;
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 0.375rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .linked-card:hover { background: rgba(255,255,255,0.05); }
+    .linked-card-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(139,92,246,0.08);
+    }
+    .linked-card-icon svg { width: 11px; height: 11px; color: rgba(139,92,246,0.5); }
+    .linked-card-info { flex: 1; min-width: 0; }
+    .linked-card-title {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--foreground);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .linked-card-sub {
+      font-size: 0.575rem;
+      color: rgba(161,161,170,0.4);
+      font-family: var(--font-mono);
+    }
+
+    /* ─── RECORDING OVERLAY (inside input) ─── */
+    .recording-overlay {
+      display: none;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.5rem;
+      height: 44px;
+    }
+    .recording-overlay.active { display: flex; }
+    .recording-left {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+    .recording-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--destructive);
+      animation: recPulse 1.5s infinite;
+    }
+    @keyframes recPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    .recording-time {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--destructive);
+    }
+    .recording-label {
+      font-size: 0.65rem;
+      color: rgba(248,113,113,0.6);
+    }
+    .recording-cancel {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: rgba(161,161,170,0.5);
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .recording-cancel:hover {
+      color: var(--destructive);
+      background: rgba(248,113,113,0.08);
+    }
+
+    /* ─── VIEW SWITCHER (toggle between views) ─── */
+    .view-indicator {
+      position: absolute;
+      top: 0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+    }
+    .view-pills {
+      display: none; /* Hidden for now - just a design concept indicator */
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-shell">
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SIDEBAR                                         -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="chat-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title-row">
+        <div>
+          <div class="sidebar-title">Mensagens</div>
+          <div class="sidebar-subtitle">4 online agora</div>
+        </div>
+        <button class="btn-new-chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 5v14M5 12h14"/></svg>
+          Nova
+        </button>
+      </div>
+      <div class="search-container">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-input" type="text" placeholder="Buscar conversas, pessoas..." />
+      </div>
+    </div>
+
+    <div class="tab-pills">
+      <button class="tab-pill active">Todas <span class="count">12</span></button>
+      <button class="tab-pill">Privadas <span class="count">5</span></button>
+      <button class="tab-pill">Grupos <span class="count">3</span></button>
+      <button class="tab-pill">Processos <span class="count">4</span></button>
+    </div>
+
+    <div class="conversation-list scrollbar-thin">
+      <div class="section-label">Fixadas</div>
+
+      <!-- Sala Geral (pinned) -->
+      <div class="conversation-item">
+        <div class="conv-avatar">
+          <div class="conv-avatar-fallback" style="background: rgba(139,92,246,0.15); font-size: 1rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top-row">
+            <span class="conv-name">Sala Geral</span>
+            <span class="conv-time">10:34</span>
+          </div>
+          <div class="conv-bottom-row">
+            <span class="conv-preview">Carlos: Boa tarde pessoal, alguem viu o...</span>
+            <span class="unread-badge">3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Recentes</div>
+
+      <!-- Active conversation -->
+      <div class="conversation-item active">
+        <div class="conv-avatar">
+          <div class="conv-avatar-fallback">DR</div>
+          <span class="online-dot"></span>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top-row">
+            <span class="conv-name">Dra. Renata Oliveira</span>
+            <span class="conv-time">10:28</span>
+          </div>
+          <div class="conv-bottom-row">
+            <span class="conv-preview">Perfeito, vou analisar o laudo e te...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation 2 -->
+      <div class="conversation-item">
+        <div class="conv-avatar">
+          <div class="conv-avatar-fallback" style="background: rgba(52,211,153,0.12); color: var(--success);">MF</div>
+          <span class="online-dot"></span>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top-row">
+            <span class="conv-name">Dr. Marcos Ferreira</span>
+            <span class="conv-time">09:45</span>
+          </div>
+          <div class="conv-bottom-row">
+            <span class="conv-preview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" style="display:inline;vertical-align:-1px;margin-right:3px;opacity:0.4"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+              Contrato_Acordo_Final.pdf
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation 3 - Group -->
+      <div class="conversation-item">
+        <div class="conv-avatar">
+          <div class="conv-avatar-fallback" style="background: rgba(251,191,36,0.12); color: var(--warning);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top-row">
+            <span class="conv-name">Equipe Trabalhista</span>
+            <span class="conv-time">Ontem</span>
+          </div>
+          <div class="conv-bottom-row">
+            <span class="conv-preview">Ana: A audiencia foi remarcada para...</span>
+            <span class="unread-badge">7</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation 4 -->
+      <div class="conversation-item">
+        <div class="conv-avatar">
+          <div class="conv-avatar-fallback" style="background: rgba(96,165,250,0.12); color: var(--info);">JS</div>
+          <span class="online-dot offline"></span>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top-row">
+            <span class="conv-name">Julia Santos</span>
+            <span class="conv-time">Ontem</span>
+          </div>
+          <div class="conv-bottom-row">
+            <span class="conv-preview">Ok, os prazos estao atualizados no...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation 5 - Process linked -->
+      <div class="conversation-item">
+        <div class="conv-avatar">
+          <div class="conv-avatar-fallback" style="background: rgba(139,92,246,0.08); color: rgba(139,92,246,0.6);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top-row">
+            <span class="conv-name">Proc. Silva vs Industrias ABC</span>
+            <span class="conv-time">08/04</span>
+          </div>
+          <div class="conv-bottom-row">
+            <span class="conv-preview">Dr. Marcos: Laudo pericial chegou...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation 6 -->
+      <div class="conversation-item">
+        <div class="conv-avatar">
+          <div class="conv-avatar-fallback" style="background: rgba(248,113,113,0.1); color: var(--destructive);">PL</div>
+          <span class="online-dot offline"></span>
+        </div>
+        <div class="conv-info">
+          <div class="conv-top-row">
+            <span class="conv-name">Pedro Lima</span>
+            <span class="conv-time">07/04</span>
+          </div>
+          <div class="conv-bottom-row">
+            <span class="conv-preview">Preciso revisar a peticao antes de...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- MAIN CHAT                                       -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="chat-main">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="header-left">
+        <div class="header-avatar">
+          <div class="conv-avatar-fallback" style="width:36px;height:36px;border-radius:0.625rem;">DR</div>
+          <span class="online-dot" style="bottom:-1px;right:-1px;position:absolute;"></span>
+        </div>
+        <div class="header-info">
+          <div class="header-name">Dra. Renata Oliveira</div>
+          <div class="header-status">
+            <span class="status-dot"></span>
+            <span class="status-text">Online</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn" title="Chamada de video">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+        </button>
+        <button class="header-btn" title="Chamada de audio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </button>
+        <button class="header-btn" title="Detalhes do contato">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Context Bar (linked process) -->
+    <div class="context-bar">
+      <span class="context-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" style="display:inline;vertical-align:-1px;margin-right:2px"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+        TRT-15
+      </span>
+      <span class="context-text">Vinculada ao processo 0010234-55.2024.5.15.0001</span>
+      <a class="context-link">Ver processo &rarr;</a>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-area scrollbar-thin">
+
+      <div class="date-separator"><span>Hoje, 09 de Abril</span></div>
+
+      <!-- Received message with sender name -->
+      <div class="msg-group received">
+        <div class="msg-avatar">
+          <div class="msg-avatar-placeholder">DR</div>
+        </div>
+        <div class="msg-stack">
+          <div class="msg-sender">Dra. Renata Oliveira</div>
+          <div class="msg-bubble">Bom dia! Conseguiu revisar a contestacao do caso Silva? O prazo encerra amanha.</div>
+          <div class="msg-meta">
+            <span class="msg-time">09:12</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sent message -->
+      <div class="msg-group sent">
+        <div class="msg-avatar invisible"></div>
+        <div class="msg-stack">
+          <div class="msg-bubble">Bom dia Renata! Sim, ja revisei. Encontrei algumas inconsistencias no calculo das verbas rescisorias. Vou te mandar o documento anotado.</div>
+          <div class="msg-meta">
+            <span class="msg-time">09:15</span>
+            <svg class="msg-status read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 7 17l-5-5"/><path d="m22 10-9.5 9.5L10 17"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sent file message -->
+      <div class="msg-group sent">
+        <div class="msg-avatar invisible"></div>
+        <div class="msg-stack">
+          <div class="file-bubble" style="background: rgba(139,92,246,0.08); border-color: rgba(139,92,246,0.12);">
+            <div class="file-icon-container" style="background: rgba(139,92,246,0.12);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div class="file-info">
+              <div class="file-name">Contestacao_Silva_Anotada.pdf</div>
+              <div class="file-size">2.4 MB</div>
+            </div>
+            <button class="file-download">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+          <div class="msg-meta">
+            <span class="msg-time">09:16</span>
+            <svg class="msg-status read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 7 17l-5-5"/><path d="m22 10-9.5 9.5L10 17"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Received text -->
+      <div class="msg-group received">
+        <div class="msg-avatar">
+          <div class="msg-avatar-placeholder">DR</div>
+        </div>
+        <div class="msg-stack">
+          <div class="msg-bubble">Otimo! Ja baixei. Realmente, o calculo do FGTS estava divergente do que consta na CTPS digital. Boa observacao!</div>
+          <div class="msg-meta">
+            <span class="msg-time">09:42</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Received audio message -->
+      <div class="msg-group received">
+        <div class="msg-avatar">
+          <div class="msg-avatar-placeholder">DR</div>
+        </div>
+        <div class="msg-stack">
+          <div class="msg-bubble audio-bubble" style="padding:0.5rem 0.75rem;">
+            <button class="audio-play-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div class="audio-waveform" id="waveform1"></div>
+            <span class="audio-duration">0:47</span>
+          </div>
+          <div class="msg-meta">
+            <span class="msg-time">09:55</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sent text -->
+      <div class="msg-group sent">
+        <div class="msg-avatar invisible"></div>
+        <div class="msg-stack">
+          <div class="msg-bubble">Entendido. Vou ajustar os valores e preparar a planilha de liquidacao ate o fim do dia.</div>
+          <div class="msg-meta">
+            <span class="msg-time">10:03</span>
+            <svg class="msg-status read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 7 17l-5-5"/><path d="m22 10-9.5 9.5L10 17"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Received image -->
+      <div class="msg-group received">
+        <div class="msg-avatar">
+          <div class="msg-avatar-placeholder">DR</div>
+        </div>
+        <div class="msg-stack">
+          <div class="msg-bubble" style="padding: 0.375rem;">
+            <div class="img-bubble">
+              <div style="width:260px;height:180px;background:linear-gradient(135deg, rgba(139,92,246,0.15), rgba(96,165,250,0.1));border-radius:0.625rem;display:flex;align-items:center;justify-content:center;">
+                <div style="text-align:center;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32" style="color:rgba(139,92,246,0.3);margin-bottom:4px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <div style="font-size:0.6rem;color:rgba(161,161,170,0.4);">Foto CTPS Digital</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="msg-meta">
+            <span class="msg-time">10:12</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Received follow-up -->
+      <div class="msg-group received">
+        <div class="msg-avatar">
+          <div class="msg-avatar-placeholder">DR</div>
+        </div>
+        <div class="msg-stack">
+          <div class="msg-bubble">Perfeito, vou analisar o laudo e te retorno com as observacoes. Podemos marcar uma call rapida as 15h?</div>
+          <div class="msg-meta">
+            <span class="msg-time">10:28</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spacer for scroll -->
+      <div style="height: 1rem;"></div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-area">
+      <div class="typing-indicator">
+        <div class="typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+        Dra. Renata esta digitando...
+      </div>
+      <div class="input-container">
+        <div class="input-wrapper">
+          <textarea class="input-field" placeholder="Digite uma mensagem..." rows="1"></textarea>
+          <div class="input-actions">
+            <button class="input-btn" title="Emoji">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </button>
+            <button class="input-btn" title="Anexar arquivo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <button class="input-btn mic" title="Gravar audio">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="send-btn" title="Enviar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- DETAIL PANEL (Right Sidebar)                    -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="detail-panel scrollbar-thin">
+    <div class="detail-header">
+      <span class="detail-header-title">Detalhes</span>
+      <button class="detail-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="detail-profile">
+      <div class="detail-avatar">
+        <div class="conv-avatar-fallback" style="width:72px;height:72px;border-radius:1rem;font-size:1.5rem;">DR</div>
+      </div>
+      <div class="detail-name">Dra. Renata Oliveira</div>
+      <div class="detail-role">Advogada Trabalhista &bull; Socia</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">Informacoes</div>
+      <div class="detail-item">
+        <div class="detail-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </div>
+        <div>
+          <div class="detail-item-label">Email</div>
+          <div class="detail-item-value">renata@zattar.adv.br</div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div>
+          <div class="detail-item-label">Telefone</div>
+          <div class="detail-item-value">(19) 99234-5678</div>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <div class="detail-item-label">Membro desde</div>
+          <div class="detail-item-value">Mar 2023</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">Processos Vinculados</div>
+      <div class="linked-card">
+        <div class="linked-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+        </div>
+        <div class="linked-card-info">
+          <div class="linked-card-title">Silva vs Industrias ABC</div>
+          <div class="linked-card-sub">0010234-55.2024.5.15.0001</div>
+        </div>
+      </div>
+      <div class="linked-card">
+        <div class="linked-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+        </div>
+        <div class="linked-card-info">
+          <div class="linked-card-title">Pereira vs LogTech Ltda</div>
+          <div class="linked-card-sub">0005678-12.2023.5.15.0002</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">Midia Compartilhada</div>
+      <div class="media-grid">
+        <div class="media-thumb" style="background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(96,165,250,0.08));"></div>
+        <div class="media-thumb" style="background: linear-gradient(135deg, rgba(52,211,153,0.1), rgba(139,92,246,0.08));"></div>
+        <div class="media-thumb" style="background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(248,113,113,0.08));"></div>
+        <div class="media-thumb" style="background: linear-gradient(135deg, rgba(96,165,250,0.12), rgba(139,92,246,0.06));"></div>
+        <div class="media-thumb" style="background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(52,211,153,0.1));"></div>
+        <div class="media-thumb" style="background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:rgba(161,161,170,0.4);">+12</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Generate waveform bars
+  const waveform = document.getElementById('waveform1');
+  if (waveform) {
+    const heights = [4,8,12,6,14,10,16,8,12,18,6,10,14,8,20,12,6,14,10,8,16,12,6,10,14,8,4,10,6,8];
+    heights.forEach(h => {
+      const bar = document.createElement('div');
+      bar.className = 'waveform-bar';
+      bar.style.height = h + 'px';
+      waveform.appendChild(bar);
+    });
+  }
+
+  // Auto-resize textarea
+  const textarea = document.querySelector('.input-field');
+  if (textarea) {
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+  }
+</script>
+
+</body>
+</html>

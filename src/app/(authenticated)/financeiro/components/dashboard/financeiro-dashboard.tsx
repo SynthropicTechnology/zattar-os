@@ -8,7 +8,7 @@ import {
   useContasPagarReceber,
   useAlertasFinanceiros,
   useOrcamentoAtual,
-} from '@/app/(authenticated)/dashboard';
+} from '@/app/(authenticated)/dashboard/hooks/use-dashboard-financeiro';
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
 import { ChartSkeleton } from '../shared/chart-skeleton';
 import { DashboardSkeleton } from './dashboard-skeleton';
