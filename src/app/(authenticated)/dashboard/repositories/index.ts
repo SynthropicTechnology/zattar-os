@@ -51,6 +51,9 @@ export { buscarContratosResumo } from './contratos-metrics';
 // Chat Metrics
 export { buscarChatResumo } from './chat-metrics';
 
+// Documentos Recentes
+export { buscarDocumentosRecentes } from './documentos-recentes';
+
 // Shared Formatters
 export { formatarMoeda } from './shared/formatters';
 
