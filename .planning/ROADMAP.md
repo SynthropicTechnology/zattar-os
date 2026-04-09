@@ -55,13 +55,13 @@ Plans:
   2. Sent and received message bubbles render with asymmetric corners, appropriate colors, sender avatars, names in group chats, timestamps, and delivery status icons
   3. Date separators appear between message groups with horizontal lines and centered label
   4. File attachments render with IconContainer and glass download button; audio messages show custom waveform; images and videos render with consistent border-radius
-**Plans**: TBD
+**Plans**: 3 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md — Header glassmorphic + MessageStatusIcon resize
+- [ ] 02-02-PLAN.md — DateSeparator + MessageGroup + text bubble asymmetric corners
+- [ ] 02-03-PLAN.md — Media bubbles: file, audio waveform, image, video
 
 ### Phase 3: Input, Context Bar & Empty State
 **Goal**: Users can compose messages through a modern textarea with glass styling, see linked legal process context, and encounter helpful suggestion cards when no conversation is selected
