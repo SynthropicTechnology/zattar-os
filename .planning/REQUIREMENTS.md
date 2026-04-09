@@ -124,69 +124,69 @@ Requirements para a entrega inicial. Cada um mapeia para fases do roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LAYOUT-01 | — | Pending |
-| LAYOUT-02 | — | Pending |
-| LAYOUT-03 | — | Pending |
-| LAYOUT-04 | — | Pending |
-| SIDE-01 | — | Pending |
-| SIDE-02 | — | Pending |
-| SIDE-03 | — | Pending |
-| SIDE-04 | — | Pending |
-| SIDE-05 | — | Pending |
-| SIDE-06 | — | Pending |
-| SIDE-07 | — | Pending |
-| HEAD-01 | — | Pending |
-| HEAD-02 | — | Pending |
-| HEAD-03 | — | Pending |
-| HEAD-04 | — | Pending |
-| CTX-01 | — | Pending |
-| CTX-02 | — | Pending |
-| CTX-03 | — | Pending |
-| CTX-04 | — | Pending |
-| MSG-01 | — | Pending |
-| MSG-02 | — | Pending |
-| MSG-03 | — | Pending |
-| MSG-04 | — | Pending |
-| MSG-05 | — | Pending |
-| MSG-06 | — | Pending |
-| MSG-07 | — | Pending |
-| MEDIA-01 | — | Pending |
-| MEDIA-02 | — | Pending |
-| MEDIA-03 | — | Pending |
-| MEDIA-04 | — | Pending |
-| MEDIA-05 | — | Pending |
-| INPUT-01 | — | Pending |
-| INPUT-02 | — | Pending |
-| INPUT-03 | — | Pending |
-| INPUT-04 | — | Pending |
-| INPUT-05 | — | Pending |
-| INPUT-06 | — | Pending |
-| INPUT-07 | — | Pending |
-| DETAIL-01 | — | Pending |
-| DETAIL-02 | — | Pending |
-| DETAIL-03 | — | Pending |
-| DETAIL-04 | — | Pending |
-| DETAIL-05 | — | Pending |
-| DETAIL-06 | — | Pending |
-| DETAIL-07 | — | Pending |
-| EMPTY-01 | — | Pending |
-| EMPTY-02 | — | Pending |
-| EMPTY-03 | — | Pending |
-| EMPTY-04 | — | Pending |
-| EMPTY-05 | — | Pending |
-| PRES-01 | — | Pending |
-| PRES-02 | — | Pending |
-| PRES-03 | — | Pending |
-| PRES-04 | — | Pending |
-| PRES-05 | — | Pending |
-| PRES-06 | — | Pending |
-| PRES-07 | — | Pending |
+| LAYOUT-01 | Phase 1 | Pending |
+| LAYOUT-02 | Phase 1 | Pending |
+| LAYOUT-03 | Phase 1 | Pending |
+| LAYOUT-04 | Phase 1 | Pending |
+| SIDE-01 | Phase 1 | Pending |
+| SIDE-02 | Phase 1 | Pending |
+| SIDE-03 | Phase 1 | Pending |
+| SIDE-04 | Phase 1 | Pending |
+| SIDE-05 | Phase 1 | Pending |
+| SIDE-06 | Phase 1 | Pending |
+| SIDE-07 | Phase 1 | Pending |
+| HEAD-01 | Phase 2 | Pending |
+| HEAD-02 | Phase 2 | Pending |
+| HEAD-03 | Phase 2 | Pending |
+| HEAD-04 | Phase 2 | Pending |
+| MSG-01 | Phase 2 | Pending |
+| MSG-02 | Phase 2 | Pending |
+| MSG-03 | Phase 2 | Pending |
+| MSG-04 | Phase 2 | Pending |
+| MSG-05 | Phase 2 | Pending |
+| MSG-06 | Phase 2 | Pending |
+| MSG-07 | Phase 2 | Pending |
+| MEDIA-01 | Phase 2 | Pending |
+| MEDIA-02 | Phase 2 | Pending |
+| MEDIA-03 | Phase 2 | Pending |
+| MEDIA-04 | Phase 2 | Pending |
+| MEDIA-05 | Phase 2 | Pending |
+| CTX-01 | Phase 3 | Pending |
+| CTX-02 | Phase 3 | Pending |
+| CTX-03 | Phase 3 | Pending |
+| CTX-04 | Phase 3 | Pending |
+| INPUT-01 | Phase 3 | Pending |
+| INPUT-02 | Phase 3 | Pending |
+| INPUT-03 | Phase 3 | Pending |
+| INPUT-04 | Phase 3 | Pending |
+| INPUT-05 | Phase 3 | Pending |
+| INPUT-06 | Phase 3 | Pending |
+| INPUT-07 | Phase 3 | Pending |
+| EMPTY-01 | Phase 3 | Pending |
+| EMPTY-02 | Phase 3 | Pending |
+| EMPTY-03 | Phase 3 | Pending |
+| EMPTY-04 | Phase 3 | Pending |
+| EMPTY-05 | Phase 3 | Pending |
+| DETAIL-01 | Phase 4 | Pending |
+| DETAIL-02 | Phase 4 | Pending |
+| DETAIL-03 | Phase 4 | Pending |
+| DETAIL-04 | Phase 4 | Pending |
+| DETAIL-05 | Phase 4 | Pending |
+| DETAIL-06 | Phase 4 | Pending |
+| DETAIL-07 | Phase 4 | Pending |
+| PRES-01 | Phase 4 | Pending |
+| PRES-02 | Phase 4 | Pending |
+| PRES-03 | Phase 4 | Pending |
+| PRES-04 | Phase 4 | Pending |
+| PRES-05 | Phase 4 | Pending |
+| PRES-06 | Phase 4 | Pending |
+| PRES-07 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 51 total
-- Mapped to phases: 0
-- Unmapped: 51
+- v1 requirements: 57 total
+- Mapped to phases: 57
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after initial definition*
+*Last updated: 2026-04-09 after roadmap creation*

@@ -61,3 +61,60 @@ Alguns módulos sob `(authenticated)/` são propositalmente embrionários (proxi
 - Todas as **Server Actions publicadas** podem ser engajadas como *Ferramentas de IA* (Tools via Model Context Protocol), permitindo que agentes manipulem processos em CLI e na Web UI.
 
 *(Para o manual estendido de comportamento do software, diagramas SSE/MCP e troubleshooting, leia `docs/architecture/AGENTS.md` e `docs/architecture/ARCHITECTURE.md` em profundidade).*
+
+<!-- GSD:project-start source:PROJECT.md -->
+## Project
+
+**ZattarOS Chat Redesign**
+
+Redesign completo do modulo de chat do ZattarOS para alinhar ao design system "Glass Briefing" ja implementado em Audiencias, Expedientes e Processos. Inclui refatoracao visual de todos os componentes (sidebar, bolhas, header, input, detail panel) e introducao de novas features como context bar de processo vinculado, audio waveform visual e empty state com suggestion cards.
+
+**Core Value:** Comunicacao em tempo real entre advogados e equipe com coerencia visual total ao design system Glass Briefing, preservando todas as funcionalidades existentes (mensagens, chamadas, gravacao de audio, upload de arquivos).
+
+### Constraints
+
+- **Stack**: Next.js 16, React 19, Tailwind CSS 4, shadcn/ui — manter
+- **Componentes shared**: Reutilizar GlassPanel, TabPills, SearchInput, IconContainer, Heading, SemanticBadge
+- **FSD Architecture**: Manter modulo em `src/app/(authenticated)/chat/`
+- **Tokens CSS existentes**: Usar os tokens `--chat-*` ja definidos em globals.css
+- **Funcionalidade**: Zero regressao — todas as features atuais devem continuar funcionando
+- **Performance**: Manter lazy loading do ChatWindow e Suspense boundaries
+<!-- GSD:project-end -->
+
+<!-- GSD:stack-start source:STACK.md -->
+## Technology Stack
+
+Technology stack not yet documented. Will populate after codebase mapping or first phase.
+<!-- GSD:stack-end -->
+
+<!-- GSD:conventions-start source:CONVENTIONS.md -->
+## Conventions
+
+Conventions not yet established. Will populate as patterns emerge during development.
+<!-- GSD:conventions-end -->
+
+<!-- GSD:architecture-start source:ARCHITECTURE.md -->
+## Architecture
+
+Architecture not yet mapped. Follow existing patterns found in the codebase.
+<!-- GSD:architecture-end -->
+
+<!-- GSD:workflow-start source:GSD defaults -->
+## GSD Workflow Enforcement
+
+Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
+
+Use these entry points:
+- `/gsd:quick` for small fixes, doc updates, and ad-hoc tasks
+- `/gsd:debug` for investigation and bug fixing
+- `/gsd:execute-phase` for planned phase work
+
+Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+<!-- GSD:workflow-end -->
+
+<!-- GSD:profile-start -->
+## Developer Profile
+
+> Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.
+> This section is managed by `generate-claude-profile` -- do not edit manually.
+<!-- GSD:profile-end -->
