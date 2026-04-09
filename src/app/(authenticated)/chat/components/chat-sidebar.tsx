@@ -1,87 +1,118 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { MessageCircle, Search } from "lucide-react";
+import React from "react";
+import { MessageCircle, Plus } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
+import { SearchInput } from "@/components/dashboard/search-input";
+import { TabPills, type TabPillOption } from "@/components/dashboard/tab-pills";
+import { Heading } from "@/components/ui/typography";
+import { NovoChatDialog } from "./novo-chat-dialog";
 import { ChatItem } from "../domain";
-
-import { Input } from "@/components/ui/input";
 import { ChatListItem } from "./chat-list-item";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader
-} from "@/components/ui/card";
-import { ActionDropdown } from "./action-dropdown";
 
 interface ChatSidebarProps {
-  salas: ChatItem[];
+  fixadas: ChatItem[];
+  recentes: ChatItem[];
   salaAtiva: ChatItem | null;
   onSelecionarSala: (sala: ChatItem) => void;
-  currentUserId?: number;
+  tabs: TabPillOption[];
+  activeTab: string;
+  onTabChange: (id: string) => void;
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  novoChatOpen: boolean;
+  onNovoChatOpenChange: (open: boolean) => void;
 }
 
-export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarProps) {
-  const [filteredChats, setFilteredChats] = React.useState<ChatItem[]>(salas);
-
-  useEffect(() => {
-    setFilteredChats(salas);
-  }, [salas]);
-
-  const changeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value.trim().toLowerCase();
-
-    if (!searchTerm) {
-      setFilteredChats(salas);
-      return;
-    }
-
-    const filteredItems = salas.filter((chat) => {
-      const name = chat.name || chat.nome || "";
-      return name.toLowerCase().includes(searchTerm);
-    });
-    setFilteredChats(filteredItems);
-  };
-
+export function ChatSidebar({
+  fixadas,
+  recentes,
+  salaAtiva,
+  onSelecionarSala,
+  tabs,
+  activeTab,
+  onTabChange,
+  searchTerm,
+  onSearchChange,
+  novoChatOpen,
+  onNovoChatOpenChange,
+}: ChatSidebarProps) {
   return (
-    <Card className="w-full pb-0 lg:w-96 flex flex-col h-full border-0 border-r rounded-none">
-      <CardHeader>
-        <CardDescription className="relative flex w-full items-center gap-2">
-          <Search className="text-muted-foreground absolute start-4 size-4 pointer-events-none" />
-          <Input
-            type="text"
-            className="ps-10 flex-1"
-            placeholder="Buscar conversas..."
-            onChange={changeHandle}
-          />
-          <div className="shrink-0">
-            <ActionDropdown variant="default" />
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="px-6 pt-6 space-y-4">
+        {/* Title row */}
+        <div className="flex items-center justify-between">
+          <div>
+            <Heading level="page">Mensagens</Heading>
+            <p className="text-[0.6rem] uppercase tracking-[0.08em] text-muted-foreground/50 font-normal">
+              Comunicacao da equipe
+            </p>
           </div>
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="flex-1 overflow-auto p-0">
-        <div className="block min-w-0 divide-y">
-          {filteredChats.length ? (
-            filteredChats.map((chat) => (
-              <ChatListItem
-                chat={chat}
-                key={chat.id}
-                active={salaAtiva?.id === chat.id}
-                onClick={() => onSelecionarSala(chat)}
-              />
-            ))
-          ) : (
-            <EmptyState
-              icon={MessageCircle}
-              title="Nenhuma conversa"
-              description="Nenhuma conversa encontrada. Inicie uma nova conversa."
-              className="py-8"
-            />
-          )}
+          <button
+            onClick={() => onNovoChatOpenChange(true)}
+            className="flex items-center gap-1.5 px-4 py-1 rounded-xl bg-primary text-white text-[0.7rem] font-semibold shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-[#7c4ddb] hover:-translate-y-px transition-all cursor-pointer"
+          >
+            <Plus className="size-3.5" />
+            Nova Conversa
+          </button>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Search (SIDE-03) */}
+        <SearchInput
+          value={searchTerm}
+          onChange={onSearchChange}
+          placeholder="Buscar conversas..."
+          className="w-full"
+        />
+
+        {/* Tab pills (SIDE-02) */}
+        <TabPills tabs={tabs} active={activeTab} onChange={onTabChange} />
+      </div>
+
+      {/* Conversation list */}
+      <div className="flex-1 overflow-y-auto px-2 scrollbar-thin">
+        {fixadas.length > 0 && (
+          <>
+            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-2 pt-4 pb-2">
+              Fixadas
+            </p>
+            {fixadas.map(sala => (
+              <ChatListItem
+                key={sala.id}
+                chat={sala}
+                active={salaAtiva?.id === sala.id}
+                onClick={() => onSelecionarSala(sala)}
+              />
+            ))}
+          </>
+        )}
+        {(fixadas.length > 0 || recentes.length > 0) && (
+          <p className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-2 pt-4 pb-2">
+            Recentes
+          </p>
+        )}
+        {recentes.length > 0 ? (
+          recentes.map(sala => (
+            <ChatListItem
+              key={sala.id}
+              chat={sala}
+              active={salaAtiva?.id === sala.id}
+              onClick={() => onSelecionarSala(sala)}
+            />
+          ))
+        ) : fixadas.length === 0 ? (
+          <EmptyState
+            icon={MessageCircle}
+            title="Nenhuma conversa"
+            description="Nenhuma conversa encontrada. Inicie uma nova conversa."
+            className="py-8"
+          />
+        ) : null}
+      </div>
+
+      {/* NovoChatDialog (triggered by button above) */}
+      <NovoChatDialog open={novoChatOpen} onOpenChange={onNovoChatOpenChange} />
+    </div>
   );
 }
