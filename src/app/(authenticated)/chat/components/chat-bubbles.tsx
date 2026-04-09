@@ -16,59 +16,95 @@ import { format } from "date-fns";
 // Helper for time formatting
 function formatTime(dateStr: string) {
   try {
-    return format(new Date(dateStr), "hh:mm a");
+    return format(new Date(dateStr), "HH:mm");
   } catch {
     return "";
   }
 }
 
-function TextChatBubble({ message }: { message: MensagemComUsuario }) {
+interface ChatBubbleProps {
+  message: MensagemComUsuario;
+  isFirstInGroup?: boolean; // controls top corner radius
+  isLastInGroup?: boolean;  // controls whether to show timestamp
+  showTimestamp?: boolean;  // explicit override
+}
+
+function TextChatBubble({
+  message,
+  isFirstInGroup = true,
+  isLastInGroup = true,
+  showTimestamp,
+}: ChatBubbleProps) {
+  // If showTimestamp is explicitly set, use it; otherwise fall back to isLastInGroup
+  const shouldShowTimestamp = showTimestamp !== undefined ? showTimestamp : isLastInGroup;
+
   return (
-    <div
-      className={cn("max-w-[80%] lg:max-w-[60%] space-y-1", {
-        "self-end": message.ownMessage
-      })}>
-      <div className="flex items-center gap-2">
-        <div
-          className={cn("bg-chat-bubble-received inline-flex rounded-md border p-3 wrap-break-word", {
-            "order-1 bg-primary text-primary-foreground": message.ownMessage
-          })}
-          style={{ overflowWrap: "anywhere" }}>
-          {message.conteudo}
-        </div>
-        <div className={cn({ "order-2": !message.ownMessage, "hidden group-hover:block": true })}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" aria-label="Mais opções" variant="ghost" className="h-6 w-6">
-                <Ellipsis className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align={message.ownMessage ? "start" : "end"}>
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Encaminhar</DropdownMenuItem>
-                <DropdownMenuItem>Deletar</DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+    <div className="group relative">
+      {/* Context menu trigger — group-hover */}
+      <div className={cn(
+        "absolute top-1/2 -translate-y-1/2 hidden group-hover:block z-10",
+        message.ownMessage ? "-left-8" : "-right-8"
+      )}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" aria-label="Mais opções" variant="ghost" className="h-6 w-6">
+              <Ellipsis className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align={message.ownMessage ? "start" : "end"}>
+            <DropdownMenuGroup>
+              <DropdownMenuItem>Encaminhar</DropdownMenuItem>
+              <DropdownMenuItem>Deletar</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
+      {/* Bubble */}
       <div
-        className={cn("flex items-center gap-2", {
-          "justify-end": message.ownMessage
-        })}>
-        <time
-          className={cn("text-muted-foreground mt-1 flex items-center text-xs", {
-            "justify-end": message.ownMessage
-          })}>
-          {formatTime(message.createdAt)}
-        </time>
-        {message.ownMessage && <MessageStatusIcon status={message.status || 'sent'} />}
+        className={cn(
+          "px-4 py-2 text-[0.8125rem] leading-[1.5]",
+          // Received bubble
+          !message.ownMessage && [
+            "bg-(--chat-bubble-received) border border-white/[0.05]",
+            isFirstInGroup
+              ? "rounded-[0.875rem]"
+              : "rounded-[0.25rem_0.875rem_0.875rem_0.875rem]"
+          ],
+          // Sent bubble
+          message.ownMessage && [
+            "bg-primary text-white shadow-lg shadow-primary/20",
+            isFirstInGroup
+              ? "rounded-[0.875rem]"
+              : "rounded-[0.875rem_0.25rem_0.875rem_0.875rem]"
+          ]
+        )}
+        style={{ overflowWrap: "anywhere" }}
+      >
+        {message.conteudo}
       </div>
+
+      {/* Timestamp — only on last bubble */}
+      {shouldShowTimestamp && (
+        <div
+          className={cn(
+            "flex items-center gap-[0.25rem] mt-[0.25rem] px-[0.125rem]",
+            message.ownMessage && "justify-end"
+          )}
+        >
+          <time className="text-[0.625rem] text-muted-foreground/35 tabular-nums font-mono">
+            {formatTime(message.createdAt)}
+          </time>
+          {message.ownMessage && (
+            <MessageStatusIcon status={message.status || "sent"} />
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
-function FileChatBubble({ message }: { message: MensagemComUsuario }) {
+function FileChatBubble({ message }: ChatBubbleProps) {
   const fileUrl = message.data?.fileUrl;
   const fileName = message.data?.fileName || "Arquivo";
   const size = message.data?.size ? `${(Number(message.data.size) / 1024 / 1024).toFixed(2)} MB` : "";
@@ -114,7 +150,7 @@ function FileChatBubble({ message }: { message: MensagemComUsuario }) {
   );
 }
 
-function VideoChatBubble({ message }: { message: MensagemComUsuario }) {
+function VideoChatBubble({ message }: ChatBubbleProps) {
   const videoUrl = message.data?.fileUrl;
   return (
     <div
@@ -125,10 +161,10 @@ function VideoChatBubble({ message }: { message: MensagemComUsuario }) {
         <div className={cn("relative order-1 overflow-hidden rounded-lg bg-black", {
             "order-1": message.ownMessage
           })}>
-          <video 
-            src={videoUrl} 
-            controls 
-            className="max-w-full rounded-lg max-h-75" 
+          <video
+            src={videoUrl}
+            controls
+            className="max-w-full rounded-lg max-h-75"
             preload="metadata"
           />
         </div>
@@ -146,7 +182,7 @@ function VideoChatBubble({ message }: { message: MensagemComUsuario }) {
   );
 }
 
-function AudioChatBubble({ message }: { message: MensagemComUsuario }) {
+function AudioChatBubble({ message }: ChatBubbleProps) {
   const audioUrl = message.data?.fileUrl;
   return (
     <div
@@ -177,7 +213,7 @@ function AudioChatBubble({ message }: { message: MensagemComUsuario }) {
   );
 }
 
-function ImageChatBubble({ message }: { message: MensagemComUsuario }) {
+function ImageChatBubble({ message }: ChatBubbleProps) {
   const imageUrl = message.data?.fileUrl;
 
   return (
@@ -217,29 +253,86 @@ function ImageChatBubble({ message }: { message: MensagemComUsuario }) {
   );
 }
 
-export function ChatBubble({ message }: { message: MensagemComUsuario }) {
-  // Use message.tipo from enum (texto, arquivo, etc)
-  // or infer from message.data?.mimeType if necessary
-  // But type is stored in DB.
-  
-  // Mapping TipoMensagemChat to component
+export function ChatBubble({
+  message,
+  isFirstInGroup,
+  isLastInGroup,
+  showTimestamp,
+}: ChatBubbleProps) {
   switch (message.tipo) {
     case "texto":
-      return <TextChatBubble message={message} />;
+      return (
+        <TextChatBubble
+          message={message}
+          isFirstInGroup={isFirstInGroup}
+          isLastInGroup={isLastInGroup}
+          showTimestamp={showTimestamp}
+        />
+      );
     case "video":
-      return <VideoChatBubble message={message} />;
+      return (
+        <VideoChatBubble
+          message={message}
+          isFirstInGroup={isFirstInGroup}
+          isLastInGroup={isLastInGroup}
+          showTimestamp={showTimestamp}
+        />
+      );
     case "audio":
-      return <AudioChatBubble message={message} />;
+      return (
+        <AudioChatBubble
+          message={message}
+          isFirstInGroup={isFirstInGroup}
+          isLastInGroup={isLastInGroup}
+          showTimestamp={showTimestamp}
+        />
+      );
     case "imagem":
-      return <ImageChatBubble message={message} />;
+      return (
+        <ImageChatBubble
+          message={message}
+          isFirstInGroup={isFirstInGroup}
+          isLastInGroup={isLastInGroup}
+          showTimestamp={showTimestamp}
+        />
+      );
     case "arquivo":
-      return <FileChatBubble message={message} />;
+      return (
+        <FileChatBubble
+          message={message}
+          isFirstInGroup={isFirstInGroup}
+          isLastInGroup={isLastInGroup}
+          showTimestamp={showTimestamp}
+        />
+      );
     default:
-      // Fallback
       if (message.data?.fileUrl) {
-         if (message.data.mimeType?.startsWith('image/')) return <ImageChatBubble message={message} />;
-         return <FileChatBubble message={message} />;
+        if (message.data.mimeType?.startsWith('image/')) {
+          return (
+            <ImageChatBubble
+              message={message}
+              isFirstInGroup={isFirstInGroup}
+              isLastInGroup={isLastInGroup}
+              showTimestamp={showTimestamp}
+            />
+          );
+        }
+        return (
+          <FileChatBubble
+            message={message}
+            isFirstInGroup={isFirstInGroup}
+            isLastInGroup={isLastInGroup}
+            showTimestamp={showTimestamp}
+          />
+        );
       }
-      return <TextChatBubble message={message} />;
+      return (
+        <TextChatBubble
+          message={message}
+          isFirstInGroup={isFirstInGroup}
+          isLastInGroup={isLastInGroup}
+          showTimestamp={showTimestamp}
+        />
+      );
   }
 }
