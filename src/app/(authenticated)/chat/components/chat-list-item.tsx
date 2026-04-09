@@ -4,8 +4,6 @@ import { Ellipsis } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ChatUserDropdown } from "./chat-list-item-dropdown";
-import { MessageStatusIcon } from "./message-status-icon";
-import { Avatar, AvatarFallback, AvatarImage, AvatarIndicator } from "@/components/ui/avatar";
 
 interface ChatListItemProps {
   chat: ChatItem;
@@ -15,47 +13,63 @@ interface ChatListItemProps {
 
 export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
   const unreadCount = chat.unreadCount || 0;
-  const showStatus = false;
 
   return (
     <div
       className={cn(
-        "group/item hover:bg-chat-sidebar-active relative flex min-w-0 cursor-pointer items-center gap-4 px-6 py-4 transition-colors",
-        { "bg-chat-sidebar-active": active }
+        "group/item flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200",
+        "border border-transparent relative",
+        active
+          ? "bg-(--chat-sidebar-active) border-primary/[0.08]"
+          : "hover:bg-foreground/[0.03]"
       )}
-      onClick={onClick}>
-      <Avatar className="overflow-visible md:size-10">
-        <AvatarImage src={chat.image} alt={chat.name} />
-        <AvatarIndicator variant={chat.usuario?.onlineStatus || 'offline'} />
-        <AvatarFallback>{generateAvatarFallback(chat.name)}</AvatarFallback>
-      </Avatar>
-      <div className="min-w-0 grow">
-        <div className="flex items-center justify-between">
-          <span className="truncate text-sm font-medium">{chat.name}</span>
-          <span className="text-muted-foreground flex-none text-xs">
+      onClick={onClick}
+    >
+      {/* Avatar 40px rounded-xl (SIDE-05) */}
+      <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0">
+        {chat.image ? (
+          <img src={chat.image} alt={chat.name || chat.nome} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-primary/12 text-primary text-xs font-semibold">
+            {generateAvatarFallback(chat.name || chat.nome)}
+          </div>
+        )}
+        {/* Online indicator dot */}
+        <div className={cn(
+          "absolute -bottom-px -right-px w-2.5 h-2.5 rounded-full border-2 border-(--surface-container-low) z-10",
+          chat.usuario?.onlineStatus === 'online' ? "bg-success" : "bg-muted-foreground/30"
+        )} />
+      </div>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[0.8rem] font-semibold text-foreground truncate">
+            {chat.name || chat.nome}
+          </span>
+          <span className="text-[0.6rem] text-muted-foreground/40 tabular-nums shrink-0">
             {chat.date ? new Date(chat.date).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ''}
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          {showStatus && <MessageStatusIcon status="read" />}
-          {chat.lastMessage && (
-            <span className="text-muted-foreground truncate text-start text-sm">
-              {chat.lastMessage}
-            </span>
-          )}
+        <div className="flex items-center justify-between gap-2 mt-1">
+          <span className="text-[0.7rem] text-muted-foreground/50 truncate flex-1">
+            {chat.lastMessage}
+          </span>
           {unreadCount > 0 && (
-            <div className="ms-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success text-sm text-white">
+            <span className="min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0">
               {unreadCount}
-            </div>
+            </span>
           )}
         </div>
       </div>
+
+      {/* Hover dropdown (keep existing) */}
       <div
         className="absolute end-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/item:opacity-100"
         onClick={(e) => e.stopPropagation()}
       >
         <ChatUserDropdown chat={chat}>
-          <Button size="icon" aria-label="Mais opções" variant="ghost" className="rounded-full h-8 w-8">
+          <Button size="icon" aria-label="Mais opcoes" variant="ghost" className="rounded-full h-8 w-8">
             <Ellipsis className="h-4 w-4" />
           </Button>
         </ChatUserDropdown>
