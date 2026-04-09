@@ -1,6 +1,6 @@
 import { authenticateRequest } from '@/lib/auth/session';
 import { ProcessosClient } from './processos-client';
-import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from './service';
+import { listarProcessos, buscarUsuariosRelacionados } from './service';
 import { obterEstatisticasProcessos } from './service-estatisticas';
 import type { ProcessoUnificado } from './domain';
 
@@ -11,9 +11,8 @@ interface ProcessosPageProps {
 export default async function ProcessosPage({ searchParams: _ }: ProcessosPageProps) {
   const session = await authenticateRequest();
 
-  const [processosResult, tribunaisResult, stats] = await Promise.all([
-    listarProcessos({ pagina: 1, limite: 200, unified: true }),
-    listarTribunais(),
+  const [processosResult, stats] = await Promise.all([
+    listarProcessos({ pagina: 1, limite: 50, unified: true }),
     obterEstatisticasProcessos(),
   ]);
 
@@ -21,11 +20,7 @@ export default async function ProcessosPage({ searchParams: _ }: ProcessosPagePr
     ? (processosResult.data.data as ProcessoUnificado[])
     : [];
   const total = processosResult.success ? processosResult.data.pagination.total : 0;
-  const tribunais = tribunaisResult.success
-    ? tribunaisResult.data.map((tribunal) => tribunal.codigo)
-    : [];
 
-  // Resolve user names from processos array
   const usersRecord = processos.length > 0
     ? await buscarUsuariosRelacionados(processos)
     : {};
@@ -41,7 +36,6 @@ export default async function ProcessosPage({ searchParams: _ }: ProcessosPagePr
       initialProcessos={processos}
       initialTotal={total}
       initialStats={stats}
-      tribunais={tribunais}
       usuarios={usuarios}
       currentUserId={session?.id ?? 0}
     />

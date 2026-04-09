@@ -177,7 +177,7 @@ export async function listarProcessos(
   const sanitizedParams: ListarProcessosParams = {
     ...params,
     pagina: Math.max(1, params.pagina ?? 1),
-    limite: Math.min(1000, Math.max(1, params.limite ?? 50)),
+    limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
 
   const result = await findAllProcessos(sanitizedParams, client);

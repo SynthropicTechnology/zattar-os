@@ -539,6 +539,16 @@ export async function findAllProcessos(
         }
 
         // =======================================================================
+        // FILTRO POR LISTA DE IDS
+        // =======================================================================
+
+        if (params.processoIds !== undefined && params.processoIds.length > 0) {
+          query = query.in("id", params.processoIds);
+        } else if (params.processoIds !== undefined && params.processoIds.length === 0) {
+          return { success: true, data: [], total: 0 };
+        }
+
+        // =======================================================================
         // BUSCA GERAL (mais custoso - aplicar por ultimo)
         // =======================================================================
 

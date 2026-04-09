@@ -6,7 +6,6 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CopyButton } from '@/app/(authenticated)/partes';
 import { timeAgo } from '@/components/dashboard/entity-card';
-import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import { ResponsavelPopover } from './responsavel-popover';
 import type { ProcessoUnificado } from '../domain';
@@ -33,19 +32,6 @@ interface ProcessoCardProps {
   onUpdateResponsavel: (processoId: number, novoResponsavelId: number | null) => void;
 }
 
-const STATUS_CLASSES: Record<string, { bg: string; text: string }> = {
-  ATIVO: { bg: 'bg-primary/8', text: 'text-primary/50' },
-  DISTRIBUIDO: { bg: 'bg-primary/8', text: 'text-primary/50' },
-  EM_ANDAMENTO: { bg: 'bg-primary/8', text: 'text-primary/50' },
-  PENDENTE: { bg: 'bg-warning/8', text: 'text-warning/50' },
-  SUSPENSO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
-  EM_RECURSO: { bg: 'bg-info/8', text: 'text-info/50' },
-  ARQUIVADO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
-  EXTINTO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
-  BAIXADO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
-  OUTRO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
-};
-
 function getInitials(name: string): string {
   if (!name) return 'NA';
   const parts = name.trim().split(/\s+/);
@@ -62,8 +48,6 @@ export function ProcessoCard({
   onClick,
   onUpdateResponsavel,
 }: ProcessoCardProps) {
-  const defaultClasses = { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' };
-  const statusClasses = STATUS_CLASSES[processo.codigoStatusProcesso] || defaultClasses;
   const trt = processo.trtOrigem || processo.trt;
   const parteAutora = processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-';
   const parteRe = processo.nomeParteReOrigem || processo.nomeParteRe || '-';
@@ -73,18 +57,9 @@ export function ProcessoCard({
   const hasUrgency = !!processo.dataProximaAudiencia;
 
   return (
-    <GlassPanel
-      className={cn(
-        'p-4 cursor-pointer group',
-        isSelected && 'border-primary/20 bg-primary/3'
-      )}
-    >
+    <GlassPanel className="p-4 cursor-pointer group">
       <div onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onClick()}>
         <div className="flex items-start gap-3">
-          <div
-            className={cn('size-2.5 rounded-full shrink-0 mt-2', statusClasses.bg)}
-            title={processo.codigoStatusProcesso}
-          />
           <div className="flex-1 min-w-0">
             <Heading level="card" className="text-sm truncate">{tituloPartes}</Heading>
             <div className="flex items-center gap-1 mt-0.5">

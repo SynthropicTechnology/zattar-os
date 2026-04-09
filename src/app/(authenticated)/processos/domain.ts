@@ -452,6 +452,9 @@ export interface ListarProcessosParams {
   responsavelId?: number;
   clienteId?: number; // Via join com processo_partes
 
+  // Filtro por lista de IDs (ex: processos com eventos pendentes)
+  processoIds?: number[];
+
   // Opcao especial para visualizacao unificada
   unified?: boolean; // default true - retorna ProcessoUnificado ou Processo[]
 }
