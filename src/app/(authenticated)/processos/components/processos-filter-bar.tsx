@@ -38,7 +38,7 @@ interface ProcessosFilterBarProps {
 
 // ── Shared popover wrapper (glass style) ───────────────────────────────
 
-const POPOVER_CLASSES = 'rounded-2xl glass-kpi border-border/20 shadow-lg overflow-hidden p-0';
+const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
 // ── Filter button ──────────────────────────────────────────────────────
 

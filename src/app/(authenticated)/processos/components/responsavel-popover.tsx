@@ -92,7 +92,7 @@ export function ResponsavelPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-60 p-0 rounded-2xl glass-kpi border-border/20 shadow-lg overflow-hidden"
+        className="w-60 p-0 rounded-2xl glass-dropdown overflow-hidden"
         align="start"
         side="bottom"
         onClick={(e) => e.stopPropagation()}
