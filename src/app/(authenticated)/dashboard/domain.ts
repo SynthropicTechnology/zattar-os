@@ -141,6 +141,28 @@ export interface ProdutividadeResumo {
   heatmap?: number[];
 }
 
+// ─── Chat Resumo ────────────────────────────────────────────────────────────
+
+export interface ChatResumo {
+  naoLidas: number;
+  salasAtivas: number;
+  ultimaMensagem: {
+    autor: string;
+    preview: string;
+    tempo: string; // ISO string
+    salaId: string;
+  } | null;
+}
+
+// ─── Documentos Recentes ────────────────────────────────────────────────────
+
+export interface DocumentoRecente {
+  id: string;
+  nome: string;
+  tipo: 'doc' | 'pdf' | 'planilha' | 'outro';
+  atualizadoEm: string; // ISO string
+}
+
 // ============================================================================
 // Tipos para Dados Financeiros Consolidados
 // ============================================================================
@@ -396,6 +418,8 @@ export interface DashboardUsuarioData {
   expedientesUrgentes: ExpedienteUrgente[];
   dadosFinanceiros: DadosFinanceirosConsolidados;
   contratos?: ContratosResumo;
+  chatResumo?: ChatResumo;
+  documentosRecentes?: DocumentoRecente[];
   ultimaAtualizacao: string;
 }
 
@@ -471,6 +495,8 @@ export interface DashboardAdminData {
   expedientesUrgentes: ExpedienteUrgente[];
   dadosFinanceiros: DadosFinanceirosConsolidados;
   contratos?: ContratosResumo;
+  chatResumo?: ChatResumo;
+  documentosRecentes?: DocumentoRecente[];
   ultimaAtualizacao: string;
 }
 
