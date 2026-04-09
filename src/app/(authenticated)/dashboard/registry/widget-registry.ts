@@ -11,7 +11,7 @@ import React from 'react';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // IMPORTS CONECTADOS (dados reais via useDashboard)
-// Todos os 52 widgets agora consomem dados do DashboardProvider.
+// Todos os 52 widgets consomem dados reais do DashboardProvider.
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ─── Processos (conectados) ─────────────────────────────────────────────────
@@ -78,15 +78,8 @@ import { WidgetProdutividadeSemanal } from '../widgets/pessoal/produtividade-sem
 import { WidgetLembretesAtivos } from '../widgets/pessoal/lembretes-ativos';
 import { WidgetHeatmapProdutividade } from '../widgets/pessoal/heatmap-produtividade';
 import { WidgetCapturaStatus } from '../widgets/pessoal/captura-status';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// IMPORTS MOCK (widgets que ainda dependem de módulos não implementados)
-// ═══════════════════════════════════════════════════════════════════════════
-
-import {
-  WidgetChatAtivo,
-  WidgetDocumentosRecentes,
-} from '../mock/widgets/section-pessoal';
+import { WidgetChatAtivo } from '../widgets/pessoal/chat-ativo';
+import { WidgetDocumentosRecentes } from '../widgets/pessoal/documentos-recentes';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
