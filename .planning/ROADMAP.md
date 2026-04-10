@@ -171,7 +171,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8
 | 1. Layout Shell & Sidebar | v1.0 | 0/0 | Not started | - |
 | 2. Header, Messages & Media | v1.0 | 3/3 | Complete   | 2026-04-09 |
 | 3. Input, Context Bar & Empty State | v1.0 | 2/1 | Complete   | 2026-04-10 |
-| 4. Detail Panel & Preservation | v1.0 | 0/2 | Not started | - |
+| 4. Detail Panel & Preservation | v1.0 | 0/2 | Planned    |  |
 | 5. Indicadores & Detail Dialog | v1.1 | 0/0 | Not started | - |
 | 6. Redesign Views | v1.1 | 0/0 | Not started | - |
 | 7. Wiring & Edicao | v1.1 | 0/0 | Not started | - |
