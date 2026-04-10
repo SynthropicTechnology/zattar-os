@@ -3,13 +3,11 @@
 import { useState, useEffect, useMemo, useCallback, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { LayoutGrid, List } from 'lucide-react';
-import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination } from '@/components/shared/data-shell';
 import { ProcessosPulseStrip } from './components/processos-pulse-strip';
-import { ProcessosInsightBanner } from './components/processos-insight-banner';
 import { ProcessoCard } from './components/processo-card';
 import { ProcessoListRow } from './components/processo-list-row';
 import { ProcessosFilterBar, type ProcessosFilters } from './components/processos-filter-bar';
@@ -33,8 +31,6 @@ export interface ProcessosClientProps {
   currentUserId: number;
 }
 
-type ProcessoTab = 'ativos' | 'arquivados' | 'meus' | 'sem_responsavel' | 'com_eventos';
-
 const PAGE_SIZE = 50;
 
 const VIEW_OPTIONS: ViewToggleOption[] = [
@@ -43,9 +39,11 @@ const VIEW_OPTIONS: ViewToggleOption[] = [
 ];
 
 const INITIAL_FILTERS: ProcessosFilters = {
+  origem: 'acervo_geral',
+  responsavel: null,
   trt: [],
   grau: null,
-  responsavelId: null,
+  comEventos: false,
 };
 
 export function ProcessosClient({
@@ -63,7 +61,6 @@ export function ProcessosClient({
   const [total, setTotal] = useState(initialTotal);
   const [stats] = useState(initialStats);
 
-  const [activeTab, setActiveTab] = useState<ProcessoTab>('ativos');
   const [filters, setFilters] = useState<ProcessosFilters>(INITIAL_FILTERS);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
@@ -84,9 +81,9 @@ export function ProcessosClient({
     [usuarios]
   );
 
-  // ── Server-side fetch ────────────────────────────────────────────────
-  const fetchProcessos = useCallback(
-    async (tab: ProcessoTab, page: number, busca: string, f: ProcessosFilters) => {
+  // ── Build server params from unified filters ─────────────────────────
+  const buildParams = useCallback(
+    (f: ProcessosFilters, page: number, busca: string): ListarProcessosParams => {
       const params: ListarProcessosParams = {
         pagina: page + 1,
         limite: PAGE_SIZE,
@@ -95,32 +92,38 @@ export function ProcessosClient({
 
       if (busca) params.busca = busca;
 
-      // Tab filters
-      switch (tab) {
-        case 'ativos':
-          params.origem = 'acervo_geral';
-          break;
-        case 'arquivados':
-          params.origem = 'arquivado';
-          break;
-        case 'meus':
-          params.responsavelId = currentUserId;
-          break;
-        case 'sem_responsavel':
-          params.semResponsavel = true;
-          break;
-        case 'com_eventos':
-          params.processoIds = stats.processoIdsComEventos;
-          break;
+      // Origem
+      if (f.origem) params.origem = f.origem;
+
+      // Responsável (meus / sem / específico)
+      if (f.responsavel === 'meus') {
+        params.responsavelId = currentUserId;
+      } else if (f.responsavel === 'sem_responsavel') {
+        params.semResponsavel = true;
+      } else if (typeof f.responsavel === 'number') {
+        params.responsavelId = f.responsavel;
       }
 
-      // Popover filters (combinam com a tab)
+      // TRT
       if (f.trt.length > 0) params.trt = f.trt;
+
+      // Grau
       if (f.grau) params.grau = f.grau as ListarProcessosParams['grau'];
-      if (f.responsavelId && tab !== 'meus' && tab !== 'sem_responsavel') {
-        params.responsavelId = f.responsavelId;
+
+      // Com Eventos
+      if (f.comEventos) {
+        params.processoIds = stats.processoIdsComEventos;
       }
 
+      return params;
+    },
+    [currentUserId, stats.processoIdsComEventos]
+  );
+
+  // ── Server-side fetch ────────────────────────────────────────────────
+  const fetchProcessos = useCallback(
+    async (f: ProcessosFilters, page: number, busca: string) => {
+      const params = buildParams(f, page, busca);
       const result = await actionListarProcessos(params);
 
       if (result.success) {
@@ -132,10 +135,10 @@ export function ProcessosClient({
         setTotal(data.pagination.total);
       }
     },
-    [currentUserId, stats.processoIdsComEventos]
+    [buildParams]
   );
 
-  // Re-fetch quando qualquer filtro muda (pula o primeiro render — SSR)
+  // Re-fetch quando filtros mudam (pula primeiro render — SSR)
   const isInitialRender = useMemo(() => ({ current: true }), []);
 
   useEffect(() => {
@@ -145,16 +148,11 @@ export function ProcessosClient({
     }
 
     startTransition(() => {
-      fetchProcessos(activeTab, pageIndex, debouncedSearch, filters);
+      fetchProcessos(filters, pageIndex, debouncedSearch);
     });
-  }, [activeTab, pageIndex, debouncedSearch, filters, fetchProcessos, isInitialRender]);
+  }, [filters, pageIndex, debouncedSearch, fetchProcessos, isInitialRender]);
 
-  // Reset página ao mudar tab, busca ou filtros
-  const handleTabChange = useCallback((tab: string) => {
-    setActiveTab(tab as ProcessoTab);
-    setPageIndex(0);
-  }, []);
-
+  // Reset page on filter/search change
   const handleFiltersChange = useCallback((newFilters: ProcessosFilters) => {
     setFilters(newFilters);
     setPageIndex(0);
@@ -176,19 +174,8 @@ export function ProcessosClient({
     );
   }, []);
 
-  // ── Tab counts vêm das stats (server-side, sempre corretas) ──────────
-  const tabOptions: TabPillOption[] = useMemo(() => [
-    { id: 'ativos', label: 'Ativos', count: stats.emCurso },
-    { id: 'arquivados', label: 'Arquivados', count: stats.arquivados },
-    { id: 'meus', label: 'Meus' },
-    { id: 'sem_responsavel', label: 'Sem Resp', count: stats.semResponsavel },
-    { id: 'com_eventos', label: 'Com Eventos', count: stats.comEventos },
-  ], [stats]);
-
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const subtitle = `${stats.total} processo${stats.total !== 1 ? 's' : ''}${stats.emCurso > 0 ? ` · ${stats.emCurso} em curso` : ''}`;
-
-  const hasActiveFilters = filters.trt.length > 0 || !!filters.grau || !!filters.responsavelId;
 
   return (
     <>
@@ -201,37 +188,29 @@ export function ProcessosClient({
 
       <ProcessosPulseStrip stats={stats} />
 
-      <ProcessosInsightBanner
-        stats={stats}
-        onFilterSemResponsavel={() => handleTabChange('sem_responsavel')}
-        onFilterComEventos={() => handleTabChange('com_eventos')}
-      />
-
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <TabPills
-          tabs={tabOptions}
-          active={activeTab}
-          onChange={handleTabChange}
-        />
-        <div className="flex items-center gap-2 sm:ml-auto">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Buscar processos..."
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <ProcessosFilterBar
+            filters={filters}
+            onChange={handleFiltersChange}
+            usuarios={usuarios}
+            currentUserId={currentUserId}
+            stats={stats}
           />
-          <ViewToggle
-            mode={viewMode}
-            onChange={setViewMode}
-            options={VIEW_OPTIONS}
-          />
+          <div className="flex items-center gap-2 sm:ml-auto">
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Buscar processos..."
+            />
+            <ViewToggle
+              mode={viewMode}
+              onChange={setViewMode}
+              options={VIEW_OPTIONS}
+            />
+          </div>
         </div>
       </div>
-
-      <ProcessosFilterBar
-        filters={filters}
-        onChange={handleFiltersChange}
-        usuarios={usuarios}
-      />
 
       <div className={isPending ? 'opacity-60 pointer-events-none transition-opacity' : 'transition-opacity'}>
         {viewMode === 'cards' && (
@@ -267,12 +246,7 @@ export function ProcessosClient({
         {processos.length === 0 && !isPending && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="text-sm font-medium text-muted-foreground/50">Nenhum processo encontrado</p>
-            <p className="text-xs text-muted-foreground/40 mt-1">
-              {hasActiveFilters
-                ? 'Tente remover alguns filtros'
-                : 'Tente ajustar a busca ou os filtros'
-              }
-            </p>
+            <p className="text-xs text-muted-foreground/40 mt-1">Tente ajustar os filtros ou a busca</p>
           </div>
         )}
       </div>
