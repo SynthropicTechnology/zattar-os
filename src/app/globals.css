@@ -2082,3 +2082,12 @@ body[data-theme-content-layout="centered"] .content-container {
     opacity: 0.8;
   }
 }
+
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}

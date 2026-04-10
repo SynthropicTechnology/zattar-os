@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { actionUploadFile, actionDeleteFile } from "../actions/file-actions";
@@ -209,7 +209,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     onTyping?.();
   };
@@ -218,8 +218,17 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
     <div className="px-4 pb-4 bg-chat-thread">
       {/* Typing Indicator */}
       {typingIndicatorText && !isRecording && (
-        <div className="text-xs text-muted-foreground ml-4 mb-1 animate-pulse">
-          {typingIndicatorText}
+        <div className="flex items-center gap-1.5 text-[0.65rem] text-muted-foreground/50 px-2 mb-1.5">
+          <div className="flex gap-0.5">
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className="w-1 h-1 rounded-full bg-primary/40 animate-[typingBounce_1.4s_infinite]"
+                style={{ animationDelay: `${i * 0.2}s` }}
+              />
+            ))}
+          </div>
+          <span>{typingIndicatorText}</span>
         </div>
       )}
 
@@ -236,119 +245,134 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
         </div>
       )}
 
-      <div className={`relative flex items-center rounded-md border transition-colors duration-300 ${isRecording ? 'bg-destructive/15 border-destructive dark:border-destructive' : 'bg-muted'}`}>
-
-        {isRecording ? (
-          // Recording UI
-          <div className="flex-1 flex items-center justify-between h-14 px-4">
-            <div className="flex items-center gap-3">
-              <div className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive dark:bg-destructive opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive dark:bg-destructive"></span>
+      <div className="flex items-end gap-2">
+        {/* Glass input wrapper */}
+        <div
+          className="flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-[44px] focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-white/[0.08]"
+          style={{ background: 'rgba(255,255,255,0.04)' }}
+        >
+          {isRecording ? (
+            // Recording UI — unchanged
+            <div className="flex-1 flex items-center justify-between h-[36px] w-full">
+              <div className="flex items-center gap-3">
+                <div className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive dark:bg-destructive opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive dark:bg-destructive"></span>
+                </div>
+                <span className="font-mono text-destructive dark:text-destructive font-medium">{formatDuration(recordingDuration)}</span>
+                <span className="text-xs text-destructive dark:text-destructive animate-pulse hidden sm:inline-block">Gravando áudio...</span>
               </div>
-              <span className="font-mono text-destructive dark:text-destructive font-medium">{formatDuration(recordingDuration)}</span>
-              <span className="text-xs text-destructive dark:text-destructive animate-pulse hidden sm:inline-block">Gravando áudio...</span>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" onClick={cancelRecording} className="text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4">
-                Cancelar
-              </Button>
-              <Button size="icon" aria-label="Enviar" onClick={handleSendAudio} className="rounded-full bg-destructive hover:bg-destructive dark:bg-destructive dark:hover:bg-destructive text-white h-9 w-9">
-                <SendIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        ) : (
-          // Default Text Input UI
-          <>
-            <Input
-              type="text"
-              value={message}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              disabled={isUploading}
-              className="h-14 border-transparent bg-white pe-32 text-base! shadow-transparent! ring-transparent! lg:pe-56"
-              placeholder={isUploading ? "Enviando arquivo..." : "Digite uma mensagem..."}
-            />
-
-            {/* Hidden File Input */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={handleFileSelect}
-              aria-label="Anexar arquivo à mensagem"
-            />
-
-            <div className="absolute inset-e-4 flex items-center">
-              <div className="block lg:hidden">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="size-11 rounded-full p-0">
-                      <PlusCircleIcon className="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>Emoji</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
-                      Anexar Arquivo
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={startRecording}>
-                      Gravar Áudio
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" onClick={cancelRecording} className="text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4">
+                  Cancelar
+                </Button>
+                <Button size="icon" aria-label="Enviar" onClick={handleSendAudio} className="rounded-full bg-destructive hover:bg-destructive dark:bg-destructive dark:hover:bg-destructive text-white h-9 w-9">
+                  <SendIcon className="h-4 w-4" />
+                </Button>
               </div>
-              <div className="hidden lg:block">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" aria-label="Emoji" className="rounded-full">
-                        <SmileIcon />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top">Emoji</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon" aria-label="Anexar arquivo"
-                        className="rounded-full"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={isUploading}
-                      >
-                        {isUploading ? <Loader2 className="animate-spin" /> : <Paperclip />}
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top">Anexar Arquivo</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon" aria-label="Microfone"
-                        className="rounded-full hover:bg-destructive/15 hover:text-destructive dark:hover:text-destructive transition-colors"
-                        onClick={startRecording}
-                      >
-                        <Mic />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top">Gravar Audio</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <Button
-                variant="outline"
-                className="ms-3"
-                onClick={handleSend}
-                disabled={(!message && !uploadedFile) || isUploading}
-              >
-                <span className="hidden lg:inline">Enviar</span> <SendIcon className="inline lg:hidden" />
-              </Button>
             </div>
-          </>
+          ) : (
+            // Default Text Input UI
+            <>
+              <Textarea
+                value={message}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                disabled={isUploading}
+                placeholder={isUploading ? "Enviando arquivo..." : "Digite uma mensagem..."}
+                rows={1}
+                className="flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-[120px] overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/40"
+              />
+
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleFileSelect}
+                aria-label="Anexar arquivo à mensagem"
+              />
+
+              {/* Action buttons — desktop inline, mobile dropdown */}
+              <div className="flex items-center self-end pb-0.5">
+                {/* Mobile: dropdown */}
+                <div className="block lg:hidden">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="size-11 rounded-full p-0">
+                        <PlusCircleIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem>Emoji</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
+                        Anexar Arquivo
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={startRecording}>
+                        Gravar Áudio
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                {/* Desktop: inline icon buttons */}
+                <div className="hidden lg:flex items-center gap-0.5">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" aria-label="Emoji" className="rounded-full size-8">
+                          <SmileIcon className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Emoji</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label="Anexar arquivo"
+                          className="rounded-full size-8"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isUploading}
+                        >
+                          {isUploading ? <Loader2 className="size-4 animate-spin" /> : <Paperclip className="size-4" />}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Anexar Arquivo</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label="Microfone"
+                          className="rounded-full size-8 hover:bg-destructive/15 hover:text-destructive transition-colors"
+                          onClick={startRecording}
+                        >
+                          <Mic className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Gravar Audio</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Send button — OUTSIDE glass wrapper, always visible when not recording */}
+        {!isRecording && (
+          <Button
+            size="icon"
+            className="size-9 rounded-[0.625rem] bg-primary text-primary-foreground shadow-[0_2px_10px_rgba(139,92,246,0.3)] hover:shadow-[0_4px_15px_rgba(139,92,246,0.4)] hover:-translate-y-px transition-all shrink-0 self-end"
+            onClick={handleSend}
+            disabled={(!message && !uploadedFile) || isUploading}
+            aria-label="Enviar mensagem"
+          >
+            <SendIcon className="size-4" />
+          </Button>
         )}
       </div>
     </div>
