@@ -97,6 +97,9 @@ export function UserProvider({
   const userRef = useRef<UserData | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  // Deduplicação de getUser(): reutiliza a Promise em voo se já existe uma
+  const getUserPromiseRef = useRef<ReturnType<typeof supabase.auth.getUser> | null>(null);
+
   // Manter ref sincronizado com state
   userRef.current = user;
 
@@ -164,6 +167,22 @@ export function UserProvider({
   };
 
   /**
+   * Wrapper deduplicado para supabase.auth.getUser().
+   * Se já existe uma chamada em voo, reutiliza a mesma Promise
+   * ao invés de disparar outra — evita lock contention na Web Locks API.
+   */
+  const deduplicatedGetUser = useCallback(() => {
+    if (getUserPromiseRef.current) return getUserPromiseRef.current;
+
+    const promise = supabase.auth.getUser().finally(() => {
+      getUserPromiseRef.current = null;
+    });
+
+    getUserPromiseRef.current = promise;
+    return promise;
+  }, [supabase]);
+
+  /**
    * Busca dados do usuário + permissões da API consolidada
    */
   const fetchUserData = useCallback(async (signal?: AbortSignal) => {
@@ -173,7 +192,7 @@ export function UserProvider({
       // Validar sessão Supabase via getUser() — faz chamada ao servidor Auth
       // para garantir que o token é válido. Não usar getSession() aqui pois
       // ele apenas lê do storage local e pode retornar dados desatualizados.
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      const { data: { user: authUser }, error: authError } = await deduplicatedGetUser();
 
       if (signal?.aborted) return;
 
@@ -244,7 +263,7 @@ export function UserProvider({
         setIsLoading(false);
       }
     }
-  }, [invalidateSession, supabase]);
+  }, [invalidateSession, deduplicatedGetUser]);
 
   // Fetch inicial + listener de auth state
   useEffect(() => {
@@ -265,7 +284,7 @@ export function UserProvider({
     const validateSession = async () => {
       if (!mounted || logoutInProgressRef.current) return;
 
-      const { data: userData, error: userError } = await supabase.auth.getUser();
+      const { data: userData, error: userError } = await deduplicatedGetUser();
 
       if (!mounted) return;
 
@@ -308,7 +327,7 @@ export function UserProvider({
 
         // Supabase recomenda não confiar em session.user de onAuthStateChange,
         // pois esse objeto vem do storage local; validar via getUser().
-        const { data: verifiedUserData, error: verifiedUserError } = await supabase.auth.getUser();
+        const { data: verifiedUserData, error: verifiedUserError } = await deduplicatedGetUser();
         
         if (verifiedUserError || !verifiedUserData.user) {
           if (isLockOrAbortError(verifiedUserError)) {
