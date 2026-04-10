@@ -114,4 +114,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-09 after Phase 01 (layout-shell-sidebar) complete — chat module has 3-column Glass Briefing shell, redesigned sidebar with TabPills/SearchInput/sections, fixada field in DB*
+*Last updated: 2026-04-10 after Phase 02 (header-messages-media) complete — chat module has glassmorphic header (backdrop-blur, avatar rounded-xl), grouped message bubbles with asymmetric WhatsApp-style corners, DateSeparator PT-BR, MessageGroup with avatar alignment, and all media bubble types (File/Audio/Image/Video) redesigned with IconContainer and custom audio waveform*
