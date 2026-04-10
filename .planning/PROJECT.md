@@ -114,4 +114,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-10 after Phase 02 (header-messages-media) complete — chat module has glassmorphic header (backdrop-blur, avatar rounded-xl), grouped message bubbles with asymmetric WhatsApp-style corners, DateSeparator PT-BR, MessageGroup with avatar alignment, and all media bubble types (File/Audio/Image/Video) redesigned with IconContainer and custom audio waveform*
+*Last updated: 2026-04-10 after Phase 04 (detail-panel-preservation) complete — Chat Redesign v1.0 milestone complete. ChatDetailPanel wired inline (xl+ screens) with avatar, online status, glass card sections. Header toggle via Zustand toggleProfileSheet. Mobile UserDetailSheet preserved. All automated regression checks passed (TypeScript clean, FSD clean, Suspense/lazy intact).*
