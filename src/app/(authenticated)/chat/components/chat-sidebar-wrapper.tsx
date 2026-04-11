@@ -65,6 +65,11 @@ export function ChatSidebarWrapper({ salas: salasIniciais, currentUserId: _curre
     return result;
   }, [salasParaExibir, activeTab, searchTerm]);
 
+  // Online user count for sidebar subtitle
+  const onlineCount = useMemo(() => {
+    return salasParaExibir.filter(s => s.usuario?.onlineStatus === 'online').length;
+  }, [salasParaExibir]);
+
   // Section grouping (per D-04, D-05, D-06)
   const { fixadas, recentes } = useMemo(() => {
     const sorted = [...filteredSalas].sort((a, b) => {
@@ -91,6 +96,7 @@ export function ChatSidebarWrapper({ salas: salasIniciais, currentUserId: _curre
       onSearchChange={setSearchTerm}
       novoChatOpen={novoChatOpen}
       onNovoChatOpenChange={setNovoChatOpen}
+      onlineCount={onlineCount}
     />
   );
 }

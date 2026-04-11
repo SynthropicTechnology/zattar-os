@@ -178,25 +178,10 @@ export function useChatSubscription({
       onNewMessageRef.current(mensagem);
     };
 
-    const setupSubscription = async () => {
-      // Verificar autenticação antes de subscrever
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-      if (cancelled) return;
-
-      if (userError) {
-        console.error(`[Chat] Erro ao verificar sessão:`, userError.message);
-        setIsConnected(false);
-        return;
-      }
-
-      if (!user) {
-        console.warn(`[Chat] Usuário não autenticado - subscription não será criada para sala ${salaId}`);
-        setIsConnected(false);
-        return;
-      }
-
-      console.log(`[Chat] Sessão válida, criando subscription para sala ${salaId}`);
+    const setupSubscription = () => {
+      // Não chamamos getUser() aqui — este hook só é montado dentro de
+      // rotas (authenticated)/, onde a sessão já foi validada pelo layout server-side.
+      // Chamadas getUser() concorrentes causam lock contention na Web Locks API.
 
       // Criar canal específico para a sala
       channel = supabase.channel(`sala_${salaId}_messages`);

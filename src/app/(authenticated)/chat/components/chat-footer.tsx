@@ -215,7 +215,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
   };
 
   return (
-    <div className="px-4 pb-4 bg-chat-thread">
+    <div className="px-5 pb-4 pt-3 bg-chat-thread">
       {/* Typing Indicator */}
       {typingIndicatorText && !isRecording && (
         <div className="flex items-center gap-1.5 text-[0.65rem] text-muted-foreground/50 px-2 mb-1.5">

@@ -134,8 +134,8 @@ export function ChatContent({ mensagens, salaAtiva }: ChatContentProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 lg:px-6 bg-(--chat-thread-bg)">
-      <div className="flex flex-col items-start space-y-1 pt-8 pb-4 max-w-full">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 bg-(--chat-thread-bg)">
+      <div className="flex flex-col items-start space-y-0.5 pt-6 pb-2 max-w-full">
         {grouped.map((item, index) => {
           if (item.type === "date-separator") {
             return <DateSeparator key={`sep-${item.date}-${index}`} date={item.date} />;

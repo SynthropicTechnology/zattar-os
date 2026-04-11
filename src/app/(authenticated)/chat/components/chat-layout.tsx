@@ -6,6 +6,7 @@ import useChatStore from "../hooks/use-chat-store";
 import { ChatSidebarWrapper } from "./chat-sidebar-wrapper";
 import { ChatItem } from "../domain";
 import { useChatPresence } from "../hooks/use-chat-presence";
+import { useUser } from "@/providers/user-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatEmptyState } from "./chat-empty-state";
 import { ChatDetailPanel } from "./chat-detail-panel";
@@ -24,9 +25,10 @@ interface ChatLayoutProps {
 
 export function ChatLayout({ salas, currentUserId, currentUserName, initialSelectedChat }: ChatLayoutProps) {
   const { selectedChat, setSelectedChat, showProfileSheet } = useChatStore();
+  const { authUserId } = useUser();
 
   // Ativar presenca do usuario no chat
-  useChatPresence({ userId: currentUserId, enabled: true });
+  useChatPresence({ userId: currentUserId, authUserId: authUserId ?? '', enabled: !!authUserId });
 
   useEffect(() => {
     if (initialSelectedChat && !selectedChat) {
@@ -35,7 +37,7 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
   }, [initialSelectedChat, selectedChat, setSelectedChat]);
 
   return (
-    <div className="flex h-[calc(100vh-2rem)] m-4 rounded-2xl border border-border overflow-hidden bg-(--surface-container-low)">
+    <div className="flex h-[calc(100vh-7.5rem)] rounded-2xl border border-border overflow-hidden bg-(--surface-container-low)">
       {/* Sidebar column (LAYOUT-01, LAYOUT-02) */}
       <div
         className={cn(

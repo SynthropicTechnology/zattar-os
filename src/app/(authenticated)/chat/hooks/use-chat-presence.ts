@@ -13,8 +13,10 @@ import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 interface UseChatPresenceProps {
-  /** ID do usuário atual */
+  /** ID do usuário atual (tabela usuarios) */
   userId: number;
+  /** UUID do Supabase Auth (auth_user_id) — evita chamadas getUser() repetidas */
+  authUserId: string;
   /** Se false, não ativa a presença */
   enabled?: boolean;
 }
@@ -42,6 +44,7 @@ const AWAY_TIMEOUT = 5 * 60 * 1000; // 5 minutos para status "away"
  */
 export function useChatPresence({
   userId,
+  authUserId,
   enabled = true,
 }: UseChatPresenceProps): UseChatPresenceReturn {
   const [supabase] = useState(() => createClient());
@@ -50,21 +53,16 @@ export function useChatPresence({
   const activityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentStatusRef = useRef<'online' | 'away'>('online');
 
-  // Atualizar status no banco de dados
+  // Atualizar status no banco de dados usando authUserId recebido via prop
+  // (evita chamadas getUser() concorrentes que causam lock contention)
   const updateDatabaseStatus = useCallback(async (status: 'online' | 'away' | 'offline') => {
-    try {
-      // Buscar o auth_user_id primeiro
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError || !user?.id) {
-        console.warn('[ChatPresence] Sem sessão ativa');
-        return;
-      }
+    if (!authUserId) return;
 
-      // Atualizar usando auth_user_id ao invés de id
+    try {
       const { error } = await supabase
         .from('usuarios')
         .update({ online_status: status })
-        .eq('auth_user_id', user.id);
+        .eq('auth_user_id', authUserId);
 
       if (error) {
         console.error('[ChatPresence] Erro ao atualizar status:', error);
@@ -72,7 +70,7 @@ export function useChatPresence({
     } catch (error) {
       console.error('[ChatPresence] Erro ao atualizar status:', error);
     }
-  }, [supabase]);
+  }, [supabase, authUserId]);
 
   // Resetar timeout de inatividade
   const resetActivityTimeout = useCallback(() => {

@@ -278,6 +278,14 @@ export function useNotificacoesRealtime(options?: {
     contadorCallbackRef.current = onContadorChange;
   }, [onContadorChange]);
 
+  // Atualizar auth do Realtime quando sessionToken muda (substitui onAuthStateChange)
+  useEffect(() => {
+    if (!sessionToken) return;
+    supabase.realtime.setAuth(sessionToken).catch(() => {
+      // Falha silenciosa — setupRealtime já tem fallback para polling
+    });
+  }, [supabase, sessionToken]);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -321,17 +329,10 @@ export function useNotificacoesRealtime(options?: {
       }
     };
 
-    // Manter o token do Realtime sempre atualizado (especialmente após refresh)
-    const {
-      data: { subscription: authSubscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!session?.access_token) return;
-      try {
-        await supabase.realtime.setAuth(session.access_token);
-      } catch {
-        // Não derrubar a UI por falha no setAuth; setupRealtime já tem fallback.
-      }
-    });
+    // O token do Realtime é atualizado via useEffect separado que reage a
+    // mudanças no sessionToken (vem do UserProvider). Não registramos
+    // onAuthStateChange aqui para evitar listener duplicado que causa
+    // lock contention na Web Locks API.
 
     const setupRealtime = async () => {
       // Evitar múltiplas tentativas de conexão simultâneas
@@ -521,7 +522,6 @@ export function useNotificacoesRealtime(options?: {
     return () => {
       isMounted = false;
       clearTimeout(initTimeout);
-      authSubscription?.unsubscribe();
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
       }

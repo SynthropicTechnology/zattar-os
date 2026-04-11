@@ -22,6 +22,7 @@ interface ChatSidebarProps {
   onSearchChange: (value: string) => void;
   novoChatOpen: boolean;
   onNovoChatOpenChange: (open: boolean) => void;
+  onlineCount?: number;
 }
 
 export function ChatSidebar({
@@ -36,25 +37,26 @@ export function ChatSidebar({
   onSearchChange,
   novoChatOpen,
   onNovoChatOpenChange,
+  onlineCount,
 }: ChatSidebarProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-6 pt-6 space-y-4">
+      <div className="px-5 pt-5 space-y-4">
         {/* Title row */}
         <div className="flex items-center justify-between">
           <div>
             <Heading level="page">Mensagens</Heading>
-            <p className="text-[0.6rem] uppercase tracking-[0.08em] text-muted-foreground/50 font-normal">
-              Comunicacao da equipe
+            <p className="text-[0.65rem] uppercase tracking-[0.08em] text-muted-foreground/50 font-medium">
+              {onlineCount !== undefined ? `${onlineCount} online agora` : "Comunicacao da equipe"}
             </p>
           </div>
           <button
             onClick={() => onNovoChatOpenChange(true)}
             className="flex items-center gap-1.5 px-4 py-1 rounded-xl bg-primary text-white text-[0.7rem] font-semibold shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-[#7c4ddb] hover:-translate-y-px transition-all cursor-pointer"
           >
-            <Plus className="size-3.5" />
-            Nova Conversa
+            <Plus className="size-3" />
+            Nova
           </button>
         </div>
 
@@ -62,7 +64,7 @@ export function ChatSidebar({
         <SearchInput
           value={searchTerm}
           onChange={onSearchChange}
-          placeholder="Buscar conversas..."
+          placeholder="Buscar conversas, pessoas..."
           className="w-full"
         />
 
