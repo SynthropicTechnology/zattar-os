@@ -74,7 +74,8 @@ export type BadgeCategory =
   | 'orcamento_status'
   | 'tipo_conta_contabil'
   | 'conciliacao_status'
-  | 'orcamento_item_status';
+  | 'orcamento_item_status'
+  | 'audiencia_indicador';
 
 /**
  * Determina o tom (intensidade) padrão por categoria.
@@ -100,6 +101,7 @@ export function getSemanticBadgeTone(category: BadgeCategory, _value?: string | 
     'pericia_situacao',
     'parcela_status',
     'repasse_status',
+    'audiencia_indicador',
   ];
 
   if (softCategories.includes(category)) {
@@ -727,6 +729,24 @@ export const OBRIGACAO_DIRECAO_VARIANTS: Record<string, BadgeVisualVariant> = {
  * <Badge variant={getSemanticBadgeVariant('status', 'ATIVO')}>Ativo</Badge>
  * <Badge variant={getSemanticBadgeVariant('audiencia_status', 'Marcada')}>Marcada</Badge>
  */
+
+// =============================================================================
+// MAPEAMENTO DE INDICADORES DE AUDIÊNCIA
+// =============================================================================
+
+/**
+ * Mapeamento de indicadores booleanos de audiência para variantes visuais.
+ * Usados em badges de indicadores (segredo de justiça, juízo digital, etc.)
+ */
+export const AUDIENCIA_INDICADOR_VARIANTS: Record<string, BadgeVisualVariant> = {
+  segredo_justica: 'warning',
+  juizo_digital: 'info',
+  designada: 'success',
+  documento_ativo: 'info',
+  litisconsorcio: 'neutral',
+  presenca_hibrida: 'accent',
+};
+
 export function getSemanticBadgeVariant(
   category: BadgeCategory,
   key: string | number | null | undefined
@@ -881,6 +901,10 @@ export function getSemanticBadgeVariant(
     case 'orcamento_item_status':
       return ORCAMENTO_ITEM_STATUS_VARIANTS[key as string] ??
         ORCAMENTO_ITEM_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'audiencia_indicador':
+      return AUDIENCIA_INDICADOR_VARIANTS[key as string] ??
+        AUDIENCIA_INDICADOR_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     default:
       return 'neutral';
