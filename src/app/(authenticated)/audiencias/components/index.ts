@@ -35,7 +35,9 @@ export { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 
 // Forms and dialogs
 export { AudienciaForm } from './audiencia-form';
-export { AudienciaDetailSheet } from './audiencia-detail-sheet';
+export { AudienciaDetailDialog } from './audiencia-detail-dialog';
+export { AudienciaIndicadorBadges, AUDIENCIA_INDICADOR_SHOW_CONFIGS } from './audiencia-indicador-badges';
+export { AudienciaTimeline } from './audiencia-timeline';
 export { AudienciasDiaDialog } from './audiencias-dia-dialog';
 export { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
 export { NovaAudienciaDialog } from './nova-audiencia-dialog';

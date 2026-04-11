@@ -11,7 +11,7 @@ interface ChatSidebarWrapperProps {
   currentUserId: number;
 }
 
-export function ChatSidebarWrapper({ salas: salasIniciais, currentUserId }: ChatSidebarWrapperProps) {
+export function ChatSidebarWrapper({ salas: salasIniciais, currentUserId: _currentUserId }: ChatSidebarWrapperProps) {
   const { selectedChat, setSelectedChat, salas, setSalas } = useChatStore();
 
   // Tab + search state

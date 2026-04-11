@@ -9,16 +9,16 @@ Requirements para revisao completa do modulo de audiencias. Cada um mapeia para 
 
 ### Detail Dialog
 
-- [ ] **DIALOG-01**: Usuario ve dialog centrado (max-w-3xl) ao clicar numa audiencia, substituindo o sheet lateral
-- [ ] **DIALOG-02**: Dialog exibe meta strip com horario, modalidade, tribunal e responsavel
-- [ ] **DIALOG-03**: Dialog exibe secao Processo com numero (mono), tribunal, grau e partes com indicador de litisconsorcio
-- [ ] **DIALOG-04**: Dialog exibe secao Local/Acesso com URL virtual (copiavel) e/ou endereco presencial, incluindo badge de presenca hibrida
-- [ ] **DIALOG-05**: Dialog exibe secao Indicadores com badges: segredo de justica, juizo digital, designada, documento ativo
-- [ ] **DIALOG-06**: Dialog exibe secao Preparo com ring SVG + checklist de itens (6 itens ponderados)
-- [ ] **DIALOG-07**: Dialog exibe secao Observacoes com texto preservando whitespace
+- [x] **DIALOG-01**: Usuario ve dialog centrado (max-w-3xl) ao clicar numa audiencia, substituindo o sheet lateral
+- [x] **DIALOG-02**: Dialog exibe meta strip com horario, modalidade, tribunal e responsavel
+- [x] **DIALOG-03**: Dialog exibe secao Processo com numero (mono), tribunal, grau e partes com indicador de litisconsorcio
+- [x] **DIALOG-04**: Dialog exibe secao Local/Acesso com URL virtual (copiavel) e/ou endereco presencial, incluindo badge de presenca hibrida
+- [x] **DIALOG-05**: Dialog exibe secao Indicadores com badges: segredo de justica, juizo digital, designada, documento ativo
+- [x] **DIALOG-06**: Dialog exibe secao Preparo com ring SVG + checklist de itens (6 itens ponderados)
+- [x] **DIALOG-07**: Dialog exibe secao Observacoes com texto preservando whitespace
 - [x] **DIALOG-08**: Dialog exibe secao Historico de Alteracoes como timeline vertical usando dados_anteriores
-- [ ] **DIALOG-09**: Dialog exibe link/botao direto para ata de audiencia quando disponivel (url_ata_audiencia)
-- [ ] **DIALOG-10**: Dialog permite abrir formulario de edicao (respeitando whitelist PJE para capturadas)
+- [x] **DIALOG-09**: Dialog exibe link/botao direto para ata de audiencia quando disponivel (url_ata_audiencia)
+- [x] **DIALOG-10**: Dialog permite abrir formulario de edicao (respeitando whitelist PJE para capturadas)
 
 ### Redesign Views
 
@@ -85,16 +85,16 @@ Requirements para revisao completa do modulo de audiencias. Cada um mapeia para 
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DIALOG-01 | Phase 5 | Pending |
-| DIALOG-02 | Phase 5 | Pending |
-| DIALOG-03 | Phase 5 | Pending |
-| DIALOG-04 | Phase 5 | Pending |
-| DIALOG-05 | Phase 5 | Pending |
-| DIALOG-06 | Phase 5 | Pending |
-| DIALOG-07 | Phase 5 | Pending |
+| DIALOG-01 | Phase 5 | Complete |
+| DIALOG-02 | Phase 5 | Complete |
+| DIALOG-03 | Phase 5 | Complete |
+| DIALOG-04 | Phase 5 | Complete |
+| DIALOG-05 | Phase 5 | Complete |
+| DIALOG-06 | Phase 5 | Complete |
+| DIALOG-07 | Phase 5 | Complete |
 | DIALOG-08 | Phase 5 | Complete |
-| DIALOG-09 | Phase 5 | Pending |
-| DIALOG-10 | Phase 5 | Pending |
+| DIALOG-09 | Phase 5 | Complete |
+| DIALOG-10 | Phase 5 | Complete |
 | INDIC-01 | Phase 5 | Complete |
 | INDIC-02 | Phase 5 | Complete |
 | INDIC-03 | Phase 5 | Complete |

@@ -59,7 +59,7 @@ export function WidgetChatAtivo() {
       {ultimaMsg ? (
         <div className="px-3 py-2.5 rounded-xl bg-white/3 border border-border/10">
           <div className="flex items-center gap-1.5 mb-1">
-            <div className="size-1.5 rounded-full bg-emerald-500/60" />
+            <div className="size-1.5 rounded-full bg-success/60" />
             <span className="text-[10px] font-semibold text-foreground/70">{ultimaMsg.autor}</span>
             <span className="text-[9px] text-muted-foreground/55 ml-auto tabular-nums">{tempoRelativo}</span>
           </div>

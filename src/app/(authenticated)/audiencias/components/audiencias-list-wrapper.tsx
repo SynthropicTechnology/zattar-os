@@ -33,7 +33,7 @@ import { useAudiencias } from '../hooks/use-audiencias';
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
 import { AudienciasListFilters } from './audiencias-list-filters';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
-import { AudienciaDetailSheet } from './audiencia-detail-sheet';
+import { AudienciaDetailDialog } from './audiencia-detail-dialog';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { AudienciaForm } from './audiencia-form';
 
@@ -288,7 +288,7 @@ export function AudienciasListWrapper({
 
       {selectedAudiencia && (
         <>
-          <AudienciaDetailSheet
+          <AudienciaDetailDialog
             open={detailOpen}
             onOpenChange={setDetailOpen}
             audiencia={selectedAudiencia}

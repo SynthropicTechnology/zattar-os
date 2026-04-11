@@ -44,7 +44,7 @@ export function ProcessoCard({
   tags,
   responsavel,
   usuarios,
-  isSelected,
+  isSelected: _isSelected,
   onClick,
   onUpdateResponsavel,
 }: ProcessoCardProps) {

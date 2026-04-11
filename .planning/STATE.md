@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Revisao Completa — Audiencias
 status: Ready to execute
-stopped_at: Completed 05-indicadores-detail-dialog/05-02-PLAN.md
-last_updated: "2026-04-11T21:28:26.954Z"
+stopped_at: Completed 05-indicadores-detail-dialog/05-03-PLAN.md
+last_updated: "2026-04-11T21:36:11.280Z"
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 05 (indicadores-detail-dialog) — EXECUTING
-Plan: 2 of 4
+Plan: 4 of 4
 
 ## Performance Metrics
 
@@ -57,6 +57,8 @@ Plan: 2 of 4
 | Phase 04-detail-panel-preservation P01 | 15min | 2 tasks | 3 files |
 | Phase 04-detail-panel-preservation P02 | 15min | 2 tasks | 3 files |
 | Phase 05 P02 | 2min | 3 tasks | 2 files |
+| Phase 05 P03 | 2min | 2 tasks | 1 files |
+| Phase 05 P03 | 3min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -93,6 +95,8 @@ Recent decisions affecting current work:
 - [Phase 04-detail-panel-preservation]: Human walkthrough auto-approved in autonomous mode after all automated checks passed — zero regressions confirmed for complete Chat Redesign v1.0
 - [Phase 05]: snakeToCamel inline to avoid cross-deep import from captura module (FSD rule)
 - [Phase 05]: Presenca hibrida badge: Tooltip compact vs explicit text dialog via showPresencaDetail prop
+- [Phase 05]: PrepScore size=lg (64px ring) used as-is; presenca hibrida in Local/Acesso section with detail text, excluded from Indicadores to avoid duplication
+- [Phase 05]: PrepScore size=lg used as-is (no xl variant needed for dialog)
 
 ### Pending Todos
 
@@ -104,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-11T21:28:26.951Z
-Stopped at: Completed 05-indicadores-detail-dialog/05-02-PLAN.md
+Last session: 2026-04-11T21:36:11.277Z
+Stopped at: Completed 05-indicadores-detail-dialog/05-03-PLAN.md
 Resume file: None

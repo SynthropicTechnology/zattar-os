@@ -44,7 +44,9 @@ export {
   AudienciaModalidadeBadge,
   // Forms and dialogs
   AudienciaForm,
-  AudienciaDetailSheet,
+  AudienciaDetailDialog,
+  AudienciaIndicadorBadges,
+  AUDIENCIA_INDICADOR_SHOW_CONFIGS,
   NovaAudienciaDialog,
   // Settings
   TiposAudienciasList,

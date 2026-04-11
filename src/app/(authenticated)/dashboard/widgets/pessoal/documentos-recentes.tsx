@@ -15,7 +15,7 @@ const TIPO_CONFIG: Record<
 > = {
   doc: { icon: FileText, color: 'text-primary/50', bgColor: 'bg-primary/8 border-primary/15' },
   pdf: { icon: FileImage, color: 'text-destructive/50', bgColor: 'bg-destructive/8 border-destructive/15' },
-  planilha: { icon: FileSpreadsheet, color: 'text-emerald-500/50', bgColor: 'bg-emerald-500/8 border-emerald-500/15' },
+  planilha: { icon: FileSpreadsheet, color: 'text-success/50', bgColor: 'bg-success/8 border-success/15' },
   outro: { icon: File, color: 'text-muted-foreground/50', bgColor: 'bg-muted/50 border-border/15' },
 };
 
@@ -56,7 +56,7 @@ export function WidgetDocumentosRecentes() {
                   doc.tipo === 'pdf'
                     ? 'text-destructive/50 bg-destructive/6'
                     : doc.tipo === 'planilha'
-                      ? 'text-emerald-500/50 bg-emerald-500/6'
+                      ? 'text-success/50 bg-success/6'
                       : 'text-primary/50 bg-primary/6'
                 }`}>
                   {doc.tipo}

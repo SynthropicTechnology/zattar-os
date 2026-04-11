@@ -101,8 +101,8 @@ jest.mock('../audiencias-mission-view', () => ({
     <div data-testid="audiencias-mission-view" />
   )),
 }));
-jest.mock('../audiencia-detail-sheet', () => ({
-  AudienciaDetailSheet: jest.fn(() => null),
+jest.mock('../audiencia-detail-dialog', () => ({
+  AudienciaDetailDialog: jest.fn(() => null),
 }));
 jest.mock('../tipos-audiencias-list', () => ({
   TiposAudienciasList: jest.fn(() => null),

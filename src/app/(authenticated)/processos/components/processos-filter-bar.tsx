@@ -213,7 +213,7 @@ function ResponsavelFilter({
   selected,
   onChange,
   usuarios,
-  currentUserId,
+  currentUserId: _currentUserId,
   stats,
 }: {
   selected: 'meus' | 'sem_responsavel' | number | null;

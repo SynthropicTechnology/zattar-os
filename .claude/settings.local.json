@@ -44,7 +44,9 @@
       "WebFetch(domain:www.copilotkit.ai)",
       "WebFetch(domain:cdn.21st.dev)",
       "Skill(gsd:new-milestone)",
-      "Skill(gsd:new-milestone:*)"
+      "Skill(gsd:new-milestone:*)",
+      "Skill(gsd:execute-phase)",
+      "Skill(gsd:execute-phase:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

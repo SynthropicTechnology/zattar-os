@@ -40,7 +40,7 @@ import { AudienciasTableWrapper } from './audiencias-table-wrapper';
 import { AudienciasMonthWrapper } from './audiencias-month-wrapper';
 import { AudienciasYearWrapper } from './audiencias-year-wrapper';
 import { AudienciasMissionView } from './audiencias-mission-view';
-import { AudienciaDetailSheet } from './audiencia-detail-sheet';
+import { AudienciaDetailDialog } from './audiencia-detail-dialog';
 import { TiposAudienciasList } from './tipos-audiencias-list';
 
 // =============================================================================
@@ -300,9 +300,9 @@ export function AudienciasContent({
         {renderContent()}
       </div>
 
-      {/* Detail Sheet para Mission View */}
+      {/* Detail Dialog para Mission View */}
       {selectedMissionAudiencia && (
-        <AudienciaDetailSheet
+        <AudienciaDetailDialog
           open={isMissionDetailOpen}
           onOpenChange={setIsMissionDetailOpen}
           audiencia={selectedMissionAudiencia}

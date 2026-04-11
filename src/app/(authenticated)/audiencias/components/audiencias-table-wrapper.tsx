@@ -42,7 +42,7 @@ import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
-import { AudienciaDetailSheet } from './audiencia-detail-sheet';
+import { AudienciaDetailDialog } from './audiencia-detail-dialog';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { AudienciaForm } from './audiencia-form';
 
@@ -644,7 +644,7 @@ export function AudienciasTableWrapper({
 
       {selectedAudiencia && (
         <>
-          <AudienciaDetailSheet
+          <AudienciaDetailDialog
             open={detailOpen}
             onOpenChange={setDetailOpen}
             audiencia={selectedAudiencia}

@@ -32,7 +32,7 @@ import {
   calcPrepItems,
   calcPrepScore,
   MissionKpiStrip,
-  AudienciaDetailSheet,
+  AudienciaDetailDialog,
   NovaAudienciaDialog,
   AudienciasSemanaView,
   AudienciasMesView,
@@ -313,9 +313,9 @@ export function AudienciasClient({
         />
       )}
 
-      {/* ── Detail Sheet ───────────────────────────────────── */}
+      {/* ── Detail Dialog ──────────────────────────────────── */}
       {selectedAudiencia && (
-        <AudienciaDetailSheet
+        <AudienciaDetailDialog
           open={isDetailOpen}
           onOpenChange={setIsDetailOpen}
           audiencia={selectedAudiencia}

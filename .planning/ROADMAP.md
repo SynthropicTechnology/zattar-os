@@ -115,7 +115,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md — Design system extension: audiencia_indicador badge category + AUDIENCIA_FIELD_LABELS + buildPjeUrl
 - [x] 05-02-PLAN.md — Shared components: AudienciaIndicadorBadges + AudienciaTimeline
-- [ ] 05-03-PLAN.md — AudienciaDetailDialog: full dialog with all 7 sections
+- [x] 05-03-PLAN.md — AudienciaDetailDialog: full dialog with all 7 sections
 - [ ] 05-04-PLAN.md — Big-bang migration: Sheet → Dialog across all 5 usage points
 
 ### Phase 6: Redesign Views
