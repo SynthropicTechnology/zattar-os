@@ -34,8 +34,7 @@ import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 import { AudienciasListFilters } from './audiencias-list-filters';
-import { AudienciasCalendarCompact } from './audiencias-calendar-compact';
-import { AudienciasDayList } from './audiencias-day-list';
+import { AudienciasGlassMonth } from './audiencias-glass-month';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
 
 import type {
@@ -71,7 +70,6 @@ export function AudienciasMonthWrapper({
   tiposAudienciaData,
 }: AudienciasMonthWrapperProps) {
   // ---------- Estado do Calendário ----------
-  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
 
   // ---------- Estado de Filtros ----------
@@ -160,29 +158,12 @@ export function AudienciasMonthWrapper({
         ) : error ? (
           <TemporalViewError message={`Erro ao carregar audiências: ${error}`} onRetry={refetch} />
         ) : (
-          <div className="bg-card border rounded-md overflow-hidden flex-1 min-h-0">
-            <div className="flex h-full">
-              {/* Calendário compacto — largura fixa para não ficar achatado */}
-              <div className="w-120ink-0 border-r p-6 overflow-auto">
-                <AudienciasCalendarCompact
-                  selectedDate={selectedDate}
-                  onDateSelect={setSelectedDate}
-                  audiencias={audiencias}
-                  currentMonth={currentMonth}
-                  onMonthChange={setCurrentMonth}
-                />
-              </div>
-
-              {/* Lista do dia — ocupa todo o espaço restante */}
-              <div className="flex-1 min-w-0">
-                <AudienciasDayList
-                  selectedDate={selectedDate}
-                  audiencias={audiencias}
-                  onAddAudiencia={() => setIsCreateDialogOpen(true)}
-                />
-              </div>
-            </div>
-          </div>
+          <AudienciasGlassMonth
+            audiencias={audiencias}
+            currentMonth={currentMonth}
+            onMonthChange={setCurrentMonth}
+            refetch={refetch}
+          />
         )}
       </DataShell>
 

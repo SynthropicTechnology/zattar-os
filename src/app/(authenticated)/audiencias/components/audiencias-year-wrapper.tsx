@@ -32,7 +32,7 @@ import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 import { AudienciasListFilters } from './audiencias-list-filters';
-import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
+import { AudienciasYearHeatmap } from './audiencias-year-heatmap';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
 
 import type {
@@ -163,7 +163,7 @@ export function AudienciasYearWrapper({
         ) : error ? (
           <TemporalViewError message={`Erro ao carregar audiências: ${error}`} onRetry={refetch} />
         ) : (
-          <AudienciasCalendarYearView
+          <AudienciasYearHeatmap
             audiencias={audiencias}
             currentDate={selectedDate}
             onDateChange={(d: Date) => setSelectedYear(d.getFullYear())}

@@ -13,10 +13,8 @@ import * as React from 'react';
 import {
   DataShell,
   DataPagination,
-  DataTable,
   DataTableToolbar,
 } from '@/components/shared/data-shell';
-import type { Table as TanstackTable } from '@tanstack/react-table';
 
 import {
   type Audiencia,
@@ -30,8 +28,9 @@ import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useAudiencias } from '../hooks/use-audiencias';
 
-import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
+import type { AudienciaComResponsavel } from './audiencias-list-columns';
 import { AudienciasListFilters } from './audiencias-list-filters';
+import { AudienciasGlassList } from './audiencias-glass-list';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
 import { AudienciaDetailDialog } from './audiencia-detail-dialog';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -71,10 +70,6 @@ export function AudienciasListWrapper({
   usuariosData,
   tiposAudienciaData,
 }: AudienciasListWrapperProps) {
-  // Table State
-  const [table, setTable] = React.useState<TanstackTable<AudienciaComResponsavel> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
-
   // Pagination State
   const [pageIndex, setPageIndex] = React.useState(
     initialPagination ? initialPagination.page - 1 : 0
@@ -172,73 +167,60 @@ export function AudienciasListWrapper({
     setEditOpen(false);
   }, [refetch]);
 
-  // Columns (memoized)
-  const columns = React.useMemo(
-    () => getAudienciasColumns(handleView, handleEdit),
-    [handleView, handleEdit]
-  );
-
   return (
     <>
       <DataShell
         header={
-          table ? (
-            <DataTableToolbar
-              table={table}
-              title="Audiências"
-              density={density}
-              onDensityChange={setDensity}
-              searchValue={globalFilter}
-              onSearchValueChange={(value: string) => {
-                setGlobalFilter(value);
-                setPageIndex(0); // Reset page on search
-              }}
-              searchPlaceholder="Buscar audiências..."
-              actionButton={{
-                label: 'Nova Audiência',
-                onClick: () => setCreateOpen(true),
-              }}
-              viewModeSlot={viewModeSlot}
-              filtersSlot={
-                <AudienciasListFilters
-                  statusFiltro={statusFiltro}
-                  onStatusChange={(v) => {
-                    setStatusFiltro(v);
-                    setPageIndex(0);
-                  }}
-                  modalidadeFiltro={modalidadeFiltro}
-                  onModalidadeChange={(v) => {
-                    setModalidadeFiltro(v);
-                    setPageIndex(0);
-                  }}
-                  trtFiltro={trtFiltro}
-                  onTrtChange={(v) => {
-                    setTrtFiltro(v);
-                    setPageIndex(0);
-                  }}
-                  grauFiltro={grauFiltro}
-                  onGrauChange={(v) => {
-                    setGrauFiltro(v);
-                    setPageIndex(0);
-                  }}
-                  responsavelFiltro={responsavelFiltro}
-                  onResponsavelChange={(v) => {
-                    setResponsavelFiltro(v);
-                    setPageIndex(0);
-                  }}
-                  tipoAudienciaFiltro={tipoAudienciaFiltro}
-                  onTipoAudienciaChange={(v) => {
-                    setTipoAudienciaFiltro(v);
-                    setPageIndex(0);
-                  }}
-                  usuarios={usuarios}
-                  tiposAudiencia={tiposAudiencia}
-                />
-              }
-            />
-          ) : (
-            <div className="p-6" />
-          )
+          <DataTableToolbar
+            title="Audiências"
+            searchValue={globalFilter}
+            onSearchValueChange={(value: string) => {
+              setGlobalFilter(value);
+              setPageIndex(0);
+            }}
+            searchPlaceholder="Buscar audiências..."
+            actionButton={{
+              label: 'Nova Audiência',
+              onClick: () => setCreateOpen(true),
+            }}
+            viewModeSlot={viewModeSlot}
+            filtersSlot={
+              <AudienciasListFilters
+                statusFiltro={statusFiltro}
+                onStatusChange={(v) => {
+                  setStatusFiltro(v);
+                  setPageIndex(0);
+                }}
+                modalidadeFiltro={modalidadeFiltro}
+                onModalidadeChange={(v) => {
+                  setModalidadeFiltro(v);
+                  setPageIndex(0);
+                }}
+                trtFiltro={trtFiltro}
+                onTrtChange={(v) => {
+                  setTrtFiltro(v);
+                  setPageIndex(0);
+                }}
+                grauFiltro={grauFiltro}
+                onGrauChange={(v) => {
+                  setGrauFiltro(v);
+                  setPageIndex(0);
+                }}
+                responsavelFiltro={responsavelFiltro}
+                onResponsavelChange={(v) => {
+                  setResponsavelFiltro(v);
+                  setPageIndex(0);
+                }}
+                tipoAudienciaFiltro={tipoAudienciaFiltro}
+                onTipoAudienciaChange={(v) => {
+                  setTipoAudienciaFiltro(v);
+                  setPageIndex(0);
+                }}
+                usuarios={usuarios}
+                tiposAudiencia={tiposAudiencia}
+              />
+            }
+          />
         }
         footer={
           totalPages > 0 ? (
@@ -254,30 +236,13 @@ export function AudienciasListWrapper({
           ) : null
         }
       >
-        <DataTable
-          data={audienciasEnriquecidas}
-          columns={columns}
-          pagination={{
-            pageIndex,
-            pageSize,
-            total,
-            totalPages,
-            onPageChange: setPageIndex,
-            onPageSizeChange: setPageSize,
-          }}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t: TanstackTable<AudienciaComResponsavel>) => setTable(t)}
-          emptyMessage="Nenhuma audiência encontrada."
-          options={{
-            meta: {
-              usuarios,
-              tiposAudiencia,
-              onSuccessAction: refetch,
-            },
-          }}
-        />
+        <div className="p-4">
+          <AudienciasGlassList
+            audiencias={audienciasEnriquecidas}
+            isLoading={isLoading}
+            onView={handleView}
+          />
+        </div>
       </DataShell>
 
       <NovaAudienciaDialog
