@@ -132,8 +132,8 @@ export function AudienciasSemanaView({
         <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
       </div>
 
-      {/* Week Grid — 5 colunas (seg-sex) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      {/* Week Grid — 5 colunas (seg-sex), items-start permite alturas independentes */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start">
         {weekDays.map((day) => {
           const key = format(day, 'yyyy-MM-dd');
           const dayAudiencias = audienciasByDay.get(key) ?? [];
@@ -235,20 +235,20 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
       </div>
 
       {/* Type */}
-      <p className="text-sm font-medium text-foreground truncate mt-1.5">
+      <p className="text-sm font-medium text-foreground mt-1.5 break-words">
         {audiencia.tipoDescricao || 'Audiência'}
       </p>
 
       {/* Process number */}
       {audiencia.numeroProcesso && (
-        <p className="text-[11px] font-mono text-muted-foreground/60 tabular-nums truncate mt-0.5">
+        <p className="text-[11px] font-mono text-muted-foreground/60 tabular-nums mt-0.5 break-all">
           {audiencia.numeroProcesso}
         </p>
       )}
 
       {/* Parties */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-        <p className="text-[11px] text-muted-foreground/60 truncate mt-1">
+        <p className="text-[11px] text-muted-foreground/60 mt-1 break-words">
           {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/40">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}
