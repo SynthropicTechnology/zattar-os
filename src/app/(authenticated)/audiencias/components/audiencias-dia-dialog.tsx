@@ -69,7 +69,8 @@ function getUsuarioNome(u: Usuario): string {
 // COMPONENTE CARD DE AUDIÊNCIA
 // =============================================================================
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TabPills } from '@/components/dashboard/tab-pills';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
 import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
 
@@ -83,20 +84,24 @@ function AudienciaCard({
   onSuccess?: () => void;
 }) {
   const [isResponsavelDialogOpen, setIsResponsavelDialogOpen] = React.useState(false);
+  const [activeTab, setActiveTab] = React.useState<string>('detalhes');
   const { logs, isLoading: loadingLogs } = useAuditLogs('audiencias', audiencia.id);
 
   const responsavel = usuarios.find((u) => u.id === audiencia.responsavelId);
   const nomeResponsavel = responsavel ? getUsuarioNome(responsavel) : null;
 
   return (
-    <div className="border rounded-lg p-4 bg-card">
-      <Tabs defaultValue="detalhes" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-4">
-          <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
-          <TabsTrigger value="historico">Histórico</TabsTrigger>
-        </TabsList>
+    <GlassPanel depth={1} className="p-4">
+      <TabPills
+        tabs={[
+          { id: 'detalhes', label: 'Detalhes' },
+          { id: 'historico', label: 'Histórico' },
+        ]}
+        active={activeTab}
+        onChange={setActiveTab}
+      />
 
-        <TabsContent value="detalhes" className="space-y-3 mt-0">
+      {activeTab === 'detalhes' && (<div className="space-y-3 mt-4">
           {/* Header: Número do processo + Status */}
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
@@ -222,13 +227,14 @@ function AudienciaCard({
               <div className="whitespace-pre-wrap">{audiencia.observacoes}</div>
             </div>
           )}
-        </TabsContent>
+      </div>)}
 
-        <TabsContent value="historico" className="mt-0">
+      {activeTab === 'historico' && (
+        <div className="mt-4">
           <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-100" />
-        </TabsContent>
-      </Tabs>
-    </div>
+        </div>
+      )}
+    </GlassPanel>
   );
 }
 

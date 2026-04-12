@@ -3,7 +3,7 @@ import { StatusAudiencia } from '../domain';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileText } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
@@ -30,15 +30,13 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
   };
 
   return (
-    <Card
-      className={cn(
-        'group relative z-10 my-0.5 w-full cursor-pointer overflow-hidden rounded-md border',
+    <div onClick={handleCardClick} className={cn('cursor-pointer', compact ? 'my-0.5' : 'my-0.5')}>
+      <GlassPanel depth={1} className={cn(
+        'group relative z-10 w-full overflow-hidden rounded-md',
         'transition-all duration-200 ease-in-out hover:shadow-lg',
         compact ? 'h-auto py-1' : 'py-2',
-      )}
-      onClick={handleCardClick}
-    >
-      <CardContent className={cn('flex flex-col gap-1', compact ? 'p-2 text-xs' : 'p-3 text-sm')}>
+      )}>
+        <div className={cn('flex flex-col gap-1', compact ? 'p-2 text-xs' : 'p-3 text-sm')}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             {/* Indicador de Ata */}
@@ -74,7 +72,8 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
             {audiencia.observacoes}
           </p>
         )}
-      </CardContent>
-    </Card>
+        </div>
+      </GlassPanel>
+    </div>
   );
 }

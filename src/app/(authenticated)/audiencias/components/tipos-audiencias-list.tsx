@@ -11,7 +11,7 @@ import * as React from 'react';
 import { Loader2, Video, MapPin, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
-import { Input } from '@/components/ui/input';
+import { SearchInput } from '@/components/dashboard/search-input';
 import {
   Table,
   TableBody,
@@ -90,10 +90,10 @@ export function TiposAudienciasList() {
     <div className="space-y-4">
       {/* Toolbar */}
       <div className="flex items-center justify-between">
-        <Input
-          placeholder="Buscar tipo de audiência..."
+        <SearchInput
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={setSearchTerm}
+          placeholder="Buscar tipo de audiência..."
           className="max-w-sm"
         />
         <div className="flex items-center gap-2">
