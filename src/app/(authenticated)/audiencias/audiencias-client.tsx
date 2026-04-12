@@ -22,7 +22,6 @@ import {
   Plus,
 } from 'lucide-react';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
-import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { Button } from '@/components/ui/button';
@@ -40,8 +39,10 @@ import {
   AudienciasListaView,
   AudienciasMissaoContent,
   useAudienciasUnified,
+  AudienciasFilterBar,
 } from '@/app/(authenticated)/audiencias';
 import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/app/(authenticated)/audiencias';
+import type { AudienciasFilterBarFilters } from '@/app/(authenticated)/audiencias/components';
 import { Heading } from '@/components/ui/typography';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -79,8 +80,9 @@ const VIEW_OPTIONS: ViewToggleOption[] = [
 
 export interface AudienciasClientProps {
   initialView?: AudienciasViewMode;
-  initialUsuarios?: { id: number; nomeExibicao?: string; nomeCompleto?: string }[];
+  initialUsuarios?: { id: number; nomeExibicao?: string; nomeCompleto?: string; avatarUrl?: string | null }[];
   initialTiposAudiencia?: TipoAudiencia[];
+  currentUserId?: number;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -91,6 +93,7 @@ export function AudienciasClient({
   initialView = 'quadro',
   initialUsuarios = [],
   initialTiposAudiencia: _initialTiposAudiencia = [],
+  currentUserId = 0,
 }: AudienciasClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -116,7 +119,12 @@ export function AudienciasClient({
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('marcada');
+  const [filters, setFilters] = useState<AudienciasFilterBarFilters>({
+    status: null,
+    responsavel: null,
+    trt: [],
+    modalidade: null,
+  });
   const [isNovaAudienciaOpen, setIsNovaAudienciaOpen] = useState(false);
 
   // Dialog state
@@ -143,32 +151,38 @@ export function AudienciasClient({
     return map;
   }, [initialUsuarios]);
 
-  const totalMarcadas = useMemo(
-    () => allAudiencias.filter((a) => a.status === StatusAudiencia.Marcada).length,
-    [allAudiencias],
-  );
-  const totalFinalizadas = useMemo(
-    () => allAudiencias.filter((a) => a.status === StatusAudiencia.Finalizada).length,
-    [allAudiencias],
-  );
+  const filterCounts = useMemo(() => ({
+    total: allAudiencias.length,
+    marcadas: allAudiencias.filter((a) => a.status === StatusAudiencia.Marcada).length,
+    finalizadas: allAudiencias.filter((a) => a.status === StatusAudiencia.Finalizada).length,
+    canceladas: allAudiencias.filter((a) => a.status === StatusAudiencia.Cancelada).length,
+    semResponsavel: allAudiencias.filter((a) => !a.responsavelId).length,
+  }), [allAudiencias]);
 
-  const statusTabs: TabPillOption[] = useMemo(() => [
-    { id: 'todas', label: 'Todas', count: allAudiencias.length },
-    { id: 'marcada', label: 'Marcadas', count: totalMarcadas },
-    { id: 'finalizada', label: 'Realizadas', count: totalFinalizadas },
-  ], [allAudiencias.length, totalMarcadas, totalFinalizadas]);
+  const totalMarcadas = filterCounts.marcadas;
+  const totalFinalizadas = filterCounts.finalizadas;
 
-  // Audiências filtradas pela aba ativa — usadas nas views
+  // Audiências filtradas pelos filtros ativos
   const audiencias = useMemo(() => {
-    if (activeTab === 'todas') return allAudiencias;
-    const statusMap: Record<string, StatusAudiencia> = {
-      marcada: StatusAudiencia.Marcada,
-      finalizada: StatusAudiencia.Finalizada,
-      cancelada: StatusAudiencia.Cancelada,
-    };
-    const target = statusMap[activeTab];
-    return target ? allAudiencias.filter((a) => a.status === target) : allAudiencias;
-  }, [allAudiencias, activeTab]);
+    let filtered = allAudiencias;
+    if (filters.status) {
+      filtered = filtered.filter((a) => a.status === filters.status);
+    }
+    if (filters.responsavel === 'sem_responsavel') {
+      filtered = filtered.filter((a) => !a.responsavelId);
+    } else if (filters.responsavel === 'meus') {
+      filtered = filtered.filter((a) => a.responsavelId === currentUserId);
+    } else if (typeof filters.responsavel === 'number') {
+      filtered = filtered.filter((a) => a.responsavelId === filters.responsavel);
+    }
+    if (filters.trt.length > 0) {
+      filtered = filtered.filter((a) => a.trt && filters.trt.includes(a.trt));
+    }
+    if (filters.modalidade) {
+      filtered = filtered.filter((a) => a.modalidade === filters.modalidade);
+    }
+    return filtered;
+  }, [allAudiencias, filters, currentUserId]);
 
   // Low prep warnings (sempre sobre marcadas, independente da tab)
   const lowPrepAudiencias = useMemo(
@@ -238,7 +252,16 @@ export function AudienciasClient({
 
       {/* ── View Controls ──────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <TabPills tabs={statusTabs} active={activeTab} onChange={setActiveTab} />
+        <AudienciasFilterBar
+          filters={filters}
+          onChange={setFilters}
+          usuarios={initialUsuarios.map((u) => ({
+            id: u.id,
+            nomeExibicao: u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`,
+          }))}
+          currentUserId={currentUserId}
+          counts={filterCounts}
+        />
         <div className="flex items-center gap-2 flex-1 justify-end">
           <SearchInput
             value={search}
@@ -279,6 +302,7 @@ export function AudienciasClient({
           currentDate={currentDate}
           onDateChange={setCurrentDate}
           onViewDetail={handleViewDetail}
+          responsavelNomes={responsavelNomesMap}
         />
       )}
 

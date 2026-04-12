@@ -6,7 +6,7 @@ Plano de implementação para completar a cobertura de testes do ZattarOS, segui
 
 ## Tasks
 
-- [-] 1. P0 — Testes unitários e de actions para módulos críticos sem testes
+- [x] 1. P0 — Testes unitários e de actions para módulos críticos sem testes
   - [x] 1.1 Criar testes unitários para o módulo `notas`
     - Criar `src/app/(authenticated)/notas/__tests__/unit/notas.domain.test.ts` testando schemas Zod (noteSchema, createNotaSchema, etc.)
     - Criar `src/app/(authenticated)/notas/__tests__/unit/notas.service.test.ts` testando funções públicas do service com mocks do repository
@@ -67,12 +67,12 @@ Plano de implementação para completar a cobertura de testes do ZattarOS, segui
     - Criar `src/app/(authenticated)/perfil/__tests__/actions/perfil-actions.test.ts`
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [-] 1.12 Criar testes unitários para o módulo `configuracoes`
+  - [x] 1.12 Criar testes unitários para o módulo `configuracoes`
     - Nota: módulo possui apenas components/, index.ts, layout.tsx, page.tsx — sem domain/service
     - Criar `src/app/(authenticated)/configuracoes/__tests__/unit/configuracoes.test.ts` testando lógica existente
     - _Requirements: 1.4, 1.5_
 
-- [ ] 2. Checkpoint — Validar P0
+- [-] 2. Checkpoint — Validar P0
   - Executar `npm test` e garantir que todos os testes P0 passam
   - Ensure all tests pass, ask the user if questions arise.
 

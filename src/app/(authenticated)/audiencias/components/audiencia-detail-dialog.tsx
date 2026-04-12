@@ -10,20 +10,16 @@ import {
   MapPin,
   Video,
   FileText,
-  ClipboardList,
   Building2,
-  Scale,
   Loader2,
   Check,
   AlertCircle,
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { Heading } from '@/components/ui/typography';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
@@ -32,6 +28,7 @@ import { PrepScore } from './prep-score';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
 import { EditarAudienciaDialog } from './editar-audiencia-dialog';
+import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
 import {
   type Audiencia,
   GRAU_TRIBUNAL_LABELS,
@@ -78,6 +75,7 @@ export function AudienciaDetailDialog({
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
+  const [isAlterarResponsavelOpen, setIsAlterarResponsavelOpen] = React.useState(false);
   const [copiedUrl, setCopiedUrl] = React.useState(false);
 
   const { usuarios } = useUsuarios();
@@ -97,9 +95,9 @@ export function AudienciaDetailDialog({
         if (result.success && result.data) {
           setFetchedAudiencia(result.data);
         } else if (!result.success) {
-          setError(result.error || 'Erro ao buscar audiencia');
+          setError(result.error || 'Erro ao buscar audiência');
         } else {
-          setError('Audiencia nao encontrada');
+          setError('Audiência não encontrada');
         }
       })
       .catch((err) => {
@@ -118,7 +116,6 @@ export function AudienciaDetailDialog({
   const pjeUrl = audiencia ? buildPjeUrl(audiencia.trt, audiencia.numeroProcesso) : '';
   const hasAta = !!(audiencia?.urlAtaAudiencia);
 
-  // Derived data
   const dataInicio = audiencia ? parseISO(audiencia.dataInicio) : null;
   const dataFim = audiencia ? parseISO(audiencia.dataFim) : null;
 
@@ -126,7 +123,7 @@ export function AudienciaDetailDialog({
     (responsavelId: number | null | undefined) => {
       if (!responsavelId) return null;
       const usuario = usuarios.find((u) => u.id === responsavelId);
-      return usuario?.nomeExibicao || usuario?.nomeCompleto || `Usuario ${responsavelId}`;
+      return usuario?.nomeExibicao || usuario?.nomeCompleto || `Usuário ${responsavelId}`;
     },
     [usuarios],
   );
@@ -142,75 +139,74 @@ export function AudienciaDetailDialog({
       setCopiedUrl(true);
       setTimeout(() => setCopiedUrl(false), 2000);
     } catch {
-      // Fallback silencioso
+      // silencioso
     }
   }, []);
+
+  const hasIndicadores = audiencia && (
+    audiencia.segredoJustica ||
+    audiencia.juizoDigital ||
+    audiencia.designada ||
+    audiencia.documentoAtivo
+  );
 
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
-          className="sm:max-w-3xl max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden [scrollbar-width:thin] glass-dialog"
+          className="sm:max-w-xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden [scrollbar-width:thin]"
           showCloseButton
         >
-          {/* ── HEADER (fixo) ── */}
-          <div className="flex-shrink-0 px-7 pt-6 pb-4 border-b border-border/20">
-            {/* Linha 1: icone + titulo + status badge */}
+          {/* ── HEADER ── */}
+          <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/20">
             <div className="flex items-start gap-3">
-              <IconContainer size="md" className="bg-primary/10">
-                <Gavel className="size-4.5 text-primary" />
+              <IconContainer size="md" className="bg-primary/10 shrink-0">
+                <Gavel className="size-4 text-primary" />
               </IconContainer>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Heading level="section" className="truncate">
-                    {audiencia?.tipoDescricao || 'Audiencia'}
-                  </Heading>
+                  <DialogTitle className="text-card-title truncate">
+                    {audiencia?.tipoDescricao || 'Audiência'}
+                  </DialogTitle>
                   {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
                 </div>
-                {/* Linha 2: data por extenso */}
                 {dataInicio && (
-                  <p className="text-sm text-muted-foreground mt-0.5">
+                  <p className="text-widget-sub mt-0.5 capitalize">
                     {format(dataInicio, "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Linha 3: botoes de acao */}
+            {/* Ações */}
             {audiencia && (
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-1.5 mt-3">
                 <Button
                   size="sm"
+                  variant="default"
+                  className="h-7 text-xs"
                   asChild={!!audiencia.urlAudienciaVirtual}
                   disabled={!audiencia.urlAudienciaVirtual}
                 >
                   {audiencia.urlAudienciaVirtual ? (
-                    <a
-                      href={audiencia.urlAudienciaVirtual}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Video className="size-3.5" />
-                      Entrar na Sala Virtual
-                      <ExternalLink className="size-3" />
+                    <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer">
+                      <Video className="size-3" />
+                      Sala Virtual
+                      <ExternalLink className="size-2.5" />
                     </a>
                   ) : (
                     <>
-                      <Video className="size-3.5" />
-                      Entrar na Sala Virtual
+                      <Video className="size-3" />
+                      Sala Virtual
                     </>
                   )}
                 </Button>
 
                 {hasAta && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={audiencia.urlAtaAudiencia!}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FileText className="size-3.5" />
-                      Visualizar Ata
+                  <Button variant="outline" size="sm" className="h-7 text-xs" asChild>
+                    <a href={audiencia.urlAtaAudiencia!} target="_blank" rel="noopener noreferrer">
+                      <FileText className="size-3" />
+                      Ata
                     </a>
                   </Button>
                 )}
@@ -218,22 +214,19 @@ export function AudienciaDetailDialog({
                 <Button
                   variant="outline"
                   size="sm"
+                  className="h-7 text-xs"
                   asChild={isPje}
                   disabled={!isPje}
                 >
                   {isPje ? (
-                    <a
-                      href={pjeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="size-3.5" />
-                      Abrir PJe
+                    <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="size-3" />
+                      PJe
                     </a>
                   ) : (
                     <>
-                      <ExternalLink className="size-3.5" />
-                      Abrir PJe
+                      <ExternalLink className="size-3" />
+                      PJe
                     </>
                   )}
                 </Button>
@@ -241,256 +234,226 @@ export function AudienciaDetailDialog({
             )}
           </div>
 
-          {/* ── BODY (scrollavel) ── */}
-          <div className="flex-1 overflow-y-auto px-7 py-5 space-y-3.5">
-            {/* Loading state */}
+          {/* ── BODY ── */}
+          <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5 [scrollbar-width:thin]">
+            {/* Loading */}
             {isLoading && (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                <Loader2 className="size-5 animate-spin text-muted-foreground" />
               </div>
             )}
 
-            {/* Error state */}
+            {/* Error */}
             {error && !isLoading && (
               <div className="flex flex-col items-center justify-center py-12 gap-2 text-center">
-                <AlertCircle className="size-6 text-destructive" />
-                <p className="text-sm text-destructive">{error}</p>
+                <AlertCircle className="size-5 text-destructive" />
+                <p className="text-caption text-destructive">{error}</p>
               </div>
             )}
 
-            {/* Conteudo principal */}
             {audiencia && !isLoading && !error && (
               <>
-                {/* 1. Meta strip */}
-                <GlassPanel depth={1} className="p-4">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {/* Horario */}
-                    <div className="space-y-1">
-                      <span className="text-meta-label">
-                        Horario
-                      </span>
-                      <div className="flex items-center gap-1.5 text-sm">
-                        <Clock className="size-3.5 text-muted-foreground/50" />
-                        {dataInicio && dataFim && (
-                          <span className="tabular-nums">
-                            {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Modalidade */}
-                    <div className="space-y-1">
-                      <span className="text-meta-label">
-                        Modalidade
-                      </span>
-                      <div>
-                        <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
-                      </div>
-                    </div>
-
-                    {/* TRT/Grau */}
-                    <div className="space-y-1">
-                      <span className="text-meta-label">
-                        TRT / Grau
-                      </span>
-                      <p className="text-sm truncate">
-                        {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-                      </p>
-                    </div>
-
-                    {/* Responsavel */}
-                    <div className="space-y-1">
-                      <span className="text-meta-label">
-                        Responsavel
-                      </span>
-                      {audiencia.responsavelId && responsavelNome ? (
-                        <div className="flex items-center gap-1.5 min-w-0">
-                          <Avatar size="xs">
-                            <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
-                            <AvatarFallback className="text-[9px]">
-                              {getInitials(responsavelNome)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm truncate">{responsavelNome}</span>
-                        </div>
-                      ) : (
-                        <span className="text-sm text-muted-foreground/60">—</span>
+                {/* Meta grid — compact 2x2 */}
+                <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                  <div>
+                    <div className="text-meta-label mb-0.5">Horário</div>
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="size-3.5 text-muted-foreground/50" />
+                      {dataInicio && dataFim && (
+                        <span className="text-label tabular-nums">
+                          {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
+                        </span>
                       )}
                     </div>
                   </div>
-                </GlassPanel>
 
-                {/* 2. Processo */}
-                <GlassPanel depth={1} className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <ClipboardList className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-meta-label">Processo</span>
+                  <div>
+                    <div className="text-meta-label mb-0.5">Modalidade</div>
+                    <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
                   </div>
-                  <div className="space-y-2.5">
-                    <div className="space-y-0.5">
-                      <span className="block font-mono text-sm font-semibold tabular-nums tracking-tight text-foreground">
-                        {audiencia.numeroProcesso}
-                      </span>
-                      <span className="block text-meta-label font-normal">
-                        {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-                      </span>
-                    </div>
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <ParteBadge polo="ATIVO" className="flex shrink-0" truncate maxWidth="100%">
-                          {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '—'}
-                        </ParteBadge>
-                        {audiencia.poloAtivoRepresentaVarios && (
-                          <span className="text-muted-foreground text-xs shrink-0">e outros</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <ParteBadge polo="PASSIVO" className="flex shrink-0" truncate maxWidth="100%">
-                          {audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '—'}
-                        </ParteBadge>
-                        {audiencia.poloPassivoRepresentaVarios && (
-                          <span className="text-muted-foreground text-xs shrink-0">e outros</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </GlassPanel>
 
-                {/* 3. Local/Acesso */}
+                  <div>
+                    <div className="text-meta-label mb-0.5">Tribunal</div>
+                    <span className="text-label truncate block">
+                      {TRT_NOMES[audiencia.trt] || audiencia.trt}
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+                        Responsável
+                      </span>
+                      <button
+                        onClick={() => setIsAlterarResponsavelOpen(true)}
+                        className="text-[10px] text-primary/60 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                      >
+                        <Pencil className="size-2.5" />
+                        Alterar
+                      </button>
+                    </div>
+                    {audiencia.responsavelId && responsavelNome ? (
+                      <div className="flex items-center gap-1.5 min-w-0 mt-0.5">
+                        <Avatar size="xs">
+                          <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
+                          <AvatarFallback className="text-[9px]">
+                            {getInitials(responsavelNome)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-label truncate">{responsavelNome}</span>
+                      </div>
+                    ) : (
+                      <span className="text-caption mt-0.5">—</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Separador */}
+                <div className="h-px bg-border/20" />
+
+                {/* Processo */}
+                <div>
+                  <div className="text-meta-label mb-1">Processo</div>
+                  <div className="font-mono text-label font-semibold tabular-nums tracking-tight">
+                    {audiencia.numeroProcesso}
+                  </div>
+                  <div className="text-micro-caption mt-0.5">
+                    {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <ParteBadge polo="ATIVO" className="flex shrink-0" truncate maxWidth="100%">
+                        {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '—'}
+                      </ParteBadge>
+                      {audiencia.poloAtivoRepresentaVarios && (
+                        <span className="text-micro-caption shrink-0">e outros</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <ParteBadge polo="PASSIVO" className="flex shrink-0" truncate maxWidth="100%">
+                        {audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '—'}
+                      </ParteBadge>
+                      {audiencia.poloPassivoRepresentaVarios && (
+                        <span className="text-micro-caption shrink-0">e outros</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Local / Acesso */}
                 {(audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida' || audiencia.modalidade === 'presencial') && (
-                  <GlassPanel depth={1} className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Building2 className="size-3.5 text-muted-foreground/50" />
-                      <span className="text-meta-label">Local / Acesso</span>
-                    </div>
-                    <div className="space-y-3">
-                      {/* URL Virtual */}
-                      {(audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && audiencia.urlAudienciaVirtual && (
-                        <div className="space-y-1">
-                          <span className="text-meta-label font-normal">Sala Virtual</span>
-                          <div className="flex items-center gap-2">
+                  audiencia.urlAudienciaVirtual || audiencia.enderecoPresencial
+                ) && (
+                  <>
+                    <div className="h-px bg-border/20" />
+                    <div>
+                      <div className="text-meta-label mb-1">Local / Acesso</div>
+                      <div className="space-y-2">
+                        {(audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && audiencia.urlAudienciaVirtual && (
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Video className="size-3.5 text-muted-foreground/50 shrink-0" />
                             <a
                               href={audiencia.urlAudienciaVirtual}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-sm text-primary truncate hover:underline"
+                              className="text-label text-primary truncate hover:underline"
                             >
                               {audiencia.urlAudienciaVirtual}
                             </a>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="size-7 shrink-0"
+                              className="size-6 shrink-0"
                               onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}
                             >
                               {copiedUrl ? (
-                                <Check className="size-3.5 text-success" />
+                                <Check className="size-3 text-success" />
                               ) : (
-                                <Copy className="size-3.5" />
+                                <Copy className="size-3" />
                               )}
                             </Button>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {/* Endereco presencial */}
-                      {(audiencia.modalidade === 'presencial' || audiencia.modalidade === 'hibrida') && audiencia.enderecoPresencial && (
-                        <div className="space-y-1">
-                          <span className="text-meta-label font-normal">Endereco Presencial</span>
-                          <div className="flex items-start gap-1.5">
+                        {(audiencia.modalidade === 'presencial' || audiencia.modalidade === 'hibrida') && audiencia.enderecoPresencial && (
+                          <div className="flex items-start gap-2">
                             <MapPin className="size-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
-                            <p className="text-sm text-foreground/80 leading-relaxed">
+                            <p className="text-label leading-relaxed">
                               {audiencia.enderecoPresencial.logradouro}, {audiencia.enderecoPresencial.numero}
                               {audiencia.enderecoPresencial.complemento && ` – ${audiencia.enderecoPresencial.complemento}`}
                               <br />
-                              {audiencia.enderecoPresencial.bairro}, {audiencia.enderecoPresencial.cidade} – {audiencia.enderecoPresencial.uf}
+                              <span className="text-caption">
+                                {audiencia.enderecoPresencial.bairro}, {audiencia.enderecoPresencial.cidade} – {audiencia.enderecoPresencial.uf}
+                              </span>
                             </p>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {/* Presenca hibrida badge */}
-                      {audiencia.presencaHibrida !== null && (
-                        <AudienciaIndicadorBadges
-                          audiencia={audiencia}
-                          show={['presenca_hibrida']}
-                          showPresencaDetail
-                        />
-                      )}
+                        {audiencia.presencaHibrida !== null && (
+                          <AudienciaIndicadorBadges
+                            audiencia={audiencia}
+                            show={['presenca_hibrida']}
+                            showPresencaDetail
+                          />
+                        )}
+                      </div>
                     </div>
-                  </GlassPanel>
+                  </>
                 )}
 
-                {/* 4. Indicadores */}
-                <GlassPanel depth={1} className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Scale className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-meta-label">Indicadores</span>
-                  </div>
-                  <AudienciaIndicadorBadges
-                    audiencia={audiencia}
-                    show={['segredo_justica', 'juizo_digital', 'designada', 'documento_ativo']}
-                  />
-                  {/* Fallback quando nenhum indicador ativo */}
-                  {!audiencia.segredoJustica &&
-                    !audiencia.juizoDigital &&
-                    !audiencia.designada &&
-                    !audiencia.documentoAtivo && (
-                      <p className="text-sm text-muted-foreground/60">Nenhum indicador especial</p>
-                    )}
-                </GlassPanel>
+                {/* Indicadores (só se houver) */}
+                {hasIndicadores && (
+                  <>
+                    <div className="h-px bg-border/20" />
+                    <div>
+                      <div className="text-meta-label mb-1">Indicadores</div>
+                      <AudienciaIndicadorBadges
+                        audiencia={audiencia}
+                        show={['segredo_justica', 'juizo_digital', 'designada', 'documento_ativo']}
+                      />
+                    </div>
+                  </>
+                )}
 
-                {/* 5. Preparo */}
-                <GlassPanel depth={1} className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <ClipboardList className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-meta-label">Preparo</span>
-                  </div>
-                  <PrepScore
-                    audiencia={audiencia}
-                    showBreakdown
-                    size="lg"
-                  />
-                </GlassPanel>
+                {/* Preparo */}
+                <div className="h-px bg-border/20" />
+                <div>
+                  <div className="text-meta-label mb-1">Preparo</div>
+                  <PrepScore audiencia={audiencia} showBreakdown size="lg" />
+                </div>
 
-                {/* 6. Observacoes (condicional) */}
+                {/* Observações */}
                 {audiencia.observacoes && (
-                  <GlassPanel depth={1} className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FileText className="size-3.5 text-muted-foreground/50" />
-                      <span className="text-meta-label">Observacoes</span>
+                  <>
+                    <div className="h-px bg-border/20" />
+                    <div>
+                      <div className="text-meta-label mb-1">Observações</div>
+                      <p className="text-caption whitespace-pre-wrap leading-relaxed">
+                        {audiencia.observacoes}
+                      </p>
                     </div>
-                    <p className="text-sm whitespace-pre-wrap text-muted-foreground">
-                      {audiencia.observacoes}
-                    </p>
-                  </GlassPanel>
+                  </>
                 )}
 
-                {/* 7. Historico de Alteracoes */}
-                <GlassPanel depth={1} className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-meta-label">Historico de Alteracoes</span>
-                  </div>
-                  <AudienciaTimeline
-                    audienciaId={audiencia.id}
-                    audiencia={audiencia}
-                  />
-                </GlassPanel>
+                {/* Histórico */}
+                <div className="h-px bg-border/20" />
+                <div>
+                  <div className="text-meta-label mb-1">Histórico</div>
+                  <AudienciaTimeline audienciaId={audiencia.id} audiencia={audiencia} />
+                </div>
               </>
             )}
           </div>
 
-          {/* ── FOOTER (fixo) ── */}
-          <div className="flex-shrink-0 px-7 py-4 border-t border-border/20 flex items-center justify-between">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+          {/* ── FOOTER ── */}
+          <div className="shrink-0 px-6 py-3.5 border-t border-border/20 flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>
             {audiencia && (
-              <Button onClick={() => setIsEditDialogOpen(true)}>
-                <Pencil className="size-4" />
-                Editar Audiencia
+              <Button size="sm" onClick={() => setIsEditDialogOpen(true)}>
+                <Pencil className="size-3.5" />
+                Editar
               </Button>
             )}
           </div>
@@ -506,6 +469,18 @@ export function AudienciaDetailDialog({
             onOpenChange(false);
           }}
           audiencia={audiencia}
+        />
+      )}
+
+      {audiencia && (
+        <AudienciasAlterarResponsavelDialog
+          open={isAlterarResponsavelOpen}
+          onOpenChange={setIsAlterarResponsavelOpen}
+          audiencia={audiencia}
+          usuarios={usuarios}
+          onSuccess={() => {
+            setIsAlterarResponsavelOpen(false);
+          }}
         />
       )}
     </>

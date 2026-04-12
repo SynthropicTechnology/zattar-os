@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { authenticateRequest } from '@/lib/auth/session';
 import { fetchAudienciasPageData } from '@/app/(authenticated)/audiencias/queries';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AudienciasClient } from '../audiencias-client';
@@ -21,7 +22,10 @@ function AudienciasLoading() {
 }
 
 export default async function AudienciasQuadroPage() {
-  const { usuarios, tiposAudiencia } = await fetchAudienciasPageData();
+  const [session, { usuarios, tiposAudiencia }] = await Promise.all([
+    authenticateRequest(),
+    fetchAudienciasPageData(),
+  ]);
 
   return (
     <Suspense fallback={<AudienciasLoading />}>
@@ -29,6 +33,7 @@ export default async function AudienciasQuadroPage() {
         initialView="quadro"
         initialUsuarios={usuarios}
         initialTiposAudiencia={tiposAudiencia}
+        currentUserId={session?.id ?? 0}
       />
     </Suspense>
   );

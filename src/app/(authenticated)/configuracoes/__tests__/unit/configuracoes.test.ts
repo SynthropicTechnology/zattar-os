@@ -15,14 +15,10 @@
 import {
     VALID_TABS,
     findNavItem,
-    type SettingsTab,
-} from '@/app/(authenticated)/configuracoes/components/settings-nav-items';
-
-// Access internal data structures for structural tests
-import {
     ALL_NAV_ITEMS,
     SETTINGS_NAV_GROUPS,
     SETTINGS_EXTERNAL_LINKS,
+    type SettingsTab,
     type SettingsNavItem,
     type SettingsNavGroup,
 } from '@/app/(authenticated)/configuracoes/components/settings-nav-items';
@@ -63,7 +59,7 @@ describe('Módulo configuracoes — settings-nav-items', () => {
     // findNavItem
     // ===========================================================================
     describe('findNavItem', () => {
-        it('deve retornar o item correto para cada tab válida', () => {
+        it('deve retornar o item correto para tab "metricas"', () => {
             const item = findNavItem('metricas');
             expect(item).toBeDefined();
             expect(item!.id).toBe('metricas');
@@ -77,7 +73,7 @@ describe('Módulo configuracoes — settings-nav-items', () => {
             expect(item).toBeUndefined();
         });
 
-        it('deve retornar item com todas as propriedades obrigatórias', () => {
+        it('deve retornar item com todas as propriedades obrigatórias para cada tab', () => {
             for (const tab of VALID_TABS) {
                 const item = findNavItem(tab);
                 expect(item).toBeDefined();
@@ -161,6 +157,33 @@ describe('Módulo configuracoes — settings-nav-items', () => {
 });
 
 describe('Módulo configuracoes — Barrel Export (index.ts)', () => {
+    beforeEach(() => {
+        jest.resetModules();
+        // Mock heavy component deps to avoid deep import chains (audiencias → Supabase)
+        jest.mock(
+            '@/app/(authenticated)/configuracoes/components/configuracoes-settings-layout',
+            () => ({ ConfiguracoesSettingsLayout: () => 'mock' }),
+        );
+        jest.mock(
+            '@/app/(authenticated)/configuracoes/components/settings-section-header',
+            () => ({ SettingsSectionHeader: () => 'mock' }),
+        );
+        jest.mock(
+            '@/app/(authenticated)/configuracoes/components/settings-nav',
+            () => ({ SettingsNav: () => 'mock' }),
+        );
+        jest.mock(
+            '@/app/(authenticated)/configuracoes/components/settings-mobile-nav',
+            () => ({ SettingsMobileNav: () => 'mock' }),
+        );
+        jest.mock(
+            '@/app/(authenticated)/configuracoes/components/aparencia-content',
+            () => ({ AparenciaContent: () => 'mock' }),
+        );
+    });
+
+    afterEach(() => jest.restoreAllMocks());
+
     it('deve exportar componentes e tipos esperados', () => {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const barrel = require('@/app/(authenticated)/configuracoes');
@@ -185,6 +208,28 @@ describe('Módulo configuracoes — Barrel Export (index.ts)', () => {
 });
 
 describe('Módulo configuracoes — page.tsx', () => {
+    beforeEach(() => {
+        jest.resetModules();
+        jest.mock('@/app/(authenticated)/admin', () => ({
+            actionObterMetricasDB: jest.fn(),
+        }));
+        jest.mock('@/lib/integracoes', () => ({
+            actionListarIntegracoesPorTipo: jest.fn(),
+        }));
+        jest.mock('@/lib/system-prompts', () => ({
+            actionListarSystemPrompts: jest.fn(),
+        }));
+        jest.mock(
+            '@/app/(authenticated)/configuracoes/components/configuracoes-settings-layout',
+            () => ({ ConfiguracoesSettingsLayout: () => 'mock' }),
+        );
+        jest.mock('next/navigation', () => ({
+            redirect: jest.fn(),
+        }));
+    });
+
+    afterEach(() => jest.restoreAllMocks());
+
     it('deve exportar dynamic = "force-dynamic"', () => {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const page = require('@/app/(authenticated)/configuracoes/page');

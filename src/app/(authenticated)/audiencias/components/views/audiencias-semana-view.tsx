@@ -38,6 +38,7 @@ export interface AudienciasSemanaViewProps {
   currentDate: Date;
   onDateChange: (date: Date) => void;
   onViewDetail: (audiencia: Audiencia) => void;
+  responsavelNomes?: Map<number, string>;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -57,6 +58,7 @@ export function AudienciasSemanaView({
   currentDate,
   onDateChange,
   onViewDetail,
+  responsavelNomes,
 }: AudienciasSemanaViewProps) {
   const weekStart = useMemo(
     () => startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }),
@@ -178,7 +180,7 @@ export function AudienciasSemanaView({
               ) : (
                 <div className="space-y-2">
                   {dayAudiencias.map((a) => (
-                    <WeekDayCard key={a.id} audiencia={a} onClick={() => onViewDetail(a)} />
+                    <WeekDayCard key={a.id} audiencia={a} onClick={() => onViewDetail(a)} responsavelNomes={responsavelNomes} />
                   ))}
                 </div>
               )}
@@ -192,7 +194,7 @@ export function AudienciasSemanaView({
 
 // ─── Internal: Week Day Card ──────────────────────────────────────────────
 
-function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: () => void }) {
+function WeekDayCard({ audiencia, onClick, responsavelNomes }: { audiencia: Audiencia; onClick: () => void; responsavelNomes?: Map<number, string> }) {
   const now = new Date();
   let isPast = false;
   let isOngoing = false;
@@ -266,6 +268,13 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
         </div>
         {audiencia.urlAudienciaVirtual && isVirtual && (
           <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70">Sala</span>
+        )}
+        {audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
+          <span className="text-[9px] text-muted-foreground/55">
+            {responsavelNomes.get(audiencia.responsavelId)}
+          </span>
+        ) : (
+          <span className="text-[9px] italic text-warning/60">Sem resp.</span>
         )}
       </div>
     </button>

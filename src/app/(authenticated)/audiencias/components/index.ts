@@ -45,6 +45,10 @@ export {
   parseAudienciasFilters,
 } from './audiencias-toolbar-filters';
 
+// Filter Bar (Glass Briefing pattern)
+export { AudienciasFilterBar } from './audiencias-filter-bar';
+export type { AudienciasFilters as AudienciasFilterBarFilters } from './audiencias-filter-bar';
+
 // Views (Glass Briefing)
 export {
   AudienciasSemanaView,

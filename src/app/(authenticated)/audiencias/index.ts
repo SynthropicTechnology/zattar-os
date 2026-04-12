@@ -55,6 +55,8 @@ export {
   AudienciasAnoView,
   AudienciasListaView,
   AudienciasMissaoContent,
+  // Filter Bar
+  AudienciasFilterBar,
 } from "./components";
 
 // ============================================================================
