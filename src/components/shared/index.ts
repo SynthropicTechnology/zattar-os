@@ -18,6 +18,10 @@ export { PageShell } from './page-shell';
 export { AmbientBackdrop } from './ambient-backdrop';
 export { BrandMark } from './brand-mark';
 
+// Glass Panels
+export { GlassPanel, WidgetContainer } from './glass-panel';
+export type { GlassPanelProps, WidgetContainerProps } from './glass-panel';
+
 // =============================================================================
 // DATA SHELL - Padrão obrigatório para tabelas
 // =============================================================================

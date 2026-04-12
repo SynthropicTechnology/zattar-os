@@ -17,7 +17,6 @@ export interface AudienciasMesViewProps {
   audiencias: Audiencia[];
   currentDate: Date;
   onDateChange: (date: Date) => void;
-  onViewDetail: (audiencia: Audiencia) => void;
   refetch: () => Promise<void>;
 }
 

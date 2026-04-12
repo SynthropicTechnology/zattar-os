@@ -24,10 +24,19 @@ export interface AudienciasListaViewProps {
 export function AudienciasListaView({
   audiencias,
   onViewDetail,
+  search,
 }: AudienciasListaViewProps) {
+  const filtered = search
+    ? audiencias.filter((a) =>
+        [a.tipoDescricao, a.numeroProcesso, a.poloAtivoNome, a.poloPassivoNome]
+          .filter(Boolean)
+          .some((field) => field!.toLowerCase().includes(search.toLowerCase()))
+      )
+    : audiencias;
+
   return (
     <AudienciasGlassList
-      audiencias={audiencias}
+      audiencias={filtered}
       isLoading={false}
       onView={onViewDetail}
     />
