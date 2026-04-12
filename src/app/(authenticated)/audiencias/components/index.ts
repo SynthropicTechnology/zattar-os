@@ -1,21 +1,3 @@
-// Main content
-export { AudienciasContent } from './audiencias-content';
-
-// Table/List views
-export { AudienciasListWrapper } from './audiencias-list-wrapper';
-export { AudienciasTableWrapper } from './audiencias-table-wrapper';
-export { AudienciasMonthWrapper } from './audiencias-month-wrapper';
-export { AudienciasYearWrapper } from './audiencias-year-wrapper';
-export { AudienciasListFilters } from './audiencias-list-filters';
-export { getAudienciasColumns, ResponsavelCell, type AudienciaComResponsavel } from './audiencias-list-columns';
-
-// Calendar views
-export { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
-export { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
-export { AudienciasCalendarCompact } from './audiencias-calendar-compact';
-export { AudienciasDayList } from './audiencias-day-list';
-export { AudienciasMonthDayCell } from './audiencias-month-day-cell';
-
 // Mission View components
 export { AudienciasMissionView } from './audiencias-mission-view';
 export { MissionCard } from './mission-card';
@@ -27,6 +9,11 @@ export { ConflictAlert } from './conflict-alert';
 export { LoadHeatmap } from './load-heatmap';
 export { AudienciaListRow } from './audiencia-list-row';
 export { RhythmStrip } from './rhythm-strip';
+
+// Glass Briefing components
+export { AudienciasGlassList } from './audiencias-glass-list';
+export { AudienciasGlassMonth } from './audiencias-glass-month';
+export { AudienciasYearHeatmap } from './audiencias-year-heatmap';
 
 // Cards and badges
 export { AudienciaCard } from './audiencia-card';
@@ -43,6 +30,10 @@ export { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-respons
 export { NovaAudienciaDialog } from './nova-audiencia-dialog';
 export { EditarAudienciaDialog } from './editar-audiencia-dialog';
 
+// List features
+export { AudienciasListFilters } from './audiencias-list-filters';
+export { getAudienciasColumns, ResponsavelCell, type AudienciaComResponsavel } from './audiencias-list-columns';
+
 // Settings
 export { TiposAudienciasList } from './tipos-audiencias-list';
 
@@ -54,7 +45,7 @@ export {
   parseAudienciasFilters,
 } from './audiencias-toolbar-filters';
 
-// Views (Glass Briefing sub-components)
+// Views (Glass Briefing)
 export {
   AudienciasSemanaView,
   AudienciasMesView,

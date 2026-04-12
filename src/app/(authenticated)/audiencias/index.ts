@@ -9,7 +9,7 @@
  *
  * @example
  * // Importar componentes
- * import { AudienciasContent, AudienciaCard } from '@/app/(authenticated)/audiencias';
+ * import { AudienciaCard } from '@/app/(authenticated)/audiencias';
  *
  * // Importar hooks
  * import { useAudiencias, useTiposAudiencias } from '@/app/(authenticated)/audiencias';
@@ -25,19 +25,9 @@
 // Components
 // ============================================================================
 export {
-  // Main content
-  AudienciasContent,
-  // Table/List views
-  AudienciasListWrapper,
-  AudienciasTableWrapper,
-  AudienciasMonthWrapper,
-  AudienciasYearWrapper,
+  // List features
   AudienciasListFilters,
   getAudienciasColumns,
-  // Calendar views
-  AudienciasCalendarMonthView,
-  AudienciasCalendarYearView,
-  AudienciasMonthDayCell,
   // Cards and badges
   AudienciaCard,
   AudienciaStatusBadge,
