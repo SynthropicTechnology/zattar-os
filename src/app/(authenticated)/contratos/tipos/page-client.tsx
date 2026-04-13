@@ -10,15 +10,10 @@ import { toast } from 'sonner';
 
 import { DataShell } from '@/components/shared/data-shell';
 import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
+import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -165,94 +160,84 @@ function TipoDialog({ open, onOpenChange, tipo, onSuccess }: TipoDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Tipo de Contrato' : 'Novo Tipo de Contrato'}</DialogTitle>
-        </DialogHeader>
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditing ? 'Editar Tipo de Contrato' : 'Novo Tipo de Contrato'}
+      maxWidth="md"
+      footer={
+        <Button type="submit" form="tipo-form" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isEditing ? 'Salvar alterações' : 'Criar tipo'}
+        </Button>
+      }
+    >
+      <Form {...form}>
+        <form id="tipo-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="nome"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: Ajuizamento" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="nome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Ajuizamento" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Slug</FormLabel>
+                <FormControl>
+                  <Input placeholder="ex: ajuizamento" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input placeholder="ex: ajuizamento" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="descricao"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Descrição (opcional)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Descrição do tipo de contrato..."
+                    className="resize-none"
+                    rows={3}
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="descricao"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descrição (opcional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Descrição do tipo de contrato..."
-                      className="resize-none"
-                      rows={3}
-                      {...field}
-                      value={field.value ?? ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="ordem"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ordem</FormLabel>
-                  <FormControl>
-                    <Input type="number" min={0} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isEditing ? 'Salvar alterações' : 'Criar tipo'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          <FormField
+            control={form.control}
+            name="ordem"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Ordem</FormLabel>
+                <FormControl>
+                  <Input type="number" min={0} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    </DialogFormShell>
   );
 }
 
@@ -320,7 +305,7 @@ export function TiposPageClient() {
           />
         }
       >
-        <div className="rounded-md border bg-card">
+        <GlassPanel className="p-1">
           {isLoading ? (
             <div className="p-4 space-y-3">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -387,7 +372,7 @@ export function TiposPageClient() {
               </tbody>
             </table>
           )}
-        </div>
+        </GlassPanel>
       </DataShell>
 
       <TipoDialog

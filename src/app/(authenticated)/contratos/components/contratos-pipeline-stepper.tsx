@@ -66,8 +66,8 @@ export function ContratosPipelineStepper({
               onClick={() => onStatusClick?.(stage)}
               className={cn(
                 'flex items-center gap-2 rounded-lg px-3 py-1.5 transition-colors',
-                'hover:bg-primary/[0.04]',
-                isActive && 'bg-primary/[0.06]',
+                'hover:bg-primary/4',
+                isActive && 'bg-primary/6',
               )}
             >
               {/* Colored dot */}

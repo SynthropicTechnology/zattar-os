@@ -18,15 +18,9 @@ import { toast } from 'sonner';
 
 import { DataShell } from '@/components/shared/data-shell';
 import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -223,93 +217,83 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Pipeline' : 'Novo Pipeline'}</DialogTitle>
-        </DialogHeader>
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditing ? 'Editar Pipeline' : 'Novo Pipeline'}
+      maxWidth="md"
+      footer={
+        <Button type="submit" form="pipeline-form" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isEditing ? 'Salvar alterações' : 'Criar pipeline'}
+        </Button>
+      }
+    >
+      <Form {...form}>
+        <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {!isEditing && (
+            <FormField
+              control={form.control}
+              name="segmentoId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Segmento</FormLabel>
+                  <FormControl>
+                    <select
+                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      value={field.value}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    >
+                      <option value={0}>Selecione um segmento...</option>
+                      {segmentos.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.nome}
+                        </option>
+                      ))}
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {!isEditing && (
-              <FormField
-                control={form.control}
-                name="segmentoId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Segmento</FormLabel>
-                    <FormControl>
-                      <select
-                        className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                        value={field.value}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      >
-                        <option value={0}>Selecione um segmento...</option>
-                        {segmentos.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.nome}
-                          </option>
-                        ))}
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormField
+            control={form.control}
+            name="nome"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: Pipeline Trabalhista" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
+          />
 
-            <FormField
-              control={form.control}
-              name="nome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Pipeline Trabalhista" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="descricao"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descrição (opcional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Descrição do pipeline..."
-                      className="resize-none"
-                      rows={3}
-                      {...field}
-                      value={field.value ?? ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isEditing ? 'Salvar alterações' : 'Criar pipeline'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          <FormField
+            control={form.control}
+            name="descricao"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Descrição (opcional)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Descrição do pipeline..."
+                    className="resize-none"
+                    rows={3}
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    </DialogFormShell>
   );
 }
 
@@ -397,106 +381,96 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Estágio' : 'Novo Estágio'}</DialogTitle>
-        </DialogHeader>
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditing ? 'Editar Estágio' : 'Novo Estágio'}
+      maxWidth="md"
+      footer={
+        <Button type="submit" form="estagio-form" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isEditing ? 'Salvar alterações' : 'Criar estágio'}
+        </Button>
+      }
+    >
+      <Form {...form}>
+        <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="nome"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: Em Análise" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="nome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Em Análise" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Slug</FormLabel>
+                <FormControl>
+                  <Input placeholder="ex: em_analise" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input placeholder="ex: em_analise" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="cor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cor</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="color"
-                        className="h-9 w-12 cursor-pointer rounded-md border border-input p-1"
-                        value={field.value}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                      <Input
-                        placeholder="#6B7280"
-                        value={field.value}
-                        onChange={(e) => field.onChange(e.target.value)}
-                        className="font-mono"
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="isDefault"
-              render={({ field }) => (
-                <FormItem>
+          <FormField
+            control={form.control}
+            name="cor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Cor</FormLabel>
+                <FormControl>
                   <div className="flex items-center gap-3">
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className="mt-0!">Estágio padrão</FormLabel>
+                    <input
+                      type="color"
+                      className="h-9 w-12 cursor-pointer rounded-md border border-input p-1"
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
+                    <Input
+                      placeholder="#6B7280"
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      className="font-mono"
+                    />
                   </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isEditing ? 'Salvar alterações' : 'Criar estágio'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          <FormField
+            control={form.control}
+            name="isDefault"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-3">
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="mt-0!">Estágio padrão</FormLabel>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    </DialogFormShell>
   );
 }
 

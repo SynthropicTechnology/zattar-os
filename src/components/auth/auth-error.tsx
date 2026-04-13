@@ -43,7 +43,7 @@ export function AuthError({ error }: { error?: string }) {
         className="w-full"
       >
         <Link href="/login" className="auth-btn-primary">
-          <ArrowLeft className="h-4.5 w-4.5>
+          <ArrowLeft className="h-4.5 w-4.5" />
           Voltar ao login
         </Link>
       </motion.div>
