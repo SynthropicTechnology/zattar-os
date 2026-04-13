@@ -69,7 +69,10 @@ export {
   actionExcluirContratosEmMassa,
   actionAlterarResponsavelContrato,
   actionContratosStats,
+  actionContratosPulseStats,
 } from './actions';
+
+export type { ContratosPulseStats } from './actions';
 
 // --- Segmentos Actions ---
 export type {

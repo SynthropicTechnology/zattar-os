@@ -41,6 +41,9 @@ import {
   excluirContrato,
 } from "../service";
 import {
+  sumValorContratosAtivos,
+  countContratosVencendo,
+  countContratosSemResponsavel,
   countContratosNovosMes,
   countContratosTrendMensal,
 } from "../repository";
@@ -1465,4 +1468,65 @@ export async function actionBuscarContratoCompleto(
       message: "Erro ao carregar contrato. Tente novamente.",
     };
   }
+}
+
+// =============================================================================
+// PULSE STATS (KPI Strip)
+// =============================================================================
+
+export interface ContratosPulseStats {
+  ativos: number;
+  valorTotal: number;
+  vencendo30d: number;
+  novosMes: number;
+  semResponsavel: number;
+  porStatus: Record<string, number>;
+  trendMensal: number[];
+}
+
+export async function actionContratosPulseStats(): Promise<
+  ActionResult<ContratosPulseStats>
+> {
+  const [
+    statusResult,
+    valorResult,
+    vencendoResult,
+    novosResult,
+    semRespResult,
+    trendResult,
+  ] = await Promise.all([
+    contarContratosPorStatus(),
+    sumValorContratosAtivos(),
+    countContratosVencendo(30),
+    countContratosNovosMes(),
+    countContratosSemResponsavel(),
+    countContratosTrendMensal(6),
+  ]);
+
+  if (!statusResult.success) {
+    return {
+      success: false,
+      error: statusResult.error.message,
+      message: "Erro ao carregar estatísticas",
+    };
+  }
+
+  const porStatus = statusResult.data;
+  const ativos = (porStatus.contratado ?? 0) + (porStatus.distribuido ?? 0);
+
+  return {
+    success: true,
+    data: {
+      ativos,
+      valorTotal: valorResult.success ? valorResult.data : 0,
+      vencendo30d: vencendoResult.success ? vencendoResult.data : 0,
+      novosMes: novosResult.success ? novosResult.data : 0,
+      semResponsavel: semRespResult.success ? semRespResult.data : 0,
+      porStatus: porStatus as Record<string, number>,
+      trendMensal: trendResult.success
+        ? trendResult.data.map((t) => t.count)
+        : [],
+    },
+    message: "Estatísticas carregadas",
+  };
 }

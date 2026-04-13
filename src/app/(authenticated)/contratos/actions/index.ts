@@ -11,6 +11,7 @@ export type {
   ClienteDetalhado,
   ResponsavelDetalhado,
   SegmentoDetalhado,
+  ContratosPulseStats,
 } from "./contratos-actions";
 export {
   actionCriarContrato,
@@ -28,6 +29,7 @@ export {
   actionExcluirContratosEmMassa,
   actionAlterarResponsavelContrato,
   actionContratosStats,
+  actionContratosPulseStats,
 } from "./contratos-actions";
 
 // Segmentos Actions
