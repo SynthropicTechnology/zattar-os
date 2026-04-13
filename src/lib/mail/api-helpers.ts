@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/auth/api-auth";
-import { getUserMailConfig } from "./credentials";
-import type { MailConfig } from "./config";
+import { getUserMailConfig } from "@/app/(authenticated)/mail/repository";
+import type { MailConfig } from "@/app/(authenticated)/mail/domain";
 
 export interface MailAuthResult {
   usuarioId: number;
