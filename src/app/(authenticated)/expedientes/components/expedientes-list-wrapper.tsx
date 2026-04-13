@@ -22,7 +22,9 @@ import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 
+import { cn } from '@/lib/utils';
 import { columns, type ExpedientesTableMeta } from './columns';
+import { ExpedientesGlassList } from './expedientes-glass-list';
 import {
   ExpedientesListFilters,
 } from './expedientes-list-filters';
@@ -38,13 +40,20 @@ export interface ExpedientesListWrapperProps {
   search?: string;
   activeTab?: 'todos' | 'pendentes' | 'baixados';
   refreshCounter?: number;
+  onViewDetail?: (expediente: Expediente) => void;
+  onBaixar?: (expediente: Expediente) => void;
 }
 
 export function ExpedientesListWrapper({
   search = '',
   activeTab = 'pendentes',
   refreshCounter = 0,
+  onViewDetail,
+  onBaixar,
 }: ExpedientesListWrapperProps) {
+  // ─── List mode toggle (glass rows vs data table) ────────────────────────
+  const [listMode, setListMode] = React.useState<'glass' | 'table'>('glass');
+
   // ─── Table instance ──────────────────────────────────────────────────────
   const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
@@ -121,35 +130,68 @@ export function ExpedientesListWrapper({
     (value: T) => { setter(value); setPageIndex(0); };
 
   // ─── Render ──────────────────────────────────────────────────────────────
+
+  const listModeToggle = (
+    <div className="flex gap-1 rounded-lg bg-muted/30 p-0.5">
+      <button
+        type="button"
+        onClick={() => setListMode('glass')}
+        className={cn(
+          'px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer',
+          listMode === 'glass'
+            ? 'bg-background text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground',
+        )}
+      >
+        Rows
+      </button>
+      <button
+        type="button"
+        onClick={() => setListMode('table')}
+        className={cn(
+          'px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer',
+          listMode === 'table'
+            ? 'bg-background text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground',
+        )}
+      >
+        Tabela
+      </button>
+    </div>
+  );
+
   return (
     <>
       <DataShell
       header={
         <DataTableToolbar
-          table={table ?? undefined}
+          table={listMode === 'table' ? (table ?? undefined) : undefined}
           density={density}
           onDensityChange={setDensity}
           filtersSlot={
-            <ExpedientesListFilters
-              trtFiltro={trtFiltro}
-              onTrtChange={withPageReset(setTrtFiltro)}
-              grauFiltro={grauFiltro}
-              onGrauChange={withPageReset(setGrauFiltro)}
-              origemFiltro={origemFiltro}
-              onOrigemChange={withPageReset(setOrigemFiltro)}
-              responsavelFiltro={responsavelFiltro}
-              onResponsavelChange={withPageReset(setResponsavelFiltro)}
-              tipoExpedienteFiltro={tipoExpedienteFiltro}
-              onTipoExpedienteChange={withPageReset(setTipoExpedienteFiltro)}
-              juizoDigitalFiltro={juizoDigitalFiltro}
-              onJuizoDigitalChange={withPageReset(setJuizoDigitalFiltro)}
-              segredoJusticaFiltro={segredoJusticaFiltro}
-              onSegredoJusticaChange={withPageReset(setSegredoJusticaFiltro)}
-              prioridadeProcessualFiltro={prioridadeProcessualFiltro}
-              onPrioridadeProcessualChange={withPageReset(setPrioridadeProcessualFiltro)}
-              usuarios={usuarios || []}
-              tiposExpedientes={tiposExpedientes || []}
-            />
+            <div className="flex items-center gap-2">
+              {listModeToggle}
+              <ExpedientesListFilters
+                trtFiltro={trtFiltro}
+                onTrtChange={withPageReset(setTrtFiltro)}
+                grauFiltro={grauFiltro}
+                onGrauChange={withPageReset(setGrauFiltro)}
+                origemFiltro={origemFiltro}
+                onOrigemChange={withPageReset(setOrigemFiltro)}
+                responsavelFiltro={responsavelFiltro}
+                onResponsavelChange={withPageReset(setResponsavelFiltro)}
+                tipoExpedienteFiltro={tipoExpedienteFiltro}
+                onTipoExpedienteChange={withPageReset(setTipoExpedienteFiltro)}
+                juizoDigitalFiltro={juizoDigitalFiltro}
+                onJuizoDigitalChange={withPageReset(setJuizoDigitalFiltro)}
+                segredoJusticaFiltro={segredoJusticaFiltro}
+                onSegredoJusticaChange={withPageReset(setSegredoJusticaFiltro)}
+                prioridadeProcessualFiltro={prioridadeProcessualFiltro}
+                onPrioridadeProcessualChange={withPageReset(setPrioridadeProcessualFiltro)}
+                usuarios={usuarios || []}
+                tiposExpedientes={tiposExpedientes || []}
+              />
+            </div>
           }
         />
       }
@@ -168,29 +210,39 @@ export function ExpedientesListWrapper({
         />
       }
     >
-      <DataTable
-        columns={columns}
-        data={expedientes}
-        pagination={{
-          pageIndex,
-          pageSize,
-          total,
-          totalPages,
-          onPageChange: setPageIndex,
-          onPageSizeChange: (size) => {
-            setPageSize(size);
-            setPageIndex(0);
-          },
-        }}
-        isLoading={isLoading}
-        error={error}
-        density={density}
-        onDensityChange={setDensity}
-        onTableReady={setTable}
-        options={{ meta: tableMeta as unknown as Record<string, unknown> }}
-        emptyMessage="Nenhum expediente encontrado."
-        striped
-      />
+      {listMode === 'glass' ? (
+        <ExpedientesGlassList
+          expedientes={expedientes}
+          isLoading={isLoading}
+          onViewDetail={onViewDetail ?? (() => {})}
+          onBaixar={onBaixar}
+          usuariosData={usuarios}
+        />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={expedientes}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total,
+            totalPages,
+            onPageChange: setPageIndex,
+            onPageSizeChange: (size) => {
+              setPageSize(size);
+              setPageIndex(0);
+            },
+          }}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onDensityChange={setDensity}
+          onTableReady={setTable}
+          options={{ meta: tableMeta as unknown as Record<string, unknown> }}
+          emptyMessage="Nenhum expediente encontrado."
+          striped
+        />
+      )}
     </DataShell>
     </>
   );

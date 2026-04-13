@@ -20,7 +20,17 @@
  */
 
 // ============================================================================
-// Components
+// Components — Glass Briefing (new)
+// ============================================================================
+export { CapturaClient } from './captura-client';
+export { CapturaKpiStrip } from './components/captura-kpi-strip';
+export type { CapturaKpiData } from './components/captura-kpi-strip';
+export { CapturaFilterBar } from './components/captura-filter-bar';
+export type { CapturaFilters } from './components/captura-filter-bar';
+export { CapturaGlassList } from './components/captura-glass-list';
+
+// ============================================================================
+// Components — Legacy (kept for backward compatibility)
 // ============================================================================
 export { CapturaList } from './components/captura-list';
 export { CapturaDialog } from './components/captura-dialog';

@@ -363,6 +363,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
             search={search}
             activeTab={activeTab}
             refreshCounter={refreshCounter}
+            onViewDetail={handleViewDetail}
+            onBaixar={handleBaixar}
           />
         )}
 

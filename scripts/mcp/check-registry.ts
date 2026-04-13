@@ -96,10 +96,12 @@ function scanRegistries(): Map<string, RegistryInfo> {
     }
 
     // Detectar padrão (service vs action)
+    // Suporta imports estáticos (from '...') e dinâmicos (await import('...'))
     const usesActions = /actionResultToMcp|await\s+action\w+/.test(content);
-    const usesServices = /from\s+['"]@\/app\/\(authenticated\)\/[^'"]*\/service['"]/.test(content)
-      || /from\s+['"]@\/app\/\(authenticated\)\/[^'"]*\/repository['"]/.test(content)
-      || /from\s+['"]@\/lib\//.test(content);
+    const usesServices = /['"]@\/app\/\(authenticated\)\/[^'"]*\/service['"]/.test(content)
+      || /['"]@\/app\/\(authenticated\)\/[^'"]*\/repository['"]/.test(content)
+      || /['"]@\/app\/\(authenticated\)\/[^'"]*\/services\//.test(content)
+      || /['"]@\/lib\/(?!safe-action|mcp)/.test(content);
 
     let pattern: 'service' | 'action' | 'mixed' = 'action';
     if (usesServices && usesActions) pattern = 'mixed';

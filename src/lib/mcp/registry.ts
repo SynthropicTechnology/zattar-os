@@ -1,33 +1,33 @@
 /**
  * Registry Principal de Ferramentas MCP do ZattarOS
  *
- * Orquestra o registro de 119 ferramentas MCP organizadas em 22 módulos.
+ * Orquestra o registro de 172 ferramentas MCP organizadas em 23 módulos.
  * Cada módulo é responsável por registrar ferramentas relacionadas a uma feature específica.
  *
  * Módulos disponíveis:
- * - Processos (4 tools)
- * - Partes (6 tools)
- * - Contratos (4 tools)
- * - Financeiro (29 tools)
- * - Chat (6 tools)
- * - Documentos (6 tools)
- * - Expedientes (7 tools)
- * - Audiências (6 tools)
- * - Obrigações (5 tools)
- * - RH (2 tools)
- * - Dashboard (2 tools)
- * - Busca Semântica (1 tool)
- * - Captura (1 tool)
- * - Usuários (4 tools)
- * - Acervo (1 tool)
- * - Assistentes (1 tool)
- * - Cargos (1 tool)
- * - Advogados (5 tools)
- * - Perícias (4 tools)
- * - Assinatura Digital (1 tool)
- * - Tarefas (7 tools) - Inclui agendamento de reuniões Zoom
- * - Chatwoot (16 tools) - Integração com Chatwoot Contacts e Conversations
- * - Dify (13 tools) - Integração com Dify AI Platform (chat, workflows, knowledge base)
+ * - Processos (4 tools) - Busca por CPF, CNPJ, número CNJ
+ * - Partes (6 tools) - Clientes, partes contrárias, terceiros
+ * - Contratos (4 tools) - CRUD e busca por cliente
+ * - Financeiro (29 tools) - Plano de contas, lançamentos, DRE, fluxo de caixa
+ * - Chat (6 tools) - Salas, mensagens, grupos, chamadas
+ * - Documentos (6 tools) - Listagem, templates, categorias
+ * - Expedientes (7 tools) - Listagem, baixa, transferência, pendentes
+ * - Audiências (6 tools) - Listagem, status, busca por CPF/CNPJ/processo
+ * - Obrigações (5 tools) - Acordos, repasses pendentes
+ * - RH (2 tools) - Salários e folhas de pagamento
+ * - Dashboard (2 tools) - Métricas do escritório e do usuário
+ * - Busca Semântica (1 tool) - Busca vetorial cross-módulo
+ * - Captura (1 tool) - Capturas CNJ
+ * - Usuários (4 tools) - Listagem, busca por email/CPF, permissões
+ * - Acervo (1 tool) - Listagem de acervo processual
+ * - Assistentes (1 tool) - Listagem de assistentes AI
+ * - Cargos (1 tool) - Listagem de cargos
+ * - Advogados (5 tools) - CRUD, busca por OAB, credenciais
+ * - Perícias (4 tools) - Listagem, busca por ID/processo, especialidades
+ * - Assinatura Digital (1 tool) - Templates de assinatura
+ * - Tarefas (10 tools) - CRUD, quadros, reuniões Zoom, horários disponíveis
+ * - Chatwoot (16 tools) - Contatos, conversas, labels, métricas
+ * - Dify (50 tools) - Chat, workflows, knowledge base, anotações, tags, chunks
  */
 
 import {
