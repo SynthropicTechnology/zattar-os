@@ -7,7 +7,7 @@ import { ArrowLeft, Edit, MoreHorizontal, Trash2, User, Calendar, Clock } from '
 
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Card } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -24,7 +24,8 @@ import {
   ContratoDeleteDialog,
 } from '@/app/(authenticated)/contratos';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
+import { ContratosPipelineStepper } from '../../components/contratos-pipeline-stepper';
 
 function getInitials(nome: string): string {
   const parts = nome.split(' ').filter(Boolean);
@@ -82,7 +83,7 @@ export function ContratoDetalhesHeader({
 
   return (
     <>
-      <Card className="p-6">
+      <GlassPanel depth={1} className="p-6">
         <div className="flex items-start gap-4">
           {/* Botao voltar */}
           <Button
@@ -110,13 +111,13 @@ export function ContratoDetalhesHeader({
                   {clienteNome}
                 </Heading>
                 {parteContrariaNome && (
-                  <p className="text-sm font-medium text-foreground/70 mt-0.5">
+                  <Text variant="label" className="text-foreground/70 mt-0.5 block">
                     vs. {parteContrariaNome}
-                  </p>
+                  </Text>
                 )}
-                <p className="text-xs text-muted-foreground mt-1">
+                <Text variant="meta-label" as="p" className="mt-1">
                   Contrato #{contrato.id} &middot; {tipoContratoLabel} &middot; {tipoCobrancaLabel}
-                </p>
+                </Text>
               </div>
 
               {/* Acoes */}
@@ -158,27 +159,36 @@ export function ContratoDetalhesHeader({
             </div>
 
             {/* Metadados */}
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-4 mt-3">
               {responsavel && (
                 <div className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
-                  <span>Responsável: {responsavel.nome}</span>
+                  <User className="h-3 w-3 text-muted-foreground" />
+                  <Text variant="meta-label">Responsável: {responsavel.nome}</Text>
                 </div>
               )}
               <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                <span>Criado: {formatDate(contrato.createdAt)}</span>
+                <Calendar className="h-3 w-3 text-muted-foreground" />
+                <Text variant="meta-label">Criado: {formatDate(contrato.createdAt)}</Text>
               </div>
               {contrato.updatedAt && contrato.updatedAt !== contrato.createdAt && (
                 <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  <span>Atualizado: {formatDate(contrato.updatedAt)}</span>
+                  <Clock className="h-3 w-3 text-muted-foreground" />
+                  <Text variant="meta-label">Atualizado: {formatDate(contrato.updatedAt)}</Text>
                 </div>
               )}
             </div>
           </div>
         </div>
-      </Card>
+
+        {/* Pipeline stepper inline */}
+        <div className="mt-4 pt-4 border-t border-border/20">
+          <ContratosPipelineStepper
+            porStatus={{}}
+            activeStatus={contrato.status}
+            compact
+          />
+        </div>
+      </GlassPanel>
 
       <ContratoDeleteDialog
         contratoId={contrato.id}
