@@ -17,26 +17,33 @@ Redesign completo do system prompt do agente Pedrinho (CopilotKit v2) e introdu�
 | Persona do prompt | Manter e melhorar o prompt de referência original (Pedrinho irreverente) |
 | Contexto dinâmico por módulo | Mantido no hook (separação de responsabilidades) |
 | Mapeamento tool→permissão | Convenção automática (prefixo nome → operação, feature → recurso) + overrides explícitos |
-| Arquitetura CopilotKit | Per-request agent creation com beforeRequestMiddleware para auth |
+| Arquitetura CopilotKit | Per-request agent creation com beforeRequestMiddleware para auth (cookies Supabase, sem headers extras) |
 
 ## Arquitetura
 
 ```
-Frontend (CopilotKit provider)
-  │ headers: { Authorization: Bearer <supabase_token> }
+Frontend (CopilotKit provider — sem mudanças, cookies Supabase já são enviados)
+  │ cookies: sb-*-auth-token (automático via @supabase/ssr)
   ▼
 API Route /api/copilotkit
   │
-  ├─ beforeRequestMiddleware → valida sessão Supabase → extrai usuarioId
-  │
-  ├─ Busca permissões do usuário (cache 5min via checkPermission existente)
+  ├─ beforeRequestMiddleware:
+  │   ├─ createClient() (server) → auth.getUser() via cookies
+  │   ├─ Busca userId numérico: usuarios.id WHERE auth_user_id = user.id
+  │   └─ Injeta x-user-id no request header
   │
   ├─ getMcpToolsForUser(usuarioId) → filtra 172 tools → ~50-80 tools
+  │   └─ Usa checkPermission() existente (cache 5min)
   │
   ├─ new BuiltInAgent({ model, tools: filteredTools, prompt })
   │
   └─ CopilotRuntime({ agents: { default: agent } })
 ```
+
+**Nota**: O Supabase SSR envia cookies automaticamente — o frontend NÃO precisa
+passar headers de Authorization. A API route lê os cookies via `createClient()`
+do `@/lib/supabase/server`. O padrão é idêntico ao `requireAuth()` existente
+em `src/app/(authenticated)/usuarios/actions/utils.ts`.
 
 ### Hooks dinâmicos (inalterados)
 
@@ -151,11 +158,12 @@ Mudanças:
 3. Cria `BuiltInAgent` por request com tools filtradas
 4. Busca prompt do DB via `getPromptContent('copilotkit_pedrinho')` com fallback
 
-### 1.5 Frontend — headers de auth
+### 1.5 Frontend (sem mudanças necessárias)
 
-Arquivo: `src/components/layout/copilot-dashboard.tsx`
-
-Passar `headers={{ Authorization: Bearer <token> }}` ao `CopilotKitProvider`.
+O `CopilotKitProvider` em `src/components/layout/copilot-dashboard.tsx` já envia
+cookies Supabase automaticamente via `@supabase/ssr`. A API route usa
+`createClient()` server-side para ler a sessão dos cookies — não precisa de
+headers adicionais.
 
 ## Parte 2: System Prompt Redesenhado
 
@@ -211,7 +219,7 @@ que ele pode não ter permissão para essa operação.
 | `src/lib/mcp/permission-map.ts` | Criar | Mapeamento convenção + overrides |
 | `src/lib/copilotkit/mcp-bridge.ts` | Editar | Adicionar `getMcpToolsForUser()` |
 | `src/app/api/copilotkit/[[...copilotkit]]/route.ts` | Reescrever | Per-request agent + middleware auth |
-| `src/components/layout/copilot-dashboard.tsx` | Editar | Passar headers auth ao provider |
+| `src/components/layout/copilot-dashboard.tsx` | Inalterado | Cookies Supabase já são enviados automaticamente |
 | `src/lib/system-prompts/defaults.ts` | Editar | Reescrever `copilotkit_pedrinho` |
 
 ## Arquivos Inalterados

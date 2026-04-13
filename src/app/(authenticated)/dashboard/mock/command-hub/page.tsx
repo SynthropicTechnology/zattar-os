@@ -392,7 +392,7 @@ function LogoTrigger({
       title="Menu de navegação (⌘/)"
     >
       <Image
-        src="/logos/logo-small-light.svg"
+        src="/logos/Sem%20Fundo%20SVG/logo-z-light.svg"
         alt="Zattar"
         width={28}
         height={28}
@@ -401,7 +401,7 @@ function LogoTrigger({
         priority
       />
       <Image
-        src="/logos/logo-small-dark.svg"
+        src="/logos/Sem%20Fundo%20SVG/logo-z-dark.svg"
         alt="Zattar"
         width={28}
         height={28}

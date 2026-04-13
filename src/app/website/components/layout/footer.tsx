@@ -95,13 +95,13 @@ export function Footer() {
                 className="relative block w-10 sm:w-12 md:w-14 h-10 sm:h-12 md:h-14 mb-5 md:mb-6 border-none outline-none"
               >
                 <Image
-                  src="/logos/logo-small-light.svg"
+                  src="/logos/Sem%20Fundo%20SVG/logo-z-light.svg"
                   alt="Logo Zattar Advogados"
                   fill
                   className="object-contain object-left dark:hidden"
                 />
                 <Image
-                  src="/logos/logo-small-dark.svg"
+                  src="/logos/Sem%20Fundo%20SVG/logo-z-dark.svg"
                   alt="Logo Zattar Advogados"
                   fill
                   className="object-contain object-left hidden dark:block"

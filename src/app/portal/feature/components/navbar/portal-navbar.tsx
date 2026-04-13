@@ -68,8 +68,8 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
           <Link href={`/portal`} className="flex items-center space-x-2">
             <div className="w-9 h-9 flex items-center justify-center">
               <Image 
-                src="/logos/logo-small-light.svg" 
-                alt="Logo Meu Processo" 
+                src="/logos/Sem%20Fundo%20SVG/logo-z-light.svg"
+                alt="Logo Meu Processo"
                 width={36}
                 height={36}
                 className="h-9 w-auto object-contain" 
@@ -129,8 +129,8 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
           <Link href={`/portal`} className="flex items-center space-x-2">
             <div className="w-8 h-8 flex items-center justify-center">
               <Image 
-                src="/logos/logo-small-light.svg" 
-                alt="Logo Meu Processo" 
+                src="/logos/Sem%20Fundo%20SVG/logo-z-light.svg"
+                alt="Logo Meu Processo"
                 width={32}
                 height={32}
                 className="h-8 w-auto object-contain" 

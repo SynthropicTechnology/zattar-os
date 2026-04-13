@@ -79,7 +79,7 @@ export function PortalShell({ children, clientName = "Cliente" }: PortalShellPro
       <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border/60 bg-background/80 backdrop-blur-lg px-4 md:px-8">
         <Link href="/portal/dashboard" className="flex items-center gap-2">
           <Image
-            src="/logos/logo-small-dark.svg"
+            src="/logos/Sem%20Fundo%20SVG/logo-z-dark.svg"
             alt="Zattar"
             width={28}
             height={28}
@@ -87,7 +87,7 @@ export function PortalShell({ children, clientName = "Cliente" }: PortalShellPro
             priority
           />
           <Image
-            src="/logos/logo-small-light.svg"
+            src="/logos/Sem%20Fundo%20SVG/logo-z-light.svg"
             alt="Zattar"
             width={28}
             height={28}

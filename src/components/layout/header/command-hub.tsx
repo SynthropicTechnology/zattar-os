@@ -476,7 +476,7 @@ export function CommandHub() {
           }}
         >
           <Image
-            src="/logos/logo-small-light.svg"
+            src="/logos/Sem%20Fundo%20SVG/logo-z-light.svg"
             alt="Zattar"
             width={36}
             height={36}
@@ -484,7 +484,7 @@ export function CommandHub() {
             priority
           />
           <Image
-            src="/logos/logo-small-dark.svg"
+            src="/logos/Sem%20Fundo%20SVG/logo-z-dark.svg"
             alt="Zattar"
             width={36}
             height={36}

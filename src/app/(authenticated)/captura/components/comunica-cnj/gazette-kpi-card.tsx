@@ -142,7 +142,7 @@ export function GazetteKpiCard({
       className={cn(
         'relative p-3 overflow-hidden h-full',
         isActive && 'border-t-2 border-t-primary',
-        isDanger && !isActive && 'bg-destructive/[0.04]',
+        isDanger && !isActive && 'bg-destructive/4',
       )}
     >
       {/* Label */}

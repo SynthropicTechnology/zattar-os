@@ -47,10 +47,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/logos/logo-z-dark.png", media: "(prefers-color-scheme: light)", type: "image/png" },
-      { url: "/logos/logo-z-light.png", media: "(prefers-color-scheme: dark)", type: "image/png" },
+      { url: "/logos/Sem%20Fundo%20PNG/logo-z-dark.png", media: "(prefers-color-scheme: light)", type: "image/png" },
+      { url: "/logos/Sem%20Fundo%20PNG/logo-z-light.png", media: "(prefers-color-scheme: dark)", type: "image/png" },
     ],
-    apple: [{ url: "/logos/logo-z-dark.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/logos/Sem%20Fundo%20PNG/logo-z-dark.png", sizes: "180x180", type: "image/png" }],
   },
 };
 

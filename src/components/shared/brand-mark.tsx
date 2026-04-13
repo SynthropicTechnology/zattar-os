@@ -61,9 +61,9 @@ const SIZE_CLASSES: Record<Exclude<BrandMarkSize, 'custom'>, string> = {
   xl: 'h-20 sm:h-24 w-auto',
 }
 
-const LIGHT_SRC = '/logos/logomarca-light.svg'
-const DARK_SRC = '/logos/logomarca-dark.svg'
-const SMALL_DARK_SRC = '/logos/logo-small-dark.svg'
+const LIGHT_SRC = '/logos/Sem%20Fundo%20SVG/logo-zattar-light.svg'
+const DARK_SRC = '/logos/Sem%20Fundo%20SVG/logo-zattar-dark.svg'
+const SMALL_DARK_SRC = '/logos/Sem%20Fundo%20SVG/logo-z-dark.svg'
 
 export function BrandMark({
   variant = 'auto',

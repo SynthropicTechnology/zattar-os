@@ -265,7 +265,7 @@ export function ExpedientesCalendar() {
                                         options={STATUS_OPTIONS}
                                         value={statusFilter}
                                         onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
-                                        defaultValue="todos"
+                                        defaultValue="pendentes"
                                     />
                                     <ResponsiveFilterPanel
                                         filterGroups={filterGroups}
