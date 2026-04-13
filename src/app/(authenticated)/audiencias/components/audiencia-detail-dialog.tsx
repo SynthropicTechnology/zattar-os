@@ -39,6 +39,7 @@ import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audien
 import {
   type Audiencia,
   type EnderecoPresencial,
+  ModalidadeAudiencia,
   GRAU_TRIBUNAL_LABELS,
   TRT_NOMES,
   isAudienciaCapturada,
@@ -49,7 +50,9 @@ import {
   actionAtualizarUrlVirtual,
   actionAtualizarEnderecoPresencial,
   actionAtualizarObservacoes,
+  actionAtualizarAudienciaPayload,
 } from '../actions';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 // =============================================================================
@@ -132,6 +135,9 @@ export function AudienciaDetailDialog({
   const [editingObs, setEditingObs] = React.useState(false);
   const [obsDraft, setObsDraft] = React.useState('');
   const [savingObs, setSavingObs] = React.useState(false);
+
+  const [savingModalidade, setSavingModalidade] = React.useState(false);
+  const [modalidadePopoverOpen, setModalidadePopoverOpen] = React.useState(false);
 
   const { usuarios } = useUsuarios();
 
@@ -239,6 +245,20 @@ export function AudienciaDetailDialog({
     setSavingObs(false);
   }, [audiencia, obsDraft, onOpenChange]);
 
+  const handleChangeModalidade = React.useCallback(async (novaModalidade: ModalidadeAudiencia) => {
+    if (!audiencia || novaModalidade === audiencia.modalidade) {
+      setModalidadePopoverOpen(false);
+      return;
+    }
+    setSavingModalidade(true);
+    setModalidadePopoverOpen(false);
+    const result = await actionAtualizarAudienciaPayload(audiencia.id, { modalidade: novaModalidade });
+    if (result.success) {
+      onOpenChange(false);
+    }
+    setSavingModalidade(false);
+  }, [audiencia, onOpenChange]);
+
   const hasIndicadores = audiencia && (
     audiencia.segredoJustica ||
     audiencia.juizoDigital ||
@@ -291,11 +311,48 @@ export function AudienciaDetailDialog({
                   </span>
                 </div>
                 <div className="w-px bg-border/40 mx-4" />
-                {/* Modalidade */}
+                {/* Modalidade — inline popover para trocar */}
                 <div className="flex-1">
                   <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em] block">Modalidade</span>
                   <div className="mt-1">
-                    <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+                    <Popover open={modalidadePopoverOpen} onOpenChange={setModalidadePopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className="flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5 transition-colors hover:bg-muted/50 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                          disabled={savingModalidade}
+                        >
+                          {savingModalidade ? (
+                            <Loader2 className="size-3 animate-spin text-muted-foreground" />
+                          ) : (
+                            <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+                          )}
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-40 p-1.5 rounded-xl glass-dropdown" align="start" side="bottom">
+                        <p className="text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider px-2 pt-1.5 pb-1">
+                          Modalidade
+                        </p>
+                        {([
+                          { value: ModalidadeAudiencia.Virtual, label: 'Virtual', icon: Video },
+                          { value: ModalidadeAudiencia.Presencial, label: 'Presencial', icon: Building2 },
+                          { value: ModalidadeAudiencia.Hibrida, label: 'Híbrida', icon: Video },
+                        ] as const).map(({ value, label, icon: Icon }) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => handleChangeModalidade(value)}
+                            className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-xs hover:bg-muted/50 transition-colors cursor-pointer"
+                          >
+                            <Icon className="size-3.5 text-muted-foreground/50" />
+                            <span>{label}</span>
+                            {audiencia.modalidade === value && (
+                              <Check className="size-3 ml-auto text-primary" />
+                            )}
+                          </button>
+                        ))}
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </div>
                 <div className="w-px bg-border/40 mx-4" />

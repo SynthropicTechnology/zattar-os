@@ -2,289 +2,330 @@
 /**
  * Script de Verificação do Registry MCP - ZattarOS
  *
- * Verifica se todas as Server Actions das features estão registradas
- * como ferramentas MCP.
+ * Verifica o estado das ferramentas MCP registradas,
+ * compara com módulos existentes, e identifica gaps.
+ *
+ * Suporta ambos os padrões de registro:
+ * - Padrão service: tools chamam services diretamente
+ * - Padrão action: tools chamam Server Actions via actionResultToMcp
  *
  * Uso:
  *   npm run mcp:check
- *   npm run mcp:check -- --exclude  # Excluir actions documentadas em exclusions-by-feature.md
+ *   npm run mcp:check -- --verbose  # Mostrar detalhes por módulo
  *   npx tsx scripts/mcp/check-registry.ts
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 
-const FEATURES_DIR = path.join(process.cwd(), 'src/features');
-const REGISTRY_FILE = path.join(process.cwd(), 'src/lib/mcp/registry.ts');
+const MODULES_DIR = path.join(process.cwd(), 'src/app/(authenticated)');
 const REGISTRIES_DIR = path.join(process.cwd(), 'src/lib/mcp/registries');
-const EXCLUSIONS_FILE = path.join(process.cwd(), 'docs/mcp-audit/exclusions-by-feature.md');
+const REGISTRY_FILE = path.join(process.cwd(), 'src/lib/mcp/registry.ts');
 
-// Verificar se deve usar exclusões
-const useExclusions = process.argv.includes('--exclude');
+const verbose = process.argv.includes('--verbose');
 
-interface ActionInfo {
+// Módulos intencionalmente minimais (sem MCP)
+// Ref: docs/architecture/MINIMAL_MODULES.md
+const MINIMAL_MODULES = new Set([
+  'ajuda',          // Sistema de docs auto-descritivo
+  'calculadoras',   // Cálculos puros client-side
+  'comunica-cnj',   // Proxy de captura
+  'configuracoes',  // Configurações internas do sistema
+  'editor',         // Wrapper PlateEditor
+  'pangea',         // FSD aninhado em feature/
+  'perfil',         // Perfil do usuário (UI-only)
+  'repasses',       // Proxy de obrigações
+]);
+
+interface ToolInfo {
   name: string;
   feature: string;
-  file: string;
 }
 
-interface CheckResult {
-  total: number;
-  registered: number;
-  missing: ActionInfo[];
+interface RegistryInfo {
+  file: string;
+  tools: ToolInfo[];
+  pattern: 'service' | 'action' | 'mixed';
+  importSources: string[];
+}
+
+interface ModuleInfo {
+  name: string;
+  hasActions: boolean;
+  hasService: boolean;
+  hasRepository: boolean;
+  actionCount: number;
+  hasRegistry: boolean;
+  isMinimal: boolean;
 }
 
 /**
- * Encontra todas as Server Actions nas features
+ * Escaneia registries e extrai informações de tools
  */
-function findAllActions(): ActionInfo[] {
-  const actions: ActionInfo[] = [];
+function scanRegistries(): Map<string, RegistryInfo> {
+  const registries = new Map<string, RegistryInfo>();
 
-  // Listar features
-  const features = fs.readdirSync(FEATURES_DIR).filter((f) => {
-    const stat = fs.statSync(path.join(FEATURES_DIR, f));
-    return stat.isDirectory();
+  if (!fs.existsSync(REGISTRIES_DIR)) {
+    console.warn('⚠️  Diretório de registries não encontrado');
+    return registries;
+  }
+
+  const files = fs.readdirSync(REGISTRIES_DIR)
+    .filter((f) => f.endsWith('-tools.ts'));
+
+  for (const file of files) {
+    const filePath = path.join(REGISTRIES_DIR, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const registryName = file.replace('-tools.ts', '');
+
+    // Extrair nomes de tools via registerMcpTool({ name: '...' })
+    const tools: ToolInfo[] = [];
+    const toolNameRegex = /registerMcpTool\(\s*\{[^}]*?name:\s*['"]([^'"]+)['"]/g;
+    let match;
+    while ((match = toolNameRegex.exec(content)) !== null) {
+      // Extrair feature do mesmo bloco
+      const blockStart = content.lastIndexOf('registerMcpTool', match.index);
+      const blockEnd = content.indexOf('handler:', match.index);
+      const block = content.substring(blockStart, blockEnd > -1 ? blockEnd : match.index + 200);
+      const featureMatch = block.match(/feature:\s*['"]([^'"]+)['"]/);
+
+      tools.push({
+        name: match[1],
+        feature: featureMatch ? featureMatch[1] : registryName,
+      });
+    }
+
+    // Detectar padrão (service vs action)
+    const usesActions = /actionResultToMcp|await\s+action\w+/.test(content);
+    const usesServices = /from\s+['"]@\/app\/\(authenticated\)\/[^'"]*\/service['"]/.test(content)
+      || /from\s+['"]@\/app\/\(authenticated\)\/[^'"]*\/repository['"]/.test(content)
+      || /from\s+['"]@\/lib\//.test(content);
+
+    let pattern: 'service' | 'action' | 'mixed' = 'action';
+    if (usesServices && usesActions) pattern = 'mixed';
+    else if (usesServices && !usesActions) pattern = 'service';
+
+    // Extrair fontes de import
+    const importSources: string[] = [];
+    const importRegex = /(?:import|from)\s+['"](@\/[^'"]+)['"]/g;
+    while ((match = importRegex.exec(content)) !== null) {
+      if (!match[1].includes('../') && !match[1].includes('./')) {
+        importSources.push(match[1]);
+      }
+    }
+
+    registries.set(registryName, {
+      file,
+      tools,
+      pattern,
+      importSources,
+    });
+  }
+
+  return registries;
+}
+
+/**
+ * Escaneia módulos e extrai informações
+ */
+function scanModules(): Map<string, ModuleInfo> {
+  const modules = new Map<string, ModuleInfo>();
+
+  const dirs = fs.readdirSync(MODULES_DIR).filter((f) => {
+    try {
+      return fs.statSync(path.join(MODULES_DIR, f)).isDirectory();
+    } catch {
+      return false;
+    }
   });
 
-  for (const feature of features) {
-    const actionsDir = path.join(FEATURES_DIR, feature, 'actions');
+  for (const dir of dirs) {
+    const modulePath = path.join(MODULES_DIR, dir);
+    const actionsDir = path.join(modulePath, 'actions');
+    const hasActions = fs.existsSync(actionsDir);
+    const hasService = fs.existsSync(path.join(modulePath, 'service.ts'));
+    const hasRepository = fs.existsSync(path.join(modulePath, 'repository.ts'));
 
-    if (!fs.existsSync(actionsDir)) {
+    // Contar actions exportadas
+    let actionCount = 0;
+    if (hasActions) {
+      const actionFiles = fs.readdirSync(actionsDir).filter((f) => f.endsWith('.ts'));
+      for (const file of actionFiles) {
+        const content = fs.readFileSync(path.join(actionsDir, file), 'utf-8');
+        const fnMatches = content.match(/export\s+(?:async\s+)?function\s+action\w+/g) || [];
+        const constMatches = content.match(/export\s+const\s+action\w+\s*=/g) || [];
+        actionCount += fnMatches.length + constMatches.length;
+      }
+    }
+
+    modules.set(dir, {
+      name: dir,
+      hasActions,
+      hasService,
+      hasRepository,
+      actionCount,
+      hasRegistry: false, // Será preenchido depois
+      isMinimal: MINIMAL_MODULES.has(dir),
+    });
+  }
+
+  return modules;
+}
+
+/**
+ * Verifica se o registry.ts orquestra todas as registries
+ */
+function checkOrchestration(registries: Map<string, RegistryInfo>): string[] {
+  const issues: string[] = [];
+
+  if (!fs.existsSync(REGISTRY_FILE)) {
+    issues.push('Arquivo registry.ts principal não encontrado');
+    return issues;
+  }
+
+  const content = fs.readFileSync(REGISTRY_FILE, 'utf-8');
+
+  // Extrair todas as funções de registro chamadas no registry.ts
+  const calledFunctions = new Set<string>();
+  const callRegex = /await\s+(register\w+Tools)\(\)/g;
+  let callMatch;
+  while ((callMatch = callRegex.exec(content)) !== null) {
+    calledFunctions.add(callMatch[1]);
+  }
+
+  // Extrair todas as funções importadas do barrel
+  const importedFunctions = new Set<string>();
+  const importRegex = /import\s*\{([^}]+)\}\s*from\s*['"]\.\/registries['"]/;
+  const importMatch = content.match(importRegex);
+  if (importMatch) {
+    importMatch[1].split(',').map(s => s.trim()).filter(Boolean).forEach(fn => {
+      importedFunctions.add(fn);
+    });
+  }
+
+  // Verificar: cada registry file deve ter sua função no barrel index.ts
+  const barrelPath = path.join(REGISTRIES_DIR, 'index.ts');
+  const barrelContent = fs.existsSync(barrelPath) ? fs.readFileSync(barrelPath, 'utf-8') : '';
+
+  for (const [name, info] of registries) {
+    // Verificar se o arquivo aparece no barrel
+    const fileRef = `./${name}-tools`;
+    if (!barrelContent.includes(fileRef)) {
+      issues.push(`Registry '${name}' (${info.file}) não exportado em registries/index.ts`);
       continue;
     }
 
-    // Listar arquivos de actions
-    const actionFiles = fs.readdirSync(actionsDir).filter((f) => f.endsWith('.ts'));
-
-    for (const file of actionFiles) {
-      const filePath = path.join(actionsDir, file);
-      const content = fs.readFileSync(filePath, 'utf-8');
-
-      // Encontrar exports de actions (funções que começam com "action")
-      const actionRegex = /export\s+(?:async\s+)?function\s+(action\w+)/g;
-      const constActionRegex = /export\s+const\s+(action\w+)\s*=/g;
-
-      let match;
-      while ((match = actionRegex.exec(content)) !== null) {
-        actions.push({
-          name: match[1],
-          feature,
-          file: path.relative(process.cwd(), filePath),
-        });
-      }
-
-      while ((match = constActionRegex.exec(content)) !== null) {
-        actions.push({
-          name: match[1],
-          feature,
-          file: path.relative(process.cwd(), filePath),
-        });
+    // Extrair o nome da função exportada do barrel
+    const exportRegex = new RegExp(`export\\s*\\{\\s*(\\w+)\\s*\\}\\s*from\\s*['"]\\.\\/` + name.replace(/-/g, '\\-') + `-tools['"]`);
+    const exportMatch = barrelContent.match(exportRegex);
+    if (exportMatch) {
+      const fnName = exportMatch[1];
+      if (!calledFunctions.has(fnName)) {
+        issues.push(`Registry '${name}' exporta ${fnName} mas NÃO é chamado em registry.ts`);
       }
     }
   }
 
-  return actions;
-}
-
-/**
- * Carrega lista de actions excluídas do documento
- */
-function loadExcludedActions(): Set<string> {
-  const excluded = new Set<string>();
-
-  if (!useExclusions || !fs.existsSync(EXCLUSIONS_FILE)) {
-    return excluded;
-  }
-
-  try {
-    const content = fs.readFileSync(EXCLUSIONS_FILE, 'utf-8');
-    
-    // Extrair actions da tabela (formato: | feature | actionXXX | ... |)
-    const lines = content.split('\n');
-    
-    for (const line of lines) {
-      // Pular header e separadores
-      if (line.trim().startsWith('|') && !line.includes('---') && !line.includes('Feature')) {
-        const columns = line.split('|').map(c => c.trim()).filter(c => c);
-        if (columns.length >= 2) {
-          const actionName = columns[1]; // Segunda coluna é a action
-          if (actionName.startsWith('action')) {
-            excluded.add(actionName);
-          }
-        }
-      }
-    }
-  } catch (error) {
-    console.warn('⚠️  Erro ao carregar exclusões:', error);
-  }
-
-  return excluded;
-}
-
-/**
- * Encontra actions registradas no registry MCP
- * Varre tanto o arquivo principal quanto os módulos em registries/
- */
-function findRegisteredActions(): Set<string> {
-  const registered = new Set<string>();
-
-  // Lista de arquivos para escanear
-  const filesToScan: string[] = [];
-
-  // Adicionar arquivo principal do registry (se existir)
-  if (fs.existsSync(REGISTRY_FILE)) {
-    filesToScan.push(REGISTRY_FILE);
-  }
-
-  // Adicionar arquivos de registries/ (exceto index.ts)
-  if (fs.existsSync(REGISTRIES_DIR)) {
-    const registryFiles = fs.readdirSync(REGISTRIES_DIR)
-      .filter((f) => f.endsWith('.ts') && f !== 'index.ts')
-      .map((f) => path.join(REGISTRIES_DIR, f));
-    filesToScan.push(...registryFiles);
-  }
-
-  if (filesToScan.length === 0) {
-    console.warn('⚠️  Nenhum arquivo de registry encontrado');
-    return registered;
-  }
-
-  for (const filePath of filesToScan) {
-    const content = fs.readFileSync(filePath, 'utf-8');
-
-    // Procurar por imports estáticos de actions
-    const staticImportRegex = /import\s*{\s*([^}]+)\s*}\s*from\s*['"]@\/features\/[^'"]+['"]/g;
-    let match;
-    while ((match = staticImportRegex.exec(content)) !== null) {
-      const imports = match[1].split(',').map((s) => s.trim());
-      for (const imp of imports) {
-        // Remover alias se houver
-        const actionName = imp.split(/\s+as\s+/)[0].trim();
-        if (actionName.startsWith('action')) {
-          registered.add(actionName);
-        }
-      }
-    }
-
-    // Procurar por imports dinâmicos (const { ... } = await import('@/app/(authenticated)/...'))
-    const dynamicImportRegex = /const\s*{\s*([^}]+)\s*}\s*=\s*await\s+import\s*\(\s*['"]@\/features\/[^'"]+['"]\s*\)/g;
-    while ((match = dynamicImportRegex.exec(content)) !== null) {
-      const imports = match[1].split(',').map((s) => s.trim());
-      for (const imp of imports) {
-        // Remover alias se houver
-        const actionName = imp.split(/\s+as\s+/)[0].trim();
-        if (actionName.startsWith('action')) {
-          registered.add(actionName);
-        }
-      }
-    }
-
-    // Procurar por chamadas diretas a actions no handler
-    const handlerRegex = /await\s+(action\w+)/g;
-    while ((match = handlerRegex.exec(content)) !== null) {
-      registered.add(match[1]);
-    }
-  }
-
-  return registered;
-}
-
-/**
- * Verifica o registry
- */
-function checkRegistry(): CheckResult {
-  console.log('🔍 Verificando Registry MCP do ZattarOS...\n');
-  
-  if (useExclusions) {
-    console.log('📋 Usando exclusões documentadas em exclusions-by-feature.md\n');
-  }
-
-  // Encontrar todas as actions
-  const allActions = findAllActions();
-  console.log(`📁 Encontradas ${allActions.length} Server Actions nas features\n`);
-
-  // Encontrar actions registradas
-  const registeredActions = findRegisteredActions();
-  console.log(`🔧 Encontradas ${registeredActions.size} actions no registry MCP\n`);
-
-  // Carregar exclusões se solicitado
-  const excludedActions = loadExcludedActions();
-  if (useExclusions && excludedActions.size > 0) {
-    console.log(`🚫 Actions excluídas (documentadas): ${excludedActions.size}\n`);
-  }
-
-  // Encontrar actions não registradas
-  const missing: ActionInfo[] = [];
-
-  for (const action of allActions) {
-    if (!registeredActions.has(action.name)) {
-      // Se usando exclusões, pular actions documentadas
-      if (useExclusions && excludedActions.has(action.name)) {
-        continue;
-      }
-      missing.push(action);
-    }
-  }
-
-  return {
-    total: allActions.length,
-    registered: registeredActions.size,
-    missing,
-  };
+  return issues;
 }
 
 /**
  * Execução principal
  */
 function main(): void {
-  const result = checkRegistry();
+  console.log('🔍 Verificando Registry MCP do ZattarOS...\n');
 
-  console.log('═'.repeat(60));
-  console.log('📊 RESULTADO DA VERIFICAÇÃO');
-  console.log('═'.repeat(60));
-  console.log(`   Total de Actions:         ${result.total}`);
-  console.log(`   Registradas no MCP:       ${result.registered}`);
-  console.log(`   Não registradas:          ${result.missing.length}`);
-  console.log('═'.repeat(60));
+  // Escanear registries e módulos
+  const registries = scanRegistries();
+  const modules = scanModules();
 
-  if (result.missing.length > 0) {
-    console.log('\n⚠️  Actions NÃO registradas no MCP:\n');
+  // Mapear registries → módulos
+  const registryFeatures = new Set<string>();
+  let totalTools = 0;
 
-    // Agrupar por feature
-    const byFeature = new Map<string, ActionInfo[]>();
-    for (const action of result.missing) {
-      if (!byFeature.has(action.feature)) {
-        byFeature.set(action.feature, []);
+  for (const [name, info] of registries) {
+    totalTools += info.tools.length;
+    registryFeatures.add(name);
+
+    // Marcar módulo correspondente
+    if (modules.has(name)) {
+      modules.get(name)!.hasRegistry = true;
+    }
+    // Também marcar se a feature dos tools aponta para o módulo
+    for (const tool of info.tools) {
+      if (modules.has(tool.feature)) {
+        modules.get(tool.feature)!.hasRegistry = true;
       }
-      byFeature.get(action.feature)!.push(action);
     }
+  }
 
-    for (const [feature, actions] of byFeature) {
-      console.log(`📦 ${feature}:`);
-      for (const action of actions) {
-        console.log(`   - ${action.name}`);
-        console.log(`     Arquivo: ${action.file}`);
+  // Identificar módulos sem registry (excluindo minimais e cross-cutting registries)
+  const modulesWithoutRegistry: ModuleInfo[] = [];
+  for (const [, mod] of modules) {
+    if (!mod.hasRegistry && !mod.isMinimal && mod.hasActions) {
+      modulesWithoutRegistry.push(mod);
+    }
+  }
+
+  // Verificar orquestração
+  const orchestrationIssues = checkOrchestration(registries);
+
+  // === OUTPUT ===
+  console.log('═'.repeat(60));
+  console.log('📊 RESULTADO DA VERIFICAÇÃO MCP');
+  console.log('═'.repeat(60));
+  console.log(`   Registries encontrados:   ${registries.size}`);
+  console.log(`   Ferramentas MCP total:    ${totalTools}`);
+  console.log(`   Módulos no app:           ${modules.size}`);
+  console.log(`   Módulos com actions:      ${[...modules.values()].filter(m => m.hasActions).length}`);
+  console.log(`   Módulos minimais:         ${[...modules.values()].filter(m => m.isMinimal).length}`);
+  console.log('═'.repeat(60));
+
+  if (verbose) {
+    console.log('\n📋 REGISTRIES POR MÓDULO:\n');
+    for (const [name, info] of [...registries.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+      const patternIcon = info.pattern === 'service' ? '🟢' : info.pattern === 'action' ? '🟡' : '🔵';
+      console.log(`  ${patternIcon} ${name} (${info.tools.length} tools, padrão: ${info.pattern})`);
+      for (const tool of info.tools) {
+        console.log(`     - ${tool.name}`);
       }
-      console.log();
     }
+    console.log('\n  Legenda: 🟢 service (direto) | 🟡 action (wrapper) | 🔵 mixed\n');
+  }
 
-    if (useExclusions) {
-      console.log('💡 Para registrar essas actions, adicione-as aos módulos em:');
-      console.log('   src/lib/mcp/registries/<feature>-tools.ts\n');
-      console.log('💡 Ou documente-as como excluídas em:');
-      console.log('   docs/mcp-audit/exclusions-by-feature.md\n');
-    } else {
-      console.log('💡 Para registrar essas actions, adicione-as aos módulos em:');
-      console.log('   src/lib/mcp/registries/<feature>-tools.ts\n');
-      console.log('💡 Dica: Use --exclude para ignorar actions documentadas em exclusions-by-feature.md\n');
+  // Reportar módulos sem registry
+  if (modulesWithoutRegistry.length > 0) {
+    console.log('\n⚠️  Módulos COM actions mas SEM registry MCP:\n');
+    for (const mod of modulesWithoutRegistry.sort((a, b) => b.actionCount - a.actionCount)) {
+      const layers = [];
+      if (mod.hasService) layers.push('service');
+      if (mod.hasRepository) layers.push('repository');
+      if (mod.hasActions) layers.push(`${mod.actionCount} actions`);
+      console.log(`   📦 ${mod.name} (${layers.join(', ')})`);
     }
+    console.log('\n💡 Para adicionar: crie src/lib/mcp/registries/<modulo>-tools.ts');
+    console.log('   e registre em src/lib/mcp/registries/index.ts + src/lib/mcp/registry.ts\n');
+  }
 
+  // Reportar problemas de orquestração
+  if (orchestrationIssues.length > 0) {
+    console.log('\n❌ Problemas de orquestração:\n');
+    for (const issue of orchestrationIssues) {
+      console.log(`   - ${issue}`);
+    }
+    console.log();
+  }
+
+  // Resultado final
+  const hasIssues = orchestrationIssues.length > 0;
+  if (hasIssues) {
+    console.log('❌ Verificação falhou — corrija os problemas acima\n');
     process.exit(1);
+  } else if (modulesWithoutRegistry.length > 0) {
+    console.log(`⚠️  ${modulesWithoutRegistry.length} módulo(s) sem cobertura MCP (não bloqueante)\n`);
+    process.exit(0); // Warning, não falha
   } else {
-    console.log('\n✅ Todas as actions úteis estão registradas no MCP!\n');
-    if (useExclusions) {
-      console.log('✅ Exclusões validadas: todas as actions não registradas estão documentadas.\n');
-    }
+    console.log('✅ Todas as registries estão orquestradas e operacionais!\n');
     process.exit(0);
   }
 }

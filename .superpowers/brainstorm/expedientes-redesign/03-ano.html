@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expedientes - Ano (Heatmap + Sidebar KPIs)</title>
+  <link rel="stylesheet" href="00-shared-styles.css">
+  <style>
+    /* === ANO-SPECIFIC STYLES === */
+
+    .ano-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .ano-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar stats */
+    .sidebar-stats {
+      padding: 20px;
+      position: sticky;
+      top: 24px;
+    }
+    .sidebar-stats-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.778rem;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+    }
+    .stat-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-top: 4px;
+    }
+    .stat-sub {
+      font-size: 10px;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+      margin-top: 4px;
+    }
+
+    /* Progress bar */
+    .stat-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.04);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.7s ease;
+    }
+
+    /* Year nav */
+    .year-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .year-nav-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted-foreground);
+      transition: all 0.15s;
+    }
+    .year-nav-btn:hover { background: rgba(85,35,235,0.06); color: var(--primary); }
+    .year-nav-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Heatmap container */
+    .heatmap-container {
+      padding: 20px;
+    }
+
+    /* Month grid (4x3) */
+    .months-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 1024px) {
+      .months-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .months-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Single month */
+    .month-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .month-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .month-count {
+      font-size: 9px;
+      font-variant-numeric: tabular-nums;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+    }
+
+    /* Mini weekday header */
+    .mini-weekday-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 2px;
+    }
+    .mini-weekday {
+      font-size: 7px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--muted-foreground);
+      opacity: 0.3;
+      text-transform: uppercase;
+    }
+
+    /* Month heatmap grid */
+    .month-heatmap {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    /* Today highlight */
+    .heatmap-cell.today {
+      outline: 2px solid var(--primary);
+      outline-offset: -1px;
+      border-radius: 3px;
+    }
+
+    /* Heatmap legend */
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+    .heatmap-legend-label {
+      font-size: 9px;
+      color: var(--muted-foreground);
+      opacity: 0.4;
+    }
+    .heatmap-legend-cell {
+      width: 12px; height: 12px;
+      border-radius: 2px;
+    }
+
+    /* Top months ranking */
+    .top-months {
+      margin-top: 16px;
+    }
+    .top-month-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+    }
+    .top-month-rank {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--muted-foreground);
+      opacity: 0.4;
+      width: 14px;
+      text-align: right;
+    }
+    .top-month-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--foreground);
+      width: 40px;
+    }
+    .top-month-bar-bg {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .top-month-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--primary);
+      transition: width 0.5s ease;
+    }
+    .top-month-value {
+      font-size: 10px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--foreground);
+      width: 28px;
+      text-align: right;
+    }
+
+    /* Breakdown badge row */
+    .breakdown-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .breakdown-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+    }
+    .breakdown-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar-mock" aria-label="Menu principal">
+  <div class="logo"></div>
+  <div class="nav-dot">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+  </div>
+  <div class="nav-dot active" aria-current="page">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><polyline points="14,2 14,8 20,8"/></svg>
+  </div>
+  <div class="nav-dot">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="page-container space-y-5 animate-in">
+
+    <!-- 1. Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="text-page-title">Expedientes</h1>
+        <p class="page-subtitle">Visao macro do acervo anual</p>
+      </div>
+      <button class="btn btn-primary" style="border-radius: 12px; padding: 8px 16px; font-size: 12px;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Expediente
+      </button>
+    </div>
+
+    <!-- 2. Controls -->
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+      <div class="tab-pills">
+        <button class="tab-pill active">Pendentes <span class="tab-count">142</span></button>
+        <button class="tab-pill">Baixados <span class="tab-count">891</span></button>
+        <button class="tab-pill">Todos <span class="tab-count">1033</span></button>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <div class="search-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Buscar processo, parte...">
+        </div>
+        <div class="view-toggle">
+          <button><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+          <button><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></button>
+          <button><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="10" y1="4" x2="10" y2="22"/></svg></button>
+          <button class="active"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
+          <button><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Year Layout: Sidebar + Heatmap -->
+    <div class="ano-layout">
+
+      <!-- LEFT: Stats Sidebar -->
+      <div class="glass-depth-2 sidebar-stats">
+
+        <!-- Year nav -->
+        <div class="year-nav" style="margin-bottom: 20px;">
+          <button class="year-nav-btn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="year-nav-title">2026</span>
+          <button class="year-nav-btn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Total -->
+          <div class="stat-card">
+            <div class="stat-label">Total no Ano</div>
+            <div class="stat-value">1.247</div>
+            <div class="stat-sub">expedientes recebidos</div>
+          </div>
+
+          <!-- Baixados -->
+          <div class="stat-card">
+            <div class="stat-label">Baixados</div>
+            <div class="stat-value" style="color: var(--success);">891</div>
+            <div class="stat-bar">
+              <div class="stat-bar-fill" style="width: 71%; background: var(--success);"></div>
+            </div>
+            <div class="stat-sub">71% de conclusao</div>
+          </div>
+
+          <!-- Pendentes -->
+          <div class="stat-card">
+            <div class="stat-label">Pendentes</div>
+            <div class="stat-value" style="color: var(--warning);">142</div>
+            <div class="breakdown-row">
+              <div class="breakdown-item">
+                <div class="breakdown-dot" style="background: var(--destructive);"></div>
+                8 vencidos
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-dot" style="background: var(--warning);"></div>
+                5 hoje
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-dot" style="background: var(--info);"></div>
+                12 prox.
+              </div>
+            </div>
+          </div>
+
+          <!-- Media semanal -->
+          <div class="stat-card">
+            <div class="stat-label">Media Semanal</div>
+            <div class="stat-value">22</div>
+            <div class="stat-sub">expedientes / semana</div>
+          </div>
+
+          <!-- Mes mais movimentado -->
+          <div class="stat-card">
+            <div class="stat-label">Mes Mais Movimentado</div>
+            <div class="stat-value" style="font-size: 1rem;">Fevereiro</div>
+            <div class="stat-sub">168 expedientes</div>
+          </div>
+        </div>
+
+        <!-- Top months ranking -->
+        <div class="top-months">
+          <div style="font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted-foreground); opacity: 0.4; margin-bottom: 8px;">Ranking por Volume</div>
+
+          <div class="top-month-row">
+            <span class="top-month-rank">1</span>
+            <span class="top-month-name">Fev</span>
+            <div class="top-month-bar-bg"><div class="top-month-bar-fill" style="width: 100%;"></div></div>
+            <span class="top-month-value">168</span>
+          </div>
+          <div class="top-month-row">
+            <span class="top-month-rank">2</span>
+            <span class="top-month-name">Mar</span>
+            <div class="top-month-bar-bg"><div class="top-month-bar-fill" style="width: 85%;"></div></div>
+            <span class="top-month-value">143</span>
+          </div>
+          <div class="top-month-row">
+            <span class="top-month-rank">3</span>
+            <span class="top-month-name">Jan</span>
+            <div class="top-month-bar-bg"><div class="top-month-bar-fill" style="width: 76%;"></div></div>
+            <span class="top-month-value">128</span>
+          </div>
+          <div class="top-month-row">
+            <span class="top-month-rank">4</span>
+            <span class="top-month-name">Abr</span>
+            <div class="top-month-bar-bg"><div class="top-month-bar-fill" style="width: 45%; opacity: 0.6;"></div></div>
+            <span class="top-month-value" style="opacity: 0.6;">76*</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Heatmap -->
+      <div class="glass-widget heatmap-container">
+
+        <!-- Months grid 4x3 -->
+        <div class="months-grid">
+
+          <!-- Janeiro -->
+          <div class="month-block">
+            <div class="month-label">Janeiro <span class="month-count">128</span></div>
+            <div class="mini-weekday-header">
+              <span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span>
+            </div>
+            <div class="month-heatmap">
+              <!-- Offset: Jan 1 2026 = Thursday (4 empty) -->
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2" data-tooltip="1 Jan: 4"></div>
+              <div class="heatmap-cell level-3" data-tooltip="2 Jan: 7"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <!-- Week 2-5 -->
+              <div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div>
+            </div>
+          </div>
+
+          <!-- Fevereiro -->
+          <div class="month-block">
+            <div class="month-label">Fevereiro <span class="month-count">168</span></div>
+            <div class="mini-weekday-header">
+              <span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span>
+            </div>
+            <div class="month-heatmap">
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-3" data-tooltip="1 Fev: 8"></div>
+              <div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-3"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-1"></div>
+            </div>
+          </div>
+
+          <!-- Marco -->
+          <div class="month-block">
+            <div class="month-label">Marco <span class="month-count">143</span></div>
+            <div class="mini-weekday-header">
+              <span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span>
+            </div>
+            <div class="month-heatmap">
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-3"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-4"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-1"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+            </div>
+          </div>
+
+          <!-- Abril (current) -->
+          <div class="month-block">
+            <div class="month-label" style="color: var(--primary);">Abril <span class="month-count" style="color: var(--primary); opacity: 0.7;">76*</span></div>
+            <div class="mini-weekday-header">
+              <span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span>
+            </div>
+            <div class="month-heatmap">
+              <!-- Apr 1 = Wednesday -->
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell level-3 today" data-tooltip="13 Abr: 5"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+            </div>
+          </div>
+
+          <!-- Maio-Dezembro (future/empty) -->
+          <div class="month-block">
+            <div class="month-label" style="opacity: 0.3;">Maio <span class="month-count">-</span></div>
+            <div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div>
+            <div class="month-heatmap">
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+            </div>
+          </div>
+
+          <div class="month-block">
+            <div class="month-label" style="opacity: 0.3;">Junho <span class="month-count">-</span></div>
+            <div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div>
+            <div class="month-heatmap">
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+            </div>
+          </div>
+
+          <div class="month-block">
+            <div class="month-label" style="opacity: 0.3;">Julho <span class="month-count">-</span></div>
+            <div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div>
+            <div class="month-heatmap">
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+            </div>
+          </div>
+
+          <div class="month-block">
+            <div class="month-label" style="opacity: 0.3;">Agosto <span class="month-count">-</span></div>
+            <div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div>
+            <div class="month-heatmap">
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+              <div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div>
+            </div>
+          </div>
+
+          <!-- Sep-Dec simplified -->
+          <div class="month-block"><div class="month-label" style="opacity: 0.3;">Setembro <span class="month-count">-</span></div><div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div><div class="month-heatmap"><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div></div></div>
+          <div class="month-block"><div class="month-label" style="opacity: 0.3;">Outubro <span class="month-count">-</span></div><div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div><div class="month-heatmap"><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div></div></div>
+          <div class="month-block"><div class="month-label" style="opacity: 0.3;">Novembro <span class="month-count">-</span></div><div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div><div class="month-heatmap"><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div></div></div>
+          <div class="month-block"><div class="month-label" style="opacity: 0.3;">Dezembro <span class="month-count">-</span></div><div class="mini-weekday-header"><span class="mini-weekday">S</span><span class="mini-weekday">T</span><span class="mini-weekday">Q</span><span class="mini-weekday">Q</span><span class="mini-weekday">S</span><span class="mini-weekday">S</span><span class="mini-weekday">D</span></div><div class="month-heatmap"><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div></div></div>
+
+        </div>
+
+        <!-- Heatmap legend -->
+        <div class="heatmap-legend">
+          <span class="heatmap-legend-label">Menos</span>
+          <div class="heatmap-legend-cell heatmap-cell empty" style="width: 12px; height: 12px;"></div>
+          <div class="heatmap-legend-cell" style="background: rgba(85,35,235,0.12);"></div>
+          <div class="heatmap-legend-cell" style="background: rgba(85,35,235,0.28);"></div>
+          <div class="heatmap-legend-cell" style="background: rgba(85,35,235,0.50);"></div>
+          <div class="heatmap-legend-cell" style="background: rgba(85,35,235,0.75);"></div>
+          <span class="heatmap-legend-label">Mais</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" onclick="document.documentElement.classList.toggle('dark')" aria-label="Alternar tema">
+  <span class="dark-icon">&#9790;</span>
+</button>
+
+</body>
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expedientes - Lista (Glass Rows)</title>
+  <link rel="stylesheet" href="00-shared-styles.css">
+  <style>
+    /* === LISTA-SPECIFIC STYLES === */
+    .list-header-row {
+      display: grid;
+      grid-template-columns: 32px 2.5fr 1fr 0.8fr 0.8fr 80px 80px 40px;
+      gap: 12px;
+      align-items: center;
+      padding: 0 16px 8px;
+    }
+    .list-header-cell {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+    }
+
+    .glass-row-grid {
+      display: grid;
+      grid-template-columns: 32px 2.5fr 1fr 0.8fr 0.8fr 80px 80px 40px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .glass-row {
+      position: relative;
+    }
+
+    /* Row action buttons */
+    .row-actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .glass-row:hover .row-actions { opacity: 1; }
+    .row-action-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+      transition: all 0.15s;
+    }
+    .row-action-btn:hover {
+      background: rgba(85,35,235,0.06);
+      color: var(--primary);
+      opacity: 1;
+    }
+
+    /* Expediente main cell */
+    .exp-main-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .exp-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .exp-processo {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--foreground);
+      font-variant-numeric: tabular-nums;
+    }
+    .exp-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .exp-partes {
+      font-size: 10px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 360px;
+    }
+
+    /* Countdown cell */
+    .countdown {
+      font-size: 11px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      padding: 3px 8px;
+      border-radius: 8px;
+    }
+    .countdown.critico {
+      background: rgba(200,60,60,0.08);
+      color: var(--destructive);
+    }
+    .countdown.alto {
+      background: rgba(200,150,50,0.08);
+      color: var(--warning);
+    }
+    .countdown.medio {
+      background: rgba(60,120,200,0.08);
+      color: var(--info);
+    }
+    .countdown.ok {
+      background: rgba(85,180,85,0.06);
+      color: var(--success);
+    }
+    .countdown.none {
+      background: rgba(0,0,0,0.03);
+      color: var(--muted-foreground);
+      opacity: 0.5;
+    }
+
+    /* Responsavel avatar */
+    .responsavel-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .avatar-circle {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(85,35,235,0.1);
+      color: var(--primary);
+      font-size: 9px;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .responsavel-name {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      opacity: 0.7;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sem-responsavel {
+      font-size: 10px;
+      font-style: italic;
+      color: var(--destructive);
+      opacity: 0.6;
+    }
+
+    /* Bulk action bar */
+    .bulk-bar {
+      position: sticky;
+      bottom: 16px;
+      margin-top: 12px;
+      padding: 10px 20px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .bulk-bar-count {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    .bulk-bar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Density toggle */
+    .density-toggle {
+      display: flex;
+      gap: 2px;
+      padding: 2px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.04);
+    }
+    .density-btn {
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      font-size: 10px;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .density-btn.active {
+      background: rgba(85,35,235,0.1);
+      color: var(--primary);
+    }
+
+    /* Compact density */
+    .density-compact .glass-row { padding: 8px 16px; }
+    .density-compact .glass-row-grid { gap: 8px; }
+    .density-compact .exp-processo { font-size: 11px; }
+
+    /* Relaxed density */
+    .density-relaxed .glass-row { padding: 16px 16px; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar-mock" aria-label="Menu principal">
+  <div class="logo"></div>
+  <div class="nav-dot">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+  </div>
+  <div class="nav-dot active" aria-current="page">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><polyline points="14,2 14,8 20,8"/></svg>
+  </div>
+  <div class="nav-dot">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="page-container space-y-5 animate-in">
+
+    <!-- 1. Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="text-page-title">Expedientes</h1>
+        <p class="page-subtitle">142 pendentes &middot; 8 vencidos</p>
+      </div>
+      <button class="btn btn-primary" style="border-radius: 12px; padding: 8px 16px; font-size: 12px;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Expediente
+      </button>
+    </div>
+
+    <!-- 2. KPI Strip -->
+    <div class="kpi-strip">
+      <div class="glass-kpi kpi-card" style="border-color: rgba(200,60,60,0.15);">
+        <div class="kpi-content">
+          <div class="kpi-label">Vencidos</div>
+          <div class="kpi-value" style="color: var(--destructive);">8</div>
+          <div class="proportion-bar"><div class="proportion-bar-fill" style="width: 5.6%; background: var(--destructive);"></div></div>
+        </div>
+        <div class="icon-container" style="background: rgba(200,60,60,0.08);">
+          <svg width="16" height="16" fill="none" stroke="var(--destructive)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+      </div>
+      <div class="glass-kpi kpi-card">
+        <div class="kpi-content">
+          <div class="kpi-label">Hoje</div>
+          <div class="kpi-value">5</div>
+          <div class="proportion-bar"><div class="proportion-bar-fill" style="width: 3.5%; background: var(--warning);"></div></div>
+        </div>
+        <div class="icon-container" style="background: rgba(200,150,50,0.08);">
+          <svg width="16" height="16" fill="none" stroke="var(--warning)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+      </div>
+      <div class="glass-kpi kpi-card">
+        <div class="kpi-content">
+          <div class="kpi-label">Proximos 3d</div>
+          <div class="kpi-value">12</div>
+          <div class="proportion-bar"><div class="proportion-bar-fill" style="width: 8.4%; background: var(--info);"></div></div>
+        </div>
+        <div class="icon-container" style="background: rgba(60,120,200,0.08);">
+          <svg width="16" height="16" fill="none" stroke="var(--info)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+      </div>
+      <div class="glass-kpi kpi-card">
+        <div class="kpi-content">
+          <div class="kpi-label">Sem dono</div>
+          <div class="kpi-value">17</div>
+          <div class="proportion-bar"><div class="proportion-bar-fill" style="width: 12%; background: var(--muted-foreground); opacity: 0.4;"></div></div>
+        </div>
+        <div class="icon-container" style="background: rgba(0,0,0,0.04);">
+          <svg width="16" height="16" fill="none" stroke="var(--muted-foreground)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.4"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Controls Row -->
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+      <!-- Tab Pills -->
+      <div class="tab-pills">
+        <button class="tab-pill active">Pendentes <span class="tab-count">142</span></button>
+        <button class="tab-pill">Baixados <span class="tab-count">891</span></button>
+        <button class="tab-pill">Todos <span class="tab-count">1033</span></button>
+      </div>
+
+      <!-- Filters -->
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <button class="filter-chip active">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+          TRT8 <span class="chip-count">3</span>
+        </button>
+        <button class="filter-chip">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          Grau
+        </button>
+        <button class="filter-chip">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Responsavel
+        </button>
+        <button class="filter-chip">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          Origem
+        </button>
+        <button class="filter-chip">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Tipo
+        </button>
+      </div>
+
+      <!-- Right controls -->
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <div class="density-toggle">
+          <button class="density-btn">S</button>
+          <button class="density-btn active">M</button>
+          <button class="density-btn">L</button>
+        </div>
+        <div class="search-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Buscar processo, parte...">
+        </div>
+        <div class="view-toggle">
+          <button>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+          <button>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+          </button>
+          <button>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="10" y1="4" x2="10" y2="22"/></svg>
+          </button>
+          <button>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </button>
+          <button class="active">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Glass Row List -->
+    <div class="glass-widget" style="padding: 16px 0; overflow: hidden;">
+
+      <!-- Column headers -->
+      <div class="list-header-row">
+        <div class="list-header-cell" style="text-align: center;">
+          <input type="checkbox" style="cursor: pointer; accent-color: var(--primary);">
+        </div>
+        <div class="list-header-cell">Processo / Partes</div>
+        <div class="list-header-cell">Prazo</div>
+        <div class="list-header-cell">Tribunal</div>
+        <div class="list-header-cell">Responsavel</div>
+        <div class="list-header-cell" style="text-align: center;">Origem</div>
+        <div class="list-header-cell" style="text-align: center;">Prazo</div>
+        <div class="list-header-cell"></div>
+      </div>
+
+      <!-- Rows -->
+      <div class="space-y-1" style="padding: 0 8px;">
+
+        <!-- Row 1: Critico (vencido) -->
+        <div class="glass-row urgency-border-critico glass-row-grid" style="animation-delay: 0.05s;">
+          <div style="text-align: center;">
+            <input type="checkbox" style="cursor: pointer; accent-color: var(--primary);">
+          </div>
+          <div class="exp-main-cell">
+            <div class="exp-title-row">
+              <span class="urgency-dot critico"></span>
+              <span class="exp-processo">0000127-66.2025.5.08.0016</span>
+              <span class="badge badge-sm badge-destructive">Vencido</span>
+            </div>
+            <div class="exp-meta-row">
+              <span class="exp-partes">RAPHAEL LUCAS NOGUEIRA DA COSTA vs UBER DO BRASIL TECNOLOGIA LTDA.</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 500; color: var(--foreground);">08/04/2026</div>
+            <div style="font-size: 9px; color: var(--muted-foreground); opacity: 0.5;">Ciencia: 01/04</div>
+          </div>
+          <div>
+            <span class="badge badge-sm badge-primary">TRT8</span>
+            <span class="badge badge-sm badge-muted" style="margin-left: 4px;">1o Grau</span>
+          </div>
+          <div class="responsavel-cell">
+            <div class="avatar-circle">JM</div>
+            <span class="responsavel-name">Jordan M.</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="badge badge-sm badge-info">Captura</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="countdown critico">-5d</span>
+          </div>
+          <div class="row-actions">
+            <button class="row-action-btn" data-tooltip="Detalhes">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 2: Critico -->
+        <div class="glass-row alt urgency-border-critico glass-row-grid" style="animation-delay: 0.1s;">
+          <div style="text-align: center;">
+            <input type="checkbox" style="cursor: pointer; accent-color: var(--primary);">
+          </div>
+          <div class="exp-main-cell">
+            <div class="exp-title-row">
+              <span class="urgency-dot critico"></span>
+              <span class="exp-processo">0001452-33.2024.5.08.0005</span>
+              <span class="badge badge-sm badge-destructive">Vencido</span>
+            </div>
+            <div class="exp-meta-row">
+              <span class="exp-partes">MARIA CLARA SANTOS vs AMAZON SERVICOS DE VAREJO LTDA.</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 500; color: var(--foreground);">06/04/2026</div>
+            <div style="font-size: 9px; color: var(--muted-foreground); opacity: 0.5;">Ciencia: 28/03</div>
+          </div>
+          <div>
+            <span class="badge badge-sm badge-primary">TRT8</span>
+            <span class="badge badge-sm badge-muted" style="margin-left: 4px;">1o Grau</span>
+          </div>
+          <div class="responsavel-cell">
+            <span class="sem-responsavel">Sem responsavel</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="badge badge-sm badge-info">Captura</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="countdown critico">-7d</span>
+          </div>
+          <div class="row-actions">
+            <button class="row-action-btn" data-tooltip="Detalhes">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 3: Hoje -->
+        <div class="glass-row urgency-border-alto glass-row-grid" style="animation-delay: 0.15s;">
+          <div style="text-align: center;">
+            <input type="checkbox" style="cursor: pointer; accent-color: var(--primary);">
+          </div>
+          <div class="exp-main-cell">
+            <div class="exp-title-row">
+              <span class="urgency-dot alto"></span>
+              <span class="exp-processo">0000891-12.2025.5.08.0002</span>
+              <span class="badge badge-sm badge-warning">Hoje</span>
+            </div>
+            <div class="exp-meta-row">
+              <span class="exp-partes">JOSE CARLOS PEREIRA vs TELECOM NORTE S.A.</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 500; color: var(--foreground);">13/04/2026</div>
+            <div style="font-size: 9px; color: var(--muted-foreground); opacity: 0.5;">Ciencia: 05/04</div>
+          </div>
+          <div>
+            <span class="badge badge-sm badge-primary">TRT8</span>
+            <span class="badge badge-sm badge-muted" style="margin-left: 4px;">2o Grau</span>
+          </div>
+          <div class="responsavel-cell">
+            <div class="avatar-circle" style="background: rgba(85,180,85,0.1); color: var(--success);">LS</div>
+            <span class="responsavel-name">Larissa S.</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="badge badge-sm badge-muted">Manual</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="countdown alto">0d</span>
+          </div>
+          <div class="row-actions">
+            <button class="row-action-btn" data-tooltip="Detalhes">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 4: Proximo 3d -->
+        <div class="glass-row alt urgency-border-medio glass-row-grid" style="animation-delay: 0.2s;">
+          <div style="text-align: center;">
+            <input type="checkbox" style="cursor: pointer; accent-color: var(--primary);">
+          </div>
+          <div class="exp-main-cell">
+            <div class="exp-title-row">
+              <span class="urgency-dot medio"></span>
+              <span class="exp-processo">0002318-77.2025.5.08.0011</span>
+            </div>
+            <div class="exp-meta-row">
+              <span class="exp-partes">ANA BEATRIZ OLIVEIRA vs CONSTRUTORA BELEM NORTE LTDA.</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 500; color: var(--foreground);">15/04/2026</div>
+            <div style="font-size: 9px; color: var(--muted-foreground); opacity: 0.5;">Ciencia: 07/04</div>
+          </div>
+          <div>
+            <span class="badge badge-sm badge-primary">TRT8</span>
+            <span class="badge badge-sm badge-muted" style="margin-left: 4px;">1o Grau</span>
+          </div>
+          <div class="responsavel-cell">
+            <div class="avatar-circle" style="background: rgba(200,150,50,0.1); color: var(--warning);">RF</div>
+            <span class="responsavel-name">Renato F.</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="badge badge-sm badge-info">Captura</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="countdown medio">2d</span>
+          </div>
+          <div class="row-actions">
+            <button class="row-action-btn" data-tooltip="Detalhes">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 5: No prazo -->
+        <div class="glass-row urgency-border-baixo glass-row-grid" style="animation-delay: 0.25s;">
+          <div style="text-align: center;">
+            <input type="checkbox" style="cursor: pointer; accent-color: var(--primary);">
+          </div>
+          <div class="exp-main-cell">
+            <div class="exp-title-row">
+              <span class="urgency-dot baixo"></span>
+              <span class="exp-processo">0003671-50.2025.5.08.0009</span>
+            </div>
+            <div class="exp-meta-row">
+              <span class="exp-partes">FRANCISCO DE ASSIS LIMA vs TRANSPORTES AMAZONIA EIRELI</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 500; color: var(--foreground);">22/04/2026</div>
+            <div style="font-size: 9px; color: var(--muted-foreground); opacity: 0.5;">Ciencia: 09/04</div>
+          </div>
+          <div>
+            <span class="badge badge-sm badge-primary">TRT8</span>
+            <span class="badge badge-sm badge-muted" style="margin-left: 4px;">1o Grau</span>
+          </div>
+          <div class="responsavel-cell">
+            <div class="avatar-circle">JM</div>
+            <span class="responsavel-name">Jordan M.</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="badge badge-sm badge-info">Captura</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="countdown ok">9d</span>
+          </div>
+          <div class="row-actions">
+            <button class="row-action-btn" data-tooltip="Detalhes">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 6: No prazo -->
+        <div class="glass-row alt urgency-border-baixo glass-row-grid" style="animation-delay: 0.3s;">
+          <div style="text-align: center;">
+            <input type="checkbox" checked style="cursor: pointer; accent-color: var(--primary);">
+          </div>
+          <div class="exp-main-cell">
+            <div class="exp-title-row">
+              <span class="urgency-dot baixo"></span>
+              <span class="exp-processo">0004102-88.2025.5.08.0014</span>
+            </div>
+            <div class="exp-meta-row">
+              <span class="exp-partes">LUCAS RIBEIRO MENDES vs SUPERMERCADOS NAZARE LTDA.</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 500; color: var(--foreground);">25/04/2026</div>
+            <div style="font-size: 9px; color: var(--muted-foreground); opacity: 0.5;">Ciencia: 10/04</div>
+          </div>
+          <div>
+            <span class="badge badge-sm badge-primary">TRT8</span>
+            <span class="badge badge-sm badge-muted" style="margin-left: 4px;">1o Grau</span>
+          </div>
+          <div class="responsavel-cell">
+            <div class="avatar-circle" style="background: rgba(85,180,85,0.1); color: var(--success);">LS</div>
+            <span class="responsavel-name">Larissa S.</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="badge badge-sm badge-muted">Manual</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="countdown ok">12d</span>
+          </div>
+          <div class="row-actions">
+            <button class="row-action-btn" data-tooltip="Detalhes">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 7: Sem prazo -->
+        <div class="glass-row urgency-border-ok glass-row-grid" style="animation-delay: 0.35s;">
+          <div style="text-align: center;">
+            <input type="checkbox" style="cursor: pointer; accent-color: var(--primary);">
+          </div>
+          <div class="exp-main-cell">
+            <div class="exp-title-row">
+              <span class="urgency-dot ok"></span>
+              <span class="exp-processo">0005890-21.2025.5.08.0003</span>
+              <span class="badge badge-sm badge-muted">Sem prazo</span>
+            </div>
+            <div class="exp-meta-row">
+              <span class="exp-partes">CARLOS EDUARDO SOUZA vs MINERACAO PARA S.A.</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--muted-foreground); opacity: 0.5;">---</div>
+          </div>
+          <div>
+            <span class="badge badge-sm badge-primary">TRT8</span>
+            <span class="badge badge-sm badge-muted" style="margin-left: 4px;">1o Grau</span>
+          </div>
+          <div class="responsavel-cell">
+            <span class="sem-responsavel">Sem responsavel</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="badge badge-sm badge-info">Captura</span>
+          </div>
+          <div style="text-align: center;">
+            <span class="countdown none">--</span>
+          </div>
+          <div class="row-actions">
+            <button class="row-action-btn" data-tooltip="Detalhes">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" style="padding: 12px 16px 4px;">
+        <span>Mostrando 1-7 de 142</span>
+        <div class="pagination-buttons">
+          <button class="pagination-btn" disabled style="opacity:0.3;">Anterior</button>
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <button class="pagination-btn">...</button>
+          <button class="pagination-btn">21</button>
+          <button class="pagination-btn">Proximo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Bulk Action Bar (shown when items selected) -->
+    <div class="bulk-bar glass-depth-2">
+      <div class="bulk-bar-count">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: inline; vertical-align: middle; margin-right: 4px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        1 selecionado
+      </div>
+      <div class="bulk-bar-actions">
+        <button class="btn btn-outline" style="font-size: 11px; padding: 5px 12px;">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Transferir
+        </button>
+        <button class="btn btn-primary" style="font-size: 11px; padding: 5px 12px;">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Baixar
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" onclick="document.documentElement.classList.toggle('dark')" aria-label="Alternar tema">
+  <span class="dark-icon">&#9790;</span>
+</button>
+
+</body>
+</html>
