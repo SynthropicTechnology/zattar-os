@@ -10,14 +10,14 @@
 <style>
   /* ================================================================
      CONCEPT A — SPLIT GLASS
-     Split-screen: painel branded escuro (esquerda) + glass form (direita)
-     Inspirado em: Linear, Vercel, Stripe — adaptado ao Glass Briefing
+     Split-screen: painel atmosferico escuro (esquerda) + glass form (direita)
+     Painel esquerdo: puro ambiente visual — logo grande, glows, grid.
+     Sistema INTERNO — zero marketing.
      ================================================================ */
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    /* Glass Briefing tokens (Light) */
     --primary: oklch(0.48 0.26 281);
     --primary-foreground: oklch(1.0 0 0);
     --background: oklch(0.96 0.01 281);
@@ -31,16 +31,11 @@
     --success: oklch(0.55 0.18 145);
     --secondary: oklch(0.95 0.04 281);
     --radius: 0.5rem;
-    --glow-primary: oklch(from var(--primary) l c h / 0.35);
 
-    /* Brand panel (always dark) */
-    --brand-bg: oklch(0.14 0.02 281);
-    --brand-surface: oklch(0.20 0.015 281);
-    --brand-text: oklch(0.98 0 0);
-    --brand-muted: oklch(0.60 0.01 281);
+    --brand-bg: oklch(0.12 0.02 281);
+    --brand-muted: oklch(0.45 0.01 281);
     --brand-primary-light: oklch(0.70 0.20 281);
 
-    /* Fonts */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-heading: 'Montserrat', sans-serif;
     --font-headline: 'Manrope', sans-serif;
@@ -56,7 +51,7 @@
     display: flex;
   }
 
-  /* ── BRAND PANEL (Left) ─────────────────────────────────── */
+  /* ── BRAND PANEL (Left) — Pure atmosphere ──────────────── */
   .brand-panel {
     position: relative;
     width: 45%;
@@ -64,183 +59,109 @@
     background: var(--brand-bg);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding: 3rem;
+    justify-content: center;
     overflow: hidden;
   }
 
-  /* Canvas dots (matching app) */
+  /* Grid lines */
   .brand-panel::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-      radial-gradient(circle, oklch(1 0 0 / 0.04) 0.8px, transparent 0.8px);
-    background-size: 14px 14px;
+      repeating-linear-gradient(0deg, oklch(1 0 0 / 0.025) 0px, oklch(1 0 0 / 0.025) 1px, transparent 1px, transparent 60px),
+      repeating-linear-gradient(90deg, oklch(1 0 0 / 0.025) 0px, oklch(1 0 0 / 0.025) 1px, transparent 1px, transparent 60px);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 10%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 10%, transparent 70%);
     pointer-events: none;
   }
 
-  /* Ambient glow — primary purple */
+  /* Primary glow */
   .brand-glow {
     position: absolute;
     width: 500px;
     height: 500px;
     border-radius: 50%;
-    background: radial-gradient(circle, oklch(0.48 0.26 281 / 0.15), transparent 70%);
-    top: 30%;
+    background: radial-gradient(circle, oklch(0.48 0.26 281 / 0.15), transparent 65%);
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     filter: blur(80px);
-    animation: glow-pulse 8s ease-in-out infinite alternate;
+    animation: glow-pulse 10s ease-in-out infinite alternate;
     pointer-events: none;
   }
 
-  .brand-glow-secondary {
+  /* Secondary warm glow */
+  .brand-glow-warm {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: 280px;
+    height: 280px;
     border-radius: 50%;
-    background: radial-gradient(circle, oklch(0.60 0.22 45 / 0.08), transparent 70%);
-    bottom: 15%;
-    right: 10%;
-    filter: blur(60px);
-    animation: glow-pulse 10s ease-in-out infinite alternate-reverse;
+    background: radial-gradient(circle, oklch(0.60 0.22 45 / 0.06), transparent 65%);
+    bottom: 20%;
+    right: 15%;
+    filter: blur(50px);
+    animation: glow-pulse 14s ease-in-out infinite alternate-reverse;
     pointer-events: none;
   }
 
   @keyframes glow-pulse {
     0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
   }
 
-  .brand-content {
+  /* Centered logo on brand panel */
+  .brand-logo-container {
     position: relative;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    max-width: 380px;
+    align-items: center;
     gap: 2rem;
   }
 
-  /* Logo placeholder (SVG inline) */
-  .brand-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+  .brand-logo-container img {
+    height: 48px;
+    width: auto;
+    opacity: 0.85;
   }
 
-  .brand-logo-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, oklch(0.70 0.20 281), oklch(0.48 0.26 281));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 20px;
-    color: white;
-  }
-
-  .brand-logo-text {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.125rem;
-    color: var(--brand-text);
-    letter-spacing: -0.01em;
-  }
-
-  .brand-logo-badge {
-    font-family: var(--font-sans);
-    font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--brand-primary-light);
-    background: oklch(0.70 0.20 281 / 0.12);
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-left: 4px;
-  }
-
-  .brand-headline {
-    font-family: var(--font-headline);
-    font-weight: 700;
-    font-size: 2rem;
-    line-height: 1.2;
-    color: var(--brand-text);
-    letter-spacing: -0.02em;
-  }
-
-  .brand-headline span {
-    background: linear-gradient(135deg, oklch(0.70 0.20 281), oklch(0.80 0.15 281));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .brand-description {
-    font-size: 0.9375rem;
-    line-height: 1.65;
-    color: var(--brand-muted);
-  }
-
-  /* Feature pills */
-  .brand-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .feature-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 100px;
-    background: oklch(1 0 0 / 0.04);
-    border: 1px solid oklch(1 0 0 / 0.08);
-    font-size: 12px;
-    color: oklch(0.75 0.005 281);
-    transition: all 0.2s ease;
-  }
-
-  .feature-pill:hover {
-    background: oklch(1 0 0 / 0.07);
-    border-color: oklch(1 0 0 / 0.12);
-  }
-
-  .feature-dot {
-    width: 5px;
-    height: 5px;
+  /* Decorative ring around logo area */
+  .brand-ring {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border: 1px solid oklch(1 0 0 / 0.04);
     border-radius: 50%;
-    background: var(--brand-primary-light);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .brand-ring-outer {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border: 1px solid oklch(1 0 0 / 0.02);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
   }
 
   /* Footer */
   .brand-footer {
     position: absolute;
     bottom: 2rem;
-    left: 3rem;
     z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--brand-muted);
-    letter-spacing: 0.02em;
-  }
-
-  .brand-footer::before {
-    content: '';
-    width: 16px;
-    height: 1px;
-    background: var(--brand-muted);
-    opacity: 0.4;
+    opacity: 0.5;
   }
 
   /* ── FORM PANEL (Right) ────────────────────────────────── */
@@ -256,12 +177,11 @@
     background: var(--background);
   }
 
-  /* Subtle ambient gradient on form side */
   .form-panel::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 60% 50% at 30% 50%, oklch(0.48 0.26 281 / 0.04), transparent);
+    background: radial-gradient(ellipse 50% 50% at 20% 50%, oklch(0.48 0.26 281 / 0.03), transparent);
     pointer-events: none;
   }
 
@@ -285,6 +205,18 @@
       0 8px 32px oklch(0 0 0 / 0.06);
   }
 
+  /* Logo in form panel (visible only on mobile when brand panel hides) */
+  .form-logo-mobile {
+    display: none;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .form-logo-mobile img {
+    height: 40px;
+    width: auto;
+  }
+
   .form-header {
     margin-bottom: 2rem;
   }
@@ -305,9 +237,7 @@
   }
 
   /* Form fields */
-  .field {
-    margin-bottom: 1rem;
-  }
+  .field { margin-bottom: 1rem; }
 
   .field-label {
     display: block;
@@ -331,18 +261,14 @@
     outline: none;
   }
 
-  .field-input::placeholder {
-    color: oklch(0.55 0.005 281);
-  }
+  .field-input::placeholder { color: oklch(0.55 0.005 281); }
 
   .field-input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px oklch(0.48 0.26 281 / 0.08);
   }
 
-  .field-input-wrapper {
-    position: relative;
-  }
+  .field-input-wrapper { position: relative; }
 
   .field-toggle {
     position: absolute;
@@ -358,9 +284,7 @@
     transition: opacity 0.2s;
   }
 
-  .field-toggle:hover {
-    opacity: 0.8;
-  }
+  .field-toggle:hover { opacity: 0.8; }
 
   /* Error alert */
   .error-alert {
@@ -376,9 +300,7 @@
   }
 
   .error-alert.visible { display: flex; }
-
   .error-alert svg { flex-shrink: 0; margin-top: 1px; color: var(--destructive); }
-
   .error-alert p { font-size: 0.8125rem; color: var(--destructive); line-height: 1.4; }
 
   @keyframes slide-in {
@@ -411,24 +333,16 @@
     box-shadow: 0 4px 16px oklch(0.48 0.26 281 / 0.25);
   }
 
-  .btn-primary:active {
-    transform: scale(0.98);
-  }
+  .btn-primary:active { transform: scale(0.98); }
 
   .btn-primary:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 
-  .btn-primary svg {
-    transition: transform 0.2s ease;
-  }
+  .btn-primary svg { transition: transform 0.2s ease; }
+  .btn-primary:hover svg { transform: translateX(2px); }
 
-  .btn-primary:hover svg {
-    transform: translateX(2px);
-  }
-
-  /* Footer link */
   .form-footer {
     text-align: center;
     margin-top: 1.5rem;
@@ -442,12 +356,9 @@
     transition: all 0.2s ease;
   }
 
-  .form-footer a:hover {
-    opacity: 1;
-    color: var(--primary);
-  }
+  .form-footer a:hover { opacity: 1; color: var(--primary); }
 
-  /* ── DARK MODE TOGGLE ─────────────────────────────────── */
+  /* ── THEME TOGGLE ──────────────────────────────────────── */
   .theme-toggle {
     position: fixed;
     top: 1rem;
@@ -482,16 +393,13 @@
     --input: oklch(1.0 0 0 / 0.12);
     --secondary: oklch(0.28 0.01 281);
     --destructive: oklch(0.65 0.20 25);
-    --brand-bg: oklch(0.11 0.02 281);
-    --brand-surface: oklch(0.16 0.015 281);
+    --brand-bg: oklch(0.09 0.015 281);
   }
 
   .dark .glass-card {
     background: oklch(0.22 0.005 281 / 0.60);
     border-color: oklch(1 0 0 / 0.08);
-    box-shadow:
-      0 1px 3px oklch(0 0 0 / 0.15),
-      0 8px 32px oklch(0 0 0 / 0.25);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.15), 0 8px 32px oklch(0 0 0 / 0.25);
   }
 
   .dark .theme-toggle {
@@ -500,30 +408,26 @@
     color: oklch(0.98 0 0);
   }
 
-  .dark .feature-pill {
-    color: oklch(0.70 0.005 281);
-  }
+  /* Swap logo for dark mode */
+  .dark .logo-light { display: none; }
+  .dark .logo-dark { display: block; }
+  .logo-dark { display: none; }
+
+  /* Form mobile logo swap */
+  .dark .form-logo-light { display: none; }
+  .dark .form-logo-dark { display: block; }
+  .form-logo-dark { display: none; }
 
   /* ── RESPONSIVE ───────────────────────────────────────── */
   @media (max-width: 1024px) {
-    .brand-panel { width: 40%; padding: 2rem; }
-    .brand-headline { font-size: 1.625rem; }
+    .brand-panel { width: 40%; }
   }
 
   @media (max-width: 768px) {
     body { flex-direction: column; }
-    .brand-panel {
-      width: 100%;
-      min-height: auto;
-      padding: 2rem 1.5rem 1.5rem;
-    }
-    .brand-content { max-width: 100%; gap: 1rem; }
-    .brand-headline { font-size: 1.375rem; }
-    .brand-description { display: none; }
-    .brand-features { display: none; }
-    .brand-footer { display: none; }
-    .brand-glow { width: 300px; height: 300px; }
-    .form-panel { min-height: auto; padding: 1.5rem; }
+    .brand-panel { display: none; }
+    .form-panel { min-height: 100svh; padding: 1.5rem; }
+    .form-logo-mobile { display: flex; }
     .glass-card { padding: 1.5rem; }
   }
 
@@ -532,9 +436,8 @@
     .form-title { font-size: 1.25rem; }
   }
 
-  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .brand-glow, .brand-glow-secondary { animation: none; }
+    .brand-glow, .brand-glow-warm { animation: none; }
     .btn-primary svg { transition: none; }
     .error-alert { animation: none; }
   }
@@ -542,54 +445,37 @@
 </head>
 <body>
 
-<!-- Theme Toggle -->
 <button class="theme-toggle" onclick="document.body.classList.toggle('dark')" aria-label="Alternar tema">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
   </svg>
 </button>
 
-<!-- ═══ BRAND PANEL ═══ -->
+<!-- ═══ BRAND PANEL — Pure atmosphere ═══ -->
 <aside class="brand-panel" aria-hidden="true">
   <div class="brand-glow"></div>
-  <div class="brand-glow-secondary"></div>
+  <div class="brand-glow-warm"></div>
+  <div class="brand-ring"></div>
+  <div class="brand-ring-outer"></div>
 
-  <div class="brand-content">
-    <div class="brand-logo">
-      <div class="brand-logo-icon">Z</div>
-      <div>
-        <div class="brand-logo-text">ZattarOS</div>
-      </div>
-      <span class="brand-logo-badge">v4</span>
-    </div>
-
-    <h1 class="brand-headline">
-      Gestao juridica com <span>inteligencia operacional</span>.
-    </h1>
-
-    <p class="brand-description">
-      Processos, audiencias, prazos e comunicacao — tudo integrado em uma plataforma construida para escritorios que exigem precisao.
-    </p>
-
-    <div class="brand-features">
-      <div class="feature-pill"><span class="feature-dot"></span> Processos</div>
-      <div class="feature-pill"><span class="feature-dot"></span> Audiencias</div>
-      <div class="feature-pill"><span class="feature-dot"></span> Prazos</div>
-      <div class="feature-pill"><span class="feature-dot"></span> Financeiro</div>
-      <div class="feature-pill"><span class="feature-dot"></span> Chat</div>
-      <div class="feature-pill"><span class="feature-dot"></span> IA</div>
-    </div>
+  <div class="brand-logo-container">
+    <img src="../../public/logos/Sem Fundo SVG/logo-zattar-light.svg" alt="Zattar Advogados" class="logo-light">
+    <img src="../../public/logos/Sem Fundo SVG/logo-zattar-light.svg" alt="Zattar Advogados" class="logo-dark">
   </div>
 
-  <div class="brand-footer">
-    Synthropic &middot; Tecnologia para o Direito
-  </div>
+  <div class="brand-footer">Synthropic</div>
 </aside>
 
 <!-- ═══ FORM PANEL ═══ -->
 <main class="form-panel">
   <div class="form-container">
     <div class="glass-card">
+      <!-- Mobile logo (when brand panel is hidden) -->
+      <div class="form-logo-mobile">
+        <img src="../../public/logos/Sem Fundo SVG/logo-zattar-dark.svg" alt="Zattar Advogados" class="form-logo-light" style="height: 40px;">
+        <img src="../../public/logos/Sem Fundo SVG/logo-zattar-light.svg" alt="Zattar Advogados" class="form-logo-dark" style="height: 40px;">
+      </div>
+
       <div class="form-header">
         <h2 class="form-title">Entrar</h2>
         <p class="form-subtitle">Acesse sua conta para continuar</p>

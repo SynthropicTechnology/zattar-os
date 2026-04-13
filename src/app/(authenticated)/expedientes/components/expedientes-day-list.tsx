@@ -192,11 +192,9 @@ export function ExpedientesDayList({
                                 {(expediente as Expediente & { tipoExpediente?: { tipoExpediente?: string } }).tipoExpediente?.tipoExpediente || 'Sem tipo'}
                               </span>
                               {expediente.descricaoArquivos && (
-                                <span className="ml-1.5 text-muted-foreground/55">
-                                  • {expediente.descricaoArquivos.length > 50
-                                      ? `${expediente.descricaoArquivos.slice(0, 50)}...`
-                                      : expediente.descricaoArquivos}
-                                </span>
+                                <p className="mt-1 whitespace-pre-wrap wrap-break-word text-muted-foreground/55">
+                                  {expediente.descricaoArquivos}
+                                </p>
                               )}
                             </div>
 

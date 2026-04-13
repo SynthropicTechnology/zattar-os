@@ -20,6 +20,14 @@ export interface MCPToolConfig<TArgs = unknown> {
   feature: string;
   /** Se requer autenticação */
   requiresAuth: boolean;
+  /**
+   * Override explícito de permissão para filtragem no CopilotKit.
+   * - 'public': visível para todos os usuários autenticados
+   * - 'admin': visível apenas para super_admin
+   * - { recurso, operacao }: verificado via checkPermission()
+   * - undefined: derivado por convenção (feature→recurso, nome→operação)
+   */
+  permissao?: { recurso: string; operacao: string } | 'public' | 'admin';
 }
 
 /**

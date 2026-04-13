@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZattarOS Auth — Concept C: Cinematic Runway</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ================================================================
+     CONCEPT C — CINEMATIC RUNWAY (v3 — Enhanced)
+     Full-dark. Sem card container. Grid + spotlights.
+     Logo corrigida, visual elevado, sem Synthropic.
+     ================================================================ */
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: oklch(0.70 0.20 281);
+    --primary-deep: oklch(0.48 0.26 281);
+    --primary-glow: oklch(0.60 0.24 281);
+    --bg: oklch(0.095 0.015 281);
+    --bg-input: oklch(0.145 0.012 281);
+    --bg-input-focus: oklch(0.17 0.014 281);
+    --fg: oklch(0.97 0 0);
+    --fg-muted: oklch(0.58 0.005 281);
+    --fg-subtle: oklch(0.38 0.005 281);
+    --border: oklch(1.0 0 0 / 0.07);
+    --border-hover: oklch(1.0 0 0 / 0.12);
+    --border-focus: oklch(0.70 0.20 281 / 0.45);
+    --destructive: oklch(0.65 0.20 25);
+    --radius: 12px;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+    --font-headline: 'Manrope', sans-serif;
+  }
+
+  html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── NOISE TEXTURE (subtle depth) ─────────────────────── */
+  .noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px;
+  }
+
+  /* ── GRID LINES ────────────────────────────────────────── */
+  .grid-lines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .grid-lines::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, oklch(1 0 0 / 0.03) 0px, oklch(1 0 0 / 0.03) 1px, transparent 1px, transparent 72px);
+    mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
+  }
+
+  .grid-lines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, oklch(1 0 0 / 0.03) 0px, oklch(1 0 0 / 0.03) 1px, transparent 1px, transparent 72px);
+    mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
+  }
+
+  /* ── SPOTLIGHTS ────────────────────────────────────────── */
+  .spotlight {
+    position: fixed;
+    width: 900px;
+    height: 700px;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse 100% 80%, oklch(0.48 0.26 281 / 0.10), transparent 60%);
+    filter: blur(30px);
+    pointer-events: none;
+    z-index: 1;
+    animation: spotlight-breathe 10s ease-in-out infinite;
+  }
+
+  .spotlight-warm {
+    position: fixed;
+    width: 450px;
+    height: 450px;
+    top: 65%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, oklch(0.60 0.20 45 / 0.04), transparent 55%);
+    filter: blur(50px);
+    pointer-events: none;
+    z-index: 1;
+    animation: spotlight-drift 22s ease-in-out infinite;
+  }
+
+  /* Top edge glow — very subtle */
+  .edge-glow {
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse, oklch(0.70 0.20 281 / 0.04), transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes spotlight-breathe {
+    0%, 100% { opacity: 0.65; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes spotlight-drift {
+    0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
+    50% { transform: translate(-50%, -50%) translate(30px, -15px); }
+  }
+
+  /* ── LAYOUT ────────────────────────────────────────────── */
+  .runway {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── LOGO (fixed!) ─────────────────────────────────────── */
+  .top-brand {
+    margin-bottom: 2.5rem;
+  }
+
+  /* dark.svg = white fills = for dark backgrounds (default)
+     light.svg = dark fills = for light backgrounds */
+  .top-brand img {
+    height: 64px;
+    width: auto;
+  }
+
+  /* Default: dark bg → show dark.svg (white logo) */
+  .logo-for-dark { display: block; }
+  .logo-for-light { display: none; }
+
+  /* Light mode: swap */
+  .light .logo-for-dark { display: none; }
+  .light .logo-for-light { display: block; }
+
+  /* ── STATEMENT ─────────────────────────────────────────── */
+  .statement {
+    text-align: center;
+    margin-bottom: 2.75rem;
+  }
+
+  .statement h1 {
+    font-family: var(--font-headline);
+    font-weight: 800;
+    font-size: 2.5rem;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: var(--fg);
+  }
+
+  .statement h1 .gradient-word {
+    background: linear-gradient(135deg, var(--primary), oklch(0.82 0.14 300));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .statement p {
+    margin-top: 0.875rem;
+    font-size: 0.9375rem;
+    color: var(--fg-muted);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+
+  /* Decorative accent line under statement */
+  .accent-line {
+    width: 48px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--primary-deep), var(--primary), transparent);
+    margin: 1.25rem auto 0;
+    opacity: 0.5;
+  }
+
+  /* ── FORM ──────────────────────────────────────────────── */
+  .auth-form { width: 100%; }
+
+  .field { margin-bottom: 1.25rem; }
+
+  .field-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--fg-muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  .field-input {
+    width: 100%;
+    height: 50px;
+    padding: 0 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-input);
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    color: var(--fg);
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .field-input::placeholder { color: var(--fg-subtle); }
+
+  .field-input:hover {
+    border-color: var(--border-hover);
+  }
+
+  .field-input:focus {
+    border-color: var(--border-focus);
+    background: var(--bg-input-focus);
+    box-shadow:
+      0 0 0 3px oklch(0.70 0.20 281 / 0.08),
+      0 0 20px oklch(0.48 0.26 281 / 0.04);
+  }
+
+  .field-input-wrapper { position: relative; }
+
+  .field-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--fg-subtle);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  .field-toggle:hover {
+    color: var(--fg-muted);
+    background: oklch(1 0 0 / 0.05);
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.75rem;
+    margin-top: -0.375rem;
+  }
+
+  .meta-row a {
+    font-size: 0.75rem;
+    color: var(--fg-subtle);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .meta-row a:hover { color: var(--primary); }
+
+  /* ── ERROR ─────────────────────────────────────────────── */
+  .error-alert {
+    display: none;
+    align-items: flex-start;
+    gap: 0.625rem;
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid oklch(0.65 0.20 25 / 0.18);
+    background: oklch(0.65 0.20 25 / 0.06);
+    margin-bottom: 1.5rem;
+    animation: error-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .error-alert.visible { display: flex; }
+  .error-alert svg { flex-shrink: 0; margin-top: 2px; color: var(--destructive); }
+  .error-alert p { font-size: 0.8125rem; color: oklch(0.78 0.12 25); line-height: 1.4; }
+
+  @keyframes error-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── BUTTON ────────────────────────────────────────────── */
+  .btn-primary {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    border: none;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-glow) 100%);
+    color: white;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    letter-spacing: -0.01em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Inner light sweep on hover */
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 30%, oklch(1 0 0 / 0.12) 50%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-primary:hover::before { opacity: 1; }
+
+  .btn-primary:hover {
+    box-shadow:
+      0 0 20px oklch(0.48 0.26 281 / 0.25),
+      0 4px 16px oklch(0.48 0.26 281 / 0.20),
+      0 12px 40px oklch(0.48 0.26 281 / 0.10);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow: 0 0 10px oklch(0.48 0.26 281 / 0.20);
+  }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+
+  .btn-primary svg {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-primary:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* ── THEME TOGGLE ──────────────────────────────────────── */
+  .theme-toggle {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 100;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: oklch(0.14 0.01 281 / 0.5);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: var(--fg-subtle);
+  }
+
+  .theme-toggle:hover {
+    color: var(--fg-muted);
+    border-color: var(--border-hover);
+    background: oklch(0.18 0.01 281 / 0.5);
+  }
+
+  /* ── LIGHT MODE ───────────────────────────────────────── */
+  .light {
+    --primary: oklch(0.48 0.26 281);
+    --primary-deep: oklch(0.42 0.26 281);
+    --primary-glow: oklch(0.55 0.24 281);
+    --bg: oklch(0.97 0.008 281);
+    --bg-input: oklch(1.0 0 0);
+    --bg-input-focus: oklch(1.0 0 0);
+    --fg: oklch(0.13 0.01 281);
+    --fg-muted: oklch(0.42 0.01 281);
+    --fg-subtle: oklch(0.58 0.005 281);
+    --border: oklch(0 0 0 / 0.10);
+    --border-hover: oklch(0 0 0 / 0.16);
+    --border-focus: oklch(0.48 0.26 281 / 0.45);
+    --destructive: oklch(0.55 0.22 25);
+  }
+
+  .light .noise { opacity: 0.015; }
+
+  .light .grid-lines::before {
+    background-image: repeating-linear-gradient(0deg, oklch(0 0 0 / 0.035) 0px, oklch(0 0 0 / 0.035) 1px, transparent 1px, transparent 72px);
+  }
+
+  .light .grid-lines::after {
+    background-image: repeating-linear-gradient(90deg, oklch(0 0 0 / 0.035) 0px, oklch(0 0 0 / 0.035) 1px, transparent 1px, transparent 72px);
+  }
+
+  .light .spotlight { background: radial-gradient(ellipse 100% 80%, oklch(0.48 0.26 281 / 0.06), transparent 60%); }
+  .light .spotlight-warm { background: radial-gradient(circle, oklch(0.60 0.20 45 / 0.025), transparent 55%); }
+  .light .edge-glow { background: radial-gradient(ellipse, oklch(0.48 0.26 281 / 0.03), transparent 60%); }
+
+  .light .theme-toggle {
+    background: oklch(1 0 0 / 0.6);
+    border-color: oklch(0 0 0 / 0.08);
+    color: var(--fg-subtle);
+  }
+
+  .light .theme-toggle:hover {
+    background: oklch(1 0 0 / 0.8);
+    border-color: oklch(0 0 0 / 0.12);
+  }
+
+  .light .error-alert {
+    border-color: oklch(0.55 0.22 25 / 0.15);
+    background: oklch(0.55 0.22 25 / 0.05);
+  }
+
+  .light .error-alert p { color: oklch(0.50 0.20 25); }
+
+  .light .btn-primary {
+    color: white;
+  }
+
+  .light .btn-primary:hover {
+    box-shadow:
+      0 0 20px oklch(0.48 0.26 281 / 0.18),
+      0 4px 16px oklch(0.48 0.26 281 / 0.15),
+      0 12px 40px oklch(0.48 0.26 281 / 0.08);
+  }
+
+  .light .statement h1 .gradient-word {
+    background: linear-gradient(135deg, oklch(0.48 0.26 281), oklch(0.58 0.22 300));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .light .accent-line {
+    background: linear-gradient(90deg, oklch(0.48 0.26 281), oklch(0.55 0.22 281), transparent);
+  }
+
+  .light .field-input {
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.04);
+  }
+
+  .light .field-input:focus {
+    box-shadow:
+      0 0 0 3px oklch(0.48 0.26 281 / 0.08),
+      0 0 20px oklch(0.48 0.26 281 / 0.03);
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .statement h1 { font-size: 2rem; }
+    .statement p { font-size: 0.875rem; }
+    .statement { margin-bottom: 2.25rem; }
+    .top-brand { margin-bottom: 2rem; }
+    .top-brand img { height: 52px; }
+    .runway { max-width: 360px; }
+  }
+
+  @media (max-width: 375px) {
+    .statement h1 { font-size: 1.75rem; }
+    .field-input { height: 46px; font-size: 0.875rem; }
+    .btn-primary { height: 46px; font-size: 0.875rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spotlight, .spotlight-warm { animation: none; }
+    .btn-primary, .btn-primary::before, .btn-primary svg { transition: none; }
+    .error-alert { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="document.body.classList.toggle('light')" aria-label="Alternar tema">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+  </svg>
+</button>
+
+<!-- Background layers -->
+<div class="noise"></div>
+<div class="grid-lines"></div>
+<div class="spotlight"></div>
+<div class="spotlight-warm"></div>
+<div class="edge-glow"></div>
+
+<!-- ═══ RUNWAY ═══ -->
+<main class="runway">
+
+  <!-- Logo: dark.svg has white fills → for dark bg (default) -->
+  <div class="top-brand">
+    <img src="../../public/logos/Sem Fundo SVG/logo-zattar-dark.svg" alt="Zattar Advogados" class="logo-for-dark">
+    <img src="../../public/logos/Sem Fundo SVG/logo-zattar-light.svg" alt="Zattar Advogados" class="logo-for-light">
+  </div>
+
+  <!-- Statement -->
+  <div class="statement">
+    <h1>Acesse seu<br><span class="gradient-word">escritorio.</span></h1>
+    <p>Entre com suas credenciais para continuar</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <!-- Form -->
+  <form class="auth-form" onsubmit="return false;">
+    <div class="field">
+      <label class="field-label" for="email">Email</label>
+      <input class="field-input" id="email" type="email" placeholder="voce@zattar.com.br" autocomplete="email" required>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="password">Senha</label>
+      <div class="field-input-wrapper">
+        <input class="field-input" id="password" type="password" placeholder="Sua senha" autocomplete="current-password" required style="padding-right: 3rem;">
+        <button type="button" class="field-toggle" aria-label="Mostrar senha" onclick="togglePassword()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <a href="#">Esqueci minha senha</a>
+    </div>
+
+    <div class="error-alert" id="error" role="alert">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p>Email ou senha incorretos</p>
+    </div>
+
+    <button type="submit" class="btn-primary">
+      Entrar
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </button>
+  </form>
+
+</main>
+
+<script>
+function togglePassword() {
+  const input = document.getElementById('password');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+</script>
+</body>
+</html>

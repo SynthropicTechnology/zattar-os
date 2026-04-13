@@ -183,7 +183,7 @@ export function ExpedientesSemanaView({
       <div className="flex items-center gap-2">
         <button
           onClick={handlePrevWeek}
-          className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer"
+          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer"
         >
           <ChevronLeft className="size-4" />
         </button>
@@ -200,7 +200,7 @@ export function ExpedientesSemanaView({
         </button>
         <button
           onClick={handleNextWeek}
-          className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer"
+          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer"
         >
           <ChevronRight className="size-4" />
         </button>
@@ -397,7 +397,7 @@ function WeekDayCard({
       {/* Row 6: Descricao arquivos */}
       {expediente.descricaoArquivos && (
         <p
-          className="text-[9px] text-muted-foreground/40 mt-1 truncate italic"
+          className="mt-1 whitespace-pre-wrap wrap-break-word text-[9px] italic text-muted-foreground/40"
           title={expediente.descricaoArquivos}
         >
           {expediente.descricaoArquivos}

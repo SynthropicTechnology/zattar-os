@@ -111,31 +111,54 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
   const [semanaDate, setSemanaDate] = useState(new Date());
 
-  // Fetch todos os expedientes sem filtro de status — filtragem client-side
-  // para manter contadores de tabs precisos independente da aba ativa.
-  const { expedientes: allExpedientes, paginacao, isLoading, refetch } = useExpedientes({
+  const baixadoFiltroAtivo = useMemo(() => {
+    if (activeTab === 'pendentes') return false;
+    if (activeTab === 'baixados') return true;
+    return undefined;
+  }, [activeTab]);
+
+  // Busca os expedientes da aba ativa para garantir que a view renderize
+  // exatamente o subconjunto esperado, sem depender de uma amostra parcial.
+  const {
+    expedientes: expedientesDaAba,
+    paginacao,
+    isLoading,
+    refetch,
+  } = useExpedientes({
     pagina: 1,
     limite: 1000,
+    baixado: baixadoFiltroAtivo,
+    incluirSemPrazo: true,
+  });
+
+  // Contadores globais são carregados separadamente para evitar distorção quando
+  // a aba ativa usa apenas uma parte do dataset.
+  const { paginacao: paginacaoPendentes } = useExpedientes({
+    pagina: 1,
+    limite: 1,
+    baixado: false,
+    incluirSemPrazo: true,
+  });
+
+  const { paginacao: paginacaoBaixados } = useExpedientes({
+    pagina: 1,
+    limite: 1,
+    baixado: true,
     incluirSemPrazo: true,
   });
 
   // Contadores globais derivados dos dados (sem chamadas extras)
   const globalCounts = useMemo(() => {
-    const pendentes = allExpedientes.filter((e) => !e.baixadoEm).length;
-    const baixados = allExpedientes.filter((e) => !!e.baixadoEm).length;
+    const pendentes = paginacaoPendentes?.total ?? 0;
+    const baixados = paginacaoBaixados?.total ?? 0;
     return {
-      todos: paginacao?.total ?? allExpedientes.length,
+      todos: pendentes + baixados,
       pendentes,
       baixados,
     };
-  }, [allExpedientes, paginacao]);
+  }, [paginacaoBaixados, paginacaoPendentes]);
 
-  // Expedientes filtrados pela tab ativa
-  const rotuloExpedientes = useMemo(() => {
-    if (activeTab === 'pendentes') return allExpedientes.filter((e) => !e.baixadoEm);
-    if (activeTab === 'baixados') return allExpedientes.filter((e) => !!e.baixadoEm);
-    return allExpedientes;
-  }, [allExpedientes, activeTab]);
+  const rotuloExpedientes = useMemo(() => expedientesDaAba, [expedientesDaAba]);
 
   // ─── Derived metrics ────────────────────────────────────────────────────────
 
