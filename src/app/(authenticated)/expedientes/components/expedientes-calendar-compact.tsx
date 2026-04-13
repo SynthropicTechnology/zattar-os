@@ -325,6 +325,21 @@ export function ExpedientesCalendarCompact({
           <span className="text-[10px]">Vencido</span>
         </div>
       </div>
+
+      {/* Legenda de urgencia */}
+      <div className="flex items-center gap-3 pt-2 px-1">
+        {[
+          { color: 'bg-destructive', label: 'Vencido' },
+          { color: 'bg-warning', label: 'Hoje' },
+          { color: 'bg-info', label: 'Proximo' },
+          { color: 'bg-success', label: 'No prazo' },
+        ].map(({ color, label }) => (
+          <div key={label} className="flex items-center gap-1">
+            <div className={cn('size-1.5 rounded-full', color)} />
+            <span className="text-[9px] text-muted-foreground/50">{label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
