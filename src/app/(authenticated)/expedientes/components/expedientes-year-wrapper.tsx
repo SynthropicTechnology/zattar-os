@@ -1,7 +1,5 @@
-'use client';
-
+import { ExpedientesYearHeatmap } from './expedientes-year-heatmap';
 import type { Expediente } from '../domain';
-import { ExpedientesCalendarYear } from './expedientes-calendar-year';
 
 export interface ExpedientesYearWrapperProps {
   expedientes: Expediente[];
@@ -9,12 +7,13 @@ export interface ExpedientesYearWrapperProps {
 }
 
 export function ExpedientesYearWrapper({
-  expedientes: _expedientes,
+  expedientes,
   currentDate = new Date(),
 }: ExpedientesYearWrapperProps) {
   return (
     <div className="flex flex-col gap-4">
-      <ExpedientesCalendarYear
+      <ExpedientesYearHeatmap
+        expedientes={expedientes}
         currentDate={currentDate}
       />
     </div>

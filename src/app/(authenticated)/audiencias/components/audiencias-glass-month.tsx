@@ -159,31 +159,41 @@ function DayCell({
 // POPOVER HEARING ITEM
 // =============================================================================
 
+function getStatusBorderClass(status: StatusAudiencia): string {
+  switch (status) {
+    case StatusAudiencia.Marcada: return 'border-l-success';
+    case StatusAudiencia.Finalizada: return 'border-l-info';
+    case StatusAudiencia.Cancelada: return 'border-l-destructive';
+    default: return 'border-l-muted-foreground';
+  }
+}
+
 function HearingItem({ audiencia }: { audiencia: Audiencia }) {
+  const modalidadeLabel =
+    audiencia.modalidade === ModalidadeAudiencia.Virtual
+      ? 'Virtual'
+      : audiencia.modalidade === ModalidadeAudiencia.Hibrida
+        ? 'Híbrida'
+        : 'Presencial';
+
+  const ModalidadeIcon =
+    audiencia.modalidade === ModalidadeAudiencia.Virtual ? Monitor : Building2;
+
   return (
-    <div className="rounded-lg p-2 px-2.5 bg-muted/30 border border-border/40">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Clock className="w-3 h-3 text-foreground/30 mt-0.5 shrink-0" />
-          <div>
-            <p className="text-xs font-semibold text-foreground/85">
-              {audiencia.horaInicio || '—'} · {audiencia.tipoDescricao || 'Audiência'}
-            </p>
-            <div className="flex items-center gap-1 mt-0.5 min-w-0">
-              {audiencia.grau && (
-                <span className="text-[9px] text-foreground/30 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
-              )}
-              <span className="text-xs text-foreground/40 tabular-nums truncate">
-                {audiencia.numeroProcesso}
-              </span>
-            </div>
-            {audiencia.orgaoJulgadorOrigem && (
-              <p className="text-[9px] text-foreground/30 mt-0.5 truncate">{audiencia.orgaoJulgadorOrigem}</p>
-            )}
-            {audiencia.observacoes && (
-              <p className="text-[9px] text-foreground/25 mt-0.5 truncate italic">{audiencia.observacoes}</p>
-            )}
-          </div>
+    <div
+      className={cn(
+        'rounded-lg p-2.5 border border-border/30 border-l-2 bg-muted/15',
+        'hover:bg-accent/40 transition-colors cursor-pointer',
+        getStatusBorderClass(audiencia.status),
+      )}
+    >
+      {/* Linha principal: hora + tipo + badge */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <Clock className="w-3 h-3 text-foreground/40 shrink-0" />
+          <span className="text-xs font-semibold text-foreground/85 truncate">
+            {audiencia.horaInicio || '—'} · {audiencia.tipoDescricao || 'Audiência'}
+          </span>
         </div>
         <span className={cn(
           'text-[10px] font-semibold tracking-[0.03em] px-[7px] py-0.5 rounded-full border shrink-0',
@@ -192,19 +202,31 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
           {STATUS_AUDIENCIA_LABELS[audiencia.status]}
         </span>
       </div>
-      <div className="flex items-center gap-3 mt-2 ml-5">
-        <div className="flex items-center gap-1 text-foreground/30">
-          {audiencia.modalidade === ModalidadeAudiencia.Virtual
-            ? <Monitor className="w-3 h-3" />
-            : <Building2 className="w-3 h-3" />}
-          <span className="text-xs">
-            {audiencia.modalidade === ModalidadeAudiencia.Virtual
-              ? 'Virtual'
-              : audiencia.modalidade === ModalidadeAudiencia.Hibrida
-                ? 'Híbrida'
-                : 'Presencial'}
+
+      {/* Processo + grau */}
+      <div className="flex items-center gap-1.5 mt-1.5 ml-[18px] min-w-0">
+        {audiencia.grau && (
+          <span className="text-[9px] text-foreground/30 shrink-0">
+            {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
           </span>
+        )}
+        <span className="text-xs text-foreground/45 tabular-nums truncate">
+          {audiencia.numeroProcesso}
+        </span>
+      </div>
+
+      {/* Meta: modalidade + órgão */}
+      <div className="flex items-center gap-3 mt-1.5 ml-[18px] text-foreground/35">
+        <div className="flex items-center gap-1">
+          <ModalidadeIcon className="w-3 h-3" />
+          <span className="text-[11px]">{modalidadeLabel}</span>
         </div>
+        {audiencia.orgaoJulgadorOrigem && (
+          <>
+            <span className="text-foreground/15">·</span>
+            <span className="text-[11px] truncate">{audiencia.orgaoJulgadorOrigem}</span>
+          </>
+        )}
       </div>
     </div>
   );
@@ -346,28 +368,29 @@ export function AudienciasGlassMonth({
                         </div>
                       </PopoverTrigger>
                       <PopoverContent
-                        className="w-72 p-3.5 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-2xl"
+                        className="w-80 p-4 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-2xl"
                         side="bottom"
-                        align="center"
+                        align="start"
+                        sideOffset={6}
                       >
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center justify-between gap-3 mb-3">
                           <div>
-                            <p className="text-xs font-bold">
-                              {format(day, "d 'de' MMMM, yyyy", { locale: ptBR })}
+                            <p className="text-sm font-bold capitalize">
+                              {format(day, "d 'de' MMMM", { locale: ptBR })}
                             </p>
-                            <p className="text-xs text-foreground/40 mt-0.5">
+                            <p className="text-xs text-foreground/40 mt-0.5 capitalize">
                               {format(day, 'EEEE', { locale: ptBR })} · {auds.length} audiência{auds.length > 1 ? 's' : ''}
                             </p>
                           </div>
                           <button
                             type="button"
                             onClick={() => setPopoverDay(null)}
-                            className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-accent/50 transition-colors"
+                            className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-accent/50 border border-border/30 transition-colors"
                           >
-                            <X className="w-3.5 h-3.5 text-foreground/40" />
+                            <X className="w-3.5 h-3.5 text-foreground/50" />
                           </button>
                         </div>
-                        <div className="space-y-1.5 max-h-64 overflow-y-auto">
+                        <div className="space-y-2 max-h-72 overflow-y-auto pr-0.5">
                           {auds.map(aud => (
                             <button
                               key={aud.id}

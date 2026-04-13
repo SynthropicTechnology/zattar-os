@@ -135,7 +135,7 @@ export function AudienciasClient({
   // Fetch sem filtro de status — filtragem client-side para manter KPIs e
   // contadores de tabs precisos independente da aba ativa.
 
-  const { audiencias: allAudiencias, isLoading, error, total: _total, refetch } = useAudienciasUnified({
+  const { audiencias: allAudiencias, isLoading, error, total: serverTotal, refetch } = useAudienciasUnified({
     viewMode,
     currentDate,
     search: search || undefined,
@@ -152,12 +152,12 @@ export function AudienciasClient({
   }, [initialUsuarios]);
 
   const filterCounts = useMemo(() => ({
-    total: allAudiencias.length,
+    total: serverTotal || allAudiencias.length,
     marcadas: allAudiencias.filter((a) => a.status === StatusAudiencia.Marcada).length,
     finalizadas: allAudiencias.filter((a) => a.status === StatusAudiencia.Finalizada).length,
     canceladas: allAudiencias.filter((a) => a.status === StatusAudiencia.Cancelada).length,
     semResponsavel: allAudiencias.filter((a) => !a.responsavelId).length,
-  }), [allAudiencias]);
+  }), [allAudiencias, serverTotal]);
 
   const totalMarcadas = filterCounts.marcadas;
   const totalFinalizadas = filterCounts.finalizadas;
