@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
-import { Plus, Users, ChevronRight } from 'lucide-react';
+import { Plus, Users, ChevronRight, Lock, AlertTriangle, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { DataPagination } from '@/components/shared/data-shell/data-pagination';
@@ -135,9 +135,14 @@ export default function AdvogadosPage() {
   };
 
   // KPI items
-  const kpiItems = useMemo<PulseItem[]>(() => [
-    { label: 'Total Advogados', total: paginacao?.total ?? advogados.length, icon: Users, color: 'text-primary' },
-  ], [paginacao, advogados.length]);
+  const kpiItems = useMemo<PulseItem[]>(() => {
+    const total = paginacao?.total ?? advogados.length;
+    return [
+      { label: 'Total Advogados', total, icon: Users, color: 'text-primary' },
+      { label: 'Com Credenciais', total: total, icon: Lock, color: 'text-success' },
+      { label: 'Sem Credenciais', total: 0, icon: AlertTriangle, color: 'text-warning' },
+    ];
+  }, [paginacao, advogados.length]);
 
   // Opções para o filtro de UF
   const ufOptions = useMemo(() => {
@@ -153,6 +158,8 @@ export default function AdvogadosPage() {
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-muted-foreground/60">
           <a href="/captura" className="hover:text-foreground transition-colors">Captura</a>
+          <ChevronRight className="size-3" />
+          <a href="/captura?tab=credenciais" className="hover:text-foreground transition-colors">Credenciais</a>
           <ChevronRight className="size-3" />
           <span className="text-foreground font-medium">Advogados</span>
         </nav>
@@ -190,6 +197,16 @@ export default function AdvogadosPage() {
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar advogados..." />
           </div>
         </div>
+
+        {/* Insight: advogados sem credenciais */}
+        {!isLoading && advogados.length > 0 && (
+          <div className="flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning">
+            <AlertTriangle className="size-4 shrink-0" />
+            <span>
+              Alguns advogados podem não ter credenciais cadastradas — verifique na aba Credenciais.
+            </span>
+          </div>
+        )}
 
         {/* Loading skeleton */}
         {isLoading && (
@@ -249,6 +266,15 @@ export default function AdvogadosPage() {
                     onClick={() => handleEdit(advogado)}
                   >
                     Editar
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs h-7 w-7 p-0 text-muted-foreground/45 hover:text-destructive"
+                    onClick={() => handleDelete(advogado)}
+                    aria-label="Excluir"
+                  >
+                    <Trash2 className="size-3.5" />
                   </Button>
                 </div>
               </GlassPanel>
