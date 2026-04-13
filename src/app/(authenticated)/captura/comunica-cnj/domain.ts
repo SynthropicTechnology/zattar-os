@@ -454,3 +454,136 @@ export const listarComunicacoesCapturadasSchema = z.object({
     message: 'dataInicio deve ser anterior a dataFim',
   }
 );
+
+// ===== GAZETTE FUSION TYPES =====
+
+export type StatusVinculacao = 'vinculado' | 'pendente' | 'orfao' | 'irrelevante';
+
+export interface GazetteMetrics {
+  publicacoesHoje: number;
+  vinculados: number;
+  totalCapturadas: number;
+  pendentes: number;
+  prazosCriticos: number;
+  orfaos: number;
+  orfaosComSugestao: number;
+  taxaVinculacao: number;
+}
+
+export interface SparklinePoint {
+  date: string;
+  count: number;
+}
+
+export interface GazetteFilters {
+  fonte?: string[];
+  tipo?: string[];
+  periodo?: { inicio: string; fim: string };
+  advogadoId?: number;
+  meio?: MeioComunicacao | null;
+  status?: StatusVinculacao[];
+  processo?: string;
+  parte?: string;
+  texto?: string;
+}
+
+export interface GazetteView {
+  id: number;
+  nome: string;
+  icone: string;
+  filtros: GazetteFilters;
+  colunas: string[];
+  sort: { campo: string; direcao: 'asc' | 'desc' };
+  densidade: 'compacto' | 'padrao' | 'confortavel';
+  modoVisualizacao: 'tabela' | 'cards';
+  visibilidade: 'pessoal' | 'equipe';
+  criadoPor: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SyncLogEntry {
+  id: number;
+  tipo: 'automatica' | 'manual';
+  status: 'sucesso' | 'erro' | 'em_andamento';
+  totalProcessados: number;
+  novos: number;
+  duplicados: number;
+  vinculadosAuto: number;
+  orfaos: number;
+  erros: Array<{ mensagem: string; processo?: string }>;
+  parametros: Record<string, unknown>;
+  duracaoMs: number | null;
+  executadoPor: number;
+  createdAt: string;
+}
+
+export interface MatchSugestao {
+  expedienteId: number;
+  expedienteNumero: string;
+  processoNumero: string;
+  partes: string;
+  vara: string;
+  grau: string;
+  status: string;
+  criadoEm: string;
+  confianca: number;
+  criterios: MatchCriterio[];
+}
+
+export interface MatchCriterio {
+  campo: string;
+  match: boolean;
+  detalhe: string;
+}
+
+export interface ComunicacaoResumo {
+  id: number;
+  comunicacaoId: number;
+  resumo: string;
+  tags: Array<{ tipo: 'prazo' | 'valor' | 'acao' | 'parte'; texto: string }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GazetteInsight {
+  tipo: 'padrao' | 'atencao' | 'relatorio';
+  titulo: string;
+  descricao: string;
+  linkFiltro?: GazetteFilters;
+}
+
+export interface ComunicacaoCNJEnriquecida extends ComunicacaoCNJ {
+  statusVinculacao: StatusVinculacao;
+  diasParaPrazo: number | null;
+  resumoAI?: ComunicacaoResumo;
+  matchSugestao?: MatchSugestao;
+  partesAutor: string[];
+  partesReu: string[];
+}
+
+// Gazette Fusion Zod Schemas
+
+export const salvarViewSchema = z.object({
+  nome: z.string().min(1).max(100),
+  icone: z.string().default('bookmark'),
+  filtros: z.record(z.unknown()).default({}),
+  colunas: z.array(z.string()).default([]),
+  sort: z.object({
+    campo: z.string(),
+    direcao: z.enum(['asc', 'desc']),
+  }).default({ campo: 'data_disponibilizacao', direcao: 'desc' }),
+  densidade: z.enum(['compacto', 'padrao', 'confortavel']).default('padrao'),
+  modoVisualizacao: z.enum(['tabela', 'cards']).default('tabela'),
+  visibilidade: z.enum(['pessoal', 'equipe']).default('pessoal'),
+});
+
+export const buscarMatchSchema = z.object({
+  comunicacaoId: z.number().int().positive(),
+});
+
+export const aceitarMatchBatchSchema = z.object({
+  confiancaMinima: z.number().min(0).max(100).default(85),
+});
+
+export type SalvarViewInput = z.infer<typeof salvarViewSchema>;
