@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Upload, Paperclip } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -61,7 +62,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
   };
 
   return (
-    <div className="space-y-4 rounded-lg border bg-muted/20 p-4">
+    <GlassPanel className="space-y-4 p-4">
       <div className="flex items-start gap-2">
         <Paperclip className="mt-0.5 h-4 w-4 text-muted-foreground" />
         <div>
@@ -122,6 +123,6 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
       </div>
 
       {mensagem && <p className="text-xs text-muted-foreground">{mensagem}</p>}
-    </div>
+    </GlassPanel>
   );
 }

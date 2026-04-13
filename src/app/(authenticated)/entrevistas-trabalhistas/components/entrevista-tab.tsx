@@ -4,6 +4,9 @@ import * as React from 'react';
 import { ClipboardList, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
+import { Heading, Text } from '@/components/ui/typography';
 import type { EntrevistaTrabalhista, EntrevistaAnexo, TipoLitigio, PerfilReclamante } from '../domain';
 import { STATUS_ENTREVISTA_LABELS, MODULO_LABELS, type ModuloEntrevista } from '../domain';
 import { useEntrevista } from '../hooks/use-entrevista';
@@ -52,21 +55,21 @@ export function EntrevistaTab({ contratoId, entrevista: initialEntrevista, anexo
   // Estado vazio: nenhuma entrevista existe
   if (view === 'empty') {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-        <div className="rounded-full bg-muted p-4">
-          <ClipboardList className="h-8 w-8 text-muted-foreground" />
-        </div>
+      <GlassPanel className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+        <IconContainer size="lg" className="bg-muted/50">
+          <ClipboardList className="size-5 text-muted-foreground/50" />
+        </IconContainer>
         <div>
-          <h3 className="text-lg font-semibold">Nenhuma entrevista realizada</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <Heading level="card">Nenhuma entrevista realizada</Heading>
+          <Text variant="caption" className="mt-1">
             Inicie uma entrevista trabalhista para coletar os fatos probatórios do caso
-          </p>
+          </Text>
         </div>
         <Button onClick={() => setView('no_zero')}>
           <Plus className="mr-2 h-4 w-4" />
           Iniciar Entrevista
         </Button>
-      </div>
+      </GlassPanel>
     );
   }
 

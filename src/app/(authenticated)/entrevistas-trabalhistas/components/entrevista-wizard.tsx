@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { ChevronLeft, ChevronRight, Save, CheckCircle2, Sparkles, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import type {
   EntrevistaTrabalhista,
   RespostasEntrevista,
@@ -247,18 +247,16 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
       </nav>
 
       {/* Conteúdo do módulo atual */}
-      <Card>
-        <CardContent className="p-6">
-          {renderModulo()}
-          <div className="mt-6">
-            <AnexoUploadZone
-              entrevistaId={entrevista.id}
-              contratoId={contratoId}
-              modulo={currentModulo}
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <GlassPanel className="p-6">
+        {renderModulo()}
+        <div className="mt-6">
+          <AnexoUploadZone
+            entrevistaId={entrevista.id}
+            contratoId={contratoId}
+            modulo={currentModulo}
+          />
+        </div>
+      </GlassPanel>
 
       {/* Testemunhas (visível no último step) */}
       {isLastStep && (
