@@ -4,8 +4,12 @@ import * as React from 'react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable, RowSelectionState } from '@tanstack/react-table';
-import { Plus, PowerOff, Power } from 'lucide-react';
-import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { Plus, PowerOff, Power, KeyRound, CheckCircle2, XCircle, Landmark } from 'lucide-react';
+import { DataTable } from '@/components/shared/data-shell';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { PulseStrip } from '@/components/dashboard/pulse-strip';
+import type { PulseItem } from '@/components/dashboard/pulse-strip';
+import { SearchInput } from '@/components/dashboard/search-input';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   AlertDialog,
@@ -321,94 +325,92 @@ export default function CredenciaisPage() {
     [handleViewAdvogado, handleEdit, handleToggleStatus]
   );
 
+  const kpiItems = useMemo<PulseItem[]>(() => {
+    const ativas = credenciais.filter((c) => c.active).length;
+    const inativas = credenciais.filter((c) => !c.active).length;
+    const tribunaisCobertos = new Set(credenciais.filter((c) => c.active).map((c) => c.tribunal)).size;
+    return [
+      { label: 'Total Credenciais', total: credenciais.length, icon: KeyRound, color: 'text-primary' },
+      { label: 'Ativas', total: ativas, icon: CheckCircle2, color: 'text-success' },
+      { label: 'Inativas', total: inativas, icon: XCircle, color: 'text-warning' },
+      { label: 'Tribunais Cobertos', total: tribunaisCobertos, icon: Landmark, color: 'text-info' },
+    ];
+  }, [credenciais]);
+
   return (
     <>
-      <DataShell
-        header={
-          table ? (
-            <DataTableToolbar
-              table={table}
-              title={advogadoIdFromUrl ? 'Credenciais (filtrado por advogado)' : 'Credenciais'}
-              density={density}
-              onDensityChange={setDensity}
-              searchValue={busca}
-              onSearchValueChange={setBusca}
-              searchPlaceholder="Buscar credenciais..."
-              actionButton={{
-                label: 'Nova Credencial',
-                icon: <Plus className="h-4 w-4" />,
-                onClick: handleNovaCredencial,
-              }}
-              actionSlot={
-                selectedCount > 0 ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">
-                      {selectedCount} selecionada(s)
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9"
-                      onClick={() => handleBulkToggle('desativar')}
-                    >
-                      <PowerOff className="mr-1.5 h-4 w-4" />
-                      Desativar
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9"
-                      onClick={() => handleBulkToggle('ativar')}
-                    >
-                      <Power className="mr-1.5 h-4 w-4" />
-                      Ativar
-                    </Button>
-                  </div>
-                ) : undefined
-              }
-              filtersSlot={
-                <>
-                  <AdvogadosFilter
-                    title="Tribunal"
-                    options={tribunalOptions}
-                    value={tribunalFilter}
-                    onValueChange={setTribunalFilter}
-                  />
-                  <AdvogadosFilter
-                    title="Grau"
-                    options={grauOptions}
-                    value={grauFilter}
-                    onValueChange={setGrauFilter}
-                  />
-                  <AdvogadosFilter
-                    title="Status"
-                    options={statusOptions}
-                    value={statusFilter}
-                    onValueChange={setStatusFilter}
-                  />
-                </>
-              }
+      <div className="space-y-5">
+        {/* KPI Strip */}
+        <PulseStrip items={kpiItems} />
+
+        {/* Filter Bar */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <AdvogadosFilter
+              title="Tribunal"
+              options={tribunalOptions}
+              value={tribunalFilter}
+              onValueChange={setTribunalFilter}
             />
-          ) : (
-            <div className="p-6" />
-          )
-        }
-      >
-        <DataTable
-          data={credenciaisFiltradas}
-          columns={colunas}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          emptyMessage="Nenhuma credencial encontrada."
-          hidePagination={true}
-          rowSelection={{
-            state: rowSelection,
-            onRowSelectionChange: setRowSelection,
-          }}
-          onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
-        />
-      </DataShell>
+            <AdvogadosFilter
+              title="Grau"
+              options={grauOptions}
+              value={grauFilter}
+              onValueChange={setGrauFilter}
+            />
+            <AdvogadosFilter
+              title="Status"
+              options={statusOptions}
+              value={statusFilter}
+              onValueChange={setStatusFilter}
+            />
+          </div>
+          <div className="flex items-center gap-2 flex-1 justify-end">
+            <SearchInput
+              value={busca}
+              onChange={setBusca}
+              placeholder="Buscar credenciais..."
+            />
+            <Button size="sm" className="rounded-xl" onClick={handleNovaCredencial}>
+              <Plus className="size-3.5" />
+              Nova Credencial
+            </Button>
+          </div>
+        </div>
+
+        {/* Bulk Actions Bar (when rows selected) */}
+        {selectedCount > 0 && (
+          <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-primary/5 px-4 py-2.5">
+            <span className="text-sm font-medium text-primary">{selectedCount} selecionada(s)</span>
+            <div className="flex items-center gap-2 ml-auto">
+              <Button variant="outline" size="sm" onClick={() => handleBulkToggle('ativar')}>
+                <Power className="size-3.5 mr-1" /> Ativar
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleBulkToggle('desativar')}>
+                <PowerOff className="size-3.5 mr-1" /> Desativar
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Table in Glass Panel */}
+        <GlassPanel depth={1} className="overflow-hidden">
+          <DataTable
+            data={credenciaisFiltradas}
+            columns={colunas}
+            isLoading={isLoading}
+            error={error}
+            density={density}
+            emptyMessage="Nenhuma credencial encontrada."
+            hidePagination={true}
+            rowSelection={{
+              state: rowSelection,
+              onRowSelectionChange: setRowSelection,
+            }}
+            onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
+          />
+        </GlassPanel>
+      </div>
 
       {/* Dialog de visualização do advogado */}
       <AdvogadoViewDialog

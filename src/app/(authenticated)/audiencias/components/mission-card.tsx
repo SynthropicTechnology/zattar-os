@@ -234,12 +234,28 @@ export function MissionCard({
           </div>
         </div>
 
+        {/* Órgão jurisdicional */}
+        {audiencia.orgaoJulgadorOrigem && (
+          <div className="mb-2 px-3 py-1.5 rounded-lg bg-border/5">
+            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Órgão Jurisdicional</span>
+            <p className="text-[11px] text-foreground/60 mt-0.5">{audiencia.orgaoJulgadorOrigem}</p>
+          </div>
+        )}
+
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
           <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-border/5">
             <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloAtivoNome || '–'}</span>
             <span className="text-[9px] text-muted-foreground/50 shrink-0">vs</span>
             <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloPassivoNome || '–'}</span>
+          </div>
+        )}
+
+        {/* Observações */}
+        {audiencia.observacoes && (
+          <div className="mb-4 px-3 py-2 rounded-lg bg-border/5">
+            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Observações</span>
+            <p className="text-[11px] text-foreground/50 mt-0.5 line-clamp-2 italic">{audiencia.observacoes}</p>
           </div>
         )}
 

@@ -120,7 +120,7 @@ export function AudienciasClient({
   const [currentDate, setCurrentDate] = useState(new Date());
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<AudienciasFilterBarFilters>({
-    status: null,
+    status: StatusAudiencia.Marcada,
     responsavel: null,
     trt: [],
     modalidade: null,

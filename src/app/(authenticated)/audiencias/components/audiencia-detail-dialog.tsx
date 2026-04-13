@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -273,6 +273,7 @@ export function AudienciaDetailDialog({
           className="sm:max-w-[780px] max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden [scrollbar-width:thin]"
           showCloseButton
         >
+          <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
           {/* ══ HEADER (fixo) ══ */}
           <div className="shrink-0" style={{ padding: '24px 28px 0' }}>
             {/* Título + Badge */}

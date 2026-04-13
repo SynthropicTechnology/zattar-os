@@ -39,6 +39,7 @@ import {
   StatusAudiencia,
   STATUS_AUDIENCIA_LABELS,
   ModalidadeAudiencia,
+  GRAU_TRIBUNAL_LABELS,
 } from '../domain';
 import { AudienciaDetailDialog } from './audiencia-detail-dialog';
 
@@ -113,7 +114,7 @@ function DayCell({
       type="button"
       onClick={() => count > 0 && onSelect(day, audienciasDia)}
       className={cn(
-        'relative min-h-[100px] sm:min-h-[120px] p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
+        'relative w-full min-h-[100px] sm:min-h-[120px] p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
         'border border-border/40',
         'hover:bg-accent/40 hover:border-border/60',
         'active:bg-accent/20 active:scale-[0.98]',
@@ -168,9 +169,20 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
             <p className="text-xs font-semibold text-foreground/85">
               {audiencia.horaInicio || '—'} · {audiencia.tipoDescricao || 'Audiência'}
             </p>
-            <p className="text-xs text-foreground/40 mt-0.5">
-              {audiencia.numeroProcesso}
-            </p>
+            <div className="flex items-center gap-1 mt-0.5 min-w-0">
+              {audiencia.grau && (
+                <span className="text-[9px] text-foreground/30 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+              )}
+              <span className="text-xs text-foreground/40 tabular-nums truncate">
+                {audiencia.numeroProcesso}
+              </span>
+            </div>
+            {audiencia.orgaoJulgadorOrigem && (
+              <p className="text-[9px] text-foreground/30 mt-0.5 truncate">{audiencia.orgaoJulgadorOrigem}</p>
+            )}
+            {audiencia.observacoes && (
+              <p className="text-[9px] text-foreground/25 mt-0.5 truncate italic">{audiencia.observacoes}</p>
+            )}
           </div>
         </div>
         <span className={cn(
@@ -315,7 +327,7 @@ export function AudienciasGlassMonth({
               const isPopoverOpen = popoverDay && isSameDay(day, popoverDay);
 
               return (
-                <div key={key} className="relative">
+                <div key={key} className="relative h-full">
                   {auds.length > 0 ? (
                     <Popover
                       open={!!isPopoverOpen}

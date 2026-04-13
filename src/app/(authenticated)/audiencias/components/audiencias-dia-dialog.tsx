@@ -15,7 +15,7 @@ import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { IconContainer } from '@/components/ui/icon-container';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { TabPills } from '@/components/dashboard/tab-pills';
@@ -252,6 +252,7 @@ export function AudienciasDiaDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden">
+        <DialogDescription className="sr-only">Audiências do dia</DialogDescription>
         {/* ── HEADER ── */}
         <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/20">
           <div className="flex items-center justify-between gap-3">

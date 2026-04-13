@@ -21,7 +21,7 @@ import { parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { IconContainer } from '@/components/ui/icon-container';
 import type { Audiencia } from '../domain';
-import { StatusAudiencia } from '../domain';
+import { StatusAudiencia, GRAU_TRIBUNAL_LABELS } from '../domain';
 import { calcPrepItems, calcPrepScore } from './prep-score';
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -137,6 +137,12 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
         <p className="text-[10px] text-muted-foreground/30 truncate">
           {audiencia.poloAtivoNome || '—'} vs {audiencia.poloPassivoNome || '—'}
         </p>
+        {audiencia.orgaoJulgadorOrigem && (
+          <p className="text-[9px] text-muted-foreground/25 truncate">{audiencia.orgaoJulgadorOrigem}</p>
+        )}
+        {audiencia.observacoes && (
+          <p className="text-[9px] text-muted-foreground/25 truncate italic" title={audiencia.observacoes}>{audiencia.observacoes}</p>
+        )}
       </div>
 
       {/* Date/Time */}
@@ -161,11 +167,16 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
         <span className="text-[9px] text-muted-foreground/50">{modalidadeLabel}</span>
       </div>
 
-      {/* TRT */}
+      {/* TRT + Grau */}
       {audiencia.trt && (
-        <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40 shrink-0 hidden md:block">
-          {audiencia.trt}
-        </span>
+        <div className="flex items-center gap-1 shrink-0 hidden md:flex">
+          <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">
+            {audiencia.trt}
+          </span>
+          {audiencia.grau && (
+            <span className="text-[9px] text-muted-foreground/35">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+          )}
+        </div>
       )}
 
       {/* Prep ring */}

@@ -28,7 +28,7 @@ import {
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import type { Audiencia } from '../../domain';
-import { StatusAudiencia } from '../../domain';
+import { StatusAudiencia, GRAU_TRIBUNAL_LABELS } from '../../domain';
 import { calcPrepItems, calcPrepScore } from '../prep-score';
 import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from '../audiencia-responsavel-popover';
 
@@ -221,11 +221,15 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
   const isVirtual = audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida';
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
       className={cn(
         'w-full text-left p-3 rounded-xl border transition-all duration-200 cursor-pointer',
         'bg-card/80 border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
+        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
         (isPast || isFinalizada) && 'opacity-60',
         isOngoing && 'ring-1 ring-success/30 border-success/25 bg-success/3',
       )}
@@ -270,16 +274,33 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         </p>
       )}
 
-      {/* 4. TRT badge + Número do processo (mesma linha, TRT na frente) */}
+      {/* 4. TRT badge + Grau + Número do processo (mesma linha) */}
       {audiencia.numeroProcesso && (
         <div className="flex items-center gap-1.5 mt-1 min-w-0">
           {audiencia.trt && (
             <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">{audiencia.trt}</span>
           )}
+          {audiencia.grau && (
+            <span className="text-[9px] text-muted-foreground/45 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+          )}
           <span className="text-[10px] text-muted-foreground/60 tabular-nums truncate">
             {audiencia.numeroProcesso}
           </span>
         </div>
+      )}
+
+      {/* 5. Órgão jurisdicional */}
+      {audiencia.orgaoJulgadorOrigem && (
+        <p className="text-[9px] text-muted-foreground/45 mt-0.5 truncate" title={audiencia.orgaoJulgadorOrigem}>
+          {audiencia.orgaoJulgadorOrigem}
+        </p>
+      )}
+
+      {/* 6. Observações (truncado) */}
+      {audiencia.observacoes && (
+        <p className="text-[9px] text-muted-foreground/40 mt-1 truncate italic" title={audiencia.observacoes}>
+          {audiencia.observacoes}
+        </p>
       )}
 
       {/* 9. Responsável — footer, alinhado à direita */}
@@ -308,6 +329,6 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
           )
         )}
       </div>
-    </button>
+    </div>
   );
 }

@@ -28,6 +28,7 @@ import {
   STATUS_AUDIENCIA_LABELS,
   ModalidadeAudiencia,
   MODALIDADE_AUDIENCIA_LABELS,
+  GRAU_TRIBUNAL_LABELS,
 } from '../domain';
 import { calcPrepItems, calcPrepScore } from './prep-score';
 
@@ -216,9 +217,19 @@ function GlassRow({
                 </span>
               )}
             </div>
-            <div className="font-mono text-xs text-muted-foreground mt-0.5">
-              {audiencia.numeroProcesso}
+            <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
+              {audiencia.grau && (
+                <span className="text-[10px] text-muted-foreground/50 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+              )}
+              <span className="text-xs text-muted-foreground tabular-nums truncate">
+                {audiencia.numeroProcesso}
+              </span>
             </div>
+            {audiencia.orgaoJulgadorOrigem && (
+              <div className="text-[10px] text-muted-foreground/45 mt-0.5 truncate" title={audiencia.orgaoJulgadorOrigem}>
+                {audiencia.orgaoJulgadorOrigem}
+              </div>
+            )}
             {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
               <div className="text-xs text-muted-foreground mt-0.5">
                 {audiencia.poloAtivoNome}
@@ -232,6 +243,11 @@ function GlassRow({
                 {audiencia.poloPassivoRepresentaVarios && (
                   <span className="text-muted-foreground/60 font-medium"> e outros</span>
                 )}
+              </div>
+            )}
+            {audiencia.observacoes && (
+              <div className="text-[10px] text-muted-foreground/40 mt-0.5 truncate italic" title={audiencia.observacoes}>
+                {audiencia.observacoes}
               </div>
             )}
           </div>

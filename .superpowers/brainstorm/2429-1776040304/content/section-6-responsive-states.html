@@ -1,0 +1,362 @@
+<h2>Seção 6: Responsivo + Empty States + Dialogs + PDF Viewer</h2>
+<p class="subtitle">Comportamento adaptativo, estados vazios com personalidade, e modais de interação</p>
+
+<!-- Responsive Breakpoints -->
+<div class="section">
+  <h3>Layout Responsivo — 4 Breakpoints</h3>
+  <div class="mockup">
+    <div class="mockup-header">Adaptação progressiva: Desktop → Tablet → Mobile</div>
+    <div class="mockup-body" style="padding: 20px 24px; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0;">
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <!-- Desktop -->
+        <div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Desktop ≥1280px</div>
+          <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; aspect-ratio: 16/10;">
+            <div style="padding: 6px 8px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 8px; color: rgba(255,255,255,0.3);">Header + Search</div>
+            <div style="display: flex; padding: 4px; gap: 2px;">
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 2px;">
+                <div style="display: flex; gap: 2px;">
+                  <div style="flex: 1; height: 20px; background: rgba(99,102,241,0.08); border-radius: 3px;"></div>
+                  <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 3px;"></div>
+                  <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 3px;"></div>
+                  <div style="flex: 1; height: 20px; background: rgba(239,68,68,0.06); border-radius: 3px;"></div>
+                  <div style="flex: 1; height: 20px; background: rgba(255,255,255,0.03); border-radius: 3px;"></div>
+                </div>
+                <div style="height: 8px; background: rgba(255,255,255,0.02); border-radius: 2px; font-size: 6px; color: rgba(255,255,255,0.15); padding: 1px 4px;">tabs + filters</div>
+                <div style="flex: 1; display: flex; gap: 2px;">
+                  <div style="flex: 1; background: rgba(255,255,255,0.02); border-radius: 3px; display: flex; flex-direction: column; gap: 1px; padding: 2px;">
+                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 2px;"></div>
+                    <div style="height: 8px; background: rgba(99,102,241,0.06); border-radius: 2px;"></div>
+                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 2px;"></div>
+                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 2px;"></div>
+                  </div>
+                  <div style="width: 35%; background: rgba(255,255,255,0.02); border-radius: 3px; border-left: 1px solid rgba(255,255,255,0.04); font-size: 6px; color: rgba(255,255,255,0.12); padding: 4px; text-align: center;">Detail Panel</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 6px;">KPIs em grid 5 cols · Tabela + Detail Panel lado a lado · Filtros inline</div>
+        </div>
+
+        <!-- Tablet -->
+        <div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Tablet 768px–1279px</div>
+          <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; max-width: 240px;">
+            <div style="padding: 4px 6px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 7px; color: rgba(255,255,255,0.3);">Header</div>
+            <div style="display: flex; gap: 2px; padding: 3px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 40%; height: 16px; background: rgba(99,102,241,0.08); border-radius: 3px;"></div>
+              <div style="flex: 1; min-width: 40%; height: 16px; background: rgba(255,255,255,0.03); border-radius: 3px;"></div>
+              <div style="flex: 1; min-width: 40%; height: 16px; background: rgba(255,255,255,0.03); border-radius: 3px;"></div>
+              <div style="flex: 1; min-width: 40%; height: 16px; background: rgba(239,68,68,0.06); border-radius: 3px;"></div>
+            </div>
+            <div style="padding: 3px;">
+              <div style="height: 6px; background: rgba(255,255,255,0.02); border-radius: 2px; margin-bottom: 2px;"></div>
+              <div style="display: flex; flex-direction: column; gap: 1px;">
+                <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 2px;"></div>
+                <div style="height: 8px; background: rgba(99,102,241,0.06); border-radius: 2px;"></div>
+                <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 2px;"></div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 6px;">KPIs em grid 2×2+1 · Detail Panel vira Sheet bottom · Filtros em popover único</div>
+        </div>
+
+        <!-- Mobile -->
+        <div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Mobile 375px–767px</div>
+          <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; aspect-ratio: 9/16; max-width: 140px;">
+            <div style="padding: 3px 4px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 6px; color: rgba(255,255,255,0.3);">Header</div>
+            <div style="padding: 3px; display: flex; gap: 2px; overflow-x: auto;">
+              <div style="min-width: 45%; height: 28px; background: rgba(99,102,241,0.08); border-radius: 3px; flex-shrink: 0;"></div>
+              <div style="min-width: 45%; height: 28px; background: rgba(255,255,255,0.03); border-radius: 3px; flex-shrink: 0;"></div>
+              <div style="min-width: 45%; height: 28px; background: rgba(255,255,255,0.03); border-radius: 3px; flex-shrink: 0;"></div>
+            </div>
+            <div style="padding: 2px 3px; font-size: 5px; color: rgba(255,255,255,0.15);">scroll tabs</div>
+            <div style="padding: 3px; display: flex; flex-direction: column; gap: 2px;">
+              <div style="height: 36px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); border-radius: 4px;"></div>
+              <div style="height: 36px; background: rgba(99,102,241,0.04); border: 1px solid rgba(99,102,241,0.1); border-radius: 4px;"></div>
+              <div style="height: 36px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); border-radius: 4px;"></div>
+            </div>
+          </div>
+          <div style="font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 6px;">KPIs horizontal scroll · Só modo cards · Detail = Sheet full · Search no header</div>
+        </div>
+
+        <!-- Breakpoint Table -->
+        <div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Regras por Breakpoint</div>
+          <div style="font-size: 11px; line-height: 2; color: rgba(255,255,255,0.4);">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 2px 0;">
+              <span>KPI Strip</span>
+              <span style="color: rgba(255,255,255,0.25);">5 cols → 2×2 → scroll</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 2px 0;">
+              <span>View Tabs</span>
+              <span style="color: rgba(255,255,255,0.25);">inline → inline → scroll</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 2px 0;">
+              <span>Filter Bar</span>
+              <span style="color: rgba(255,255,255,0.25);">inline → popover → sheet</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 2px 0;">
+              <span>Data View</span>
+              <span style="color: rgba(255,255,255,0.25);">table/cards → table/cards → cards only</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.04); padding: 2px 0;">
+              <span>Detail Panel</span>
+              <span style="color: rgba(255,255,255,0.25);">slide-in → sheet bottom → sheet full</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+              <span>Órfãos Split</span>
+              <span style="color: rgba(255,255,255,0.25);">side-by-side → stacked → stacked</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Empty States -->
+<div class="section">
+  <h3>Empty States — Com Personalidade</h3>
+  <div class="mockup">
+    <div class="mockup-header">5 estados vazios contextuais</div>
+    <div class="mockup-body" style="padding: 20px; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+
+      <!-- Empty 1: No results -->
+      <div style="padding: 32px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; text-align: center;">
+        <div style="width: 48px; height: 48px; margin: 0 auto 12px; background: rgba(255,255,255,0.04); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: rgba(255,255,255,0.15);">⊘</div>
+        <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 4px;">Nenhuma publicação encontrada</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.25); margin-bottom: 12px;">Tente ajustar os filtros ou buscar com termos diferentes</div>
+        <div style="display: flex; gap: 8px; justify-content: center;">
+          <div style="padding: 6px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Limpar Filtros</div>
+        </div>
+      </div>
+
+      <!-- Empty 2: First time -->
+      <div style="padding: 32px 20px; background: rgba(99,102,241,0.03); border: 1px solid rgba(99,102,241,0.1); border-radius: 12px; text-align: center;">
+        <div style="width: 48px; height: 48px; margin: 0 auto 12px; background: rgba(99,102,241,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #818cf8;">↻</div>
+        <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 4px;">Nenhuma publicação capturada ainda</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.25); margin-bottom: 12px;">Inicie a primeira sincronização para buscar publicações do Diário Oficial</div>
+        <div style="display: flex; gap: 8px; justify-content: center;">
+          <div style="padding: 6px 14px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.25); border-radius: 6px; font-size: 11px; color: #818cf8; font-weight: 500; cursor: pointer;">Sincronizar Agora</div>
+        </div>
+        <!-- Suggestion cards -->
+        <div style="margin-top: 16px; display: flex; gap: 8px;">
+          <div style="flex: 1; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; text-align: left;">
+            <div style="font-size: 10px; color: #818cf8; font-weight: 500; margin-bottom: 3px;">Configurar OAB</div>
+            <div style="font-size: 10px; color: rgba(255,255,255,0.2);">Vincule advogados para captura automática</div>
+          </div>
+          <div style="flex: 1; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; text-align: left;">
+            <div style="font-size: 10px; color: #818cf8; font-weight: 500; margin-bottom: 3px;">Selecionar Tribunais</div>
+            <div style="font-size: 10px; color: rgba(255,255,255,0.2);">Escolha as fontes para monitoramento</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty 3: All resolved -->
+      <div style="padding: 32px 20px; background: rgba(34,197,94,0.03); border: 1px solid rgba(34,197,94,0.1); border-radius: 12px; text-align: center;">
+        <div style="width: 48px; height: 48px; margin: 0 auto 12px; background: rgba(34,197,94,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #4ade80;">✓</div>
+        <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 4px;">Tudo resolvido!</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.25);">Todas as comunicações órfãs foram vinculadas ou marcadas como irrelevantes</div>
+      </div>
+
+      <!-- Empty 4: No deadlines -->
+      <div style="padding: 32px 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; text-align: center;">
+        <div style="width: 48px; height: 48px; margin: 0 auto 12px; background: rgba(255,255,255,0.04); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: rgba(255,255,255,0.15);">☀</div>
+        <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 4px;">Nenhum prazo urgente</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.25);">Sem prazos vencendo nas próximas 48 horas. Tudo sob controle.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Viewer -->
+<div class="section">
+  <h3>PDF Viewer — Redesenhado</h3>
+  <div class="mockup">
+    <div class="mockup-header">Split-view: metadados à esquerda + PDF renderizado à direita</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0; min-height: 400px;">
+
+      <!-- Dialog header -->
+      <div style="padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 14px; font-weight: 500;">Certidão de Publicação</span>
+          <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: rgba(255,255,255,0.3); font-family: monospace;">hash: a3f8c2...</span>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <div style="padding: 5px 10px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Baixar PDF</div>
+          <div style="padding: 5px 10px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Nova Aba</div>
+          <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 12px; color: rgba(255,255,255,0.3); cursor: pointer;">✕</div>
+        </div>
+      </div>
+
+      <div style="display: flex; min-height: 340px;">
+        <!-- Left: Metadata -->
+        <div style="width: 280px; padding: 16px; border-right: 1px solid rgba(255,255,255,0.04); display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px;">Processo</div>
+            <div style="font-size: 12px; font-variant-numeric: tabular-nums;">0001234-56.2024.8.16.0001</div>
+          </div>
+          <div>
+            <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px;">Tipo</div>
+            <div style="font-size: 12px;">Intimação</div>
+          </div>
+          <div>
+            <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px;">Tribunal</div>
+            <div style="font-size: 12px;">TJ-PR · 2ª Vara Cível</div>
+          </div>
+          <div>
+            <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px;">Publicação</div>
+            <div style="font-size: 12px;">12/04/2026</div>
+          </div>
+          <div>
+            <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px;">Meio</div>
+            <div style="font-size: 12px;">Diário Eletrônico</div>
+          </div>
+          <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.04);">
+            <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); margin-bottom: 4px;">Expediente</div>
+            <div style="padding: 8px; background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.1); border-radius: 6px; font-size: 11px; cursor: pointer;">
+              <span style="color: #4ade80;">●</span> Expediente #4521 <span style="color: rgba(255,255,255,0.2);">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: PDF iframe area -->
+        <div style="flex: 1; background: rgba(255,255,255,0.02); display: flex; flex-direction: column;">
+          <!-- PDF toolbar -->
+          <div style="padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="padding: 3px 6px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.25);">−</div>
+              <span style="font-size: 10px; color: rgba(255,255,255,0.3);">100%</span>
+              <div style="padding: 3px 6px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.25);">+</div>
+            </div>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.2);">Página 1 de 3</span>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <div style="padding: 3px 6px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.25);">◀</div>
+              <div style="padding: 3px 6px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.25);">▶</div>
+              <div style="padding: 3px 6px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.25);">⛶</div>
+            </div>
+          </div>
+          <!-- PDF content placeholder -->
+          <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 200px; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+              <div style="height: 8px; background: rgba(255,255,255,0.08); border-radius: 2px; width: 60%; margin-bottom: 8px;"></div>
+              <div style="height: 4px; background: rgba(255,255,255,0.04); border-radius: 1px; margin-bottom: 4px;"></div>
+              <div style="height: 4px; background: rgba(255,255,255,0.04); border-radius: 1px; margin-bottom: 4px;"></div>
+              <div style="height: 4px; background: rgba(255,255,255,0.04); border-radius: 1px; width: 80%; margin-bottom: 12px;"></div>
+              <div style="height: 4px; background: rgba(255,255,255,0.04); border-radius: 1px; margin-bottom: 4px;"></div>
+              <div style="height: 4px; background: rgba(255,255,255,0.04); border-radius: 1px; margin-bottom: 4px;"></div>
+              <div style="height: 4px; background: rgba(255,255,255,0.04); border-radius: 1px; width: 70%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dialogs Catalog -->
+<div class="section">
+  <h3>Catálogo de Dialogs e Popovers</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <!-- Sync Dialog -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Dialog: Sincronização Manual</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        Formulário glass-dialog com seleção de advogado (OAB) + tribunal + período. Progress bar durante execução. Métricas finais ao completar. Usa <code>glass-dialog</code> + <code>glass-dialog-overlay</code>.
+      </p>
+    </div>
+
+    <!-- Busca Manual -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Dialog: Buscar Expediente Manual</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        Combobox com busca por número de processo. Mostra lista de expedientes com dados resumidos. Clique para vincular. Fallback para "Criar Novo".
+      </p>
+    </div>
+
+    <!-- Criar View -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Dialog: Criar Nova View</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        Nome + ícone + filtros incluídos (chips) + visibilidade (pessoal/equipe). Mostrado na Seção 2. Glass dialog compacto.
+      </p>
+    </div>
+
+    <!-- Column Config -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Popover: Configurar Colunas</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        Lista de colunas com toggles (switch) + drag handles para reordenar. Checkbox "mostrar/ocultar". Persiste por view.
+      </p>
+    </div>
+
+    <!-- Filter Popovers -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Popovers: Filtros Individuais</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        <strong>Fonte:</strong> Combobox agrupado com multi-select<br>
+        <strong>Tipo:</strong> Checkboxes com badges coloridos<br>
+        <strong>Período:</strong> DateRangePicker<br>
+        <strong>Advogado:</strong> Combobox com OAB<br>
+        <strong>Meio:</strong> Radio (Todos/Edital/DE)<br>
+        <strong>Status:</strong> Checkboxes (Vinculado/Pendente/Órfão)
+      </p>
+    </div>
+
+    <!-- Sync Timeline -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Popover: Timeline de Sincronização</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        Abre ao clicar no botão "Sincronizar" ou no ícone de status da API. Mostra últimas 10 sincronizações + botão "Sincronizar Agora". Mostrado na Seção 5.
+      </p>
+    </div>
+
+    <!-- Tooltips -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Tooltips</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        <strong>KPI hover:</strong> mostra breakdown da métrica<br>
+        <strong>Status dot:</strong> "Vinculado ao Exp. #4521"<br>
+        <strong>AI badge:</strong> "Confiança de match: 92%"<br>
+        <strong>Prazo badge:</strong> "Vence em 14/04/2026 (2 dias)"<br>
+        <strong>Rate limit:</strong> "847/1000 requests · Reset em 2h"
+      </p>
+    </div>
+
+    <!-- Keyboard Shortcuts -->
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Dialog: Atalhos de Teclado (?)</div>
+      <p style="font-size: 12px; margin: 8px 0 0; color: #aaa; line-height: 1.5;">
+        <code>/</code> Buscar · <code>↑↓</code> Navegar · <code>Enter</code> Abrir · <code>Esc</code> Fechar<br>
+        <code>v</code> Vincular · <code>p</code> Ver PDF · <code>f</code> Filtros · <code>t</code> Toggle tabela/cards<br>
+        <code>⌘K</code> Search NLP · <code>?</code> Este help
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Design Decisions -->
+<div class="section">
+  <h3>Decisões de Design</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Mobile-First Cards</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Em mobile (&lt;768px) só modo cards — tabela não funciona em tela estreita. Detail panel vira Sheet full-screen. KPIs em horizontal scroll. Filtros em Sheet bottom.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">PDF Split-View</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Metadados à esquerda (280px) + PDF renderizado à direita. Zoom, paginação, fullscreen. Mobile: metadados colapsam no topo, PDF full-width. Usa <code>react-pdf</code> em vez de iframe.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Empty States Contextuais</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">4 estados: sem resultados (ajustar filtros), primeira vez (onboarding + sync), todos resolvidos (sucesso!), sem prazos (tranquilidade). Cada um com ícone, mensagem e CTA específico. Usa <code>EmptyState</code> shared.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">8 Dialogs/Popovers Mapeados</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Todos usam <code>glass-dialog</code> em desktop e <code>Sheet</code> em mobile (via <code>useIsMobile()</code>). Consistência visual total com o design system. Zero modais genéricos.</p>
+    </div>
+  </div>
+</div>
