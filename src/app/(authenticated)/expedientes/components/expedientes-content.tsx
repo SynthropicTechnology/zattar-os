@@ -18,7 +18,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared';
 import { type ViewType } from '@/components/shared';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
-import { useWeekNavigator } from '@/components/shared';
 import { FileSearch } from 'lucide-react';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
@@ -31,7 +30,7 @@ import { ExpedientesControlView } from './expedientes-control-view';
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';
 import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
 import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
-import { ExpedientesWeekMission } from './expedientes-week-mission';
+import { ExpedientesSemanaView } from './expedientes-semana-view';
 import { ExpedienteDialog } from './expediente-dialog';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
@@ -133,7 +132,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   // Data fetching
   const { usuarios } = useUsuarios();
   const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
-  const weekNav = useWeekNavigator();
+  const [semanaDate, setSemanaDate] = useState(new Date());
 
   const { expedientes: rotuloExpedientes, isLoading, refetch } = useExpedientes({
     pagina: 1,
@@ -369,17 +368,11 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
 
         {!isLoading && viewMode === 'semana' && filteredExpedientes.length > 0 && (
-          <ExpedientesWeekMission
-            weekNavigatorProps={{
-              weekDays: weekNav.weekDays,
-              selectedDate: weekNav.selectedDate,
-              onDateSelect: weekNav.setSelectedDate,
-              onPreviousWeek: weekNav.goToPreviousWeek,
-              onNextWeek: weekNav.goToNextWeek,
-              onToday: weekNav.goToToday,
-              isCurrentWeek: weekNav.isCurrentWeek,
-            }}
+          <ExpedientesSemanaView
             expedientes={filteredExpedientes}
+            currentDate={semanaDate}
+            onDateChange={setSemanaDate}
+            onViewDetail={handleViewDetail}
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
           />
