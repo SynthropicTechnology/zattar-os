@@ -1,0 +1,261 @@
+<h2>Seção 2: Search NLP + Filtros Progressivos</h2>
+<p class="subtitle">3 camadas de filtragem que se revelam progressivamente</p>
+
+<!-- Layer 1: NLP Search -->
+<div class="section">
+  <h3>Camada 1 — Search Bar NLP (⌘K)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Busca com linguagem natural → interpretação em chips</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0;">
+
+      <!-- State 1: Empty -->
+      <div style="padding: 20px 24px 12px;">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Estado 1: Vazio</div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;">
+          <span style="color: rgba(255,255,255,0.25);">⌘K</span>
+          <span style="color: rgba(255,255,255,0.3); font-size: 14px;">Buscar publicações... (ex: "intimações TJ-PR desta semana")</span>
+        </div>
+      </div>
+
+      <!-- State 2: Typing NLP -->
+      <div style="padding: 12px 24px;">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Estado 2: Digitando linguagem natural</div>
+        <div style="padding: 10px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(99,102,241,0.3); border-radius: 10px 10px 0 0; font-size: 14px;">
+          <span style="color: #e2e8f0;">intimações do TJ-PR desta semana com prazo vencendo</span>
+          <span style="display: inline-block; width: 2px; height: 16px; background: #818cf8; animation: blink 1s infinite; vertical-align: middle; margin-left: 2px;"></span>
+        </div>
+        <!-- AI Interpretation dropdown -->
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(99,102,241,0.2); border-top: none; border-radius: 0 0 10px 10px; padding: 12px 16px;">
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(99,102,241,0.15); color: #818cf8; border-radius: 4px; font-weight: 500;">AI</span>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.4);">Interpretação:</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <div style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); border-radius: 6px; font-size: 12px;">
+              <span style="color: rgba(255,255,255,0.5);">Tipo</span>
+              <span style="color: #4ade80; font-weight: 500;">Intimação</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 6px; font-size: 12px;">
+              <span style="color: rgba(255,255,255,0.5);">Fonte</span>
+              <span style="color: #60a5fa; font-weight: 500;">TJ-PR</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 6px; font-size: 12px;">
+              <span style="color: rgba(255,255,255,0.5);">Período</span>
+              <span style="color: #fbbf24; font-weight: 500;">06/04 – 12/04</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; font-size: 12px;">
+              <span style="color: rgba(255,255,255,0.5);">Prazo</span>
+              <span style="color: #f87171; font-weight: 500;">Vencendo (&lt;3 dias)</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <div style="padding: 5px 12px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.25); border-radius: 6px; font-size: 11px; color: #818cf8; cursor: pointer; font-weight: 500;">Aplicar Filtros</div>
+            <div style="padding: 5px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Editar Filtros</div>
+            <div style="padding: 5px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Salvar como View</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 3: Operators mode -->
+      <div style="padding: 12px 24px 20px;">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Estado 3: Power user com operadores</div>
+        <div style="padding: 10px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; font-size: 13px; font-family: monospace;">
+          <span style="color: #818cf8;">fonte:</span><span style="color: #e2e8f0;">tj-pr</span>
+          <span style="color: #818cf8;"> tipo:</span><span style="color: #e2e8f0;">intimação</span>
+          <span style="color: #818cf8;"> prazo:</span><span style="color: #f87171;">&lt;5d</span>
+          <span style="color: #818cf8;"> vinculado:</span><span style="color: #fbbf24;">não</span>
+        </div>
+        <div style="margin-top: 6px; font-size: 10px; color: rgba(255,255,255,0.2);">
+          Operadores: fonte: · tipo: · prazo: · processo: · parte: · advogado: · vinculado: · meio: · data:
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Layer 2: Filter Bar -->
+<div class="section">
+  <h3>Camada 2 — Filter Bar (Dropdowns Composáveis)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Filtros como botões com popovers + chips ativos</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0;">
+
+      <!-- Filter buttons row -->
+      <div style="padding: 16px 24px 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+        <!-- Active filter button -->
+        <div style="display: flex; align-items: center; gap: 4px; padding: 5px 12px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25); border-radius: 8px; font-size: 12px; cursor: pointer;">
+          <span style="color: rgba(255,255,255,0.5);">Fonte</span>
+          <span style="color: #60a5fa; font-weight: 500;">TJ-PR</span>
+          <span style="color: rgba(255,255,255,0.3);">▾</span>
+        </div>
+        <!-- Active filter button -->
+        <div style="display: flex; align-items: center; gap: 4px; padding: 5px 12px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 8px; font-size: 12px; cursor: pointer;">
+          <span style="color: rgba(255,255,255,0.5);">Tipo</span>
+          <span style="color: #4ade80; font-weight: 500;">Intimação</span>
+          <span style="color: rgba(255,255,255,0.3);">▾</span>
+        </div>
+        <!-- Inactive filter buttons -->
+        <div style="padding: 5px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">
+          Período <span style="color: rgba(255,255,255,0.2);">▾</span>
+        </div>
+        <div style="padding: 5px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">
+          Advogado <span style="color: rgba(255,255,255,0.2);">▾</span>
+        </div>
+        <div style="padding: 5px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">
+          Meio <span style="color: rgba(255,255,255,0.2);">▾</span>
+        </div>
+        <!-- Add filter -->
+        <div style="padding: 5px 12px; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.25); cursor: pointer;">
+          + Filtro
+        </div>
+        <!-- Spacer -->
+        <div style="flex: 1;"></div>
+        <!-- Active filter summary -->
+        <div style="font-size: 11px; color: rgba(255,255,255,0.3);">
+          Filtros ativos <span style="padding: 1px 6px; background: rgba(99,102,241,0.15); color: #818cf8; border-radius: 10px; font-weight: 500;">2</span>
+        </div>
+        <div style="padding: 4px 10px; border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.25); cursor: pointer; border: 1px solid rgba(255,255,255,0.06);">
+          Limpar
+        </div>
+      </div>
+
+      <!-- Active chips row -->
+      <div style="padding: 0 24px 16px; display: flex; gap: 6px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 4px; padding: 3px 8px 3px 10px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.15); border-radius: 20px; font-size: 11px;">
+          <span style="color: #60a5fa;">TJ-PR</span>
+          <span style="color: rgba(255,255,255,0.2); cursor: pointer; font-size: 14px;">×</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 4px; padding: 3px 8px 3px 10px; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.15); border-radius: 20px; font-size: 11px;">
+          <span style="color: #4ade80;">Intimação</span>
+          <span style="color: rgba(255,255,255,0.2); cursor: pointer; font-size: 14px;">×</span>
+        </div>
+      </div>
+
+      <!-- Example: Popover for Fonte filter -->
+      <div style="padding: 0 24px 20px;">
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); margin-bottom: 8px;">Popover do filtro "Fonte" (ao clicar):</div>
+        <div style="width: 320px; background: rgba(15,15,25,0.98); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); overflow: hidden;">
+          <!-- Search inside popover -->
+          <div style="padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+            <div style="padding: 6px 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 12px; color: rgba(255,255,255,0.3);">Buscar tribunal...</div>
+          </div>
+          <!-- Grouped list -->
+          <div style="max-height: 250px; overflow-y: auto; padding: 6px;">
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); padding: 6px 8px 4px;">TRT — Trabalho</div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; background: rgba(59,130,246,0.08);">
+              <div style="width: 14px; height: 14px; border-radius: 3px; background: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 9px; color: white;">✓</div>
+              <span style="font-size: 12px; font-weight: 500;">TRT-9</span>
+              <span style="font-size: 11px; color: rgba(255,255,255,0.3);">Paraná</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer;">
+              <div style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15);"></div>
+              <span style="font-size: 12px;">TRT-2</span>
+              <span style="font-size: 11px; color: rgba(255,255,255,0.3);">São Paulo</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer;">
+              <div style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15);"></div>
+              <span style="font-size: 12px;">TRT-15</span>
+              <span style="font-size: 11px; color: rgba(255,255,255,0.3);">Campinas</span>
+            </div>
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.2); padding: 10px 8px 4px;">TJ — Justiça Comum</div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer;">
+              <div style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15);"></div>
+              <span style="font-size: 12px;">TJ-PR</span>
+              <span style="font-size: 11px; color: rgba(255,255,255,0.3);">Paraná</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer;">
+              <div style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15);"></div>
+              <span style="font-size: 12px;">TJ-SP</span>
+              <span style="font-size: 11px; color: rgba(255,255,255,0.3);">São Paulo</span>
+            </div>
+          </div>
+          <!-- Footer -->
+          <div style="padding: 8px 12px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between;">
+            <span style="font-size: 11px; color: rgba(255,255,255,0.3);">1 selecionado</span>
+            <span style="font-size: 11px; color: #818cf8; cursor: pointer;">Aplicar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Layer 3: Saved Views -->
+<div class="section">
+  <h3>Camada 3 — Views Salvas (Presets)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Criar nova view a partir de filtros ativos</div>
+    <div class="mockup-body" style="padding: 20px 24px; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0;">
+
+      <!-- Create view dialog -->
+      <div style="width: 380px; background: rgba(15,15,25,0.98); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); padding: 20px;">
+        <div style="font-size: 15px; font-weight: 600; margin-bottom: 16px;">Criar Nova View</div>
+
+        <!-- Name -->
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Nome da View</div>
+          <div style="padding: 8px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; font-size: 13px;">Intimações TJ-PR urgentes</div>
+        </div>
+
+        <!-- Icon -->
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Ícone</div>
+          <div style="display: flex; gap: 6px;">
+            <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; font-size: 14px; cursor: pointer;">⚡</div>
+            <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 14px; cursor: pointer;">📋</div>
+            <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 14px; cursor: pointer;">🔔</div>
+            <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 14px; cursor: pointer;">⭐</div>
+          </div>
+        </div>
+
+        <!-- Filters included -->
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 6px;">Filtros incluídos</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+            <div style="padding: 3px 8px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.15); border-radius: 20px; font-size: 10px; color: #60a5fa;">Fonte: TJ-PR</div>
+            <div style="padding: 3px 8px; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.15); border-radius: 20px; font-size: 10px; color: #4ade80;">Tipo: Intimação</div>
+            <div style="padding: 3px 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15); border-radius: 20px; font-size: 10px; color: #f87171;">Prazo: &lt;5 dias</div>
+          </div>
+        </div>
+
+        <!-- Visibility -->
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 6px;">Visibilidade</div>
+          <div style="display: flex; gap: 8px;">
+            <div style="padding: 6px 14px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.2); border-radius: 8px; font-size: 12px; color: #818cf8; font-weight: 500;">Pessoal</div>
+            <div style="padding: 6px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4);">Equipe</div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+          <div style="padding: 7px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">Cancelar</div>
+          <div style="padding: 7px 16px; background: rgba(99,102,241,0.9); border-radius: 8px; font-size: 12px; color: white; font-weight: 500; cursor: pointer;">Criar View</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Design Decisions -->
+<div class="section">
+  <h3>Decisões de Design — Filtros</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">3 Camadas Progressivas</div>
+      <p style="font-size: 13px; margin: 8px 0 0;"><strong>1.</strong> NLP Search (⌘K) — para quem pensa em linguagem natural<br><strong>2.</strong> Filter Bar — botões com popovers para seleção precisa<br><strong>3.</strong> Views Salvos — presets persistentes para fluxos recorrentes</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">NLP → Chips Editáveis</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">A interpretação AI não é black-box. Cada filtro inferido vira um chip editável que o usuário pode corrigir antes de aplicar. Transparência total = confiança.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Chips Coloridos por Categoria</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Cada tipo de filtro tem cor semântica: <span style="color: #60a5fa;">Fonte (azul)</span>, <span style="color: #4ade80;">Tipo (verde)</span>, <span style="color: #fbbf24;">Período (âmbar)</span>, <span style="color: #f87171;">Prazo (vermelho)</span>. Padrão Gmail.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Tribunal Agrupado por Hierarquia</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Popover do filtro Fonte agrupa por tipo (TRT, TJ, TRF, TRE, Superiores). Multi-select com checkboxes. Busca interna. Já existe no search-form.tsx atual — vamos refinar a UX.</p>
+    </div>
+  </div>
+</div>
