@@ -9,7 +9,7 @@ function AgendamentosLoading() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-[400px] w-full" />
+      <Skeleton className="h-100 w-full" />
     </div>
   );
 }

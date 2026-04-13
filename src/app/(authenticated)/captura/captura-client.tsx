@@ -14,6 +14,7 @@ import type { CapturaKpiData } from './components/captura-kpi-strip';
 import { CapturaFilterBar } from './components/captura-filter-bar';
 import type { CapturaFilters } from './components/captura-filter-bar';
 import { CapturaGlassList } from './components/captura-glass-list';
+import { CapturaGlassCards } from './components/captura-glass-cards';
 import { CapturaDialog } from './components/captura-dialog';
 
 // Sub-tab content (existing components, will be refactored in later tasks)
@@ -137,13 +138,22 @@ export function CapturaClient() {
             </div>
           </div>
 
-          {/* Content */}
-          <CapturaGlassList
-            key={refreshKey}
-            search={search}
-            filters={filters}
-            onKpiUpdate={setKpiData}
-          />
+          {/* Content — Lista ou Cards */}
+          {viewMode === 'lista' ? (
+            <CapturaGlassList
+              key={refreshKey}
+              search={search}
+              filters={filters}
+              onKpiUpdate={setKpiData}
+            />
+          ) : (
+            <CapturaGlassCards
+              key={refreshKey}
+              search={search}
+              filters={filters}
+              onKpiUpdate={setKpiData}
+            />
+          )}
         </>
       )}
 

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
-import { Plus, Users, ChevronRight, Lock, AlertTriangle, Trash2 } from 'lucide-react';
+import { Plus, Users, ChevronRight, Lock, AlertTriangle, Trash2, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { DataPagination } from '@/components/shared/data-shell/data-pagination';
@@ -37,6 +37,7 @@ import { UFS_BRASIL } from '@/app/(authenticated)/advogados';
 import { AdvogadoDialog } from '../components/advogados/advogado-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import { CredenciaisAdvogadoDialog } from '../components/advogados/credenciais-advogado-dialog';
+import { useCredenciaisMap } from '../hooks/use-credenciais-map';
 
 export default function AdvogadosPage() {
   // Estados de busca e filtros
@@ -134,15 +135,46 @@ export default function AdvogadosPage() {
     }
   };
 
-  // KPI items
+  // Credenciais map for counting per advogado
+  const { credenciaisMap } = useCredenciaisMap();
+
+  // Count credenciais per advogado (we need to fetch all credenciais and group by advogado)
+  const [credenciaisPorAdvogado, setCredenciaisPorAdvogado] = useState<Map<number, { ativas: number; inativas: number }>>(new Map());
+
+  React.useEffect(() => {
+    async function fetchCredenciais() {
+      try {
+        const res = await fetch('/api/captura/credenciais');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!json.success) return;
+        const creds = Array.isArray(json.data) ? json.data : (json.data?.credenciais ?? []);
+        const counts = new Map<number, { ativas: number; inativas: number }>();
+        for (const c of creds) {
+          const advId = c.advogado_id;
+          if (!advId) continue;
+          const current = counts.get(advId) ?? { ativas: 0, inativas: 0 };
+          if (c.active) current.ativas++;
+          else current.inativas++;
+          counts.set(advId, current);
+        }
+        setCredenciaisPorAdvogado(counts);
+      } catch { /* ignore */ }
+    }
+    fetchCredenciais();
+  }, []);
+
+  // KPI items — using real credential counts
   const kpiItems = useMemo<PulseItem[]>(() => {
     const total = paginacao?.total ?? advogados.length;
+    const comCreds = advogados.filter((a) => (credenciaisPorAdvogado.get(a.id)?.ativas ?? 0) > 0).length;
+    const semCreds = advogados.length - comCreds;
     return [
       { label: 'Total Advogados', total, icon: Users, color: 'text-primary' },
-      { label: 'Com Credenciais', total: total, icon: Lock, color: 'text-success' },
-      { label: 'Sem Credenciais', total: 0, icon: AlertTriangle, color: 'text-warning' },
+      { label: 'Com Credenciais', total: comCreds, icon: Lock, color: 'text-success' },
+      { label: 'Sem Credenciais', total: semCreds, icon: AlertTriangle, color: 'text-warning' },
     ];
-  }, [paginacao, advogados.length]);
+  }, [paginacao, advogados, credenciaisPorAdvogado]);
 
   // Opções para o filtro de UF
   const ufOptions = useMemo(() => {
@@ -220,65 +252,112 @@ export default function AdvogadosPage() {
         {/* Card Grid */}
         {!isLoading && advogados.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {advogados.map((advogado) => (
-              <GlassPanel key={advogado.id} depth={2} className="p-4">
-                {/* Avatar + Name */}
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <span className="text-sm font-semibold text-primary">
-                      {advogado.nome_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold truncate">{advogado.nome_completo}</div>
-                    <div className="text-xs text-muted-foreground/55">
-                      {advogado.oabs.map((o: { numero: string; uf: string }) => `OAB/${o.uf} ${o.numero}`).join(', ') || 'Sem OAB'}
+            {advogados.map((advogado) => {
+              const creds = credenciaisPorAdvogado.get(advogado.id);
+              const ativas = creds?.ativas ?? 0;
+              const inativas = creds?.inativas ?? 0;
+              const temCredenciais = ativas > 0;
+
+              return (
+                <GlassPanel key={advogado.id} depth={2} className="p-5">
+                  {/* Header: Avatar + Name + Status badge */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-bold text-primary font-heading">
+                        {advogado.nome_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
+                      </span>
                     </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-semibold truncate font-heading">{advogado.nome_completo}</div>
+                      <div className="text-xs text-muted-foreground/55">
+                        {advogado.oabs.map((o: { numero: string; uf: string }) => `OAB/${o.uf} ${o.numero}`).join(', ') || 'Sem OAB'}
+                      </div>
+                    </div>
+                    {temCredenciais ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0">
+                        <ShieldCheck className="size-2.5" />
+                        Ativo
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md shrink-0">
+                        <ShieldAlert className="size-2.5" />
+                        Pendente
+                      </span>
+                    )}
                   </div>
-                </div>
 
-                <div className="border-t border-border/10 my-2" />
+                  <div className="border-t border-border/10 my-2" />
 
-                {/* CPF */}
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground/60">
+                  {/* CPF */}
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground/60 mb-1.5">
                     <span className="font-medium text-muted-foreground/40 uppercase tracking-wide text-[10px]">CPF</span>
                     <span className="truncate">{advogado.cpf}</span>
                   </div>
-                </div>
 
-                <div className="border-t border-border/10 mt-3 pt-3" />
+                  <div className="border-t border-border/10 my-2" />
 
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex-1 text-xs h-7 text-primary"
-                    onClick={() => handleViewCredenciais(advogado)}
-                  >
-                    Ver Credenciais
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-xs h-7"
-                    onClick={() => handleEdit(advogado)}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-xs h-7 w-7 p-0 text-muted-foreground/45 hover:text-destructive"
-                    onClick={() => handleDelete(advogado)}
-                    aria-label="Excluir"
-                  >
-                    <Trash2 className="size-3.5" />
-                  </Button>
-                </div>
-              </GlassPanel>
-            ))}
+                  {/* Credenciais count */}
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <Lock className="size-3.5 text-muted-foreground/45 shrink-0" />
+                    {temCredenciais ? (
+                      <span className="text-muted-foreground/70">
+                        <span className="text-success font-medium">{ativas} ativa{ativas !== 1 ? 's' : ''}</span>
+                        {inativas > 0 && (
+                          <>
+                            <span className="text-muted-foreground/35 mx-1">/</span>
+                            <span className="text-warning font-medium">{inativas} inativa{inativas !== 1 ? 's' : ''}</span>
+                          </>
+                        )}
+                      </span>
+                    ) : (
+                      <span className="text-destructive/70 text-xs">Nenhuma credencial cadastrada</span>
+                    )}
+                  </div>
+
+                  <div className="border-t border-border/10 mt-3 pt-3" />
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2">
+                    {temCredenciais ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="flex-1 text-xs h-7 text-primary"
+                        onClick={() => handleViewCredenciais(advogado)}
+                      >
+                        Ver Credenciais
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="flex-1 text-xs h-7 text-warning"
+                        onClick={() => handleViewCredenciais(advogado)}
+                      >
+                        Adicionar Credenciais
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs h-7"
+                      onClick={() => handleEdit(advogado)}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs h-7 w-7 p-0 text-muted-foreground/45 hover:text-destructive"
+                      onClick={() => handleDelete(advogado)}
+                      aria-label="Excluir"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </Button>
+                  </div>
+                </GlassPanel>
+              );
+            })}
           </div>
         )}
 

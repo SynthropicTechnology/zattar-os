@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { History, CheckCircle2, XCircle, Clock, Plus, ArrowRightLeft } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { WidgetContainer } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
 import { Text } from '@/components/ui/typography';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
@@ -92,83 +92,75 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
   const flatItems = sortedHistorico;
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <History className="size-4" />
-          Histórico de Status
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isEmpty ? (
-          <div className="text-center py-6 text-muted-foreground">
-            <History className="size-8 mx-auto mb-2 opacity-50" />
-            <p>Nenhum histórico disponível</p>
-          </div>
-        ) : (
-          <div>
-            {Object.entries(grouped).map(([monthLabel, items]) => (
-              <div key={monthLabel}>
-                {/* Month group header */}
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/40 pb-2 pl-10">
-                  {monthLabel}
-                </p>
+    <WidgetContainer title="Histórico de Status" icon={History}>
+      {isEmpty ? (
+        <div className="text-center py-6 text-muted-foreground">
+          <History className="size-8 mx-auto mb-2 opacity-50" />
+          <p>Nenhum histórico disponível</p>
+        </div>
+      ) : (
+        <div>
+          {Object.entries(grouped).map(([monthLabel, items]) => (
+            <div key={monthLabel}>
+              {/* Month group header */}
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/40 pb-2 pl-10">
+                {monthLabel}
+              </p>
 
-                {items.map((item) => {
-                  const globalIndex = flatItems.findIndex((fi) => fi.id === item.id);
-                  const isLast = globalIndex === flatItems.length - 1;
-                  const isCreation = item.fromStatus === null;
-                  const EventIcon = getEventIcon(item.toStatus, isCreation);
-                  const iconColorClass = getIconColorClass(item.toStatus, isCreation);
+              {items.map((item) => {
+                const globalIndex = flatItems.findIndex((fi) => fi.id === item.id);
+                const isLast = globalIndex === flatItems.length - 1;
+                const isCreation = item.fromStatus === null;
+                const EventIcon = getEventIcon(item.toStatus, isCreation);
+                const iconColorClass = getIconColorClass(item.toStatus, isCreation);
 
-                  return (
-                    <div key={item.id} className="flex gap-3 pb-6 relative">
-                      {/* Vertical connector line */}
-                      {!isLast && (
-                        <div className="absolute left-[11px] top-8 bottom-0 w-px bg-border/20" />
+                return (
+                  <div key={item.id} className="flex gap-3 pb-6 relative">
+                    {/* Vertical connector line */}
+                    {!isLast && (
+                      <div className="absolute left-2.75 top-8 bottom-0 w-px bg-border/20" />
+                    )}
+
+                    {/* Icon dot */}
+                    <IconContainer size="sm" className={iconColorClass}>
+                      <EventIcon className="size-3.5" />
+                    </IconContainer>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 pt-0.5">
+                      {isCreation ? (
+                        <p className="text-[13px] text-foreground">
+                          Contrato criado com status{' '}
+                          <SemanticBadge category="status_contrato" value={item.toStatus}>
+                            {STATUS_CONTRATO_LABELS[item.toStatus]}
+                          </SemanticBadge>
+                        </p>
+                      ) : (
+                        <p className="text-[13px] text-foreground">
+                          Status alterado para{' '}
+                          <SemanticBadge category="status_contrato" value={item.toStatus}>
+                            {STATUS_CONTRATO_LABELS[item.toStatus]}
+                          </SemanticBadge>
+                        </p>
                       )}
 
-                      {/* Icon dot */}
-                      <IconContainer size="sm" className={iconColorClass}>
-                        <EventIcon className="size-3.5" />
-                      </IconContainer>
+                      <Text variant="caption" className="mt-0.5">
+                        {formatTime(item.changedAt)}
+                      </Text>
 
-                      {/* Content */}
-                      <div className="flex-1 min-w-0 pt-0.5">
-                        {isCreation ? (
-                          <p className="text-[13px] text-foreground">
-                            Contrato criado com status{' '}
-                            <SemanticBadge category="status_contrato" value={item.toStatus}>
-                              {STATUS_CONTRATO_LABELS[item.toStatus]}
-                            </SemanticBadge>
-                          </p>
-                        ) : (
-                          <p className="text-[13px] text-foreground">
-                            Status alterado para{' '}
-                            <SemanticBadge category="status_contrato" value={item.toStatus}>
-                              {STATUS_CONTRATO_LABELS[item.toStatus]}
-                            </SemanticBadge>
-                          </p>
-                        )}
-
-                        <Text variant="caption" className="mt-0.5">
-                          {formatTime(item.changedAt)}
-                        </Text>
-
-                        {item.reason && (
-                          <div className="text-[12px] text-muted-foreground mt-1.5 p-2 bg-muted/50 rounded-md">
-                            {item.reason}
-                          </div>
-                        )}
-                      </div>
+                      {item.reason && (
+                        <div className="text-[12px] text-muted-foreground mt-1.5 p-2 bg-muted/50 rounded-md">
+                          {item.reason}
+                        </div>
+                      )}
                     </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+    </WidgetContainer>
   );
 }

@@ -13,8 +13,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { GlassPanel } from '@/components/shared/glass-panel';
+import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
 import { Text } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import type {
@@ -46,19 +45,11 @@ import {
 
 function ObservacoesSection({ texto }: { texto: string }) {
   return (
-    <Card className="border-l-4 border-l-primary/30">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <StickyNote className="size-4" />
-          Observações
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed">
-          {texto}
-        </p>
-      </CardContent>
-    </Card>
+    <WidgetContainer title="Observações" icon={StickyNote}>
+      <p className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed">
+        {texto}
+      </p>
+    </WidgetContainer>
   );
 }
 
@@ -76,29 +67,15 @@ function ResumoFinanceiroSection({ lancamentos }: { lancamentos: Lancamento[] })
 
   if (lancamentos.length === 0) {
     return (
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-medium flex items-center gap-2">
-            <DollarSign className="size-4" />
-            Resumo Financeiro
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">Nenhum lançamento financeiro</p>
-        </CardContent>
-      </Card>
+      <WidgetContainer title="Resumo Financeiro" icon={DollarSign}>
+        <p className="text-sm text-muted-foreground">Nenhum lançamento financeiro</p>
+      </WidgetContainer>
     );
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <DollarSign className="size-4" />
-          Resumo Financeiro
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
+    <WidgetContainer title="Resumo Financeiro" icon={DollarSign}>
+      <div className="space-y-3">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total</p>
@@ -117,8 +94,8 @@ function ResumoFinanceiroSection({ lancamentos }: { lancamentos: Lancamento[] })
         <p className="text-xs text-muted-foreground">
           {lancamentos.length} lançamento{lancamentos.length !== 1 ? 's' : ''}
         </p>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetContainer>
   );
 }
 
@@ -142,44 +119,36 @@ function AtividadeRecenteSection({ historico }: { historico: ContratoStatusHisto
     .slice(0, 3);
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <History className="size-4" />
-          Atividade Recente
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          {sorted.map((item) => {
-            const toLabel = STATUS_CONTRATO_LABELS[item.toStatus] || item.toStatus;
-            const fromLabel = item.fromStatus
-              ? STATUS_CONTRATO_LABELS[item.fromStatus] || item.fromStatus
-              : null;
-            const variant = getSemanticBadgeVariant('status_contrato', item.toStatus);
+    <WidgetContainer title="Atividade Recente" icon={History}>
+      <div className="space-y-3">
+        {sorted.map((item) => {
+          const toLabel = STATUS_CONTRATO_LABELS[item.toStatus] || item.toStatus;
+          const fromLabel = item.fromStatus
+            ? STATUS_CONTRATO_LABELS[item.fromStatus] || item.fromStatus
+            : null;
+          const variant = getSemanticBadgeVariant('status_contrato', item.toStatus);
 
-            return (
-              <div key={item.id} className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  {fromLabel && (
-                    <>
-                      <span className="text-xs text-muted-foreground truncate">{fromLabel}</span>
-                      <ArrowRight className="size-3 text-muted-foreground shrink-0" />
-                    </>
-                  )}
-                  <Badge variant={variant} className="text-xs shrink-0">
-                    {toLabel}
-                  </Badge>
-                </div>
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {formatDateTime(item.changedAt)}
-                </span>
+          return (
+            <div key={item.id} className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                {fromLabel && (
+                  <>
+                    <span className="text-xs text-muted-foreground truncate">{fromLabel}</span>
+                    <ArrowRight className="size-3 text-muted-foreground shrink-0" />
+                  </>
+                )}
+                <Badge variant={variant} className="text-xs shrink-0">
+                  {toLabel}
+                </Badge>
               </div>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                {formatDateTime(item.changedAt)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </WidgetContainer>
   );
 }
 

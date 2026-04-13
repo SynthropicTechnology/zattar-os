@@ -54,7 +54,7 @@ export function AmbientBackdrop({
         />
         {grid && (
           <div
-            className="absolute inset-0 [background-image:radial-gradient(var(--color-primary)_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.03]"
+            className="absolute inset-0 bg-[radial-gradient(var(--color-primary)_1px,transparent_1px)] bg-size-[40px_40px] opacity-[0.03]"
           />
         )}
       </div>

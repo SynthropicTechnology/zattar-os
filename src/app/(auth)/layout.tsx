@@ -12,7 +12,7 @@ import { BrandMark } from '@/components/shared/brand-mark'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="auth-runway relative min-h-svh flex items-center justify-center overflow-hidden">
+    <div className="dark auth-runway relative min-h-svh flex items-center justify-center overflow-hidden">
       {/* Noise texture */}
       <div className="auth-noise" aria-hidden="true" />
 

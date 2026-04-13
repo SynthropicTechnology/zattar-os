@@ -8,12 +8,13 @@ import type { PulseItem } from '@/components/dashboard/pulse-strip';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Button } from '@/components/ui/button';
-import { Landmark, Settings, Plus } from 'lucide-react';
+import { Landmark, Settings, Plus, Lock, AlertTriangle, Clock } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useTribunais } from '@/app/(authenticated)/captura';
 import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import type { TribunalConfigDb as TribunalConfig } from '@/app/(authenticated)/captura';
+import { useCredenciaisMap } from '../hooks/use-credenciais-map';
 
 const TIPO_ACESSO_LABELS: Record<string, string> = {
   primeiro_grau: '1º Grau',
@@ -92,18 +93,33 @@ export default function TribunaisPage() {
     });
   }, [tribunais, buscaDebounced, tribunalFilter, tipoAcessoFilter]);
 
-  // KPI items
+  // Credenciais map for enriching tribunal cards
+  const { credenciaisMap } = useCredenciaisMap();
+
+  // Count credenciais per tribunal
+  const credenciaisPorTribunal = useMemo(() => {
+    const counts = new Map<string, number>();
+    credenciaisMap.forEach((info) => {
+      const current = counts.get(info.tribunal) ?? 0;
+      counts.set(info.tribunal, current + 1);
+    });
+    return counts;
+  }, [credenciaisMap]);
+
+  // Tribunais with credenciais vs without
+  const tribunaisComCredenciais = useMemo(() => {
+    return tribunais.filter((t) => (credenciaisPorTribunal.get(t.tribunal_codigo) ?? 0) > 0).length;
+  }, [tribunais, credenciaisPorTribunal]);
+
+  // KPI items — aligned with mock: Configurados, Com Credenciais, Sem Cobertura
   const kpiItems = useMemo<PulseItem[]>(() => {
-    const porGrau = tribunais.reduce<Record<string, number>>((acc, t) => {
-      acc[t.tipo_acesso] = (acc[t.tipo_acesso] ?? 0) + 1;
-      return acc;
-    }, {});
+    const semCobertura = tribunais.length - tribunaisComCredenciais;
     return [
       { label: 'Configurados', total: tribunais.length, icon: Landmark, color: 'text-primary' },
-      { label: '1º Grau', total: porGrau['primeiro_grau'] ?? 0, icon: Settings, color: 'text-success' },
-      { label: '2º Grau', total: porGrau['segundo_grau'] ?? 0, icon: Settings, color: 'text-warning' },
+      { label: 'Com Credenciais', total: tribunaisComCredenciais, icon: Lock, color: 'text-success' },
+      { label: 'Sem Cobertura', total: semCobertura, icon: AlertTriangle, color: 'text-warning' },
     ];
-  }, [tribunais]);
+  }, [tribunais, tribunaisComCredenciais]);
 
   return (
     <>
@@ -165,31 +181,44 @@ export default function TribunaisPage() {
                 depth={2}
                 className="p-4 h-full"
               >
-                {/* Tribunal code + name */}
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/[0.08] flex items-center justify-center shrink-0">
-                    <Landmark className="w-5 h-5 text-primary" />
-                  </div>
+                {/* Header: Acronym + Name + Grau badge */}
+                <div className="flex items-start justify-between gap-2 mb-3">
                   <div className="min-w-0">
-                    <div className="text-sm font-semibold truncate">{tribunal.tribunal_codigo}</div>
-                    <div className="text-xs text-muted-foreground/55 truncate">{tribunal.tribunal_nome}</div>
+                    <div className="text-lg font-bold text-primary font-heading leading-none">
+                      {tribunal.tribunal_codigo}
+                    </div>
+                    <div className="text-xs text-muted-foreground/55 mt-1 truncate">
+                      {tribunal.tribunal_nome}
+                    </div>
                   </div>
+                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-[5px] border border-border/15 bg-muted/20 text-muted-foreground shrink-0">
+                    {TIPO_ACESSO_LABELS[tribunal.tipo_acesso] ?? tribunal.tipo_acesso}
+                  </span>
                 </div>
 
                 {/* Divider */}
                 <div className="border-t border-border/10 my-2" />
 
-                {/* Details */}
+                {/* Meta rows */}
                 <div className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-muted-foreground/60">Grau</span>
-                    <span className="text-[11px] font-medium">
-                      {TIPO_ACESSO_LABELS[tribunal.tipo_acesso] ?? tribunal.tipo_acesso}
+                  {/* Status */}
+                  <div className="flex items-center gap-1.5 text-[11px]">
+                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? 'bg-success' : 'bg-warning'}`} />
+                    <span className="text-muted-foreground/70">
+                      {(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? 'Ativo' : 'Sem cobertura'}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-muted-foreground/60">URL Base</span>
-                    <span className="text-[11px] font-mono text-muted-foreground/55 truncate max-w-[160px]" title={tribunal.url_base}>
+
+                  {/* Credenciais count */}
+                  <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/70">
+                    <Lock className="size-3 opacity-50 shrink-0" />
+                    <span>Credenciais: <strong className="text-foreground font-medium">{credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0}</strong></span>
+                  </div>
+
+                  {/* URL base (truncated) */}
+                  <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/70">
+                    <Clock className="size-3 opacity-50 shrink-0" />
+                    <span className="truncate max-w-40" title={tribunal.url_base}>
                       {tribunal.url_base.replace(/^https?:\/\//, '')}
                     </span>
                   </div>
@@ -197,9 +226,17 @@ export default function TribunaisPage() {
 
                 {/* Action */}
                 <div className="border-t border-border/10 mt-3 pt-3">
-                  <Button variant="ghost" size="sm" className="w-full text-xs h-7 text-primary">
-                    Configurar
-                  </Button>
+                  {(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? (
+                    <Button variant="ghost" size="sm" className="w-full text-xs h-7 text-primary">
+                      <Settings className="size-3 mr-1" />
+                      Configurar
+                    </Button>
+                  ) : (
+                    <Button variant="ghost" size="sm" className="w-full text-xs h-7 text-warning">
+                      <Plus className="size-3 mr-1" />
+                      Adicionar Credencial
+                    </Button>
+                  )}
                 </div>
               </GlassPanel>
               </div>

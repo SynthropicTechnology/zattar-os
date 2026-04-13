@@ -360,9 +360,9 @@ Glass row pattern:
   type="button"
   onClick={() => onView?.(captura)}
   className={cn(
-    'w-full text-left rounded-2xl border border-white/[0.06] p-4 cursor-pointer',
-    'transition-all duration-[180ms] ease-out',
-    'hover:bg-white/[0.055] hover:border-white/[0.12] hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
+    'w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+    'transition-all duration-180 ease-out',
+    'hover:bg-white/5.5er:border-white/[0.12] hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
     isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
   )}
 >

@@ -28,6 +28,7 @@ import type { CapturaLog, TipoCaptura, StatusCaptura } from '../types';
 import type { CapturaKpiData } from './captura-kpi-strip';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';
+import { useCredenciaisMap } from '../hooks/use-credenciais-map';
 
 // =============================================================================
 // TIPOS
@@ -140,6 +141,14 @@ const TIPO_LABELS: Record<TipoCaptura, string> = {
   timeline: 'Timeline',
 };
 
+const GRAU_LABELS: Record<string, string> = {
+  '1': '1º Grau',
+  '2': '2º Grau',
+  primeiro_grau: '1º Grau',
+  segundo_grau: '2º Grau',
+  unico: 'Único',
+};
+
 function formatarTipo(tipo: TipoCaptura): string {
   return TIPO_LABELS[tipo] ?? tipo;
 }
@@ -181,11 +190,15 @@ function calcularDuracao(captura: CapturaLog): string {
 function GlassRow({
   captura,
   advogadoNome,
+  tribunalCodigo,
+  grau,
   onView,
   isAlt,
 }: {
   captura: CapturaLog;
   advogadoNome: string | undefined;
+  tribunalCodigo: string | undefined;
+  grau: string | undefined;
   onView: () => void;
   isAlt: boolean;
 }) {
@@ -198,13 +211,13 @@ function GlassRow({
       onClick={onView}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onView(); } }}
       className={cn(
-        'w-full text-left rounded-2xl border border-white/[0.06] p-4 cursor-pointer',
-        'transition-all duration-[180ms] ease-out',
-        'hover:bg-white/[0.055] hover:border-white/[0.12] hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
+        'w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+        'transition-all duration-180 ease-out',
+        'hover:bg-white/5.5 hover:border-white/12 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
         isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
       )}
     >
-      <div className="grid grid-cols-[10px_1fr_120px_100px_56px] gap-4 items-center">
+      <div className="grid grid-cols-[10px_1fr_80px_70px_120px_80px_80px_56px] gap-3 items-center">
         {/* Status dot */}
         <div className="flex items-center justify-center">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getStatusDotColor(captura.status))} />
@@ -221,7 +234,7 @@ function GlassRow({
             </span>
             {advogadoNome && (
               <div className="flex items-center gap-1.5 mt-0.5">
-                <div className="size-4 rounded-full bg-gradient-to-br from-primary to-highlight flex items-center justify-center shrink-0">
+                <div className="size-4 rounded-full bg-linear-to-br from-primary to-highlight flex items-center justify-center shrink-0">
                   <span className="text-[7px] font-bold text-white">
                     {advogadoNome.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
                   </span>
@@ -234,10 +247,32 @@ function GlassRow({
           </div>
         </div>
 
-        {/* Status badge + date + duration stacked */}
+        {/* Tribunal */}
+        <div>
+          {tribunalCodigo ? (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded-[5px] text-[10px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
+              {tribunalCodigo}
+            </span>
+          ) : (
+            <span className="text-xs text-muted-foreground/30">—</span>
+          )}
+        </div>
+
+        {/* Grau */}
+        <div>
+          <span className="text-xs text-muted-foreground/60">
+            {grau ? (GRAU_LABELS[grau] ?? grau) : '—'}
+          </span>
+        </div>
+
+        {/* Status badge */}
         <div className="flex flex-col items-end gap-1">
           <CapturaStatusSemanticBadge value={captura.status} className="text-[10px]" />
-          <span className="text-xs text-muted-foreground/60">
+        </div>
+
+        {/* Start time */}
+        <div className="text-right">
+          <span className="text-xs text-muted-foreground/60 tabular-nums">
             {formatarDataHora(captura.iniciado_em)}
           </span>
         </div>
@@ -279,7 +314,7 @@ function GlassRow({
 
 function ListToolbar({ total, emAndamento }: { total: number; emAndamento: number }) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05]">
+    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
       <div className="flex items-center gap-3">
         <span className="text-xs text-muted-foreground/60">
           {total.toLocaleString('pt-BR')} capturas
@@ -306,8 +341,8 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.028] p-4">
-          <div className="grid grid-cols-[10px_1fr_120px_100px_56px] gap-4 items-center">
+        <div key={i} className="rounded-2xl border border-white/6 bg-white/[0.028] p-4">
+          <div className="grid grid-cols-[10px_1fr_80px_70px_120px_80px_80px_56px] gap-3 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="flex items-center gap-3">
               <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
@@ -316,10 +351,10 @@ function ListSkeleton() {
                 <Skeleton className="h-3 w-28" />
               </div>
             </div>
-            <div className="flex flex-col items-end gap-1">
-              <Skeleton className="h-5 w-20 rounded-full" />
-              <Skeleton className="h-3 w-16" />
-            </div>
+            <Skeleton className="h-5 w-12 rounded" />
+            <Skeleton className="h-3 w-14" />
+            <Skeleton className="h-5 w-20 rounded-full ml-auto" />
+            <Skeleton className="h-3 w-16 ml-auto" />
             <Skeleton className="h-3 w-12 ml-auto" />
             <div />
           </div>
@@ -335,13 +370,22 @@ function ListSkeleton() {
 
 function ColumnHeaders() {
   return (
-    <div className="grid grid-cols-[10px_1fr_120px_100px_56px] gap-4 items-center mb-2">
+    <div className="grid grid-cols-[10px_1fr_80px_70px_120px_80px_80px_56px] gap-3 items-center mb-2">
       <div />
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
         Captura
       </span>
+      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
+        Tribunal
+      </span>
+      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
+        Grau
+      </span>
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
-        Status / Início
+        Status
+      </span>
+      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
+        Início
       </span>
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
         Duração
@@ -381,9 +425,9 @@ function PaginationBar({
           disabled={pagina <= 1}
           className={cn(
             'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
-            'border border-white/[0.08] transition-all duration-150',
+            'border border-white/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
-            'hover:bg-white/6 hover:border-white/[0.14]',
+            'hover:bg-white/6 hover:border-white/14',
           )}
         >
           <ChevronLeft className="w-3 h-3" />
@@ -397,7 +441,7 @@ function PaginationBar({
             'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
             'border border-white/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
-            'hover:bg-white/[0.06] hover:border-white/[0.14]',
+            'hover:bg-white/6 hover:border-white/14',
           )}
         >
           Próxima
@@ -428,6 +472,20 @@ export function CapturaGlassList({
   });
 
   const { advogadosMap } = useAdvogadosMap();
+  const { credenciaisMap } = useCredenciaisMap();
+
+  // Resolve tribunal/grau from first credencial_id
+  const resolveTribunalGrau = React.useCallback(
+    (captura: CapturaLog): { tribunal?: string; grau?: string } => {
+      if (!captura.credencial_ids?.length) return {};
+      for (const credId of captura.credencial_ids) {
+        const info = credenciaisMap.get(credId);
+        if (info) return { tribunal: info.tribunal, grau: info.grau };
+      }
+      return {};
+    },
+    [credenciaisMap]
+  );
 
   // KPI update
   useEffect(() => {
@@ -443,23 +501,38 @@ export function CapturaGlassList({
   // Reset page when filters change
   useEffect(() => {
     setPagina(1);
-  }, [filters?.tipo, filters?.status]);
+  }, [filters?.tipo, filters?.status, filters?.tribunal]);
 
   const emAndamentoCount = React.useMemo(
     () => capturas.filter((c) => c.status === 'in_progress').length,
     [capturas]
   );
 
-  // Client-side search filter
+  // Client-side search + tribunal filter
   const filtered = React.useMemo(() => {
-    if (!search) return capturas;
-    const q = search.toLowerCase();
-    return capturas.filter((c) => {
-      const tipoLabel = formatarTipo(c.tipo_captura).toLowerCase();
-      const advogado = c.advogado_id ? (advogadosMap.get(c.advogado_id) ?? '').toLowerCase() : '';
-      return tipoLabel.includes(q) || advogado.includes(q);
-    });
-  }, [capturas, search, advogadosMap]);
+    let result = capturas;
+
+    // Tribunal filter (client-side since API doesn't support it)
+    if (filters?.tribunal) {
+      result = result.filter((c) => {
+        const { tribunal } = resolveTribunalGrau(c);
+        return tribunal === filters.tribunal;
+      });
+    }
+
+    // Text search
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter((c) => {
+        const tipoLabel = formatarTipo(c.tipo_captura).toLowerCase();
+        const advogado = c.advogado_id ? (advogadosMap.get(c.advogado_id) ?? '').toLowerCase() : '';
+        const { tribunal } = resolveTribunalGrau(c);
+        return tipoLabel.includes(q) || advogado.includes(q) || (tribunal?.toLowerCase().includes(q) ?? false);
+      });
+    }
+
+    return result;
+  }, [capturas, search, filters?.tribunal, advogadosMap, resolveTribunalGrau]);
 
   if (isLoading) return <ListSkeleton />;
 
@@ -480,17 +553,22 @@ export function CapturaGlassList({
         <ColumnHeaders />
       </div>
       <div className="flex flex-col gap-2 px-4 pb-4">
-        {filtered.map((captura, i) => (
-          <GlassRow
-            key={captura.id}
-            captura={captura}
-            advogadoNome={
-              captura.advogado_id ? advogadosMap.get(captura.advogado_id) : undefined
-            }
-            onView={() => onView?.(captura)}
-            isAlt={i % 2 === 1}
-          />
-        ))}
+        {filtered.map((captura, i) => {
+          const { tribunal, grau } = resolveTribunalGrau(captura);
+          return (
+            <GlassRow
+              key={captura.id}
+              captura={captura}
+              advogadoNome={
+                captura.advogado_id ? advogadosMap.get(captura.advogado_id) : undefined
+              }
+              tribunalCodigo={tribunal}
+              grau={grau}
+              onView={() => onView?.(captura)}
+              isAlt={i % 2 === 1}
+            />
+          );
+        })}
       </div>
       {paginacao && paginacao.totalPaginas > 1 && (
         <div className="px-4 pb-4">

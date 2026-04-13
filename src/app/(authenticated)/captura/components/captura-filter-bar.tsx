@@ -49,6 +49,25 @@ const STATUS_OPTIONS = [
   { value: 'pending', label: 'Pendente' },
 ];
 
+const TRIBUNAL_OPTIONS = [
+  { value: 'TRT1', label: 'TRT1' },
+  { value: 'TRT2', label: 'TRT2' },
+  { value: 'TRT3', label: 'TRT3' },
+  { value: 'TRT4', label: 'TRT4' },
+  { value: 'TRT5', label: 'TRT5' },
+  { value: 'TRT6', label: 'TRT6' },
+  { value: 'TRT7', label: 'TRT7' },
+  { value: 'TRT8', label: 'TRT8' },
+  { value: 'TRT9', label: 'TRT9' },
+  { value: 'TRT10', label: 'TRT10' },
+  { value: 'TRT11', label: 'TRT11' },
+  { value: 'TRT12', label: 'TRT12' },
+  { value: 'TRT13', label: 'TRT13' },
+  { value: 'TRT14', label: 'TRT14' },
+  { value: 'TRT15', label: 'TRT15' },
+  { value: 'TST', label: 'TST' },
+];
+
 // --- Sub-components ---
 
 function FilterDropdownTrigger({
@@ -163,6 +182,13 @@ export function CapturaFilterBar({ filters, onChange, counts }: CapturaFilterBar
         selected={filters.status}
         onSelect={handleChange('status')}
         counts={counts?.status}
+      />
+      <FilterDropdown
+        label="Tribunal"
+        options={TRIBUNAL_OPTIONS}
+        selected={filters.tribunal}
+        onSelect={handleChange('tribunal')}
+        counts={counts?.tribunal}
       />
     </div>
   );

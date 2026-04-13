@@ -226,7 +226,20 @@ export default function CredenciaisPage() {
     setCredenciaisAdvogadoDialog({ open: true, advogado });
   }, [selectedAdvogadoId, advogadosList]);
 
+  // Advogado filter
+  const [advogadoFilter, setAdvogadoFilter] = useState<string>('all');
+
   // Opções para filtros (extraídas dos dados)
+  const advogadoOptions = useMemo(() => {
+    const advMap = new Map<number, string>();
+    credenciais.forEach((c) => {
+      if (!advMap.has(c.advogado_id)) advMap.set(c.advogado_id, c.advogado_nome);
+    });
+    return Array.from(advMap.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([id, nome]) => ({ label: nome, value: String(id) }));
+  }, [credenciais]);
+
   const tribunalOptions = useMemo(() => {
     const tribunais = [...new Set(credenciais.map((c) => c.tribunal))].sort();
     return tribunais.map((t) => ({ label: t, value: t }));
@@ -245,7 +258,7 @@ export default function CredenciaisPage() {
   // Limpar seleção quando filtros mudam
   useEffect(() => {
     setRowSelection({});
-  }, [buscaDebounced, tribunalFilter, grauFilter, statusFilter]);
+  }, [buscaDebounced, tribunalFilter, grauFilter, statusFilter, advogadoFilter]);
 
   // Filtrar credenciais
   const credenciaisFiltradas = useMemo(() => {
@@ -264,6 +277,11 @@ export default function CredenciaisPage() {
           oabMatch;
 
         if (!match) return false;
+      }
+
+      // Filtro de advogado
+      if (advogadoFilter !== 'all' && String(credencial.advogado_id) !== advogadoFilter) {
+        return false;
       }
 
       // Filtro de tribunal
@@ -286,7 +304,7 @@ export default function CredenciaisPage() {
 
       return true;
     });
-  }, [credenciais, buscaDebounced, tribunalFilter, grauFilter, statusFilter]);
+  }, [credenciais, buscaDebounced, advogadoFilter, tribunalFilter, grauFilter, statusFilter]);
 
   // Bulk actions helpers (deve ficar após credenciaisFiltradas)
   const selectedCount = Object.keys(rowSelection).filter((k) => rowSelection[k]).length;
@@ -361,6 +379,12 @@ export default function CredenciaisPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex items-center gap-2 flex-wrap">
               <AdvogadosFilter
+                title="Advogado"
+                options={advogadoOptions}
+                value={advogadoFilter}
+                onValueChange={setAdvogadoFilter}
+              />
+              <AdvogadosFilter
                 title="Tribunal"
                 options={tribunalOptions}
                 value={tribunalFilter}
@@ -397,23 +421,8 @@ export default function CredenciaisPage() {
         {/* Table View */}
         {viewMode === 'tabela' && (
           <>
-            {/* Bulk Actions Bar (when rows selected) */}
-            {selectedCount > 0 && (
-              <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-primary/5 px-4 py-2.5">
-                <span className="text-sm font-medium text-primary">{selectedCount} selecionada(s)</span>
-                <div className="flex items-center gap-2 ml-auto">
-                  <Button variant="outline" size="sm" onClick={() => handleBulkToggle('ativar')}>
-                    <Power className="size-3.5 mr-1" /> Ativar
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkToggle('desativar')}>
-                    <PowerOff className="size-3.5 mr-1" /> Desativar
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            <GlassPanel depth={1} className="overflow-hidden">
-              <div className="flex items-center px-4 py-2.5 border-b border-white/[0.05]">
+            <GlassPanel depth={1} className="overflow-hidden relative">
+              <div className="flex items-center px-4 py-2.5 border-b border-white/5">
                 <span className="text-xs text-muted-foreground/60">
                   {credenciaisFiltradas.length} credenciais
                 </span>
@@ -432,6 +441,29 @@ export default function CredenciaisPage() {
                 }}
                 onTableReady={(t) => _setTable(t as TanstackTable<Credencial>)}
               />
+
+              {/* Sticky Bulk Actions Bar */}
+              {selectedCount > 0 && (
+                <div className="sticky bottom-0 left-0 right-0 flex items-center gap-3 bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl">
+                  <span className="text-sm font-semibold flex-1">{selectedCount} selecionada(s)</span>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="bg-primary-foreground/12 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/20"
+                    onClick={() => handleBulkToggle('ativar')}
+                  >
+                    <Power className="size-3.5 mr-1" /> Ativar
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="bg-primary-foreground/12 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/20"
+                    onClick={() => handleBulkToggle('desativar')}
+                  >
+                    <PowerOff className="size-3.5 mr-1" /> Desativar
+                  </Button>
+                </div>
+              )}
             </GlassPanel>
           </>
         )}
@@ -456,7 +488,7 @@ export default function CredenciaisPage() {
                 <GlassPanel key={credencial.id} depth={2} className="p-4">
                   {/* Tribunal + Grau header */}
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-9 h-9 rounded-[0.625rem] bg-primary/[0.08] flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">
                       <Landmark className="w-4 h-4 text-primary" />
                     </div>
                     <div className="min-w-0">
