@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Captura › Credenciais — ZattarOS POC</title>
+  <link rel="stylesheet" href="00-shared-styles.css" />
+  <style>
+    /* ── Page-specific overrides ── */
+    html { font-size: 16px; }
+
+    /* Status toggle pill */
+    .status-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .status-toggle-track {
+      width: 28px;
+      height: 16px;
+      border-radius: 99px;
+      position: relative;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .status-toggle-track.on  { background: var(--success); }
+    .status-toggle-track.off { background: oklch(0.75 0.01 281 / 0.35); }
+    .dark .status-toggle-track.off { background: oklch(0.35 0.01 281 / 0.5); }
+    .status-toggle-thumb {
+      position: absolute;
+      top: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: left 0.2s;
+    }
+    .status-toggle-track.on  .status-toggle-thumb { left: 14px; }
+    .status-toggle-track.off .status-toggle-thumb { left: 2px; }
+
+    /* Row grouping */
+    .group-divider td {
+      padding: 4px 12px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted-foreground);
+      opacity: 0.55;
+      background: rgba(0,0,0,0.015);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .dark .group-divider td {
+      background: rgba(255,255,255,0.02);
+      border-bottom-color: rgba(255,255,255,0.04);
+    }
+
+    /* Checkbox */
+    .row-check {
+      width: 15px;
+      height: 15px;
+      border-radius: 4px;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      background: white;
+      cursor: pointer;
+      appearance: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      accent-color: var(--primary);
+    }
+    .dark .row-check {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
+    }
+    input[type="checkbox"] { accent-color: var(--primary); cursor: pointer; }
+
+    /* Bulk actions bar */
+    .bulk-bar {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: oklch(0.48 0.26 281 / 0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-radius: 0 0 16px 16px;
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .bulk-bar.hidden { display: none; }
+    .bulk-bar .bulk-count {
+      font-weight: 600;
+      opacity: 0.9;
+      flex: 1;
+    }
+    .bulk-bar .btn-bulk {
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.12);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .bulk-bar .btn-bulk:hover { background: rgba(255,255,255,0.2); }
+    .bulk-bar .btn-bulk.destructive {
+      background: rgba(239,68,68,0.25);
+      border-color: rgba(239,68,68,0.3);
+    }
+    .bulk-bar .btn-bulk.destructive:hover { background: rgba(239,68,68,0.4); }
+
+    /* Credential card */
+    .cred-card {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .cred-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .cred-card-divider {
+      height: 1px;
+      background: rgba(0,0,0,0.06);
+      margin: 10px 0;
+    }
+    .dark .cred-card-divider { background: rgba(255,255,255,0.06); }
+    .cred-card-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted-foreground);
+      margin-bottom: 4px;
+    }
+    .cred-card-row svg { width: 13px; height: 13px; flex-shrink: 0; opacity: 0.55; }
+    .cred-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2px;
+    }
+
+    /* Tribunal badge */
+    .tribunal-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(85,35,235,0.07);
+      color: var(--primary);
+      border: 1px solid rgba(85,35,235,0.12);
+      letter-spacing: 0.04em;
+    }
+    .grau-badge {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(0,0,0,0.04);
+      color: var(--muted-foreground);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .dark .grau-badge {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.07);
+    }
+
+    /* Login monospace */
+    .login-mono {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--foreground);
+      opacity: 0.75;
+    }
+
+    /* Dialog overlay wrapper (static demo) */
+    .dialog-demo-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.04);
+      padding: 32px;
+    }
+    .dark .dialog-demo-wrapper {
+      background: rgba(0,0,0,0.3);
+    }
+
+    /* Form fields */
+    .form-field { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted-foreground);
+      opacity: 0.7;
+      margin-bottom: 5px;
+    }
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.1);
+      background: var(--surface-1);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--foreground);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .dark .form-input,
+    .dark .form-select {
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+    }
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px oklch(0.48 0.26 281 / 0.1);
+    }
+    .form-input-password { position: relative; }
+    .form-input-password .form-input { padding-right: 36px; }
+    .form-input-password .eye-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted-foreground);
+      opacity: 0.45;
+      display: flex;
+    }
+    .form-input-password .eye-btn svg { width: 15px; height: 15px; }
+
+    .form-section-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted-foreground);
+      opacity: 0.55;
+      margin-bottom: 10px;
+    }
+    .form-section-label svg { width: 13px; height: 13px; }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Inline hint */
+    .form-hint {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+
+    /* Section card inside dialog */
+    .dialog-section {
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.06);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      background: rgba(0,0,0,0.015);
+    }
+    .dark .dialog-section {
+      border-color: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* Action icon buttons */
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1px solid rgba(0,0,0,0.07);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+      transition: all 0.15s;
+    }
+    .icon-btn:hover { background: rgba(0,0,0,0.04); opacity: 1; }
+    .icon-btn.destructive:hover { background: rgba(239,68,68,0.06); color: var(--destructive); opacity: 1; }
+    .icon-btn svg { width: 13px; height: 13px; }
+    .dark .icon-btn { border-color: rgba(255,255,255,0.07); }
+
+    /* Table icon container colors */
+    .ic-trt  { background: rgba(85,35,235,0.07); color: var(--primary); }
+    .ic-tst  { background: rgba(60,120,200,0.07); color: var(--info); }
+    .dark .ic-trt { background: rgba(85,35,235,0.15); }
+    .dark .ic-tst { background: rgba(60,120,200,0.15); }
+
+    /* Proportion bar accents */
+    .pb-success { background: var(--success); }
+    .pb-warning  { background: var(--warning); }
+    .pb-info     { background: var(--info); }
+
+    /* Section demo labels */
+    .demo-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted-foreground);
+      opacity: 0.45;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .dark .demo-section-label { border-bottom-color: rgba(255,255,255,0.05); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SIDEBAR MOCK
+════════════════════════════════════════════════════════════════════ -->
+<nav class="sidebar-mock" aria-label="Navegação principal">
+  <div class="logo" aria-hidden="true"></div>
+
+  <!-- Home -->
+  <button class="nav-dot" data-tooltip="Início" aria-label="Início">
+    <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M10 2L2 8v10h5v-6h6v6h5V8L10 2z"/></svg>
+  </button>
+  <!-- Processos -->
+  <button class="nav-dot" data-tooltip="Processos" aria-label="Processos">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><rect x="4" y="3" width="12" height="14" rx="2"/><path d="M7 7h6M7 10h6M7 13h4"/></svg>
+  </button>
+  <!-- Agenda -->
+  <button class="nav-dot" data-tooltip="Agenda" aria-label="Agenda">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M7 2v4M13 2v4M3 9h14"/></svg>
+  </button>
+  <!-- Captura (active) -->
+  <button class="nav-dot active" data-tooltip="Captura" aria-label="Captura" aria-current="page">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><circle cx="10" cy="10" r="3"/><path d="M4 10a6 6 0 0 1 12 0"/><path d="M1 10a9 9 0 0 1 18 0"/></svg>
+  </button>
+  <!-- Chat -->
+  <button class="nav-dot" data-tooltip="Chat" aria-label="Chat">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M17 12a2 2 0 0 1-2 2H6l-3 3V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7z"/></svg>
+  </button>
+
+  <div style="flex:1"></div>
+
+  <!-- Avatar -->
+  <div class="nav-dot" style="border-radius:50%;background:oklch(0.48 0.26 281 / 0.7);color:white;font-size:11px;font-weight:700;cursor:default;" aria-label="Usuário">JM</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════════════════════ -->
+<main class="main-content" style="padding: 24px;">
+
+  <!-- ── Page Header ── -->
+  <header class="page-header" style="margin-bottom: 20px;">
+    <div>
+      <h1 class="text-page-title" style="font-size: 1.25rem;">Captura</h1>
+      <p class="page-subtitle">Automação de captura judicial — PJE / TRT</p>
+    </div>
+    <button class="btn btn-primary" aria-label="Adicionar nova credencial" onclick="openDialog()">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 4a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2h-4v4a1 1 0 1 1-2 0v-4H5a1 1 0 1 1 0-2h4V5a1 1 0 0 1 1-1z"/></svg>
+      Nova Credencial
+    </button>
+  </header>
+
+  <!-- ── Tab Pills ── -->
+  <nav class="tab-pills" style="margin-bottom: 20px;" role="tablist" aria-label="Seções da Captura">
+    <button class="tab-pill" role="tab" aria-selected="false">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M3 5h14M3 10h14M3 15h8"/></svg>
+      Histórico
+    </button>
+    <button class="tab-pill" role="tab" aria-selected="false">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M7 2v4M13 2v4M3 9h14"/></svg>
+      Agendamentos
+    </button>
+    <button class="tab-pill active" role="tab" aria-selected="true" aria-controls="credenciais-panel">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="7" cy="8" r="3"/><path d="M13 6h4M13 10h2M1 16c0-2.21 2.686-4 6-4 1.3 0 2.504.326 3.47.876"/><rect x="12" y="12" width="6" height="5" rx="1"/><circle cx="15" cy="14.5" r="0.7" fill="currentColor"/></svg>
+      Credenciais
+    </button>
+    <button class="tab-pill" role="tab" aria-selected="false">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M3 10a7 7 0 1 1 14 0A7 7 0 0 1 3 10z"/><path d="M3 10h14M10 3c-2 2.5-2 4.5 0 7s2 4.5 0 7"/></svg>
+      Tribunais
+    </button>
+  </nav>
+
+  <!-- ── KPI Strip ── -->
+  <section class="kpi-strip" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;" aria-label="Indicadores de credenciais">
+
+    <!-- Total -->
+    <div class="glass-kpi kpi-card">
+      <div class="kpi-icon" style="background: rgba(85,35,235,0.08);">
+        <svg viewBox="0 0 20 20" fill="none" stroke="var(--primary)" stroke-width="1.6" width="18" height="18">
+          <circle cx="7" cy="8" r="3"/><path d="M1 17c0-2.76 2.686-5 6-5s6 2.24 6 5M13 6h4M13 10h2M13 14h4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Total Credenciais</p>
+        <p class="kpi-value" style="color: var(--foreground);">47</p>
+        <div class="proportion-bar"><div class="proportion-bar-fill" style="width:100%; background: var(--primary); opacity:0.3;"></div></div>
+      </div>
+    </div>
+
+    <!-- Ativas -->
+    <div class="glass-kpi kpi-card">
+      <div class="kpi-icon" style="background: rgba(85,180,85,0.08);">
+        <svg viewBox="0 0 20 20" fill="none" stroke="var(--success)" stroke-width="1.6" width="18" height="18">
+          <circle cx="10" cy="10" r="7"/><path d="M7 10l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Ativas</p>
+        <p class="kpi-value" style="color: var(--success);">39</p>
+        <div class="proportion-bar"><div class="proportion-bar-fill pb-success" style="width:83%;"></div></div>
+      </div>
+    </div>
+
+    <!-- Inativas -->
+    <div class="glass-kpi kpi-card">
+      <div class="kpi-icon" style="background: rgba(200,150,50,0.08);">
+        <svg viewBox="0 0 20 20" fill="none" stroke="var(--warning)" stroke-width="1.6" width="18" height="18">
+          <circle cx="10" cy="10" r="7"/><path d="M10 6v4M10 14h.01" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Inativas</p>
+        <p class="kpi-value" style="color: var(--warning);">8</p>
+        <div class="proportion-bar"><div class="proportion-bar-fill pb-warning" style="width:17%;"></div></div>
+      </div>
+    </div>
+
+    <!-- Tribunais Cobertos -->
+    <div class="glass-kpi kpi-card">
+      <div class="kpi-icon" style="background: rgba(60,120,200,0.08);">
+        <svg viewBox="0 0 20 20" fill="none" stroke="var(--info)" stroke-width="1.6" width="18" height="18">
+          <path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2.5-2 4.5 0 7s2 4.5 0 7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Tribunais Cobertos</p>
+        <p class="kpi-value" style="color: var(--info);">18</p>
+        <div class="proportion-bar"><div class="proportion-bar-fill pb-info" style="width:72%;"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Filter Bar ── -->
+  <div class="glass-widget" style="padding: 10px 16px; margin-bottom: 16px;" role="search" aria-label="Filtros de credenciais">
+    <div class="filter-bar">
+      <!-- Chips -->
+      <button class="filter-chip" aria-haspopup="listbox" aria-label="Filtrar por advogado">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+        Advogado
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 8l4 4 4-4"/></svg>
+      </button>
+
+      <button class="filter-chip" aria-haspopup="listbox" aria-label="Filtrar por tribunal">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14"/></svg>
+        Tribunal
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 8l4 4 4-4"/></svg>
+      </button>
+
+      <button class="filter-chip" aria-haspopup="listbox" aria-label="Filtrar por grau">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12M6 10h8M8 14h4"/></svg>
+        Grau
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 8l4 4 4-4"/></svg>
+      </button>
+
+      <button class="filter-chip active" aria-pressed="true" aria-label="Filtrar por status ativo">
+        <span class="status-dot success" aria-hidden="true"></span>
+        Status: Ativa
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 8l4 4 4-4"/></svg>
+      </button>
+
+      <!-- Right controls -->
+      <div class="filter-bar-right">
+        <div class="search-input">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="9" r="5"/><path d="M14.5 14.5l3 3"/></svg>
+          <input type="search" placeholder="Buscar login, advogado..." aria-label="Buscar credenciais" />
+        </div>
+        <div class="view-toggle" role="group" aria-label="Modo de visualização">
+          <button class="active" id="btn-tabela" onclick="showTabela()" aria-pressed="true" aria-label="Visualizar em tabela">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="2" y="4" width="16" height="2" rx="1"/><rect x="2" y="9" width="16" height="2" rx="1"/><rect x="2" y="14" width="16" height="2" rx="1"/></svg>
+            Tabela
+          </button>
+          <button id="btn-cards" onclick="showCards()" aria-pressed="false" aria-label="Visualizar em cards">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>
+            Cards
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       TABLE VIEW
+  ═══════════════════════════════════════════════════════ -->
+  <section id="view-tabela" id="credenciais-panel" aria-label="Tabela de credenciais">
+    <div class="glass-widget" style="overflow: hidden;">
+      <div style="overflow-x: auto;">
+        <table class="data-table" role="grid" aria-label="Lista de credenciais">
+          <thead>
+            <tr>
+              <th style="width:36px;">
+                <input type="checkbox" id="select-all" aria-label="Selecionar todas as credenciais" onchange="toggleAll(this)" />
+              </th>
+              <th>Advogado</th>
+              <th>Tribunal</th>
+              <th>Grau</th>
+              <th>Login</th>
+              <th style="text-align:center;">Status</th>
+              <th>Última Captura</th>
+              <th style="width:72px;text-align:right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+
+            <!-- ── Grupo: Dr. Marcos Silva ── -->
+            <tr class="group-divider">
+              <td colspan="8">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+                  Dr. Marcos Silva — OAB/RJ 123456
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT15 Marcos Silva" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dr. Marcos Silva</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/RJ 123456</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT15</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">1º Grau</span></td>
+              <td><span class="login-mono">marcos.silva.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status ativo: TRT15 Marcos Silva">
+                  <div class="status-toggle-track on">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--success);">Ativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">12/04/2025 14:32</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg>
+                  </button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT1 Marcos Silva" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dr. Marcos Silva</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/RJ 123456</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT1</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">2º Grau</span></td>
+              <td><span class="login-mono">marcos.silva.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status ativo: TRT1 Marcos Silva">
+                  <div class="status-toggle-track on">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--success);">Ativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">11/04/2025 09:15</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TST Marcos Silva" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dr. Marcos Silva</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/RJ 123456</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-tst">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge" style="background:rgba(60,120,200,0.07);color:var(--info);border-color:rgba(60,120,200,0.12);">TST</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">Tribunal Superior</span></td>
+              <td><span class="login-mono">marcos.silva.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status inativo: TST Marcos Silva">
+                  <div class="status-toggle-track off">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">Inativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">—</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── Grupo: Dra. Ana Costa ── -->
+            <tr class="group-divider">
+              <td colspan="8">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+                  Dra. Ana Costa — OAB/SP 789012
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT2 Ana Costa" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dra. Ana Costa</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/SP 789012</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT2</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">1º Grau</span></td>
+              <td><span class="login-mono">ana.costa.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status ativo: TRT2 Ana Costa">
+                  <div class="status-toggle-track on">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--success);">Ativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">12/04/2025 16:45</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT15 Ana Costa" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dra. Ana Costa</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/SP 789012</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT15</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">2º Grau</span></td>
+              <td><span class="login-mono">ana.costa.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status ativo: TRT15 Ana Costa">
+                  <div class="status-toggle-track on">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--success);">Ativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">10/04/2025 11:00</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT4 Ana Costa" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dra. Ana Costa</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/SP 789012</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT4</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">1º Grau</span></td>
+              <td><span class="login-mono">ana.costa.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status inativo: TRT4 Ana Costa">
+                  <div class="status-toggle-track off">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">Inativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">05/04/2025 08:00</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ── Grupo: Dr. Pedro Oliveira ── -->
+            <tr class="group-divider">
+              <td colspan="8">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+                  Dr. Pedro Oliveira — OAB/MG 345678
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT3 Pedro Oliveira" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dr. Pedro Oliveira</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/MG 345678</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT3</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">1º Grau</span></td>
+              <td><span class="login-mono">pedro.oliveira.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status ativo: TRT3 Pedro Oliveira">
+                  <div class="status-toggle-track on">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--success);">Ativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">12/04/2025 13:20</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT3 2G Pedro Oliveira" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dr. Pedro Oliveira</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/MG 345678</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT3</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">2º Grau</span></td>
+              <td><span class="login-mono">pedro.oliveira.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status ativo: TRT3 2G Pedro Oliveira">
+                  <div class="status-toggle-track on">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--success);">Ativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">12/04/2025 13:22</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><input type="checkbox" class="row-cb" aria-label="Selecionar credencial TRT18 Pedro Oliveira" onchange="updateBulk()" /></td>
+              <td>
+                <div style="font-size:13px;font-weight:500;color:var(--foreground);">Dr. Pedro Oliveira</div>
+                <div style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">OAB/MG 345678</div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <div class="icon-container-sm ic-trt">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+                  </div>
+                  <span class="tribunal-badge">TRT18</span>
+                </div>
+              </td>
+              <td><span class="grau-badge">1º Grau</span></td>
+              <td><span class="login-mono">pedro.oliveira.adv</span></td>
+              <td style="text-align:center;">
+                <label class="status-toggle" aria-label="Status inativo: TRT18 Pedro Oliveira">
+                  <div class="status-toggle-track off">
+                    <div class="status-toggle-thumb"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--muted-foreground);opacity:0.6;">Inativa</span>
+                </label>
+              </td>
+              <td style="font-size:12px;color:var(--muted-foreground);">02/04/2025 07:30</td>
+              <td>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button class="icon-btn" data-tooltip="Configurar" aria-label="Configurar credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+                  <button class="icon-btn destructive" data-tooltip="Excluir" aria-label="Excluir credencial"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bulk Actions Bar -->
+      <div class="bulk-bar hidden" id="bulk-bar" role="toolbar" aria-label="Ações em massa">
+        <span class="bulk-count" id="bulk-count">0 selecionadas</span>
+        <button class="btn-bulk" onclick="bulkAction('ativar')" aria-label="Ativar selecionadas">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="7"/><path d="M7 10l2 2 4-4"/></svg>
+          Ativar
+        </button>
+        <button class="btn-bulk" onclick="bulkAction('desativar')" aria-label="Desativar selecionadas">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="10" cy="10" r="7"/><path d="M7 10h6"/></svg>
+          Desativar
+        </button>
+        <button class="btn-bulk destructive" onclick="bulkAction('excluir')" aria-label="Excluir selecionadas">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg>
+          Excluir
+        </button>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" style="padding: 12px 20px; border-top: 1px solid rgba(0,0,0,0.04);">
+        <span>Exibindo 10 de 47 credenciais</span>
+        <div class="pagination-buttons" role="navigation" aria-label="Paginação">
+          <button class="pagination-btn" aria-label="Página anterior" disabled>‹</button>
+          <button class="pagination-btn active" aria-label="Página 1, atual" aria-current="page">1</button>
+          <button class="pagination-btn" aria-label="Página 2">2</button>
+          <button class="pagination-btn" aria-label="Página 3">3</button>
+          <span style="padding: 4px 6px; font-size:12px; color:var(--muted-foreground);">…</span>
+          <button class="pagination-btn" aria-label="Página 5">5</button>
+          <button class="pagination-btn" aria-label="Próxima página">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       CARDS VIEW (hidden by default)
+  ═══════════════════════════════════════════════════════ -->
+  <section id="view-cards" style="display:none;" aria-label="Cards de credenciais">
+    <div class="card-grid">
+
+      <!-- Card 1 -->
+      <div class="glass-kpi cred-card animate-in">
+        <div class="cred-card-header">
+          <div class="icon-container-md ic-trt" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="tribunal-badge">TRT15</span>
+              <span class="grau-badge">1º Grau</span>
+            </div>
+          </div>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-row">
+          <!-- Person icon -->
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+          <span>Dr. Marcos Silva</span>
+        </div>
+        <div class="cred-card-row">
+          <!-- Key icon -->
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="4"/><path d="M12 9h6M16 7v4" stroke-linecap="round"/></svg>
+          <span class="login-mono">marcos.silva.adv</span>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-footer">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span class="status-dot success" aria-hidden="true"></span>
+            <span style="font-size:12px;color:var(--success);font-weight:500;">Ativa</span>
+            <span style="font-size:11px;color:var(--muted-foreground);opacity:0.55;margin-left:4px;">Última: 12/04</span>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="icon-btn" aria-label="Configurar credencial TRT15 Marcos Silva">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg>
+            </button>
+            <button class="icon-btn destructive" aria-label="Excluir credencial TRT15 Marcos Silva">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="glass-kpi cred-card animate-in">
+        <div class="cred-card-header">
+          <div class="icon-container-md ic-trt" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="tribunal-badge">TRT1</span>
+              <span class="grau-badge">2º Grau</span>
+            </div>
+          </div>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+          <span>Dr. Marcos Silva</span>
+        </div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="4"/><path d="M12 9h6M16 7v4" stroke-linecap="round"/></svg>
+          <span class="login-mono">marcos.silva.adv</span>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-footer">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span class="status-dot success" aria-hidden="true"></span>
+            <span style="font-size:12px;color:var(--success);font-weight:500;">Ativa</span>
+            <span style="font-size:11px;color:var(--muted-foreground);opacity:0.55;margin-left:4px;">Última: 11/04</span>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="icon-btn" aria-label="Configurar credencial TRT1 Marcos Silva"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+            <button class="icon-btn destructive" aria-label="Excluir credencial TRT1 Marcos Silva"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 (inactive) -->
+      <div class="glass-kpi cred-card animate-in" style="opacity:0.75;">
+        <div class="cred-card-header">
+          <div class="icon-container-md ic-tst" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="tribunal-badge" style="background:rgba(60,120,200,0.07);color:var(--info);border-color:rgba(60,120,200,0.12);">TST</span>
+              <span class="grau-badge">Tribunal Superior</span>
+            </div>
+          </div>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+          <span>Dr. Marcos Silva</span>
+        </div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="4"/><path d="M12 9h6M16 7v4" stroke-linecap="round"/></svg>
+          <span class="login-mono">marcos.silva.adv</span>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-footer">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span class="status-dot muted" aria-hidden="true"></span>
+            <span style="font-size:12px;color:var(--muted-foreground);opacity:0.6;font-weight:500;">Inativa</span>
+            <span style="font-size:11px;color:var(--muted-foreground);opacity:0.4;margin-left:4px;">—</span>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="icon-btn" aria-label="Configurar credencial TST Marcos Silva"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+            <button class="icon-btn destructive" aria-label="Excluir credencial TST Marcos Silva"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="glass-kpi cred-card animate-in">
+        <div class="cred-card-header">
+          <div class="icon-container-md ic-trt" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="tribunal-badge">TRT2</span>
+              <span class="grau-badge">1º Grau</span>
+            </div>
+          </div>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+          <span>Dra. Ana Costa</span>
+        </div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="4"/><path d="M12 9h6M16 7v4" stroke-linecap="round"/></svg>
+          <span class="login-mono">ana.costa.adv</span>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-footer">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span class="status-dot success" aria-hidden="true"></span>
+            <span style="font-size:12px;color:var(--success);font-weight:500;">Ativa</span>
+            <span style="font-size:11px;color:var(--muted-foreground);opacity:0.55;margin-left:4px;">Última: 12/04</span>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="icon-btn" aria-label="Configurar credencial TRT2 Ana Costa"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+            <button class="icon-btn destructive" aria-label="Excluir credencial TRT2 Ana Costa"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="glass-kpi cred-card animate-in">
+        <div class="cred-card-header">
+          <div class="icon-container-md ic-trt" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="tribunal-badge">TRT3</span>
+              <span class="grau-badge">1º Grau</span>
+            </div>
+          </div>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+          <span>Dr. Pedro Oliveira</span>
+        </div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="4"/><path d="M12 9h6M16 7v4" stroke-linecap="round"/></svg>
+          <span class="login-mono">pedro.oliveira.adv</span>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-footer">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span class="status-dot success" aria-hidden="true"></span>
+            <span style="font-size:12px;color:var(--success);font-weight:500;">Ativa</span>
+            <span style="font-size:11px;color:var(--muted-foreground);opacity:0.55;margin-left:4px;">Última: 12/04</span>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="icon-btn" aria-label="Configurar credencial TRT3 Pedro Oliveira"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+            <button class="icon-btn destructive" aria-label="Excluir credencial TRT3 Pedro Oliveira"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 (inactive) -->
+      <div class="glass-kpi cred-card animate-in" style="opacity:0.72;">
+        <div class="cred-card-header">
+          <div class="icon-container-md ic-trt" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14M10 3c-2 2 0 7 0 7s2-5 0-7"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="tribunal-badge">TRT18</span>
+              <span class="grau-badge">1º Grau</span>
+            </div>
+          </div>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+          <span>Dr. Pedro Oliveira</span>
+        </div>
+        <div class="cred-card-row">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="4"/><path d="M12 9h6M16 7v4" stroke-linecap="round"/></svg>
+          <span class="login-mono">pedro.oliveira.adv</span>
+        </div>
+        <div class="cred-card-divider" aria-hidden="true"></div>
+        <div class="cred-card-footer">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span class="status-dot muted" aria-hidden="true"></span>
+            <span style="font-size:12px;color:var(--muted-foreground);opacity:0.6;font-weight:500;">Inativa</span>
+            <span style="font-size:11px;color:var(--muted-foreground);opacity:0.4;margin-left:4px;">02/04</span>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="icon-btn" aria-label="Configurar credencial TRT18 Pedro Oliveira"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 2.5a1.5 1.5 0 0 0-3 0v.5a5.5 5.5 0 0 0-2.1 1.2l-.4-.2a1.5 1.5 0 1 0-1.5 2.6l.4.2A5.5 5.5 0 0 0 2 8.5v.5a1.5 1.5 0 0 0 3 0v-.5a5.5 5.5 0 0 0 2.1-1.2l.4.2a1.5 1.5 0 1 0 1.5-2.6l-.4-.2A5.5 5.5 0 0 0 8.5 3v-.5z"/><circle cx="5" cy="5" r="1.5"/></svg></button>
+            <button class="icon-btn destructive" aria-label="Excluir credencial TRT18 Pedro Oliveira"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12l-1 10H5L4 6zm3-2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H7V4zM2 6h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       DIALOG PREVIEW (static demo below content)
+  ═══════════════════════════════════════════════════════ -->
+  <div style="margin-top: 40px;">
+    <p class="demo-section-label">Demonstracao — Dialog "Nova Credencial"</p>
+
+    <div class="dialog-demo-wrapper" role="presentation">
+      <!-- Overlay hint -->
+      <div style="display:flex;justify-content:center;">
+        <div class="glass-dialog" style="width:100%;max-width:520px;padding:0;overflow:hidden;" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+
+          <!-- Dialog Header -->
+          <div style="padding:20px 24px 16px;border-bottom:1px solid rgba(0,0,0,0.06);">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="icon-container-md" style="background:rgba(85,35,235,0.08);">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="var(--primary)" stroke-width="1.5" width="16" height="16" aria-hidden="true">
+                    <circle cx="7" cy="8" r="3"/><path d="M13 6h4M13 10h2M1 16c0-2.21 2.686-4 6-4 1.3 0 2.504.326 3.47.876"/><rect x="12" y="12" width="6" height="5" rx="1"/><circle cx="15" cy="14.5" r="0.7" fill="var(--primary)"/>
+                  </svg>
+                </div>
+                <div>
+                  <h2 id="dialog-title" class="text-card-title" style="font-size:1rem;">Nova Credencial</h2>
+                  <p style="font-size:11px;color:var(--muted-foreground);opacity:0.6;margin-top:1px;">Adicionar acesso a tribunal PJE/TRT</p>
+                </div>
+              </div>
+              <button class="icon-btn" style="width:32px;height:32px;border-radius:8px;" aria-label="Fechar dialog">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 5l10 10M15 5L5 15"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dialog Body -->
+          <div style="padding:20px 24px;">
+
+            <!-- Section: Advogado -->
+            <div class="dialog-section">
+              <div class="form-section-label">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="3"/><path d="M2 17c0-3.31 2.686-6 6-6s6 2.69 6 6"/></svg>
+                Advogado
+              </div>
+              <div class="form-field" style="margin-bottom:0;">
+                <label class="form-label" for="advogado-select">Selecionar Advogado</label>
+                <div style="position:relative;">
+                  <select class="form-select" id="advogado-select" aria-required="true">
+                    <option value="" disabled selected>Escolha um advogado...</option>
+                    <option>Dr. Marcos Silva (OAB/RJ 123456)</option>
+                    <option>Dra. Ana Costa (OAB/SP 789012)</option>
+                    <option>Dr. Pedro Oliveira (OAB/MG 345678)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section: Tribunal -->
+            <div class="dialog-section">
+              <div class="form-section-label">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3z"/><path d="M3 10h14"/></svg>
+                Tribunal
+              </div>
+              <div class="form-grid-2">
+                <div class="form-field" style="margin-bottom:0;">
+                  <label class="form-label" for="tribunal-select">Tribunal</label>
+                  <select class="form-select" id="tribunal-select" aria-required="true">
+                    <option value="" disabled selected>Selecione...</option>
+                    <optgroup label="Regionais">
+                      <option>TRT1 — RJ</option>
+                      <option>TRT2 — SP</option>
+                      <option>TRT3 — MG</option>
+                      <option>TRT4 — RS</option>
+                      <option>TRT15 — Campinas</option>
+                      <option>TRT18 — GO</option>
+                    </optgroup>
+                    <optgroup label="Superior">
+                      <option>TST</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="form-field" style="margin-bottom:0;">
+                  <label class="form-label" for="grau-select">Grau</label>
+                  <select class="form-select" id="grau-select" aria-required="true">
+                    <option value="" disabled selected>Selecione...</option>
+                    <option>1º Grau</option>
+                    <option>2º Grau</option>
+                    <option>Tribunal Superior</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section: Credenciais -->
+            <div class="dialog-section" style="margin-bottom:0;">
+              <div class="form-section-label">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="4"/><path d="M12 9h6M16 7v4" stroke-linecap="round"/></svg>
+                Credenciais de Acesso
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="login-input">Login</label>
+                <input class="form-input" type="text" id="login-input" placeholder="nome.sobrenome.adv" aria-required="true" aria-describedby="login-hint" />
+                <p class="form-hint" id="login-hint">Utilize o formato: nome.sobrenome.adv</p>
+              </div>
+              <div class="form-field" style="margin-bottom:0;">
+                <label class="form-label" for="senha-input">Senha</label>
+                <div class="form-input-password">
+                  <input class="form-input" type="password" id="senha-input" placeholder="••••••••••" aria-required="true" />
+                  <button type="button" class="eye-btn" aria-label="Mostrar ou ocultar senha">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z"/><circle cx="10" cy="10" r="2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dialog Footer -->
+          <div style="padding:14px 24px 20px;display:flex;align-items:center;justify-content:flex-end;gap:8px;border-top:1px solid rgba(0,0,0,0.06);">
+            <button class="btn btn-outline" type="button" onclick="closeDialog()" aria-label="Cancelar criação de credencial">Cancelar</button>
+            <button class="btn btn-primary" type="submit" aria-label="Salvar nova credencial">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 1 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z"/></svg>
+              Salvar Credencial
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════
+     THEME TOGGLE
+═══════════════════════════════════════════════════════ -->
+<button
+  class="theme-toggle"
+  id="theme-toggle"
+  onclick="toggleTheme()"
+  aria-label="Alternar tema claro/escuro"
+  title="Alternar tema"
+>
+  <span id="theme-icon">🌙</span>
+</button>
+
+<!-- ══════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════ -->
+<script>
+  // ── Theme ──
+  const root = document.documentElement;
+  const themeIcon = document.getElementById('theme-icon');
+
+  function toggleTheme() {
+    root.classList.toggle('dark');
+    themeIcon.textContent = root.classList.contains('dark') ? '☀️' : '🌙';
+  }
+
+  // ── View Toggle ──
+  const viewTabela = document.getElementById('view-tabela');
+  const viewCards  = document.getElementById('view-cards');
+  const btnTabela  = document.getElementById('btn-tabela');
+  const btnCards   = document.getElementById('btn-cards');
+
+  function showTabela() {
+    viewTabela.style.display = '';
+    viewCards.style.display  = 'none';
+    btnTabela.classList.add('active');
+    btnTabela.setAttribute('aria-pressed', 'true');
+    btnCards.classList.remove('active');
+    btnCards.setAttribute('aria-pressed', 'false');
+  }
+
+  function showCards() {
+    viewTabela.style.display = 'none';
+    viewCards.style.display  = '';
+    btnCards.classList.add('active');
+    btnCards.setAttribute('aria-pressed', 'true');
+    btnTabela.classList.remove('active');
+    btnTabela.setAttribute('aria-pressed', 'false');
+  }
+
+  // ── Bulk Selection ──
+  function updateBulk() {
+    const boxes = document.querySelectorAll('.row-cb');
+    const checked = [...boxes].filter(b => b.checked).length;
+    const bar = document.getElementById('bulk-bar');
+    const cnt = document.getElementById('bulk-count');
+
+    if (checked > 0) {
+      bar.classList.remove('hidden');
+      cnt.textContent = checked + ' selecionada' + (checked > 1 ? 's' : '');
+    } else {
+      bar.classList.add('hidden');
+    }
+  }
+
+  function toggleAll(master) {
+    document.querySelectorAll('.row-cb').forEach(cb => {
+      cb.checked = master.checked;
+    });
+    updateBulk();
+  }
+
+  function bulkAction(action) {
+    const labels = { ativar: 'ativar', desativar: 'desativar', excluir: 'excluir' };
+    alert('Acao: ' + labels[action] + ' — (demo apenas)');
+  }
+
+  // ── Dialog ──
+  function openDialog() {
+    // In POC we just scroll to the dialog demo
+    document.querySelector('.dialog-demo-wrapper').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function closeDialog() {
+    document.querySelector('.dialog-demo-wrapper').style.display = 'none';
+  }
+
+  // ── Status toggle interaction ──
+  document.querySelectorAll('.status-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const track = toggle.querySelector('.status-toggle-track');
+      const label = toggle.querySelector('span');
+
+      if (track.classList.contains('on')) {
+        track.classList.remove('on');
+        track.classList.add('off');
+        label.textContent = 'Inativa';
+        label.style.color = 'var(--muted-foreground)';
+        label.style.opacity = '0.6';
+      } else {
+        track.classList.remove('off');
+        track.classList.add('on');
+        label.textContent = 'Ativa';
+        label.style.color = 'var(--success)';
+        label.style.opacity = '1';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

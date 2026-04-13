@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Captura › Credenciais › Advogados — ZattarOS POC</title>
+  <link rel="stylesheet" href="00-shared-styles.css" />
+  <style>
+    /* =========================================================
+       PAGE-SPECIFIC STYLES — Advogados
+       ========================================================= */
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted-foreground);
+      margin-bottom: 20px;
+    }
+    .breadcrumb a {
+      color: var(--muted-foreground);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+    .breadcrumb a:hover { opacity: 1; }
+    .breadcrumb span.current {
+      color: var(--foreground);
+      font-weight: 500;
+      opacity: 0.9;
+    }
+    .breadcrumb svg {
+      width: 12px;
+      height: 12px;
+      opacity: 0.35;
+      flex-shrink: 0;
+    }
+
+    /* KPI strip — 3 columns for this page */
+    .kpi-strip-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    /* Lawyer card */
+    .lawyer-card {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .lawyer-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      transform: translateY(-1px);
+    }
+
+    .lawyer-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: color-mix(in oklch, var(--primary) 12%, transparent);
+      color: var(--primary);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .lawyer-name-block { flex: 1; min-width: 0; }
+    .lawyer-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.833rem;
+      font-weight: 600;
+      color: var(--foreground);
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lawyer-oab {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      opacity: 0.65;
+      margin-top: 1px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-divider {
+      height: 1px;
+      background: rgba(0,0,0,0.05);
+      margin: 12px 0;
+    }
+    .dark .card-divider {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .lawyer-contact-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted-foreground);
+      margin-bottom: 6px;
+    }
+    .lawyer-contact-row:last-of-type { margin-bottom: 0; }
+    .lawyer-contact-row svg {
+      width: 13px;
+      height: 13px;
+      opacity: 0.45;
+      flex-shrink: 0;
+    }
+    .lawyer-contact-row span {
+      opacity: 0.75;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .credential-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .credential-row svg {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+    }
+    .credential-count-active {
+      color: var(--success);
+      font-weight: 500;
+    }
+    .credential-count-inactive {
+      color: var(--warning);
+      font-weight: 500;
+    }
+    .credential-separator {
+      color: var(--muted-foreground);
+      opacity: 0.35;
+      font-size: 10px;
+    }
+
+    .lawyer-card-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+    }
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      color: var(--primary);
+      background: color-mix(in oklch, var(--primary) 6%, transparent);
+      border: 1px solid color-mix(in oklch, var(--primary) 14%, transparent);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-link:hover {
+      background: color-mix(in oklch, var(--primary) 10%, transparent);
+    }
+    .btn-link svg { width: 12px; height: 12px; }
+    .btn-icon-sm {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1px solid rgba(0,0,0,0.07);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-icon-sm:hover {
+      background: rgba(0,0,0,0.04);
+      opacity: 1;
+    }
+    .btn-icon-sm svg { width: 13px; height: 13px; }
+    .btn-footer-spacer { flex: 1; }
+
+    /* UF chip select */
+    .uf-select {
+      appearance: none;
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.07);
+      border-radius: 8px;
+      padding: 5px 28px 5px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      outline: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      transition: all 0.2s;
+    }
+    .uf-select:focus {
+      border-color: color-mix(in oklch, var(--primary) 40%, transparent);
+    }
+    .dark .uf-select {
+      background-color: transparent;
+      color: var(--muted-foreground);
+    }
+
+    /* Dialog overlay + modal */
+    .dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .dialog-modal {
+      width: 100%;
+      max-width: 480px;
+      padding: 28px;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .dialog-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .dialog-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+    .dialog-subtitle {
+      font-size: 12px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+      margin-top: 2px;
+    }
+    .dialog-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .dialog-close:hover {
+      background: rgba(0,0,0,0.05);
+      opacity: 1;
+    }
+    .dialog-close svg { width: 16px; height: 16px; }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .form-grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted-foreground);
+      opacity: 0.7;
+    }
+    .form-input {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.02);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--foreground);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-input:focus {
+      border-color: color-mix(in oklch, var(--primary) 50%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 8%, transparent);
+    }
+    .form-select {
+      appearance: none;
+      padding: 8px 32px 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.02);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--foreground);
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    .form-select:focus {
+      border-color: color-mix(in oklch, var(--primary) 50%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 8%, transparent);
+    }
+    .dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    .dark .dialog-footer {
+      border-top-color: rgba(255,255,255,0.05);
+    }
+
+    /* Insight banner above grid */
+    .page-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .page-banner.warning {
+      background: color-mix(in oklch, var(--warning) 6%, transparent);
+      border: 1px solid color-mix(in oklch, var(--warning) 16%, transparent);
+      color: var(--warning);
+    }
+    .page-banner svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .page-banner strong { font-weight: 700; }
+  </style>
+</head>
+<body class="animate-in">
+
+  <!-- ===== SIDEBAR MOCK ===== -->
+  <nav class="sidebar-mock" aria-label="Navegação principal">
+    <div class="logo" aria-hidden="true"></div>
+
+    <!-- Home -->
+    <button class="nav-dot" aria-label="Dashboard" data-tooltip="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </button>
+
+    <!-- Processos -->
+    <button class="nav-dot" aria-label="Processos" data-tooltip="Processos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>
+      </svg>
+    </button>
+
+    <!-- Captura (active) -->
+    <button class="nav-dot active" aria-label="Captura" data-tooltip="Captura" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+
+    <!-- Agenda -->
+    <button class="nav-dot" aria-label="Agenda" data-tooltip="Agenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    </button>
+
+    <!-- Tarefas -->
+    <button class="nav-dot" aria-label="Tarefas" data-tooltip="Tarefas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </button>
+
+    <!-- Settings (bottom) -->
+    <button class="nav-dot" style="margin-top:auto;" aria-label="Configurações" data-tooltip="Configurações">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content" style="padding: 28px 24px; min-height: 100vh;">
+    <div class="page-container" style="padding: 0;">
+
+      <!-- BREADCRUMB -->
+      <nav class="breadcrumb" aria-label="Caminho de navegação">
+        <a href="#">Captura</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+        <a href="#">Credenciais</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+        <span class="current" aria-current="page">Advogados</span>
+      </nav>
+
+      <div class="space-y-5">
+
+        <!-- PAGE HEADER -->
+        <header class="page-header">
+          <div>
+            <h1 class="text-page-title">Advogados</h1>
+            <p class="page-subtitle">Gestão de advogados com acesso aos sistemas judiciais</p>
+          </div>
+          <button class="btn btn-primary" onclick="openDialog()" aria-haspopup="dialog">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Novo Advogado
+          </button>
+        </header>
+
+        <!-- KPI STRIP -->
+        <div class="kpi-strip-3" role="region" aria-label="Resumo de advogados">
+
+          <!-- Total -->
+          <div class="glass-kpi kpi-card">
+            <div class="kpi-icon" style="background: color-mix(in oklch, var(--primary) 8%, transparent);" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="kpi-content">
+              <div class="kpi-label">Total Advogados</div>
+              <div class="kpi-value" style="color: var(--foreground);">12</div>
+            </div>
+          </div>
+
+          <!-- Com credenciais -->
+          <div class="glass-kpi kpi-card">
+            <div class="kpi-icon" style="background: color-mix(in oklch, var(--success) 8%, transparent);" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--success);">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                <circle cx="12" cy="16" r="1" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="kpi-content">
+              <div class="kpi-label">Com Credenciais</div>
+              <div class="kpi-value" style="color: var(--success);">10</div>
+            </div>
+          </div>
+
+          <!-- Sem credenciais -->
+          <div class="glass-kpi kpi-card">
+            <div class="kpi-icon" style="background: color-mix(in oklch, var(--warning) 8%, transparent);" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--warning);">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div class="kpi-content">
+              <div class="kpi-label">Sem Credenciais</div>
+              <div class="kpi-value" style="color: var(--warning);">2</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar" role="search" aria-label="Filtros de advogados">
+          <!-- UF OAB filter -->
+          <div style="display:flex; align-items:center; gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--muted-foreground); opacity:.5;" aria-hidden="true">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            <label for="filter-uf" style="font-size:11px; font-weight:600; color:var(--muted-foreground); opacity:.7; text-transform:uppercase; letter-spacing:.1em;">UF OAB</label>
+            <select id="filter-uf" class="uf-select" aria-label="Filtrar por UF da OAB">
+              <option value="">Todas as UFs</option>
+              <option value="DF">DF</option>
+              <option value="MG">MG</option>
+              <option value="BA">BA</option>
+              <option value="PE">PE</option>
+              <option value="PR">PR</option>
+              <option value="RJ" selected>RJ</option>
+              <option value="RS">RS</option>
+              <option value="SP">SP</option>
+            </select>
+          </div>
+
+          <!-- Search -->
+          <div class="filter-bar-right">
+            <div class="search-input">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="search" placeholder="Buscar advogado..." aria-label="Buscar advogado por nome ou OAB" />
+            </div>
+          </div>
+        </div>
+
+        <!-- BANNER: advogados sem credencial -->
+        <div class="page-banner warning" role="alert" aria-live="polite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span><strong>2 advogados</strong> ainda não possuem credenciais cadastradas. Acesse os cards abaixo para configurar o acesso aos tribunais.</span>
+        </div>
+
+        <!-- CARD GRID -->
+        <section class="card-grid" aria-label="Lista de advogados">
+
+          <!-- Card 1 — Dr. Marcos Silva -->
+          <article class="glass-widget lawyer-card" aria-label="Advogado Dr. Marcos Silva">
+            <div class="lawyer-card-header">
+              <div class="avatar-circle" aria-hidden="true">MS</div>
+              <div class="lawyer-name-block">
+                <div class="lawyer-name">Dr. Marcos Silva</div>
+                <div class="lawyer-oab">OAB/RJ 123.456</div>
+              </div>
+              <span class="badge badge-success" aria-label="Status: ativo">Ativo</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>marcos@escritorio.adv.br</span>
+            </div>
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.28 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.66 5.66l1.07-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.28 16l.64.92z"/>
+              </svg>
+              <span>(21) 99999-1234</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="credential-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--success);" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style="font-size:12px; color: var(--muted-foreground);">
+                Credenciais:
+                <span class="credential-count-active" aria-label="5 ativas">5 ativas</span>
+                <span class="credential-separator" aria-hidden="true"> / </span>
+                <span class="credential-count-inactive" aria-label="1 inativa">1 inativa</span>
+              </span>
+            </div>
+
+            <div class="lawyer-card-footer">
+              <a href="#" class="btn-link" aria-label="Ver credenciais de Dr. Marcos Silva">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                Ver Credenciais
+              </a>
+              <div class="btn-footer-spacer"></div>
+              <button class="btn-icon-sm" aria-label="Editar Dr. Marcos Silva" title="Editar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon-sm" aria-label="Mais opções para Dr. Marcos Silva" title="Mais opções">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- Card 2 — Dra. Ana Beatriz Costa -->
+          <article class="glass-widget lawyer-card" aria-label="Advogada Dra. Ana Beatriz Costa">
+            <div class="lawyer-card-header">
+              <div class="avatar-circle" aria-hidden="true" style="background: color-mix(in oklch, var(--info) 10%, transparent); color: var(--info);">AB</div>
+              <div class="lawyer-name-block">
+                <div class="lawyer-name">Dra. Ana Beatriz Costa</div>
+                <div class="lawyer-oab">OAB/SP 245.789</div>
+              </div>
+              <span class="badge badge-success" aria-label="Status: ativo">Ativo</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>ana.costa@escritorio.adv.br</span>
+            </div>
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.28 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.66 5.66l1.07-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.28 16l.64.92z"/>
+              </svg>
+              <span>(11) 98877-5566</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="credential-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--success);" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style="font-size:12px; color: var(--muted-foreground);">
+                Credenciais:
+                <span class="credential-count-active" aria-label="8 ativas">8 ativas</span>
+                <span class="credential-separator" aria-hidden="true"> / </span>
+                <span style="color: var(--muted-foreground); opacity:.55;">0 inativas</span>
+              </span>
+            </div>
+
+            <div class="lawyer-card-footer">
+              <a href="#" class="btn-link" aria-label="Ver credenciais de Dra. Ana Beatriz Costa">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                Ver Credenciais
+              </a>
+              <div class="btn-footer-spacer"></div>
+              <button class="btn-icon-sm" aria-label="Editar Dra. Ana Beatriz Costa" title="Editar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon-sm" aria-label="Mais opções" title="Mais opções">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- Card 3 — Dr. Felipe Mendonça -->
+          <article class="glass-widget lawyer-card" aria-label="Advogado Dr. Felipe Mendonça">
+            <div class="lawyer-card-header">
+              <div class="avatar-circle" aria-hidden="true" style="background: color-mix(in oklch, var(--highlight) 10%, transparent); color: var(--highlight);">FM</div>
+              <div class="lawyer-name-block">
+                <div class="lawyer-name">Dr. Felipe Mendonça</div>
+                <div class="lawyer-oab">OAB/MG 98.321</div>
+              </div>
+              <span class="badge badge-success" aria-label="Status: ativo">Ativo</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>felipe.mendonca@juridico.com.br</span>
+            </div>
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.28 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.66 5.66l1.07-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.28 16l.64.92z"/>
+              </svg>
+              <span>(31) 97766-4433</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="credential-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--success);" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style="font-size:12px; color: var(--muted-foreground);">
+                Credenciais:
+                <span class="credential-count-active" aria-label="3 ativas">3 ativas</span>
+                <span class="credential-separator" aria-hidden="true"> / </span>
+                <span class="credential-count-inactive" aria-label="2 inativas">2 inativas</span>
+              </span>
+            </div>
+
+            <div class="lawyer-card-footer">
+              <a href="#" class="btn-link" aria-label="Ver credenciais de Dr. Felipe Mendonça">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                Ver Credenciais
+              </a>
+              <div class="btn-footer-spacer"></div>
+              <button class="btn-icon-sm" aria-label="Editar Dr. Felipe Mendonça" title="Editar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon-sm" aria-label="Mais opções" title="Mais opções">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- Card 4 — Dra. Renata Oliveira (sem credenciais) -->
+          <article class="glass-widget lawyer-card" aria-label="Advogada Dra. Renata Oliveira — sem credenciais">
+            <div class="lawyer-card-header">
+              <div class="avatar-circle" aria-hidden="true" style="background: color-mix(in oklch, var(--warning) 10%, transparent); color: var(--warning);">RO</div>
+              <div class="lawyer-name-block">
+                <div class="lawyer-name">Dra. Renata Oliveira</div>
+                <div class="lawyer-oab">OAB/RS 67.890</div>
+              </div>
+              <span class="badge badge-warning" aria-label="Status: sem credenciais">Pendente</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>renata.oliveira@advogada.com</span>
+            </div>
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.28 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.66 5.66l1.07-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.28 16l.64.92z"/>
+              </svg>
+              <span>(51) 99988-7766</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="credential-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--warning);" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                <line x1="2" y1="2" x2="22" y2="22"/>
+              </svg>
+              <span style="font-size:12px; color: var(--warning); font-weight:500;">Nenhuma credencial cadastrada</span>
+            </div>
+
+            <div class="lawyer-card-footer">
+              <a href="#" class="btn-link" style="background: color-mix(in oklch, var(--warning) 6%, transparent); color: var(--warning); border-color: color-mix(in oklch, var(--warning) 18%, transparent);" aria-label="Adicionar credenciais para Dra. Renata Oliveira">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Adicionar Credenciais
+              </a>
+              <div class="btn-footer-spacer"></div>
+              <button class="btn-icon-sm" aria-label="Editar Dra. Renata Oliveira" title="Editar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon-sm" aria-label="Mais opções" title="Mais opções">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- Card 5 — Dr. Carlos Drummond -->
+          <article class="glass-widget lawyer-card" aria-label="Advogado Dr. Carlos Drummond">
+            <div class="lawyer-card-header">
+              <div class="avatar-circle" aria-hidden="true" style="background: color-mix(in oklch, var(--success) 10%, transparent); color: var(--success);">CD</div>
+              <div class="lawyer-name-block">
+                <div class="lawyer-name">Dr. Carlos Drummond</div>
+                <div class="lawyer-oab">OAB/BA 55.102</div>
+              </div>
+              <span class="badge badge-success" aria-label="Status: ativo">Ativo</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>c.drummond@drummond.adv.br</span>
+            </div>
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.28 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.66 5.66l1.07-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.28 16l.64.92z"/>
+              </svg>
+              <span>(71) 98833-2211</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="credential-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--success);" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style="font-size:12px; color: var(--muted-foreground);">
+                Credenciais:
+                <span class="credential-count-active" aria-label="6 ativas">6 ativas</span>
+                <span class="credential-separator" aria-hidden="true"> / </span>
+                <span style="color: var(--muted-foreground); opacity:.55;">0 inativas</span>
+              </span>
+            </div>
+
+            <div class="lawyer-card-footer">
+              <a href="#" class="btn-link" aria-label="Ver credenciais de Dr. Carlos Drummond">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                Ver Credenciais
+              </a>
+              <div class="btn-footer-spacer"></div>
+              <button class="btn-icon-sm" aria-label="Editar Dr. Carlos Drummond" title="Editar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon-sm" aria-label="Mais opções" title="Mais opções">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- Card 6 — Dra. Patrícia Nunes (sem credenciais) -->
+          <article class="glass-widget lawyer-card" aria-label="Advogada Dra. Patrícia Nunes — sem credenciais">
+            <div class="lawyer-card-header">
+              <div class="avatar-circle" aria-hidden="true" style="background: color-mix(in oklch, var(--destructive) 10%, transparent); color: var(--destructive);">PN</div>
+              <div class="lawyer-name-block">
+                <div class="lawyer-name">Dra. Patrícia Nunes</div>
+                <div class="lawyer-oab">OAB/PE 41.673</div>
+              </div>
+              <span class="badge badge-warning" aria-label="Status: sem credenciais">Pendente</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>patricia.nunes@advpe.com.br</span>
+            </div>
+            <div class="lawyer-contact-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.28 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.66 5.66l1.07-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.28 16l.64.92z"/>
+              </svg>
+              <span>(81) 97755-3300</span>
+            </div>
+
+            <div class="card-divider" role="separator"></div>
+
+            <div class="credential-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--warning);" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                <line x1="2" y1="2" x2="22" y2="22"/>
+              </svg>
+              <span style="font-size:12px; color: var(--warning); font-weight:500;">Nenhuma credencial cadastrada</span>
+            </div>
+
+            <div class="lawyer-card-footer">
+              <a href="#" class="btn-link" style="background: color-mix(in oklch, var(--warning) 6%, transparent); color: var(--warning); border-color: color-mix(in oklch, var(--warning) 18%, transparent);" aria-label="Adicionar credenciais para Dra. Patrícia Nunes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Adicionar Credenciais
+              </a>
+              <div class="btn-footer-spacer"></div>
+              <button class="btn-icon-sm" aria-label="Editar Dra. Patrícia Nunes" title="Editar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon-sm" aria-label="Mais opções" title="Mais opções">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </article>
+
+        </section>
+        <!-- /CARD GRID -->
+
+      </div>
+      <!-- /space-y-5 -->
+
+    </div>
+    <!-- /page-container -->
+  </main>
+
+  <!-- ===== DIALOG: Novo Advogado ===== -->
+  <div
+    class="dialog-overlay"
+    id="dialog-novo-advogado"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="dialog-title"
+    style="display: none;"
+    onclick="handleOverlayClick(event)"
+  >
+    <div class="glass-dialog dialog-modal" onclick="event.stopPropagation()">
+
+      <div class="dialog-header">
+        <div>
+          <h2 class="dialog-title" id="dialog-title">Novo Advogado</h2>
+          <p class="dialog-subtitle">Cadastre um advogado para gerenciar suas credenciais judiciais</p>
+        </div>
+        <button class="dialog-close" onclick="closeDialog()" aria-label="Fechar dialog">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <form onsubmit="return false;" novalidate>
+        <div class="form-grid space-y-3">
+
+          <!-- Nome Completo -->
+          <div class="form-field">
+            <label class="form-label" for="nome-completo">Nome Completo</label>
+            <input
+              id="nome-completo"
+              type="text"
+              class="form-input"
+              placeholder="Ex.: Dr. João da Silva"
+              autocomplete="name"
+              aria-required="true"
+            />
+          </div>
+
+          <!-- OAB + UF side by side -->
+          <div class="form-grid form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="oab-numero">Número OAB</label>
+              <input
+                id="oab-numero"
+                type="text"
+                class="form-input"
+                placeholder="Ex.: 123.456"
+                inputmode="numeric"
+                aria-required="true"
+              />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="oab-uf">UF OAB</label>
+              <select id="oab-uf" class="form-select" aria-required="true">
+                <option value="" disabled selected>Selecionar</option>
+                <option value="BA">BA — Bahia</option>
+                <option value="DF">DF — Distrito Federal</option>
+                <option value="MG">MG — Minas Gerais</option>
+                <option value="PE">PE — Pernambuco</option>
+                <option value="PR">PR — Paraná</option>
+                <option value="RJ">RJ — Rio de Janeiro</option>
+                <option value="RS">RS — Rio Grande do Sul</option>
+                <option value="SP">SP — São Paulo</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- E-mail -->
+          <div class="form-field">
+            <label class="form-label" for="email">E-mail</label>
+            <input
+              id="email"
+              type="email"
+              class="form-input"
+              placeholder="advogado@escritorio.com.br"
+              autocomplete="email"
+              aria-required="true"
+            />
+          </div>
+
+          <!-- Telefone -->
+          <div class="form-field">
+            <label class="form-label" for="telefone">Telefone</label>
+            <input
+              id="telefone"
+              type="tel"
+              class="form-input"
+              placeholder="(00) 00000-0000"
+              autocomplete="tel"
+            />
+          </div>
+
+        </div>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" onclick="closeDialog()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Salvar
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ===== THEME TOGGLE ===== -->
+  <button
+    class="theme-toggle"
+    onclick="toggleTheme()"
+    aria-label="Alternar tema claro/escuro"
+    title="Alternar tema"
+    id="theme-btn"
+  >🌙</button>
+
+  <script>
+    /* Theme toggle */
+    const html = document.documentElement;
+    const btn = document.getElementById('theme-btn');
+    let isDark = false;
+
+    function toggleTheme() {
+      isDark = !isDark;
+      html.classList.toggle('dark', isDark);
+      btn.textContent = isDark ? '☀️' : '🌙';
+      btn.setAttribute('aria-label', isDark ? 'Ativar tema claro' : 'Ativar tema escuro');
+    }
+
+    /* Dialog open/close */
+    const dialogEl = document.getElementById('dialog-novo-advogado');
+
+    function openDialog() {
+      dialogEl.style.display = 'flex';
+      dialogEl.style.animation = 'fadeIn 0.2s ease-out';
+      document.body.style.overflow = 'hidden';
+      // focus first input
+      setTimeout(() => {
+        const first = dialogEl.querySelector('input, select, button');
+        if (first) first.focus();
+      }, 50);
+    }
+
+    function closeDialog() {
+      dialogEl.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === dialogEl) closeDialog();
+    }
+
+    /* Escape key closes dialog */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dialogEl.style.display !== 'none') closeDialog();
+    });
+
+    /* Simulate opening dialog on load to show it in the POC */
+    /* Remove this line if you don't want it auto-open */
+    window.addEventListener('DOMContentLoaded', () => {
+      // Auto-open after a short delay so the page renders first
+      setTimeout(openDialog, 600);
+    });
+  </script>
+
+</body>
+</html>

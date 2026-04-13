@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Captura — Histórico · ZattarOS</title>
+  <link rel="stylesheet" href="00-shared-styles.css">
+  <style>
+    /* =========================================================
+       PAGE-SPECIFIC OVERRIDES
+       ========================================================= */
+
+    /* Dark tab-pill in dark mode */
+    .dark .tab-pill.active {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* Table container */
+    .table-wrapper {
+      padding: 0;
+      overflow: hidden;
+    }
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Checkbox */
+    .row-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1.5px solid rgba(0,0,0,0.18);
+      appearance: none;
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      background: transparent;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .row-check:checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .row-check:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 8px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+    .dark .row-check { border-color: rgba(255,255,255,0.2); }
+
+    /* Row action buttons */
+    .row-action {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-foreground);
+      opacity: 0.45;
+      transition: all 0.15s;
+    }
+    .row-action:hover { background: rgba(0,0,0,0.05); opacity: 1; }
+    .row-action.destructive:hover { background: rgba(200,60,60,0.08); color: var(--destructive); opacity: 1; }
+    .row-action svg { width: 14px; height: 14px; }
+
+    /* Table toolbar */
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      gap: 12px;
+    }
+    .dark .table-toolbar { border-color: rgba(255,255,255,0.05); }
+
+    .table-count {
+      font-size: 12px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+    }
+
+    /* Divider */
+    .v-divider {
+      width: 1px;
+      height: 16px;
+      background: rgba(0,0,0,0.08);
+    }
+    .dark .v-divider { background: rgba(255,255,255,0.07); }
+
+    /* Tribunal chip (small inline) */
+    .tribunal-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.03);
+      color: var(--muted-foreground);
+      letter-spacing: 0.04em;
+    }
+    .dark .tribunal-chip {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* Tipo badge (colored by type) */
+    .tipo-acervo    { background: rgba(85,35,235,0.07); color: var(--primary); border: 1px solid rgba(85,35,235,0.15); }
+    .tipo-audiencia { background: rgba(60,120,200,0.07); color: var(--info); border: 1px solid rgba(60,120,200,0.15); }
+    .tipo-combinada { background: rgba(200,150,50,0.07); color: var(--warning); border: 1px solid rgba(200,150,50,0.15); }
+    .tipo-timeline  { background: rgba(85,180,85,0.07); color: var(--success); border: 1px solid rgba(85,180,85,0.15); }
+    .tipo-pericia   { background: rgba(200,60,60,0.07); color: var(--destructive); border: 1px solid rgba(200,60,60,0.15); }
+
+    .tipo-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    /* Advogado avatar */
+    .adv-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), oklch(0.60 0.22 45));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* Duration pill */
+    .duration-pill {
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      color: var(--muted-foreground);
+      opacity: 0.65;
+    }
+
+    /* Spinner for "em andamento" */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 10px;
+      height: 10px;
+      border: 1.5px solid rgba(60,120,200,0.25);
+      border-top-color: var(--info);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* Pagination tweaks */
+    .pagination { padding: 12px 20px; }
+
+    /* Responsive 2-col KPI grid */
+    @media (max-width: 1023px) {
+      .kpi-strip { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+
+    /* Filter bar responsive */
+    @media (max-width: 640px) {
+      .filter-bar { flex-direction: column; align-items: flex-start; }
+      .filter-bar-right { margin-left: 0; }
+      .search-input input { width: 160px; }
+    }
+
+    /* Row highlight on hover */
+    .data-table tbody tr:hover { background: rgba(85,35,235,0.025); }
+    .dark .data-table tbody tr:hover { background: rgba(85,35,235,0.06); }
+
+    /* Page load animation stagger */
+    .animate-stagger > * {
+      opacity: 0;
+      transform: translateY(6px);
+      animation: fadeIn 0.32s ease-out forwards;
+    }
+    .animate-stagger > *:nth-child(1) { animation-delay: 0.04s; }
+    .animate-stagger > *:nth-child(2) { animation-delay: 0.09s; }
+    .animate-stagger > *:nth-child(3) { animation-delay: 0.14s; }
+    .animate-stagger > *:nth-child(4) { animation-delay: 0.19s; }
+    .animate-stagger > *:nth-child(5) { animation-delay: 0.24s; }
+    .animate-stagger > *:nth-child(6) { animation-delay: 0.29s; }
+    .animate-stagger > *:nth-child(7) { animation-delay: 0.34s; }
+    .animate-stagger > *:nth-child(8) { animation-delay: 0.39s; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== SIDEBAR MOCK ===================== -->
+  <nav class="sidebar-mock" aria-label="Navegação principal">
+    <div class="logo" aria-hidden="true"></div>
+
+    <!-- Processos -->
+    <button class="nav-dot" data-tooltip="Processos" aria-label="Processos">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <line x1="10" y1="9" x2="8" y2="9"/>
+      </svg>
+    </button>
+
+    <!-- Audiências -->
+    <button class="nav-dot" data-tooltip="Audiências" aria-label="Audiências">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    </button>
+
+    <!-- Tarefas -->
+    <button class="nav-dot" data-tooltip="Tarefas" aria-label="Tarefas">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7">
+        <polyline points="9 11 12 14 22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </button>
+
+    <!-- Chat -->
+    <button class="nav-dot" data-tooltip="Chat" aria-label="Chat">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
+
+    <!-- Captura — ACTIVE -->
+    <button class="nav-dot active" data-tooltip="Captura" aria-label="Captura" aria-current="page">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    </button>
+
+    <!-- Financeiro -->
+    <button class="nav-dot" data-tooltip="Financeiro" aria-label="Financeiro">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7">
+        <line x1="12" y1="1" x2="12" y2="23"/>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+    </button>
+
+    <!-- Configurações -->
+    <button class="nav-dot" data-tooltip="Configurações" aria-label="Configurações" style="margin-top: auto;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="main-content">
+    <div class="page-container animate-stagger" style="max-width: 1400px; margin: 0 auto; padding: 28px 24px; display: flex; flex-direction: column; gap: 20px;">
+
+      <!-- 1. PAGE HEADER -->
+      <header class="page-header">
+        <div>
+          <h1 class="text-page-title">Captura</h1>
+          <p class="page-subtitle">Automação de captura judicial — PJE/TRT</p>
+        </div>
+        <button class="btn btn-primary" aria-label="Iniciar nova captura">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Nova Captura
+        </button>
+      </header>
+
+      <!-- 2. TAB PILLS -->
+      <nav aria-label="Seções de Captura">
+        <div class="tab-pills" role="tablist">
+          <button class="tab-pill active" role="tab" aria-selected="true" aria-controls="tab-historico">
+            <!-- Clock icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Histórico
+          </button>
+          <button class="tab-pill" role="tab" aria-selected="false">
+            <!-- Calendar icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Agendamentos
+          </button>
+          <button class="tab-pill" role="tab" aria-selected="false">
+            <!-- Key icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+            </svg>
+            Credenciais
+          </button>
+          <button class="tab-pill" role="tab" aria-selected="false">
+            <!-- Building icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="9" width="18" height="13" rx="1"/>
+              <path d="M8 9V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/>
+              <line x1="12" y1="12" x2="12" y2="17"/>
+              <line x1="9" y1="14.5" x2="15" y2="14.5"/>
+            </svg>
+            Tribunais
+          </button>
+        </div>
+      </nav>
+
+      <!-- 3. KPI STRIP -->
+      <div class="kpi-strip" style="grid-template-columns: repeat(4, 1fr);" role="region" aria-label="Indicadores de captura">
+
+        <!-- KPI 1: Total Capturas -->
+        <div class="glass-kpi kpi-card">
+          <div class="kpi-icon" style="background: rgba(85,35,235,0.10);" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--primary)" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Total Capturas</div>
+            <div class="kpi-value">
+              1.247
+              <span class="kpi-delta" style="color: var(--success);">+32 hoje</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 2: Sucesso -->
+        <div class="glass-kpi kpi-card">
+          <div class="kpi-icon" style="background: rgba(85,180,85,0.10);" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--success)" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Sucesso</div>
+            <div class="kpi-value" style="color: var(--success);">94,2%</div>
+            <div class="proportion-bar">
+              <div class="proportion-bar-fill" style="width: 94.2%; background: var(--success);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 3: Em Andamento -->
+        <div class="glass-kpi kpi-card">
+          <div class="kpi-icon" style="background: rgba(60,120,200,0.10);" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--info)" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Em Andamento</div>
+            <div class="kpi-value" style="color: var(--info);">8</div>
+          </div>
+        </div>
+
+        <!-- KPI 4: Falhas (7d) -->
+        <div class="glass-kpi kpi-card">
+          <div class="kpi-icon" style="background: rgba(200,60,60,0.10);" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--destructive)" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Falhas (7d)</div>
+            <div class="kpi-value" style="color: var(--destructive);">23</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. INSIGHT BANNER -->
+      <div class="insight-banner warning" role="alert" aria-live="polite">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>
+          <strong>Atenção:</strong> 3 capturas falharam por timeout no TRT15 nas últimas 2h — verificar conectividade do sistema.
+        </span>
+        <button class="btn btn-ghost" style="margin-left: auto; padding: 2px 8px; font-size: 11px;" aria-label="Dispensar alerta">Dispensar</button>
+      </div>
+
+      <!-- 5. FILTER BAR -->
+      <div class="filter-bar" role="search" aria-label="Filtros do histórico">
+        <!-- Filter chips left -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <span class="text-meta-label" style="opacity: 0.5; margin-right: 2px;">Filtrar por</span>
+
+          <!-- Tipo dropdown trigger -->
+          <button class="filter-chip" aria-haspopup="listbox" aria-label="Filtrar por tipo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6h16M7 12h10M10 18h4"/>
+            </svg>
+            Tipo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+
+          <!-- Status dropdown trigger -->
+          <button class="filter-chip active" aria-haspopup="listbox" aria-label="Filtrar por status">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Status
+            <span class="count">Todos</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+
+          <!-- Tribunal dropdown trigger -->
+          <button class="filter-chip" aria-haspopup="listbox" aria-label="Filtrar por tribunal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="9" width="18" height="13" rx="1"/>
+              <path d="M8 9V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4"/>
+            </svg>
+            Tribunal
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+
+          <div class="v-divider"></div>
+
+          <!-- Active filter: Período -->
+          <button class="filter-chip active" aria-label="Período selecionado: últimos 7 dias">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Últimos 7 dias
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.5;">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Right: Search + View Toggle -->
+        <div class="filter-bar-right">
+          <div class="search-input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="search" placeholder="Buscar captura..." aria-label="Buscar no histórico de capturas">
+          </div>
+          <div class="view-toggle" role="group" aria-label="Modo de visualização">
+            <button class="active" aria-pressed="true" aria-label="Visualizar como tabela">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+              Tabela
+            </button>
+            <button aria-pressed="false" aria-label="Visualizar como cards">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+              Cards
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. DATA TABLE -->
+      <div class="glass-widget table-wrapper" id="tab-historico" role="region" aria-label="Histórico de capturas">
+
+        <!-- Toolbar -->
+        <div class="table-toolbar">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="table-count">1.247 capturas</span>
+            <div class="v-divider"></div>
+            <span class="badge badge-info" style="font-size: 10px;">
+              <span class="spinner" aria-hidden="true"></span>
+              8 em execução
+            </span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" aria-label="Exportar dados">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Exportar
+            </button>
+            <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 11px;" aria-label="Configurar colunas">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" y1="6" x2="20" y2="6"/>
+                <line x1="8" y1="12" x2="20" y2="12"/>
+                <line x1="12" y1="18" x2="20" y2="18"/>
+              </svg>
+              Colunas
+            </button>
+          </div>
+        </div>
+
+        <!-- Table scroll wrapper -->
+        <div class="table-scroll">
+          <table class="data-table" aria-label="Tabela de histórico de capturas">
+            <thead>
+              <tr>
+                <th style="width: 40px;">
+                  <input type="checkbox" class="row-check" aria-label="Selecionar todas as linhas">
+                </th>
+                <th>Tipo</th>
+                <th>Tribunal</th>
+                <th>Grau</th>
+                <th>Advogado</th>
+                <th>Status</th>
+                <th>Início</th>
+                <th>Duração</th>
+                <th style="width: 96px; text-align: right;">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Row 1 — Concluída -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 1"></td>
+                <td>
+                  <span class="tipo-badge tipo-acervo">Acervo</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TRT1</span>
+                </td>
+                <td class="text-label">1º Grau</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true">DS</div>
+                    <span class="text-label">Dr. Silva</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-success">
+                    <span class="status-dot success" aria-hidden="true"></span>
+                    Concluída
+                  </span>
+                </td>
+                <td class="duration-pill">13/04 08:14</td>
+                <td class="duration-pill">2m 34s</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2 — Em Andamento -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 2"></td>
+                <td>
+                  <span class="tipo-badge tipo-audiencia">Audiências</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TRT2</span>
+                </td>
+                <td class="text-label">2º Grau</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true" style="background: linear-gradient(135deg, var(--info), oklch(0.55 0.18 200));">DC</div>
+                    <span class="text-label">Dra. Costa</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-info">
+                    <span class="spinner" aria-hidden="true"></span>
+                    Em Andamento
+                  </span>
+                </td>
+                <td class="duration-pill">13/04 09:02</td>
+                <td class="duration-pill" style="color: var(--info); opacity: 1;">1m 12s…</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3 — Falha -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 3"></td>
+                <td>
+                  <span class="tipo-badge tipo-combinada">Combinada</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TRT15</span>
+                </td>
+                <td class="text-label">1º Grau</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true" style="background: linear-gradient(135deg, var(--destructive), oklch(0.60 0.20 10));">DO</div>
+                    <span class="text-label">Dr. Oliveira</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-destructive">
+                    <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Falha
+                  </span>
+                </td>
+                <td class="duration-pill">13/04 07:45</td>
+                <td class="duration-pill">—</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4 — Concluída -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 4"></td>
+                <td>
+                  <span class="tipo-badge tipo-timeline">Timeline</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TST</span>
+                </td>
+                <td class="text-label">TST</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true">DS</div>
+                    <span class="text-label">Dr. Silva</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-success">
+                    <span class="status-dot success" aria-hidden="true"></span>
+                    Concluída
+                  </span>
+                </td>
+                <td class="duration-pill">12/04 17:30</td>
+                <td class="duration-pill">4m 08s</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 5 — Pendente -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 5"></td>
+                <td>
+                  <span class="tipo-badge tipo-pericia">Perícias</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TRT5</span>
+                </td>
+                <td class="text-label">1º Grau</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true" style="background: linear-gradient(135deg, var(--info), oklch(0.55 0.18 200));">DC</div>
+                    <span class="text-label">Dra. Costa</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-muted">
+                    <span class="status-dot muted" aria-hidden="true"></span>
+                    Pendente
+                  </span>
+                </td>
+                <td class="duration-pill">12/04 14:00</td>
+                <td class="duration-pill">—</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 6 — Em Andamento -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 6"></td>
+                <td>
+                  <span class="tipo-badge tipo-acervo">Acervo</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TRT15</span>
+                </td>
+                <td class="text-label">2º Grau</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true" style="background: linear-gradient(135deg, var(--destructive), oklch(0.60 0.20 10));">DO</div>
+                    <span class="text-label">Dr. Oliveira</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-info">
+                    <span class="spinner" aria-hidden="true"></span>
+                    Em Andamento
+                  </span>
+                </td>
+                <td class="duration-pill">13/04 09:18</td>
+                <td class="duration-pill" style="color: var(--info); opacity: 1;">0m 48s…</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 7 — Falha -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 7"></td>
+                <td>
+                  <span class="tipo-badge tipo-audiencia">Audiências</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TRT1</span>
+                </td>
+                <td class="text-label">1º Grau</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true">DS</div>
+                    <span class="text-label">Dr. Silva</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-destructive">
+                    <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Falha
+                  </span>
+                </td>
+                <td class="duration-pill">12/04 22:10</td>
+                <td class="duration-pill">—</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 8 — Concluída -->
+              <tr>
+                <td><input type="checkbox" class="row-check" aria-label="Selecionar captura 8"></td>
+                <td>
+                  <span class="tipo-badge tipo-timeline">Timeline</span>
+                </td>
+                <td>
+                  <span class="tribunal-chip">TRT2</span>
+                </td>
+                <td class="text-label">2º Grau</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 7px;">
+                    <div class="adv-avatar" aria-hidden="true" style="background: linear-gradient(135deg, var(--info), oklch(0.55 0.18 200));">DC</div>
+                    <span class="text-label">Dra. Costa</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-success">
+                    <span class="status-dot success" aria-hidden="true"></span>
+                    Concluída
+                  </span>
+                </td>
+                <td class="duration-pill">12/04 11:55</td>
+                <td class="duration-pill">6m 22s</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; gap: 2px;">
+                    <button class="row-action" aria-label="Ver detalhes da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                    <button class="row-action" aria-label="Configurações da captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                      </svg>
+                    </button>
+                    <button class="row-action destructive" aria-label="Excluir captura">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span>Mostrando <strong>1–8</strong> de <strong>1.247</strong> resultados</span>
+          <div class="pagination-buttons" role="navigation" aria-label="Paginação">
+            <button class="pagination-btn" aria-label="Primeira página">«</button>
+            <button class="pagination-btn" aria-label="Página anterior">‹</button>
+            <button class="pagination-btn active" aria-label="Página 1, atual" aria-current="page">1</button>
+            <button class="pagination-btn" aria-label="Página 2">2</button>
+            <button class="pagination-btn" aria-label="Página 3">3</button>
+            <span style="padding: 4px 6px; font-size: 12px; color: var(--muted-foreground); opacity: 0.5;">…</span>
+            <button class="pagination-btn" aria-label="Página 156">156</button>
+            <button class="pagination-btn" aria-label="Próxima página">›</button>
+            <button class="pagination-btn" aria-label="Última página">»</button>
+          </div>
+        </div>
+
+      </div>
+      <!-- end table widget -->
+
+    </div>
+    <!-- end page container -->
+  </main>
+
+  <!-- ===================== THEME TOGGLE ===================== -->
+  <button
+    class="theme-toggle"
+    id="theme-toggle"
+    aria-label="Alternar tema claro/escuro"
+    title="Alternar tema"
+  >🌙</button>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script>
+    // Theme toggle
+    const btn = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    // Default to dark mode for Glass Briefing preview
+    html.classList.add('dark');
+    btn.textContent = '☀️';
+
+    btn.addEventListener('click', () => {
+      const isDark = html.classList.toggle('dark');
+      btn.textContent = isDark ? '☀️' : '🌙';
+    });
+
+    // Dismissible insight banner
+    const dismissBtns = document.querySelectorAll('.insight-banner .btn-ghost');
+    dismissBtns.forEach(b => {
+      b.addEventListener('click', () => {
+        const banner = b.closest('.insight-banner');
+        banner.style.transition = 'opacity 0.2s, max-height 0.3s, margin 0.3s, padding 0.3s';
+        banner.style.opacity = '0';
+        banner.style.maxHeight = '0';
+        banner.style.margin = '0';
+        banner.style.padding = '0';
+        banner.style.overflow = 'hidden';
+        banner.setAttribute('aria-hidden', 'true');
+      });
+    });
+
+    // Simulate live counter for "Em Andamento" KPI
+    let inProgress = 8;
+    const kpiInfo = document.querySelector('.kpi-value[style*="var(--info)"]');
+    setInterval(() => {
+      // Randomly fluctuate between 6-10
+      const delta = Math.random() > 0.5 ? 1 : -1;
+      inProgress = Math.max(6, Math.min(10, inProgress + delta));
+      if (kpiInfo) kpiInfo.textContent = inProgress;
+    }, 4200);
+
+    // Tab pill switching (visual only)
+    document.querySelectorAll('.tab-pill').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab-pill').forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+      });
+    });
+
+    // View toggle switching
+    document.querySelectorAll('.view-toggle button').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.view-toggle button').forEach(x => {
+          x.classList.remove('active');
+          x.setAttribute('aria-pressed', 'false');
+        });
+        b.classList.add('active');
+        b.setAttribute('aria-pressed', 'true');
+      });
+    });
+
+    // Row checkbox interactions
+    const headerCheck = document.querySelector('thead .row-check');
+    const rowChecks = document.querySelectorAll('tbody .row-check');
+    if (headerCheck) {
+      headerCheck.addEventListener('change', () => {
+        rowChecks.forEach(c => c.checked = headerCheck.checked);
+      });
+    }
+  </script>
+
+</body>
+</html>

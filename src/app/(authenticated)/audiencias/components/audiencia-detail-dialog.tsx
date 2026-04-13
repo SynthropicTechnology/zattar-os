@@ -19,11 +19,14 @@ import {
   MessageSquare,
   ShieldCheck,
   Landmark,
+  X,
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { IconContainer } from '@/components/ui/icon-container';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
@@ -31,16 +34,22 @@ import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { PrepScore } from './prep-score';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
-import { EditarAudienciaDialog } from './editar-audiencia-dialog';
 import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
+// EditarAudienciaDialog removido — edição agora é inline
 import {
   type Audiencia,
+  type EnderecoPresencial,
   GRAU_TRIBUNAL_LABELS,
   TRT_NOMES,
   isAudienciaCapturada,
   buildPjeUrl,
 } from '../domain';
-import { actionBuscarAudienciaPorId } from '../actions';
+import {
+  actionBuscarAudienciaPorId,
+  actionAtualizarUrlVirtual,
+  actionAtualizarEnderecoPresencial,
+  actionAtualizarObservacoes,
+} from '../actions';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 // =============================================================================
@@ -107,8 +116,22 @@ export function AudienciaDetailDialog({
   const [fetchedAudiencia, setFetchedAudiencia] = React.useState<Audiencia | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
   const [copiedUrl, setCopiedUrl] = React.useState(false);
+
+  // ── Inline editing states ──
+  const [editingUrl, setEditingUrl] = React.useState(false);
+  const [urlDraft, setUrlDraft] = React.useState('');
+  const [savingUrl, setSavingUrl] = React.useState(false);
+
+  const [editingEndereco, setEditingEndereco] = React.useState(false);
+  const [enderecoDraft, setEnderecoDraft] = React.useState<EnderecoPresencial>({
+    cep: '', logradouro: '', numero: '', complemento: '', bairro: '', cidade: '', uf: '',
+  });
+  const [savingEndereco, setSavingEndereco] = React.useState(false);
+
+  const [editingObs, setEditingObs] = React.useState(false);
+  const [obsDraft, setObsDraft] = React.useState('');
+  const [savingObs, setSavingObs] = React.useState(false);
 
   const { usuarios } = useUsuarios();
 
@@ -161,6 +184,60 @@ export function AudienciaDetailDialog({
       // silencioso
     }
   }, []);
+
+  // ── Inline save handlers ──
+  const handleStartEditUrl = React.useCallback(() => {
+    setUrlDraft(audiencia?.urlAudienciaVirtual || '');
+    setEditingUrl(true);
+  }, [audiencia]);
+
+  const handleSaveUrl = React.useCallback(async () => {
+    if (!audiencia) return;
+    setSavingUrl(true);
+    const result = await actionAtualizarUrlVirtual(audiencia.id, urlDraft || null);
+    if (result.success) {
+      setEditingUrl(false);
+      onOpenChange(false);
+    }
+    setSavingUrl(false);
+  }, [audiencia, urlDraft, onOpenChange]);
+
+  const handleStartEditEndereco = React.useCallback(() => {
+    const e = audiencia?.enderecoPresencial;
+    setEnderecoDraft({
+      cep: e?.cep || '', logradouro: e?.logradouro || '', numero: e?.numero || '',
+      complemento: e?.complemento || '', bairro: e?.bairro || '', cidade: e?.cidade || '', uf: e?.uf || '',
+    });
+    setEditingEndereco(true);
+  }, [audiencia]);
+
+  const handleSaveEndereco = React.useCallback(async () => {
+    if (!audiencia) return;
+    setSavingEndereco(true);
+    const hasData = enderecoDraft.logradouro && enderecoDraft.numero && enderecoDraft.cidade && enderecoDraft.uf;
+    const result = await actionAtualizarEnderecoPresencial(audiencia.id, hasData ? enderecoDraft : null);
+    if (result.success) {
+      setEditingEndereco(false);
+      onOpenChange(false);
+    }
+    setSavingEndereco(false);
+  }, [audiencia, enderecoDraft, onOpenChange]);
+
+  const handleStartEditObs = React.useCallback(() => {
+    setObsDraft(audiencia?.observacoes || '');
+    setEditingObs(true);
+  }, [audiencia]);
+
+  const handleSaveObs = React.useCallback(async () => {
+    if (!audiencia) return;
+    setSavingObs(true);
+    const result = await actionAtualizarObservacoes(audiencia.id, obsDraft || null);
+    if (result.success) {
+      setEditingObs(false);
+      onOpenChange(false);
+    }
+    setSavingObs(false);
+  }, [audiencia, obsDraft, onOpenChange]);
 
   const hasIndicadores = audiencia && (
     audiencia.segredoJustica ||
@@ -355,63 +432,119 @@ export function AudienciaDetailDialog({
                   </SectionCard>
                 </div>
 
-                {/* ── Local / Acesso ── */}
-                {(audiencia.urlAudienciaVirtual || audiencia.enderecoPresencial) && (
-                  <div>
-                    <SectionHeader icon={Building2} label="Local / Acesso" />
-                    <SectionCard>
-                      <div className="space-y-2.5">
-                        {(audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && audiencia.urlAudienciaVirtual && (
-                          <div className="flex items-center gap-2 min-w-0">
-                            <Video className="size-3.5 text-muted-foreground/40 shrink-0" />
-                            <a
-                              href={audiencia.urlAudienciaVirtual}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[13px] text-primary truncate hover:underline"
-                            >
-                              {audiencia.urlAudienciaVirtual}
-                            </a>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="size-7 shrink-0"
-                              onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}
-                            >
-                              {copiedUrl ? (
-                                <Check className="size-3.5 text-success" />
-                              ) : (
-                                <Copy className="size-3.5" />
-                              )}
-                            </Button>
+                {/* ── Local / Acesso (sempre visível) ── */}
+                <div>
+                  <SectionHeader icon={Building2} label="Local / Acesso" />
+                  <SectionCard>
+                    <div className="space-y-3">
+                      {/* URL Virtual — inline edit */}
+                      {(audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && (
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em]">Sala Virtual</span>
+                            {!editingUrl && (
+                              <button type="button" onClick={handleStartEditUrl} className="text-[10px] text-primary/60 hover:text-primary transition-colors cursor-pointer flex items-center gap-0.5">
+                                <Pencil className="size-2.5" />
+                                {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
+                              </button>
+                            )}
                           </div>
-                        )}
+                          {editingUrl ? (
+                            <div className="flex items-center gap-2">
+                              <Input
+                                type="url"
+                                placeholder="https://zoom.us/..."
+                                value={urlDraft}
+                                onChange={(e) => setUrlDraft(e.target.value)}
+                                className="h-8 text-xs flex-1"
+                                autoFocus
+                              />
+                              <Button size="icon" variant="ghost" className="size-7 shrink-0" onClick={handleSaveUrl} disabled={savingUrl}>
+                                {savingUrl ? <Loader2 className="size-3 animate-spin" /> : <Check className="size-3.5 text-success" />}
+                              </Button>
+                              <Button size="icon" variant="ghost" className="size-7 shrink-0" onClick={() => setEditingUrl(false)}>
+                                <X className="size-3.5 text-muted-foreground" />
+                              </Button>
+                            </div>
+                          ) : audiencia.urlAudienciaVirtual ? (
+                            <div className="flex items-center gap-2 min-w-0">
+                              <Video className="size-3.5 text-muted-foreground/40 shrink-0" />
+                              <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer" className="text-[13px] text-primary truncate hover:underline">
+                                {audiencia.urlAudienciaVirtual}
+                              </a>
+                              <Button variant="ghost" size="icon" className="size-7 shrink-0" onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}>
+                                {copiedUrl ? <Check className="size-3.5 text-success" /> : <Copy className="size-3.5" />}
+                              </Button>
+                            </div>
+                          ) : (
+                            <p className="text-[13px] text-muted-foreground/40 italic">Nenhum link cadastrado</p>
+                          )}
+                        </div>
+                      )}
 
-                        {(audiencia.modalidade === 'presencial' || audiencia.modalidade === 'hibrida') && audiencia.enderecoPresencial && (
-                          <div className="flex items-start gap-2">
-                            <MapPin className="size-3.5 text-muted-foreground/40 mt-0.5 shrink-0" />
-                            <p className="text-[13px] text-foreground/80 leading-relaxed">
-                              {audiencia.enderecoPresencial.logradouro}, {audiencia.enderecoPresencial.numero}
-                              {audiencia.enderecoPresencial.complemento && ` – ${audiencia.enderecoPresencial.complemento}`}
-                              <br />
-                              <span className="text-muted-foreground">
-                                {audiencia.enderecoPresencial.bairro}, {audiencia.enderecoPresencial.cidade} – {audiencia.enderecoPresencial.uf}
-                              </span>
-                            </p>
+                      {/* Endereço Presencial — inline edit */}
+                      {(audiencia.modalidade === 'presencial' || audiencia.modalidade === 'hibrida') && (
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em]">Endereço</span>
+                            {!editingEndereco && (
+                              <button type="button" onClick={handleStartEditEndereco} className="text-[10px] text-primary/60 hover:text-primary transition-colors cursor-pointer flex items-center gap-0.5">
+                                <Pencil className="size-2.5" />
+                                {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
+                              </button>
+                            )}
                           </div>
-                        )}
+                          {editingEndereco ? (
+                            <div className="space-y-2">
+                              <div className="grid grid-cols-[1fr_80px] gap-2">
+                                <Input placeholder="Logradouro" value={enderecoDraft.logradouro} onChange={(e) => setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))} className="h-8 text-xs" autoFocus />
+                                <Input placeholder="Nº" value={enderecoDraft.numero} onChange={(e) => setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))} className="h-8 text-xs" />
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
+                                <Input placeholder="Complemento" value={enderecoDraft.complemento || ''} onChange={(e) => setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))} className="h-8 text-xs" />
+                                <Input placeholder="Bairro" value={enderecoDraft.bairro} onChange={(e) => setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))} className="h-8 text-xs" />
+                              </div>
+                              <div className="grid grid-cols-[1fr_60px_100px] gap-2">
+                                <Input placeholder="Cidade" value={enderecoDraft.cidade} onChange={(e) => setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))} className="h-8 text-xs" />
+                                <Input placeholder="UF" maxLength={2} value={enderecoDraft.uf} onChange={(e) => setEnderecoDraft((d) => ({ ...d, uf: e.target.value.toUpperCase() }))} className="h-8 text-xs" />
+                                <Input placeholder="CEP" value={enderecoDraft.cep} onChange={(e) => setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))} className="h-8 text-xs" />
+                              </div>
+                              <div className="flex justify-end gap-1.5 mt-1">
+                                <Button size="sm" variant="ghost" onClick={() => setEditingEndereco(false)} className="h-7 text-xs">Cancelar</Button>
+                                <Button size="sm" onClick={handleSaveEndereco} disabled={savingEndereco} className="h-7 text-xs">
+                                  {savingEndereco ? <Loader2 className="size-3 animate-spin mr-1" /> : null}
+                                  Salvar
+                                </Button>
+                              </div>
+                            </div>
+                          ) : audiencia.enderecoPresencial ? (
+                            <div className="flex items-start gap-2">
+                              <MapPin className="size-3.5 text-muted-foreground/40 mt-0.5 shrink-0" />
+                              <p className="text-[13px] text-foreground/80 leading-relaxed">
+                                {audiencia.enderecoPresencial.logradouro}, {audiencia.enderecoPresencial.numero}
+                                {audiencia.enderecoPresencial.complemento && ` – ${audiencia.enderecoPresencial.complemento}`}
+                                <br />
+                                <span className="text-muted-foreground">
+                                  {audiencia.enderecoPresencial.bairro}, {audiencia.enderecoPresencial.cidade} – {audiencia.enderecoPresencial.uf}
+                                </span>
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-[13px] text-muted-foreground/40 italic">Nenhum endereço cadastrado</p>
+                          )}
+                        </div>
+                      )}
 
-                        {audiencia.presencaHibrida !== null && (
-                          <AudienciaIndicadorBadges
-                            audiencia={audiencia}
-                            show={['presenca_hibrida']}
-                            showPresencaDetail
-                          />
-                        )}
-                      </div>
-                    </SectionCard>
-                  </div>
-                )}
+                      {audiencia.presencaHibrida !== null && (
+                        <AudienciaIndicadorBadges
+                          audiencia={audiencia}
+                          show={['presenca_hibrida']}
+                          showPresencaDetail
+                        />
+                      )}
+                    </div>
+                  </SectionCard>
+                </div>
 
                 {/* ── Indicadores ── */}
                 {hasIndicadores && (
@@ -434,17 +567,48 @@ export function AudienciaDetailDialog({
                   </SectionCard>
                 </div>
 
-                {/* ── Observações ── */}
-                {audiencia.observacoes && (
-                  <div>
-                    <SectionHeader icon={MessageSquare} label="Observações" />
-                    <SectionCard>
+                {/* ── Observações (sempre visível, inline edit) ── */}
+                <div>
+                  <SectionHeader
+                    icon={MessageSquare}
+                    label="Observações"
+                    action={
+                      !editingObs && (
+                        <button type="button" onClick={handleStartEditObs} className="text-[10px] text-primary/60 hover:text-primary transition-colors cursor-pointer flex items-center gap-0.5">
+                          <Pencil className="size-2.5" />
+                          {audiencia.observacoes ? 'Editar' : 'Adicionar'}
+                        </button>
+                      )
+                    }
+                  />
+                  <SectionCard>
+                    {editingObs ? (
+                      <div className="space-y-2">
+                        <Textarea
+                          placeholder="Anotações sobre a audiência..."
+                          value={obsDraft}
+                          onChange={(e) => setObsDraft(e.target.value)}
+                          rows={3}
+                          className="text-[13px]"
+                          autoFocus
+                        />
+                        <div className="flex justify-end gap-1.5">
+                          <Button size="sm" variant="ghost" onClick={() => setEditingObs(false)} className="h-7 text-xs">Cancelar</Button>
+                          <Button size="sm" onClick={handleSaveObs} disabled={savingObs} className="h-7 text-xs">
+                            {savingObs ? <Loader2 className="size-3 animate-spin mr-1" /> : null}
+                            Salvar
+                          </Button>
+                        </div>
+                      </div>
+                    ) : audiencia.observacoes ? (
                       <p className="text-[13px] text-muted-foreground leading-relaxed whitespace-pre-wrap">
                         {audiencia.observacoes}
                       </p>
-                    </SectionCard>
-                  </div>
-                )}
+                    ) : (
+                      <p className="text-[13px] text-muted-foreground/40 italic">Nenhuma observação</p>
+                    )}
+                  </SectionCard>
+                </div>
 
                 {/* ── Histórico ── */}
                 <div>
@@ -456,34 +620,13 @@ export function AudienciaDetailDialog({
           </div>
 
           {/* ══ FOOTER (fixo) ══ */}
-          <div className="shrink-0 px-7 py-4 border-t border-border/20 flex items-center justify-between">
+          <div className="shrink-0 px-7 py-4 border-t border-border/20 flex items-center justify-end">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>
-            {audiencia && (
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setIsEditDialogOpen(true)}>
-                  <Pencil className="size-4" />
-                  Editar
-                </Button>
-              </div>
-            )}
           </div>
         </DialogContent>
       </Dialog>
-
-      {audiencia && (
-        <EditarAudienciaDialog
-          open={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-          onSuccess={() => {
-            setIsEditDialogOpen(false);
-            onOpenChange(false);
-          }}
-          audiencia={audiencia}
-        />
-      )}
-
     </>
   );
 }

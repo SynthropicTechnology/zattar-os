@@ -230,7 +230,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         isOngoing && 'ring-1 ring-success/30 border-success/25 bg-success/3',
       )}
     >
-      {/* Time range + Status indicators */}
+      {/* 1. Hora + Status */}
       <div className="flex items-center justify-between gap-1">
         <span className="text-xs tabular-nums font-semibold text-foreground/80">
           {fmtTime(audiencia.dataInicio)} – {fmtTime(audiencia.dataFim)}
@@ -247,68 +247,67 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         </div>
       </div>
 
-      {/* Type */}
-      <p className="text-xs font-medium text-foreground mt-1.5 break-words leading-snug">
-        {audiencia.tipoDescricao || 'Audiência'}
-      </p>
+      {/* 2. Tipo + Modalidade (mesma linha) */}
+      <div className="flex items-center gap-1.5 mt-1.5 min-w-0">
+        <p className="text-xs font-medium text-foreground break-words leading-snug truncate">
+          {audiencia.tipoDescricao || 'Audiência'}
+        </p>
+        <div className="flex items-center gap-1 shrink-0">
+          {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
+          <span className="text-[9px] text-muted-foreground/55">
+            {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
+          </span>
+        </div>
+        {audiencia.urlAudienciaVirtual && isVirtual && (
+          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70 shrink-0">Sala</span>
+        )}
+      </div>
 
-      {/* Parties (antes do número) */}
+      {/* 3. Partes */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
         <p className="text-[10px] text-muted-foreground/55 mt-1 break-words leading-snug">
           {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/35">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}
 
-      {/* TRT badge + Responsável à direita (antes do número) */}
-      <div className="flex items-center justify-between gap-1.5 mt-2">
-        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+      {/* 4. TRT badge + Número do processo (mesma linha, TRT na frente) */}
+      {audiencia.numeroProcesso && (
+        <div className="flex items-center gap-1.5 mt-1 min-w-0">
           {audiencia.trt && (
-            <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">{audiencia.trt}</span>
+            <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">{audiencia.trt}</span>
           )}
-          <div className="flex items-center gap-1">
-            {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
-            <span className="text-[9px] text-muted-foreground/55">
-              {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
-            </span>
-          </div>
-          {audiencia.urlAudienciaVirtual && isVirtual && (
-            <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70">Sala</span>
-          )}
+          <span className="text-[10px] text-muted-foreground/60 tabular-nums truncate">
+            {audiencia.numeroProcesso}
+          </span>
         </div>
-        {/* Responsável — inline popover à direita */}
-        <div className="shrink-0">
-          {usuarios ? (
-            <AudienciaResponsavelPopover
-              audienciaId={audiencia.id}
+      )}
+
+      {/* 9. Responsável — footer, alinhado à direita */}
+      <div className="flex justify-end mt-2">
+        {usuarios ? (
+          <AudienciaResponsavelPopover
+            audienciaId={audiencia.id}
+            responsavelId={audiencia.responsavelId}
+            usuarios={usuarios}
+            onSuccess={onResponsavelChange}
+            align="end"
+          >
+            <ResponsavelTriggerContent
               responsavelId={audiencia.responsavelId}
               usuarios={usuarios}
-              onSuccess={onResponsavelChange}
-              align="end"
-            >
-              <ResponsavelTriggerContent
-                responsavelId={audiencia.responsavelId}
-                usuarios={usuarios}
-                size="sm"
-              />
-            </AudienciaResponsavelPopover>
+              size="sm"
+            />
+          </AudienciaResponsavelPopover>
+        ) : (
+          audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
+            <span className="text-[9px] text-muted-foreground/55">
+              {responsavelNomes.get(audiencia.responsavelId)}
+            </span>
           ) : (
-            audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
-              <span className="text-[9px] text-muted-foreground/55">
-                {responsavelNomes.get(audiencia.responsavelId)}
-              </span>
-            ) : (
-              <span className="text-[9px] italic text-warning/60">Sem resp.</span>
-            )
-          )}
-        </div>
+            <span className="text-[9px] italic text-warning/60">Sem resp.</span>
+          )
+        )}
       </div>
-
-      {/* Process number (sem font-mono, sem break-all) */}
-      {audiencia.numeroProcesso && (
-        <p className="text-[10px] text-muted-foreground/60 tabular-nums mt-1.5 truncate">
-          {audiencia.numeroProcesso}
-        </p>
-      )}
     </button>
   );
 }

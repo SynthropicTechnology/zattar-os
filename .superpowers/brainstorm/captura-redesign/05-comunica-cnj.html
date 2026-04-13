@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Captura › Comunica CNJ — ZattarOS Glass Briefing POC</title>
+  <link rel="stylesheet" href="00-shared-styles.css" />
+  <style>
+    /* ====================================================
+       PAGE-SPECIFIC OVERRIDES & EXTENSIONS
+       ==================================================== */
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted-foreground);
+      margin-bottom: 20px;
+    }
+    .breadcrumb span { opacity: 0.55; }
+    .breadcrumb span.current {
+      color: var(--foreground);
+      font-weight: 500;
+      opacity: 1;
+    }
+    .breadcrumb svg {
+      width: 12px;
+      height: 12px;
+      opacity: 0.35;
+    }
+
+    /* Inner tab pills — smaller variant */
+    .tab-pills-sm {
+      display: flex;
+      gap: 2px;
+      padding: 2px;
+      background: rgba(0,0,0,0.04);
+      border-radius: 10px;
+      width: fit-content;
+    }
+    .tab-pill-sm {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab-pill-sm:hover { background: rgba(0,0,0,0.03); }
+    .tab-pill-sm.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .dark .tab-pill-sm.active {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* Tab section panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Search form grid */
+    .form-row {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .form-row-2 { grid-template-columns: 1fr 1fr; }
+    .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-row-1 { grid-template-columns: 1fr; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted-foreground);
+      opacity: 0.7;
+    }
+    .form-input,
+    .form-select {
+      padding: 7px 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.6);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--foreground);
+      outline: none;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .dark .form-input,
+    .dark .form-select {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 15%, transparent);
+    }
+    .form-input[type="date"] { cursor: pointer; }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 4px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      margin-top: 4px;
+    }
+
+    /* Widget padding helper */
+    .widget-padded { padding: 20px 24px; }
+
+    /* Table action icon buttons */
+    .action-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1px solid rgba(0,0,0,0.07);
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-foreground);
+      transition: all 0.2s;
+      opacity: 0.6;
+    }
+    .action-btn:hover {
+      background: rgba(85,35,235,0.06);
+      border-color: rgba(85,35,235,0.18);
+      color: var(--primary);
+      opacity: 1;
+    }
+    .action-btn svg { width: 13px; height: 13px; }
+
+    /* Process number mono style */
+    .proc-num {
+      font-size: 12px;
+      font-family: 'Geist Mono', 'Courier New', monospace;
+      color: var(--foreground);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+    .proc-num-sm {
+      font-size: 11px;
+      font-family: 'Geist Mono', 'Courier New', monospace;
+      color: var(--muted-foreground);
+      opacity: 0.7;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Party name truncated */
+    .party-name {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+    }
+    .party-name-sm {
+      font-size: 12px;
+      color: var(--muted-foreground);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+
+    /* Table actions cell */
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Filter bar for Capturadas tab */
+    .capturadas-filter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .capturadas-filter .search-input input {
+      width: 260px;
+    }
+
+    .segment-control {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .segment-btn {
+      padding: 5px 12px;
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      border-right: 1px solid var(--border);
+    }
+    .segment-btn:last-child { border-right: none; }
+    .segment-btn.active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .segment-btn:hover:not(.active) {
+      background: rgba(0,0,0,0.03);
+    }
+
+    /* Vincular small btn */
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 8px;
+      gap: 4px;
+    }
+    .btn-sm svg { width: 12px; height: 12px; }
+
+    /* ====================================================
+       DIALOG OVERLAY
+       ==================================================== */
+    .dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .dialog-container {
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px 32px 24px;
+      position: relative;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .dialog-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(0,0,0,0.05);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-foreground);
+      transition: all 0.2s;
+    }
+    .dialog-close:hover { background: rgba(0,0,0,0.1); }
+    .dialog-close svg { width: 16px; height: 16px; }
+    .dialog-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--foreground);
+      margin-bottom: 20px;
+      padding-right: 40px;
+    }
+    .dialog-section {
+      margin-bottom: 18px;
+    }
+    .dialog-section-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+      margin-bottom: 10px;
+    }
+    .dialog-section-header svg { width: 13px; height: 13px; opacity: 0.7; }
+    .dialog-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+    .dialog-field { }
+    .dialog-field-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted-foreground);
+      opacity: 0.55;
+      margin-bottom: 2px;
+    }
+    .dialog-field-value {
+      font-size: 13px;
+      color: var(--foreground);
+      font-weight: 500;
+    }
+    .dialog-field-value.mono {
+      font-family: 'Geist Mono', 'Courier New', monospace;
+      font-size: 12px;
+      letter-spacing: -0.01em;
+    }
+    .dialog-section-inner {
+      background: rgba(0,0,0,0.025);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .dark .dialog-section-inner {
+      background: rgba(255,255,255,0.035);
+    }
+    .parties-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .party-col-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+      margin-bottom: 4px;
+    }
+    .party-item {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--foreground);
+      line-height: 1.4;
+    }
+    .party-item + .party-item { margin-top: 2px; }
+    .adv-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .adv-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .adv-oab {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      opacity: 0.7;
+    }
+    .teor-block {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--foreground);
+      opacity: 0.85;
+      background: rgba(0,0,0,0.025);
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,0.05);
+      margin-top: 8px;
+      font-style: italic;
+    }
+    .dark .teor-block {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.06);
+    }
+    .doc-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.05);
+      background: rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
+    .dark .doc-item {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.06);
+    }
+    .doc-item + .doc-item { margin-top: 6px; }
+    .doc-item:hover { background: rgba(85,35,235,0.04); }
+    .doc-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      background: rgba(200,60,60,0.08);
+      border: 1px solid rgba(200,60,60,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--destructive);
+    }
+    .doc-icon svg { width: 14px; height: 14px; }
+    .doc-name {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .doc-size {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+    }
+    .dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 16px;
+      margin-top: 4px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    .dark .dialog-footer {
+      border-top-color: rgba(255,255,255,0.06);
+    }
+
+    /* Sincronização tab placeholder */
+    .sync-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .sync-status-row:last-child { border-bottom: none; }
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Dark mode tab-pill active */
+    .dark .tab-pill.active,
+    .dark .tab-pill-sm.active {
+      background: rgba(255,255,255,0.09);
+    }
+
+    /* Responsive helpers */
+    @media (max-width: 800px) {
+      .form-row-3 { grid-template-columns: 1fr 1fr; }
+      .form-row-2 { grid-template-columns: 1fr; }
+      .parties-row { grid-template-columns: 1fr; }
+      .dialog-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       SIDEBAR MOCK
+       ============================================================ -->
+  <nav class="sidebar-mock" aria-label="Navegação principal">
+    <div class="logo" aria-hidden="true"></div>
+
+    <!-- Home -->
+    <button class="nav-dot" data-tooltip="Início" aria-label="Início">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><polyline points="9 21 9 12 15 12 15 21"/>
+      </svg>
+    </button>
+
+    <!-- Processos -->
+    <button class="nav-dot" data-tooltip="Processos" aria-label="Processos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+      </svg>
+    </button>
+
+    <!-- Audiências -->
+    <button class="nav-dot" data-tooltip="Audiências" aria-label="Audiências">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    </button>
+
+    <!-- Captura (active) -->
+    <button class="nav-dot active" data-tooltip="Captura" aria-label="Captura" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    </button>
+
+    <!-- Chat -->
+    <button class="nav-dot" data-tooltip="Chat" aria-label="Chat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+    </button>
+
+    <div style="flex:1"></div>
+
+    <!-- User -->
+    <button class="nav-dot" data-tooltip="Perfil" aria-label="Perfil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="main-content" style="min-height: 100vh; padding: 28px 28px 60px;">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Localização">
+      <span>Captura</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+      <span class="current">Comunica CNJ</span>
+    </nav>
+
+    <div class="space-y-5">
+
+      <!-- =====================================================
+           PAGE HEADER
+           ===================================================== -->
+      <header class="page-header">
+        <div>
+          <h1 class="text-page-title">Comunicações CNJ</h1>
+          <p class="page-subtitle">Consulta e sincronização de comunicações processuais do Domicílio Judicial Eletrônico</p>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+          <button class="btn btn-outline" aria-label="Consultar comunicações">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Consultar
+          </button>
+          <button class="btn btn-primary" aria-label="Sincronizar comunicações do CNJ">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+            Sincronizar
+          </button>
+        </div>
+      </header>
+
+      <!-- =====================================================
+           KPI STRIP (5 cards)
+           ===================================================== -->
+      <section class="kpi-strip" aria-label="Resumo de comunicações">
+
+        <!-- Total -->
+        <div class="glass-kpi kpi-card" role="region" aria-label="Total de comunicações">
+          <div class="kpi-icon" style="background: rgba(85,35,235,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Total</div>
+            <div class="kpi-value" style="color: var(--foreground);">342</div>
+          </div>
+        </div>
+
+        <!-- Pendentes -->
+        <div class="glass-kpi kpi-card" role="region" aria-label="Comunicações pendentes">
+          <div class="kpi-icon" style="background: rgba(200,150,50,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Pendentes</div>
+            <div class="kpi-value" style="color: var(--warning);">18</div>
+            <div class="proportion-bar"><div class="proportion-bar-fill" style="width:5.3%; background: var(--warning);"></div></div>
+          </div>
+        </div>
+
+        <!-- Vinculadas -->
+        <div class="glass-kpi kpi-card" role="region" aria-label="Comunicações vinculadas">
+          <div class="kpi-icon" style="background: rgba(85,180,85,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Vinculadas</div>
+            <div class="kpi-value" style="color: var(--success);">289</div>
+            <div class="proportion-bar"><div class="proportion-bar-fill" style="width:84.5%; background: var(--success);"></div></div>
+          </div>
+        </div>
+
+        <!-- Sem Vínculo -->
+        <div class="glass-kpi kpi-card" role="region" aria-label="Comunicações sem vínculo">
+          <div class="kpi-icon" style="background: rgba(200,60,60,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--destructive)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Sem Vínculo</div>
+            <div class="kpi-value" style="color: var(--destructive);">35</div>
+            <div class="proportion-bar"><div class="proportion-bar-fill" style="width:10.2%; background: var(--destructive);"></div></div>
+          </div>
+        </div>
+
+        <!-- Últimas 24h -->
+        <div class="glass-kpi kpi-card" role="region" aria-label="Comunicações nas últimas 24 horas">
+          <div class="kpi-icon" style="background: rgba(60,120,200,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Últimas 24h</div>
+            <div class="kpi-value" style="color: var(--info);">7</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =====================================================
+           INNER TAB PILLS
+           ===================================================== -->
+      <div role="tablist" aria-label="Seções de Comunicações CNJ" class="tab-pills-sm" id="main-tabs">
+        <button
+          role="tab"
+          aria-selected="true"
+          aria-controls="tab-consulta"
+          id="btn-consulta"
+          class="tab-pill-sm active"
+          onclick="switchTab('consulta')"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Consulta
+        </button>
+        <button
+          role="tab"
+          aria-selected="false"
+          aria-controls="tab-capturadas"
+          id="btn-capturadas"
+          class="tab-pill-sm"
+          onclick="switchTab('capturadas')"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Capturadas
+          <span style="font-size:10px; background: rgba(200,150,50,0.14); color: var(--warning); border-radius:5px; padding: 1px 5px; font-weight:600;">35</span>
+        </button>
+        <button
+          role="tab"
+          aria-selected="false"
+          aria-controls="tab-sincronizacao"
+          id="btn-sincronizacao"
+          class="tab-pill-sm"
+          onclick="switchTab('sincronizacao')"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+          </svg>
+          Sincronização
+        </button>
+      </div>
+
+      <!-- =====================================================
+           TAB: CONSULTA
+           ===================================================== -->
+      <section id="tab-consulta" class="tab-panel active animate-in" role="tabpanel" aria-labelledby="btn-consulta">
+        <div class="space-y-4">
+
+          <!-- Search Form -->
+          <div class="glass-widget widget-padded">
+            <p class="text-meta-label" style="margin-bottom: 14px;">Filtros de Consulta</p>
+
+            <div class="form-row form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="cpf-cnpj">CPF / CNPJ</label>
+                <input
+                  id="cpf-cnpj"
+                  type="text"
+                  class="form-input"
+                  placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                  aria-label="CPF ou CNPJ da parte"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="tipo-parte">Tipo de Parte</label>
+                <select id="tipo-parte" class="form-select" aria-label="Filtrar por tipo de parte">
+                  <option value="">Todos</option>
+                  <option value="destinatario">Destinatário</option>
+                  <option value="advogado">Advogado</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row form-row-3">
+              <div class="form-group">
+                <label class="form-label" for="data-inicio">Data Início</label>
+                <input id="data-inicio" type="date" class="form-input" aria-label="Data de início do período" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="data-fim">Data Fim</label>
+                <input id="data-fim" type="date" class="form-input" aria-label="Data de fim do período" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="meio">Meio</label>
+                <select id="meio" class="form-select" aria-label="Filtrar por meio de comunicação">
+                  <option value="">Todos</option>
+                  <option value="edital">Edital</option>
+                  <option value="diario">Diário Oficial</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row form-row-1">
+              <div class="form-group">
+                <label class="form-label" for="num-processo">Número do Processo</label>
+                <input
+                  id="num-processo"
+                  type="text"
+                  class="form-input"
+                  placeholder="0000000-00.0000.0.00.0000"
+                  aria-label="Número do processo judicial"
+                />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" aria-label="Executar consulta no CNJ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                Consultar CNJ
+              </button>
+            </div>
+          </div>
+
+          <!-- Results Table -->
+          <div class="glass-widget" style="overflow: hidden;">
+            <div style="padding: 16px 20px 12px; border-bottom: 1px solid rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:space-between;">
+              <p class="text-meta-label">Resultados — 6 comunicações encontradas</p>
+              <span class="badge badge-info" style="font-size:10px;">CNJ · API v2.1</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-table" aria-label="Comunicações CNJ encontradas">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Processo</th>
+                    <th scope="col">Destinatário</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Meio</th>
+                    <th scope="col">Data Disponibilização</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="text-meta-label" style="opacity:.5;">001</span></td>
+                    <td>
+                      <div class="proc-num">0001234-56.2023.5.01.0001</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TRT da 1ª Região</div>
+                    </td>
+                    <td>
+                      <div class="party-name">Metalúrgica Santos Ltda.</div>
+                      <div class="proc-num-sm">CNPJ 12.345.678/0001-90</div>
+                    </td>
+                    <td><span class="badge badge-primary">Intimação</span></td>
+                    <td><span class="badge badge-info">Edital</span></td>
+                    <td style="font-size:12px; white-space:nowrap;">10/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success"></span> Ativa</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes da comunicação" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Baixar PDF" aria-label="Baixar PDF da comunicação">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Vincular a expediente" aria-label="Vincular a expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-meta-label" style="opacity:.5;">002</span></td>
+                    <td>
+                      <div class="proc-num">0009876-12.2024.4.03.6100</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TRF da 3ª Região</div>
+                    </td>
+                    <td>
+                      <div class="party-name">Roberto Figueiredo Costa</div>
+                      <div class="proc-num-sm">CPF 987.654.321-00</div>
+                    </td>
+                    <td><span class="badge badge-warning" style="font-size:10px;">Citação</span></td>
+                    <td><span class="badge badge-muted">Diário</span></td>
+                    <td style="font-size:12px; white-space:nowrap;">09/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success"></span> Ativa</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Baixar PDF" aria-label="Baixar PDF">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Vincular a expediente" aria-label="Vincular a expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-meta-label" style="opacity:.5;">003</span></td>
+                    <td>
+                      <div class="proc-num">0003456-89.2022.8.26.0100</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TJSP — 1ª Vara Cível</div>
+                    </td>
+                    <td>
+                      <div class="party-name">Construtora Horizonte S.A.</div>
+                      <div class="proc-num-sm">CNPJ 45.678.901/0001-23</div>
+                    </td>
+                    <td><span class="badge badge-primary">Intimação</span></td>
+                    <td><span class="badge badge-info">Edital</span></td>
+                    <td style="font-size:12px; white-space:nowrap;">08/04/2025</td>
+                    <td><span class="badge badge-destructive"><span class="status-dot destructive"></span> Cancelada</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Baixar PDF" aria-label="Baixar PDF" style="opacity:.35; pointer-events:none; cursor:not-allowed;">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Vincular a expediente" aria-label="Vincular a expediente" style="opacity:.35; pointer-events:none; cursor:not-allowed;">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-meta-label" style="opacity:.5;">004</span></td>
+                    <td>
+                      <div class="proc-num">0007821-33.2024.5.15.0016</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TRT da 15ª Região</div>
+                    </td>
+                    <td>
+                      <div class="party-name">Ana Paula Mendonça</div>
+                      <div class="proc-num-sm">CPF 321.654.987-55</div>
+                    </td>
+                    <td><span class="badge badge-muted" style="font-size:10px;">Notificação</span></td>
+                    <td><span class="badge badge-muted">Diário</span></td>
+                    <td style="font-size:12px; white-space:nowrap;">07/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success"></span> Ativa</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Baixar PDF" aria-label="Baixar PDF">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Vincular a expediente" aria-label="Vincular a expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-meta-label" style="opacity:.5;">005</span></td>
+                    <td>
+                      <div class="proc-num">0012045-78.2021.2.00.0000</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">CNJ — 2ª Câmara</div>
+                    </td>
+                    <td>
+                      <div class="party-name">União Federal</div>
+                      <div class="proc-num-sm">CNPJ 00.394.460/0008-53</div>
+                    </td>
+                    <td><span class="badge badge-primary">Intimação</span></td>
+                    <td><span class="badge badge-info">Edital</span></td>
+                    <td style="font-size:12px; white-space:nowrap;">06/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success"></span> Ativa</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Baixar PDF" aria-label="Baixar PDF">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Vincular a expediente" aria-label="Vincular a expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-meta-label" style="opacity:.5;">006</span></td>
+                    <td>
+                      <div class="proc-num">0004567-22.2023.8.19.0001</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TJRJ — 3ª Vara Criminal</div>
+                    </td>
+                    <td>
+                      <div class="party-name">Marcos Aurélio Pinheiro</div>
+                      <div class="proc-num-sm">CPF 456.789.012-34</div>
+                    </td>
+                    <td><span class="badge badge-warning" style="font-size:10px;">Citação</span></td>
+                    <td><span class="badge badge-muted">Diário</span></td>
+                    <td style="font-size:12px; white-space:nowrap;">05/04/2025</td>
+                    <td><span class="badge badge-destructive"><span class="status-dot destructive"></span> Cancelada</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Baixar PDF" aria-label="Baixar PDF" style="opacity:.35; pointer-events:none; cursor:not-allowed;">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                        <button class="action-btn" data-tooltip="Vincular" aria-label="Vincular" style="opacity:.35; pointer-events:none; cursor:not-allowed;">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div style="padding: 0 20px 12px;">
+              <div class="pagination">
+                <span>Mostrando 1–6 de 6 resultados</span>
+                <div class="pagination-buttons">
+                  <button class="pagination-btn active" aria-label="Página 1" aria-current="page">1</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =====================================================
+           TAB: CAPTURADAS
+           ===================================================== -->
+      <section id="tab-capturadas" class="tab-panel" role="tabpanel" aria-labelledby="btn-capturadas">
+        <div class="space-y-4">
+
+          <!-- Filter Bar -->
+          <div class="glass-widget" style="padding: 14px 20px;">
+            <div class="capturadas-filter">
+              <div class="search-input" role="search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Buscar processo ou destinatário..." aria-label="Buscar comunicações capturadas" />
+              </div>
+              <span class="text-meta-label" style="opacity:.5;">Status Vínculo:</span>
+              <div class="segment-control" role="group" aria-label="Filtrar por status de vínculo">
+                <button class="segment-btn" onclick="setSegment(this)" aria-pressed="false">Vinculada</button>
+                <button class="segment-btn" onclick="setSegment(this)" aria-pressed="false">Não Vinculada</button>
+                <button class="segment-btn active" onclick="setSegment(this)" aria-pressed="true">Todas</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capturadas Table -->
+          <div class="glass-widget" style="overflow: hidden;">
+            <div style="padding: 16px 20px 12px; border-bottom: 1px solid rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:space-between;">
+              <p class="text-meta-label">8 comunicações capturadas</p>
+              <span class="badge badge-warning" style="font-size:10px;">35 sem vínculo</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-table" aria-label="Comunicações capturadas">
+                <thead>
+                  <tr>
+                    <th scope="col">Processo</th>
+                    <th scope="col">Comunicação</th>
+                    <th scope="col">Polo Ativo</th>
+                    <th scope="col">Polo Passivo</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Vínculo</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0001234-56.2023.5.01.0001</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TRT 1ª Região</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-primary">Intimação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Edital</div>
+                    </td>
+                    <td><div class="party-name-sm">Metalúrgica Santos Ltda.</div></td>
+                    <td><div class="party-name-sm">João Carlos Almeida</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">10/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success" style="margin-right:2px;"></span>Vinculada</span></td>
+                    <td>
+                      <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0009876-12.2024.4.03.6100</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TRF 3ª Região</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-warning" style="font-size:10px;">Citação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Diário Oficial</div>
+                    </td>
+                    <td><div class="party-name-sm">Roberto Figueiredo Costa</div></td>
+                    <td><div class="party-name-sm">Banco do Brasil S.A.</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">09/04/2025</td>
+                    <td><span class="badge badge-warning"><span class="status-dot warning" style="margin-right:2px;"></span>Pendente</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="btn btn-outline btn-sm" aria-label="Vincular ao expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                          Vincular
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0003456-89.2022.8.26.0100</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TJSP</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-primary">Intimação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Edital</div>
+                    </td>
+                    <td><div class="party-name-sm">Construtora Horizonte S.A.</div></td>
+                    <td><div class="party-name-sm">Prefeitura Municipal de SP</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">08/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success" style="margin-right:2px;"></span>Vinculada</span></td>
+                    <td>
+                      <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0007821-33.2024.5.15.0016</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TRT 15ª Região</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-muted" style="font-size:10px;">Notificação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Diário Oficial</div>
+                    </td>
+                    <td><div class="party-name-sm">Ana Paula Mendonça</div></td>
+                    <td><div class="party-name-sm">Empresa Têxtil Norte Ltda.</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">07/04/2025</td>
+                    <td><span class="badge badge-warning"><span class="status-dot warning" style="margin-right:2px;"></span>Pendente</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="btn btn-outline btn-sm" aria-label="Vincular ao expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                          Vincular
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0012045-78.2021.2.00.0000</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">CNJ</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-primary">Intimação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Edital</div>
+                    </td>
+                    <td><div class="party-name-sm">União Federal</div></td>
+                    <td><div class="party-name-sm">Estado do Rio de Janeiro</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">06/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success" style="margin-right:2px;"></span>Vinculada</span></td>
+                    <td>
+                      <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0004567-22.2023.8.19.0001</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TJRJ</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-warning" style="font-size:10px;">Citação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Diário Oficial</div>
+                    </td>
+                    <td><div class="party-name-sm">Marcos Aurélio Pinheiro</div></td>
+                    <td><div class="party-name-sm">Seguradora Confiança S.A.</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">05/04/2025</td>
+                    <td><span class="badge badge-warning"><span class="status-dot warning" style="margin-right:2px;"></span>Pendente</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="btn btn-outline btn-sm" aria-label="Vincular ao expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                          Vincular
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0005523-41.2024.1.00.0000</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">STJ</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-primary">Intimação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Edital</div>
+                    </td>
+                    <td><div class="party-name-sm">Fazenda Pública Nacional</div></td>
+                    <td><div class="party-name-sm">Telecom Brasil S.A.</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">04/04/2025</td>
+                    <td><span class="badge badge-success"><span class="status-dot success" style="margin-right:2px;"></span>Vinculada</span></td>
+                    <td>
+                      <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="proc-num">0008899-07.2023.8.13.0024</div>
+                      <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">TJMG — 5ª Vara</div>
+                    </td>
+                    <td>
+                      <span class="badge badge-muted" style="font-size:10px;">Notificação</span>
+                      <div style="font-size:11px; color:var(--muted-foreground); margin-top:3px; opacity:.7;">Diário Oficial</div>
+                    </td>
+                    <td><div class="party-name-sm">Clínica Saúde Total Ltda.</div></td>
+                    <td><div class="party-name-sm">Carlos Eduardo Braga</div></td>
+                    <td style="font-size:12px; white-space:nowrap;">03/04/2025</td>
+                    <td><span class="badge badge-warning"><span class="status-dot warning" style="margin-right:2px;"></span>Pendente</span></td>
+                    <td>
+                      <div class="actions-cell">
+                        <button class="action-btn" data-tooltip="Ver detalhes" aria-label="Ver detalhes" onclick="openDialog()">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                        <button class="btn btn-outline btn-sm" aria-label="Vincular ao expediente">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                          Vincular
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div style="padding: 0 20px 12px;">
+              <div class="pagination">
+                <span>Mostrando 1–8 de 35 pendentes</span>
+                <div class="pagination-buttons">
+                  <button class="pagination-btn active" aria-label="Página 1" aria-current="page">1</button>
+                  <button class="pagination-btn" aria-label="Página 2">2</button>
+                  <button class="pagination-btn" aria-label="Página 3">3</button>
+                  <button class="pagination-btn" aria-label="Próxima página">›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =====================================================
+           TAB: SINCRONIZAÇÃO
+           ===================================================== -->
+      <section id="tab-sincronizacao" class="tab-panel" role="tabpanel" aria-labelledby="btn-sincronizacao">
+        <div class="space-y-4">
+          <div class="insight-banner info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Última sincronização: <strong>13/04/2025 às 08:47</strong> — 7 comunicações novas importadas com sucesso.</span>
+          </div>
+
+          <div class="glass-widget" style="overflow: hidden;">
+            <div style="padding: 16px 20px 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+              <p class="text-meta-label">Histórico de Sincronização</p>
+            </div>
+
+            <div class="sync-status-row">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="sync-dot" style="background: var(--success);"></div>
+                <div>
+                  <div style="font-size:13px; font-weight:500;">Sincronização automática</div>
+                  <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">13/04/2025 08:47 — 7 itens importados</div>
+                </div>
+              </div>
+              <span class="badge badge-success">Concluída</span>
+            </div>
+
+            <div class="sync-status-row">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="sync-dot" style="background: var(--success);"></div>
+                <div>
+                  <div style="font-size:13px; font-weight:500;">Sincronização automática</div>
+                  <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">12/04/2025 08:47 — 3 itens importados</div>
+                </div>
+              </div>
+              <span class="badge badge-success">Concluída</span>
+            </div>
+
+            <div class="sync-status-row">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="sync-dot" style="background: var(--warning);"></div>
+                <div>
+                  <div style="font-size:13px; font-weight:500;">Sincronização manual</div>
+                  <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">11/04/2025 14:23 — Timeout parcial (API CNJ)</div>
+                </div>
+              </div>
+              <span class="badge badge-warning">Parcial</span>
+            </div>
+
+            <div class="sync-status-row">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="sync-dot" style="background: var(--success);"></div>
+                <div>
+                  <div style="font-size:13px; font-weight:500;">Sincronização automática</div>
+                  <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">11/04/2025 08:47 — 12 itens importados</div>
+                </div>
+              </div>
+              <span class="badge badge-success">Concluída</span>
+            </div>
+
+            <div class="sync-status-row">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="sync-dot" style="background: var(--destructive);"></div>
+                <div>
+                  <div style="font-size:13px; font-weight:500;">Sincronização automática</div>
+                  <div style="font-size:11px; color:var(--muted-foreground); opacity:.6;">10/04/2025 08:47 — Erro de autenticação CNJ</div>
+                </div>
+              </div>
+              <span class="badge badge-destructive">Erro</span>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============================================================
+       DETAIL DIALOG
+       ============================================================ -->
+  <div
+    id="detail-dialog"
+    class="dialog-overlay"
+    style="display: none;"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="dialog-title"
+    onclick="handleOverlayClick(event)"
+  >
+    <div class="glass-dialog dialog-container" onclick="event.stopPropagation()">
+
+      <button class="dialog-close" onclick="closeDialog()" aria-label="Fechar detalhes da comunicação">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <h2 class="dialog-title" id="dialog-title">Detalhes da Comunicação</h2>
+
+      <!-- Section 1: Dados Processuais -->
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Dados Processuais
+        </div>
+        <div class="dialog-section-inner">
+          <div class="dialog-grid-2">
+            <div class="dialog-field">
+              <div class="dialog-field-label">Processo</div>
+              <div class="dialog-field-value mono">0001234-56.2023.5.01.0001</div>
+            </div>
+            <div class="dialog-field">
+              <div class="dialog-field-label">Tribunal</div>
+              <div class="dialog-field-value">TRT da 1ª Região</div>
+            </div>
+            <div class="dialog-field">
+              <div class="dialog-field-label">Vara</div>
+              <div class="dialog-field-value">2ª Vara do Trabalho de Niterói</div>
+            </div>
+            <div class="dialog-field">
+              <div class="dialog-field-label">Classe Judicial</div>
+              <div class="dialog-field-value">Reclamação Trabalhista (RCl)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Partes -->
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Partes
+        </div>
+        <div class="dialog-section-inner">
+          <div class="parties-row">
+            <div>
+              <div class="party-col-label">Polo Ativo</div>
+              <div class="party-item">Metalúrgica Santos Ltda.</div>
+              <div class="party-item" style="font-size:11px; color:var(--muted-foreground); opacity:.65;">CNPJ 12.345.678/0001-90</div>
+            </div>
+            <div>
+              <div class="party-col-label">Polo Passivo</div>
+              <div class="party-item">João Carlos Almeida</div>
+              <div class="party-item" style="font-size:11px; color:var(--muted-foreground); opacity:.65;">CPF 234.567.890-11</div>
+            </div>
+          </div>
+          <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px; margin-top: 4px;">
+            <div class="party-col-label">Advogados</div>
+            <div class="adv-row">
+              <div class="adv-name">Dra. Fernanda Lima Rodrigues</div>
+              <span class="badge badge-muted"><span class="adv-oab">OAB/RJ 98.765</span></span>
+            </div>
+            <div class="adv-row">
+              <div class="adv-name">Dr. Gustavo Marchetti Soares</div>
+              <span class="badge badge-muted"><span class="adv-oab">OAB/SP 54.321</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Comunicação -->
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Comunicação
+        </div>
+        <div class="dialog-section-inner">
+          <div class="dialog-grid-2" style="margin-bottom:10px;">
+            <div class="dialog-field">
+              <div class="dialog-field-label">Tipo</div>
+              <div class="dialog-field-value"><span class="badge badge-primary">Intimação</span></div>
+            </div>
+            <div class="dialog-field">
+              <div class="dialog-field-label">Meio</div>
+              <div class="dialog-field-value"><span class="badge badge-info">Edital</span></div>
+            </div>
+            <div class="dialog-field">
+              <div class="dialog-field-label">Data Disponibilização</div>
+              <div class="dialog-field-value">10/04/2025 às 08:30</div>
+            </div>
+            <div class="dialog-field">
+              <div class="dialog-field-label">Data Ciência</div>
+              <div class="dialog-field-value">11/04/2025 (D+1)</div>
+            </div>
+          </div>
+          <div class="dialog-field-label" style="margin-bottom:4px;">Teor da Comunicação</div>
+          <div class="teor-block">
+            "Intima-se a parte autora, Metalúrgica Santos Ltda., nos termos da decisão proferida em 09/04/2025,
+            para que, no prazo de 15 (quinze) dias úteis, apresente réplica à contestação ofertada pela parte
+            reclamada, sob pena de preclusão. Cientes."
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Documentos -->
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+          Documentos
+        </div>
+        <div>
+          <div class="doc-item">
+            <div class="doc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div class="doc-name">Intimação_0001234-56.2023.5.01.0001.pdf</div>
+              <div class="doc-size">PDF · 84 KB</div>
+            </div>
+            <button class="action-btn" data-tooltip="Baixar documento" aria-label="Baixar documento">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div class="doc-name">Contestação_Parte_Reclamada.pdf</div>
+              <div class="doc-size">PDF · 312 KB</div>
+            </div>
+            <button class="action-btn" data-tooltip="Baixar documento" aria-label="Baixar documento">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div class="doc-name">Procuração_Advogado_Defesa.pdf</div>
+              <div class="doc-size">PDF · 45 KB</div>
+            </div>
+            <button class="action-btn" data-tooltip="Baixar documento" aria-label="Baixar documento">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialog Footer -->
+      <div class="dialog-footer">
+        <button class="btn btn-ghost" onclick="closeDialog()" aria-label="Fechar dialog">Fechar</button>
+        <button class="btn btn-primary" aria-label="Vincular esta comunicação a um expediente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+          </svg>
+          Vincular a Expediente
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       THEME TOGGLE
+       ============================================================ -->
+  <button
+    class="theme-toggle"
+    id="theme-toggle"
+    onclick="toggleTheme()"
+    aria-label="Alternar tema claro/escuro"
+    title="Alternar tema"
+  >🌙</button>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+    // ---- Tab switching ----
+    function switchTab(name) {
+      // Hide all panels
+      document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.remove('active');
+        p.classList.remove('animate-in');
+      });
+      // Deactivate all tab buttons
+      document.querySelectorAll('.tab-pill-sm').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+
+      // Activate target panel
+      const panel = document.getElementById('tab-' + name);
+      if (panel) {
+        panel.classList.add('active');
+        // Force reflow for animation
+        void panel.offsetWidth;
+        panel.classList.add('animate-in');
+      }
+
+      // Activate target button
+      const btn = document.getElementById('btn-' + name);
+      if (btn) {
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+      }
+    }
+
+    // ---- Segment control ----
+    function setSegment(el) {
+      const group = el.closest('.segment-control');
+      group.querySelectorAll('.segment-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      el.classList.add('active');
+      el.setAttribute('aria-pressed', 'true');
+    }
+
+    // ---- Dialog ----
+    function openDialog() {
+      const dialog = document.getElementById('detail-dialog');
+      dialog.style.display = 'flex';
+      // Prevent background scroll
+      document.body.style.overflow = 'hidden';
+      // Focus management
+      dialog.querySelector('button').focus();
+    }
+
+    function closeDialog() {
+      const dialog = document.getElementById('detail-dialog');
+      dialog.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(event) {
+      // Close if clicking the overlay backdrop (not the dialog itself)
+      if (event.target === event.currentTarget) {
+        closeDialog();
+      }
+    }
+
+    // Close dialog on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeDialog();
+      }
+    });
+
+    // ---- Theme toggle ----
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('zattar-theme', isDark ? 'dark' : 'light');
+    }
+
+    // Restore saved theme
+    (function() {
+      const saved = localStorage.getItem('zattar-theme');
+      if (saved === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.getElementById('theme-toggle').textContent = '☀️';
+      }
+    })();
+  </script>
+
+</body>
+</html>
