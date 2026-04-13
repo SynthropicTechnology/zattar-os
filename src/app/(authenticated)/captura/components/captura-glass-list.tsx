@@ -13,6 +13,8 @@ import {
   Archive,
   ChevronRight,
   ChevronLeft,
+  Eye,
+  Trash2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -20,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '../types';
 import type { CapturaKpiData } from './captura-kpi-strip';
@@ -52,6 +55,44 @@ function getStatusDotColor(status: StatusCaptura): string {
     case 'pending':
     default:
       return 'bg-muted-foreground/40';
+  }
+}
+
+function getTipoIconBg(tipo: TipoCaptura): string {
+  switch (tipo) {
+    case 'acervo_geral': return 'bg-primary/[0.08]';
+    case 'audiencias':
+    case 'audiencias_designadas':
+    case 'audiencias_realizadas':
+    case 'audiencias_canceladas': return 'bg-info/[0.08]';
+    case 'combinada': return 'bg-warning/[0.08]';
+    case 'timeline': return 'bg-success/[0.08]';
+    case 'pericias': return 'bg-destructive/[0.08]';
+    case 'partes': return 'bg-primary/[0.08]';
+    case 'pendentes':
+    case 'expedientes_no_prazo':
+    case 'expedientes_sem_prazo': return 'bg-info/[0.08]';
+    case 'arquivados': return 'bg-muted-foreground/[0.08]';
+    default: return 'bg-primary/[0.08]';
+  }
+}
+
+function getTipoIconColor(tipo: TipoCaptura): string {
+  switch (tipo) {
+    case 'acervo_geral': return 'text-primary';
+    case 'audiencias':
+    case 'audiencias_designadas':
+    case 'audiencias_realizadas':
+    case 'audiencias_canceladas': return 'text-info';
+    case 'combinada': return 'text-warning';
+    case 'timeline': return 'text-success';
+    case 'pericias': return 'text-destructive';
+    case 'partes': return 'text-primary';
+    case 'pendentes':
+    case 'expedientes_no_prazo':
+    case 'expedientes_sem_prazo': return 'text-info';
+    case 'arquivados': return 'text-muted-foreground';
+    default: return 'text-primary';
   }
 }
 
@@ -161,7 +202,7 @@ function GlassRow({
         isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
       )}
     >
-      <div className="grid grid-cols-[10px_1fr_120px_100px_32px] gap-4 items-center">
+      <div className="grid grid-cols-[10px_1fr_120px_100px_56px] gap-4 items-center">
         {/* Status dot */}
         <div className="flex items-center justify-center">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getStatusDotColor(captura.status))} />
@@ -169,17 +210,24 @@ function GlassRow({
 
         {/* Main info: icon + tipo + advogado */}
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-[0.625rem] bg-primary/[0.08] flex items-center justify-center shrink-0">
-            <TipoIcon className="w-4 h-4 text-primary" />
+          <div className={cn('w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
+            <TipoIcon className={cn('w-4 h-4', getTipoIconColor(captura.tipo_captura))} />
           </div>
           <div className="min-w-0">
             <span className="block text-sm font-semibold truncate">
               {formatarTipo(captura.tipo_captura)}
             </span>
             {advogadoNome && (
-              <span className="block text-xs text-muted-foreground/55 truncate mt-0.5">
-                {advogadoNome}
-              </span>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="size-4 rounded-full bg-gradient-to-br from-primary to-highlight flex items-center justify-center shrink-0">
+                  <span className="text-[7px] font-bold text-white">
+                    {advogadoNome.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground/55 truncate">
+                  {advogadoNome}
+                </span>
+              </div>
             )}
           </div>
         </div>
@@ -199,12 +247,52 @@ function GlassRow({
           </span>
         </div>
 
-        {/* Chevron */}
-        <div className="flex items-center justify-end">
-          <ChevronRight className="w-4 h-4 text-muted-foreground/40" />
+        {/* Actions */}
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onView(); }}
+            className="size-7 rounded-md flex items-center justify-center text-muted-foreground/45 hover:bg-muted/30 hover:text-foreground transition-colors"
+            aria-label="Ver detalhes"
+          >
+            <Eye className="size-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            className="size-7 rounded-md flex items-center justify-center text-muted-foreground/45 hover:bg-destructive/10 hover:text-destructive transition-colors"
+            aria-label="Excluir"
+          >
+            <Trash2 className="size-3.5" />
+          </button>
         </div>
       </div>
     </button>
+  );
+}
+
+// =============================================================================
+// LIST TOOLBAR
+// =============================================================================
+
+function ListToolbar({ total, emAndamento }: { total: number; emAndamento: number }) {
+  return (
+    <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05]">
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-muted-foreground/60">
+          {total.toLocaleString('pt-BR')} capturas
+        </span>
+        {emAndamento > 0 && (
+          <>
+            <div className="w-px h-4 bg-border/10" />
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-info">
+              <span className="size-1.5 rounded-full bg-info animate-pulse" />
+              {emAndamento} em execução
+            </span>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -217,7 +305,7 @@ function ListSkeleton() {
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
         <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.028] p-4">
-          <div className="grid grid-cols-[10px_1fr_120px_100px_32px] gap-4 items-center">
+          <div className="grid grid-cols-[10px_1fr_120px_100px_56px] gap-4 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="flex items-center gap-3">
               <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
@@ -245,7 +333,7 @@ function ListSkeleton() {
 
 function ColumnHeaders() {
   return (
-    <div className="grid grid-cols-[10px_1fr_120px_100px_32px] gap-4 items-center px-4 mb-2">
+    <div className="grid grid-cols-[10px_1fr_120px_100px_56px] gap-4 items-center mb-2">
       <div />
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
         Captura
@@ -355,6 +443,11 @@ export function CapturaGlassList({
     setPagina(1);
   }, [filters?.tipo, filters?.status]);
 
+  const emAndamentoCount = React.useMemo(
+    () => capturas.filter((c) => c.status === 'in_progress').length,
+    [capturas]
+  );
+
   // Client-side search filter
   const filtered = React.useMemo(() => {
     if (!search) return capturas;
@@ -379,9 +472,12 @@ export function CapturaGlassList({
   }
 
   return (
-    <div>
-      <ColumnHeaders />
-      <div className="flex flex-col gap-2">
+    <GlassPanel depth={1} className="overflow-hidden">
+      <ListToolbar total={paginacao?.total ?? 0} emAndamento={emAndamentoCount} />
+      <div className="px-4 pt-3">
+        <ColumnHeaders />
+      </div>
+      <div className="flex flex-col gap-2 px-4 pb-4">
         {filtered.map((captura, i) => (
           <GlassRow
             key={captura.id}
@@ -395,13 +491,15 @@ export function CapturaGlassList({
         ))}
       </div>
       {paginacao && paginacao.totalPaginas > 1 && (
-        <PaginationBar
-          paginacao={paginacao}
-          pagina={pagina}
-          onPrev={() => setPagina((p) => Math.max(1, p - 1))}
-          onNext={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
-        />
+        <div className="px-4 pb-4">
+          <PaginationBar
+            paginacao={paginacao}
+            pagina={pagina}
+            onPrev={() => setPagina((p) => Math.max(1, p - 1))}
+            onNext={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
+          />
+        </div>
       )}
-    </div>
+    </GlassPanel>
   );
 }

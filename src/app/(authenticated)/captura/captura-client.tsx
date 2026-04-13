@@ -7,7 +7,7 @@ import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle } from '@/components/dashboard/view-toggle';
 import type { ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
-import { Plus, History, CalendarClock, KeyRound, Landmark, List, LayoutGrid } from 'lucide-react';
+import { Plus, History, CalendarClock, KeyRound, Landmark, List, LayoutGrid, AlertTriangle } from 'lucide-react';
 
 import { CapturaKpiStrip } from './components/captura-kpi-strip';
 import type { CapturaKpiData } from './components/captura-kpi-strip';
@@ -109,6 +109,16 @@ export function CapturaClient() {
         <>
           {/* KPI Strip */}
           <CapturaKpiStrip data={kpiData} />
+
+          {/* Insight Banner */}
+          {kpiData.falhas > 0 && (
+            <div className="flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning">
+              <AlertTriangle className="size-4 shrink-0" />
+              <span>
+                <strong>{kpiData.falhas}</strong> captura(s) falharam nos últimos 7 dias — verifique os logs para detalhes.
+              </span>
+            </div>
+          )}
 
           {/* Filter Bar + Search + View Toggle */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
