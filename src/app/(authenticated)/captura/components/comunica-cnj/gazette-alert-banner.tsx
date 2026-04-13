@@ -20,7 +20,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
     <div
       className={cn(
         'flex items-center gap-3 px-4 py-2.5',
-        'bg-destructive/[0.04] border-b border-destructive/10',
+        'bg-destructive/4 border-b border-destructive/10',
       )}
     >
       {/* Icon */}

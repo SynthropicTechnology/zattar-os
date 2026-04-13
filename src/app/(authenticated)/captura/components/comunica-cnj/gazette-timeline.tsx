@@ -27,7 +27,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
     <div className="relative flex flex-col gap-3">
       {/* Vertical line */}
       <div
-        className="absolute left-[5px] top-2 bottom-2 w-px bg-border/50"
+        className="absolute left-1.25op-2 bottom-2 w-px bg-border/50"
         aria-hidden
       />
 
@@ -49,13 +49,13 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
             className={cn(
               'flex-1 rounded-lg p-2',
               item.isCurrent
-                ? 'bg-primary/[0.04] border border-primary/10'
+                ? 'bg-primary/4 border border-primary/10'
                 : 'bg-muted/20 border border-border/30',
             )}
           >
             {/* Header: badge + date */}
             <div className="flex items-center justify-between gap-2 mb-0.5">
-              <div className="flex-shrink-0">{item.badge}</div>
+              <div className="shrink-0">{item.badge}</div>
               <span className="text-[10px] text-muted-foreground/25 whitespace-nowrap">
                 {item.date}
               </span>
