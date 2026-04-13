@@ -16,6 +16,7 @@ import {
   OrigemExpediente,
   getExpedientePartyNames,
 } from '../domain';
+import type { Usuario } from '@/app/(authenticated)/usuarios';
 
 // =============================================================================
 // TYPES
@@ -26,7 +27,7 @@ interface ExpedientesGlassListProps {
   isLoading: boolean;
   onViewDetail: (expediente: Expediente) => void;
   onBaixar?: (expediente: Expediente) => void;
-  usuariosData?: { id: number; nome: string; email: string }[];
+  usuariosData?: Usuario[];
 }
 
 // =============================================================================
@@ -133,7 +134,7 @@ function GlassRow({
   expediente: Expediente;
   onViewDetail: () => void;
   isAlt: boolean;
-  usuariosData?: { id: number; nome: string; email: string }[];
+  usuariosData?: Usuario[];
 }) {
   const urgency = getUrgencyLevel(expediente);
   const dias = getDiasRestantes(expediente);
@@ -218,10 +219,10 @@ function GlassRow({
             <>
               <div className="w-[22px] h-[22px] rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <span className="text-[9px] font-semibold text-primary">
-                  {responsavel.nome.charAt(0).toUpperCase()}
+                  {(responsavel.nomeExibicao || responsavel.nomeCompleto).charAt(0).toUpperCase()}
                 </span>
               </div>
-              <span className="text-[11px] truncate">{responsavel.nome}</span>
+              <span className="text-[11px] truncate">{responsavel.nomeExibicao || responsavel.nomeCompleto}</span>
             </>
           ) : (
             <span className="text-[11px] text-destructive/70 italic">Sem responsável</span>
