@@ -1,0 +1,146 @@
+<h2>3 Abordagens para o Redesign do Comunica CNJ</h2>
+<p class="subtitle">Escolha a direção arquitetural que melhor serve o dia-a-dia do escritório</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>🏛️ "Gazette Command Center"</h3>
+      <p><strong>Inspiração:</strong> Stripe Dashboard + Linear Triage</p>
+      <p>Dashboard-first. KPIs interativos no topo (clicáveis = filtram a tabela). Abaixo, tabela de alta densidade com view tabs (Todas, Pendentes, Órfãos, Prazos). Detail panel deslizante à direita. Painel de resolução de órfãos como uma view dedicada com split-panel e scores de confiança.</p>
+      <div style="margin-top: 12px; padding: 16px; background: rgba(99,102,241,0.08); border-radius: 12px; font-size: 13px;">
+        <div style="margin-bottom: 8px;"><strong>Layout:</strong></div>
+        <pre style="font-family: monospace; font-size: 11px; line-height: 1.4; white-space: pre; color: #94a3b8;">
+┌─────────────────────────────────────────────────┐
+│  Header + NLP Search Bar                        │
+├────────┬────────┬────────┬────────┬────────────┤
+│  KPI 1 │  KPI 2 │  KPI 3 │  KPI 4 │   KPI 5   │
+├────────┴────────┴────────┴────────┴────────────┤
+│  [Todas] [Pendentes] [Órfãos] [Prazos] [+View] │
+│  [Fonte ▼] [Tipo ▼] [Status ▼]  chips ativos   │
+├─────────────────────────────────┬───────────────┤
+│  Data Table (alta densidade)    │ Detail Panel  │
+│  - Tipo, Processo, Parte,       │ (slide-in)    │
+│    Fonte, Data, Prazo, Status   │ - Texto       │
+│  - Inline quick-actions         │ - PDF preview │
+│  - Row hover → expand preview   │ - Timeline    │
+│                                 │ - Vincular    │
+└─────────────────────────────────┴───────────────┘</pre>
+      </div>
+      <div style="margin-top: 12px;">
+        <div style="display:flex; gap: 16px; font-size: 12px;">
+          <span style="color: #22c55e;">✓ Máxima densidade de informação</span>
+          <span style="color: #22c55e;">✓ KPIs funcionais (filtram ao clicar)</span>
+          <span style="color: #22c55e;">✓ Keyboard-first para processamento rápido</span>
+        </div>
+        <div style="display:flex; gap: 16px; font-size: 12px; margin-top: 4px;">
+          <span style="color: #f59e0b;">⚠ Curva de aprendizado para usuários novos</span>
+          <span style="color: #f59e0b;">⚠ Pode parecer "fria" sem personalidade visual</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>📬 "Gazette Inbox"</h3>
+      <p><strong>Inspiração:</strong> Intercom Inbox + Missive + QuickBooks Reconciliation</p>
+      <p>Inbox-first. Lista de publicações como feed à esquerda com preview cards (não tabela). Painel de detalhes à direita (sempre visível em desktop). KPIs como uma faixa compacta acima da lista. Workflow de triagem inline — badges de status editáveis direto na lista. Resolução de órfãos com confidence scores integrado no painel de detalhes.</p>
+      <div style="margin-top: 12px; padding: 16px; background: rgba(99,102,241,0.08); border-radius: 12px; font-size: 13px;">
+        <div style="margin-bottom: 8px;"><strong>Layout:</strong></div>
+        <pre style="font-family: monospace; font-size: 11px; line-height: 1.4; white-space: pre; color: #94a3b8;">
+┌─────────────────────────────────────────────────┐
+│  Header + NLP Search + Filter Chips             │
+├────────┬────────┬────────┬────────┬────────────┤
+│  KPI 1 │  KPI 2 │  KPI 3 │  KPI 4 │   KPI 5   │
+├────────┴────────┴────────┴────────┴────────────┤
+│  [Todas] [Pendentes] [Órfãos] [Prazos]         │
+├─────────────────────┬───────────────────────────┤
+│  Publication Cards   │  Detail Panel             │
+│  ┌───────────────┐  │  ┌─────────────────────┐  │
+│  │ ● INTIMAÇÃO   │  │  │  Texto completo      │  │
+│  │ TJ-PR • 12/04 │  │  │  ─────────────────   │  │
+│  │ Silva vs Sant. │  │  │  Processo vinculado  │  │
+│  │ ○ Pendente    │  │  │  Timeline do caso    │  │
+│  └───────────────┘  │  │  PDF inline           │  │
+│  ┌───────────────┐  │  │  Match suggestions    │  │
+│  │ ● DESPACHO    │  │  │  [Vincular] [Ignorar] │  │
+│  │ ...           │  │  └─────────────────────┘  │
+│  └───────────────┘  │                           │
+└─────────────────────┴───────────────────────────┘</pre>
+      </div>
+      <div style="margin-top: 12px;">
+        <div style="display:flex; gap: 16px; font-size: 12px;">
+          <span style="color: #22c55e;">✓ UX intuitiva (parece email/inbox)</span>
+          <span style="color: #22c55e;">✓ Preview cards mais ricos que tabela</span>
+          <span style="color: #22c55e;">✓ Detail panel sempre visível = contexto máximo</span>
+        </div>
+        <div style="display:flex; gap: 16px; font-size: 12px; margin-top: 4px;">
+          <span style="color: #f59e0b;">⚠ Menos itens visíveis por vez (cards ocupam mais espaço)</span>
+          <span style="color: #f59e0b;">⚠ Processamento em batch mais lento que tabela</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>⚡ "Gazette Fusion" (Recomendado)</h3>
+      <p><strong>Inspiração:</strong> Stripe + Linear + Notion + QuickBooks — o melhor de cada</p>
+      <p>Fusão inteligente. KPIs interativos no topo (Stripe). View tabs como presets salvos (Notion). Tabela de alta densidade como modo padrão MAS com toggle para modo cards (Linear). Detail panel deslizante (Linear). View "Órfãos" com split-panel de resolução e confidence scores (QuickBooks). NLP search progressivo. Tudo envolvido em Glass Briefing com profundidade semântica.</p>
+      <div style="margin-top: 12px; padding: 16px; background: rgba(99,102,241,0.08); border-radius: 12px; font-size: 13px;">
+        <div style="margin-bottom: 8px;"><strong>Layout:</strong></div>
+        <pre style="font-family: monospace; font-size: 11px; line-height: 1.4; white-space: pre; color: #94a3b8;">
+┌─────────────────────────────────────────────────┐
+│  🔍 NLP Search (progressivo: texto → filtros)   │
+├────────┬────────┬────────┬────────┬────────────┤
+│▸KPI 1  │ KPI 2  │ KPI 3  │ KPI 4  │  KPI 5    │
+│ click→ │ click→ │ click→ │ click→ │  click→   │
+│ filtra │ filtra │ filtra │ filtra │  filtra   │
+├────────┴────────┴────────┴────────┴────────────┤
+│ [Todas][Pendentes][Órfãos][Prazos][+View] ⊞⊟  │
+│ Chips: [TJ-PR ×] [Intimação ×]     [Limpar]   │
+├─────────────────────────────┬───────────────────┤
+│ Table/Cards (toggle ⊞/⊟)   │ Detail Panel      │
+│                             │ (contextual):     │
+│ TABLE MODE: alta densidade  │                   │
+│ com inline actions          │ Normal: texto +   │
+│                             │ PDF + timeline    │
+│ — OU —                      │                   │
+│                             │ Órfão: split com  │
+│ CARD MODE: preview rico     │ match scores +    │
+│ com excerpt + badges        │ [Vincular/Ignorar]│
+│                             │                   │
+│ Keyboard: ↑↓ navega,       │ AI: resumo auto + │
+│ Enter abre, / busca        │ prazos destacados  │
+└─────────────────────────────┴───────────────────┘</pre>
+      </div>
+      <div style="margin-top: 12px;">
+        <div style="display:flex; gap: 16px; font-size: 12px; flex-wrap: wrap;">
+          <span style="color: #22c55e;">✓ Flexível: tabela para volume, cards para review</span>
+          <span style="color: #22c55e;">✓ KPIs funcionais + views salvos</span>
+          <span style="color: #22c55e;">✓ Resolução de órfãos como view dedicada</span>
+          <span style="color: #22c55e;">✓ AI integrada (NLP + matching + resumos)</span>
+          <span style="color: #22c55e;">✓ Glass Briefing nativo</span>
+        </div>
+        <div style="display:flex; gap: 16px; font-size: 12px; margin-top: 4px;">
+          <span style="color: #f59e0b;">⚠ Mais complexo de implementar (maior escopo)</span>
+          <span style="color: #f59e0b;">⚠ Precisa de design cuidadoso para não sobrecarregar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 24px; padding: 16px; background: rgba(34,197,94,0.08); border-radius: 12px; border-left: 3px solid rgba(34,197,94,0.5);">
+  <h3 style="margin: 0 0 8px 0; font-size: 14px;">💡 Por que recomendo C (Fusion)?</h3>
+  <ul style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.6;">
+    <li><strong>Adaptável</strong>: advogados que processam volume usam tabela; quem faz triagem detalhada usa cards</li>
+    <li><strong>Progressivo</strong>: começa simples (KPIs + tabela), revela complexidade sob demanda (filtros, AI, views)</li>
+    <li><strong>Órfãos como feature</strong>: não é um "bug" a resolver, é uma view de trabalho com UX dedicada</li>
+    <li><strong>Glass Briefing</strong>: cada camada (KPI strip → filter bar → tabela → detail panel) mapeia para um depth diferente do GlassPanel</li>
+    <li><strong>Referências sólidas</strong>: cada pedaço vem de um padrão comprovado, não é invenção especulativa</li>
+  </ul>
+</div>

@@ -1,0 +1,167 @@
+<h2>Seção 1: Arquitetura de Página + KPI Strip</h2>
+<p class="subtitle">Estrutura geral da página e os KPIs interativos no topo</p>
+
+<!-- Page Architecture -->
+<div class="section">
+  <h3>Arquitetura Geral da Página</h3>
+  <div class="mockup">
+    <div class="mockup-header">Gazette Fusion — Layout Desktop (≥1280px)</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; min-height: 600px; font-family: system-ui, sans-serif; color: #e2e8f0;">
+
+      <!-- Top Bar -->
+      <div style="padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 18px; font-weight: 700; letter-spacing: -0.02em;">Diário Oficial</div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); padding: 2px 8px; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">Comunica CNJ</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 13px; color: rgba(255,255,255,0.4); min-width: 280px;">
+            <span style="opacity: 0.5;">⌘K</span>
+            <span>Buscar publicações...</span>
+          </div>
+          <div style="padding: 6px 12px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.25); border-radius: 8px; font-size: 12px; font-weight: 500; color: #818cf8;">↻ Sincronizar</div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.4);"></div>
+          <span style="font-size: 11px; color: rgba(255,255,255,0.3);">API ok · 847/1000 req</span>
+        </div>
+      </div>
+
+      <!-- KPI Strip -->
+      <div style="padding: 16px 24px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+        <!-- KPI 1 - Active -->
+        <div style="padding: 16px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); border-radius: 12px; cursor: pointer; position: relative;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #818cf8; border-radius: 12px 12px 0 0;"></div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Publicações Hoje</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;">142</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="font-size: 11px; color: #22c55e;">▲ 12%</span>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.25);">vs. ontem</span>
+          </div>
+          <!-- Mini sparkline -->
+          <div style="margin-top: 8px; height: 24px; display: flex; align-items: end; gap: 2px;">
+            <div style="width: 4px; height: 8px; background: rgba(99,102,241,0.3); border-radius: 2px;"></div>
+            <div style="width: 4px; height: 12px; background: rgba(99,102,241,0.3); border-radius: 2px;"></div>
+            <div style="width: 4px; height: 6px; background: rgba(99,102,241,0.3); border-radius: 2px;"></div>
+            <div style="width: 4px; height: 16px; background: rgba(99,102,241,0.4); border-radius: 2px;"></div>
+            <div style="width: 4px; height: 10px; background: rgba(99,102,241,0.3); border-radius: 2px;"></div>
+            <div style="width: 4px; height: 20px; background: rgba(99,102,241,0.4); border-radius: 2px;"></div>
+            <div style="width: 4px; height: 24px; background: #818cf8; border-radius: 2px;"></div>
+          </div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div style="padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Vinculados</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;">128</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="font-size: 11px; color: #22c55e;">89%</span>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.25);">taxa vinculação</span>
+          </div>
+          <div style="margin-top: 8px; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px;">
+            <div style="width: 89%; height: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: 2px;"></div>
+          </div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div style="padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Pendentes</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;">11</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="font-size: 11px; color: #f59e0b;">⬤</span>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.25);">aguardando triagem</span>
+          </div>
+        </div>
+
+        <!-- KPI 4 -->
+        <div style="padding: 16px; background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.12); border-radius: 12px; cursor: pointer;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Prazos Críticos</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: #ef4444; font-variant-numeric: tabular-nums;">3</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="font-size: 11px; color: #ef4444;">⚠</span>
+            <span style="font-size: 10px; color: rgba(239,68,68,0.6);">vencem em &lt;48h</span>
+          </div>
+        </div>
+
+        <!-- KPI 5 -->
+        <div style="padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Órfãos</div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: #f59e0b; font-variant-numeric: tabular-nums;">3</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="font-size: 11px; color: #818cf8;">AI</span>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.25);">2 com sugestão de match</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- View Tabs + Filters placeholder -->
+      <div style="padding: 0 24px 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; gap: 2px;">
+            <div style="padding: 6px 14px; background: rgba(99,102,241,0.12); border-radius: 8px; font-size: 12px; font-weight: 500; color: #818cf8;">Todas</div>
+            <div style="padding: 6px 14px; border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">Pendentes</div>
+            <div style="padding: 6px 14px; border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">Órfãos <span style="font-size: 9px; padding: 1px 5px; background: rgba(245,158,11,0.15); color: #f59e0b; border-radius: 10px; margin-left: 4px;">3</span></div>
+            <div style="padding: 6px 14px; border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">Prazos</div>
+            <div style="padding: 6px 14px; border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">Meus Processos</div>
+            <div style="padding: 6px 14px; border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.3); cursor: pointer; border: 1px dashed rgba(255,255,255,0.1);">+ View</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; gap: 2px; padding: 2px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+              <div style="padding: 4px 8px; background: rgba(255,255,255,0.08); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.6);">⊞</div>
+              <div style="padding: 4px 8px; border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.3);">⊟</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content area placeholder -->
+      <div style="padding: 0 24px 24px; flex: 1;">
+        <div style="height: 200px; border: 1px dashed rgba(255,255,255,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); font-size: 13px;">
+          Área de conteúdo (Tabela / Cards + Detail Panel) — próximas seções
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Design Decisions -->
+<div class="section">
+  <h3>Decisões de Design</h3>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">KPIs Interativos</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Cada KPI é clicável e filtra a tabela abaixo. O KPI ativo recebe borda colorida no topo + background tint. Clicar novamente remove o filtro. Glass Depth 2 (glass-kpi) para os cards.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Search Bar NLP</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Campo ⌘K no header aceita linguagem natural. Ao digitar, mostra interpretação estruturada em chips editáveis abaixo. Também aceita operadores: <code>fonte:tj-pr tipo:intimação</code></p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">View Tabs como Presets</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">"Todas", "Pendentes", "Órfãos", "Prazos" são views pré-configuradas. "Meus Processos" filtra por advogado logado. "+ View" permite criar views personalizadas com filtros salvos.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Rate Limit + Sincronização</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Status da API CNJ visível no header (verde/amarelo/vermelho). Botão "Sincronizar" dispara a captura manual. Sparklines nos KPIs mostram tendência dos últimos 7 dias.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Glass Depth Mapping -->
+<div class="section">
+  <h3>Mapeamento Glass Briefing</h3>
+  <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 8px 16px; font-size: 13px; align-items: center;">
+      <div style="padding: 2px 8px; background: rgba(99,102,241,0.1); border-radius: 4px; font-size: 11px; font-weight: 500; color: #818cf8;">Depth 1</div>
+      <div>Container da página, área de conteúdo principal</div>
+      <div style="color: rgba(255,255,255,0.3); font-size: 11px;">glass-widget</div>
+
+      <div style="padding: 2px 8px; background: rgba(99,102,241,0.15); border-radius: 4px; font-size: 11px; font-weight: 500; color: #a78bfa;">Depth 2</div>
+      <div>KPI cards, cards de publicação, filter chips ativos</div>
+      <div style="color: rgba(255,255,255,0.3); font-size: 11px;">glass-kpi</div>
+
+      <div style="padding: 2px 8px; background: rgba(99,102,241,0.2); border-radius: 4px; font-size: 11px; font-weight: 500; color: #c4b5fd;">Depth 3</div>
+      <div>KPI ativo (filtro selecionado), CTA "Sincronizar", alertas urgentes</div>
+      <div style="color: rgba(255,255,255,0.3); font-size: 11px;">primary tint</div>
+    </div>
+  </div>
+</div>
