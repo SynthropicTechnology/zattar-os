@@ -189,9 +189,9 @@ export default function TribunaisPage() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-muted-foreground/60">Sistema</span>
-                    <span className="text-[11px] font-medium truncate max-w-[120px]">
-                      {tribunal.sistema}
+                    <span className="text-[11px] text-muted-foreground/60">URL Base</span>
+                    <span className="text-[11px] font-mono text-muted-foreground/55 truncate max-w-[160px]" title={tribunal.url_base}>
+                      {tribunal.url_base.replace(/^https?:\/\//, '')}
                     </span>
                   </div>
                 </div>
