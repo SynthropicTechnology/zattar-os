@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LogIn, LogOut, RefreshCw, Clock, Monitor, MapPin } from 'lucide-react';
@@ -86,40 +87,35 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-48" />
-          <Skeleton className="h-4 w-full mt-2" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex gap-4">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-3 w-full" />
-                </div>
+      <GlassPanel depth={1} className="p-6">
+        <Skeleton className="h-6 w-48" />
+        <Skeleton className="h-4 w-full mt-2" />
+        <div className="space-y-4 mt-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex gap-4">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-full" />
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          ))}
+        </div>
+      </GlassPanel>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Clock className="h-5 w-5" />
-          Histórico de Acesso
-        </CardTitle>
-        <CardDescription>
-          Sessões de login registradas pelo sistema
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <GlassPanel depth={1} className="p-6">
+      <Heading level="widget" className="flex items-center gap-2">
+        <Clock className="size-4" />
+        Histórico de Acesso
+      </Heading>
+      <p className="text-xs text-muted-foreground/50 mt-1">
+        Sessões de login registradas pelo sistema
+      </p>
+
+      <div className="mt-4">
         {error && (
           <div className="text-sm text-destructive p-4 bg-destructive/10 rounded-lg">
             {error}
@@ -162,7 +158,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
 
                     {/* Conteúdo */}
                     <div className="flex-1 pb-6">
-                      <div className="rounded-lg border bg-card p-4">
+                      <div className="bg-muted/4 border-border/15 rounded-xl p-4">
                         <div className="flex items-start justify-between gap-4">
                           <div className="space-y-1">
                             <p className={`font-medium ${colorClass}`}>{label}</p>
@@ -197,7 +193,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </GlassPanel>
   );
 }
