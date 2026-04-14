@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { cn } from '@/lib/utils';
+import { getRoleBannerGradient } from '../shared/role-banner';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Loader2,
@@ -227,6 +229,7 @@ export function CargosManagementDialog({
                       className="w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors cursor-pointer rounded-md"
                     >
                       <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div className={cn('w-1 h-5 rounded-sm bg-gradient-to-b shrink-0', getRoleBannerGradient(cargo.nome))} />
                         <span className="font-medium">{cargo.nome}</span>
                         {!cargo.ativo && (
                           <Badge variant="secondary" className="text-xs">

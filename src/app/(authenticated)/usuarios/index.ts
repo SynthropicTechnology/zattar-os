@@ -161,3 +161,12 @@ export { UserCompletenessRing } from "./components/shared/user-completeness-ring
 export { UserStatusDot, getStatusFromLastLogin } from "./components/shared/user-status-dot";
 export { RoleBanner, getRoleBannerGradient } from "./components/shared/role-banner";
 export { calcularCompleteness, getCompletenessColor, getCompletenessColorClass } from "./components/shared/completeness-utils";
+export { ActivityHeatmap } from "./components/activities/activity-heatmap";
+export { ProfileSidebar } from "./components/detail/profile-sidebar";
+export { PermissionToggle } from "./components/permissions/permission-toggle";
+export { RolePresetSelect, ROLE_PRESETS } from "./components/permissions/role-preset-select";
+export { UsuariosListView } from "./components/list/usuarios-list-view";
+export { UsuariosOrgView } from "./components/list/usuarios-org-view";
+export { UserKpiStrip } from "./components/list/user-kpi-strip";
+export { UsuariosToolbar, type UsuariosViewMode } from "./components/list/usuarios-toolbar";
+export { DepartmentGroupHeader } from "./components/list/department-group-header";

@@ -26,6 +26,7 @@ import { AvatarEditDialog } from '../avatar/avatar-edit-dialog';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 import { Typography } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 interface UsuarioEditDialogProps {
   open: boolean;
@@ -368,7 +369,7 @@ export function UsuarioEditDialog({
           </div>
 
           {/* Contato */}
-          <div className="border-t pt-4 grid gap-4">
+          <GlassPanel depth={1} className="p-4 grid gap-4">
             <Typography.Small className="font-medium text-muted-foreground">Contato</Typography.Small>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
@@ -419,10 +420,10 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
-          </div>
+          </GlassPanel>
 
           {/* Profissional */}
-          <div className="border-t pt-4 grid gap-4">
+          <GlassPanel depth={1} className="p-4 grid gap-4">
             <Typography.Small className="font-medium text-muted-foreground">Profissional</Typography.Small>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="grid gap-2">
@@ -475,10 +476,10 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
-          </div>
+          </GlassPanel>
 
           {/* Endereço */}
-          <div className="border-t pt-4 grid gap-4">
+          <GlassPanel depth={1} className="p-4 grid gap-4">
             <Typography.Small className="font-medium text-muted-foreground">Endereço</Typography.Small>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="grid gap-2">
@@ -605,10 +606,10 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
-          </div>
+          </GlassPanel>
 
           {/* Status */}
-          <div className="border-t pt-4 grid gap-4">
+          <GlassPanel depth={1} className="p-4 grid gap-4">
             <Typography.Small className="font-medium text-muted-foreground">Status do Usuário</Typography.Small>
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
@@ -645,7 +646,7 @@ export function UsuarioEditDialog({
                 </Alert>
               )}
             </div>
-          </div>
+          </GlassPanel>
         </div>
       </form>
 
