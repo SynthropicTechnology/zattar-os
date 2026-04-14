@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { parseISO, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { FileSearch, ChevronRight } from 'lucide-react';
+import { FileSearch, ChevronRight, Lock, Monitor, AlertTriangle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
@@ -36,6 +36,7 @@ interface ExpedientesGlassListProps {
   onViewDetail: (expediente: Expediente) => void;
   onBaixar?: (expediente: Expediente) => void;
   usuariosData?: Usuario[];
+  tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
 }
 
 // =============================================================================
@@ -93,12 +94,14 @@ function GlassRow({
   onBaixar,
   isAlt,
   usuariosData,
+  tiposExpedientesData,
 }: {
   expediente: Expediente;
   onViewDetail: () => void;
   onBaixar?: (expediente: Expediente) => void;
   isAlt: boolean;
   usuariosData?: Usuario[];
+  tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
 }) {
   const urgency = getExpedienteUrgencyLevel(expediente);
   const dias = getExpedienteDiasRestantes(expediente);
@@ -107,6 +110,8 @@ function GlassRow({
   const origemLabel = ORIGEM_EXPEDIENTE_LABELS[expediente.origem] ?? expediente.origem;
 
   const responsavel = usuariosData?.find((u) => u.id === expediente.responsavelId);
+  const tipoLabel = tiposExpedientesData?.find((t) => t.id === expediente.tipoExpedienteId)?.tipoExpediente;
+  const orgaoJulgador = expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem;
 
   return (
     <button
@@ -126,18 +131,45 @@ function GlassRow({
           <div className={cn('w-2 h-2 rounded-full shrink-0', URGENCY_DOT[urgency])} />
         </div>
 
-        {/* 2. Main cell: processo + partes */}
+        {/* 2. Main cell — stacked info */}
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
+          {/* Title row: processo number + tipo badge + indicator badges */}
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-medium tabular-nums truncate">
               {expediente.numeroProcesso}
             </span>
+            {/* Tipo expediente badge */}
+            {tipoLabel && (
+              <span className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1.5 py-0.5 text-[9px] font-semibold shrink-0">
+                {tipoLabel}
+              </span>
+            )}
             {urgency === 'critico' && !expediente.baixadoEm && (
               <span className="inline-flex items-center bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[9px] font-semibold shrink-0">
                 Vencido
               </span>
             )}
+            {/* Indicator badges */}
+            {expediente.segredoJustica && (
+              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold">
+                <Lock className="w-2.5 h-2.5" />
+                Segredo
+              </span>
+            )}
+            {expediente.juizoDigital && (
+              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold">
+                <Monitor className="w-2.5 h-2.5" />
+                Digital
+              </span>
+            )}
+            {expediente.prioridadeProcessual && (
+              <span className="inline-flex items-center gap-1 bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[10px] font-semibold">
+                <AlertTriangle className="w-2.5 h-2.5" />
+                Prioridade
+              </span>
+            )}
           </div>
+          {/* Partes */}
           {(partes.autora || partes.re) && (
             <div className="text-[10px] text-muted-foreground/60 truncate mt-0.5">
               {partes.autora}
@@ -145,6 +177,18 @@ function GlassRow({
                 <span className="text-muted-foreground/40"> vs. </span>
               )}
               {partes.re}
+            </div>
+          )}
+          {/* Classe judicial */}
+          {expediente.classeJudicial && (
+            <div className="text-[10px] text-muted-foreground/45 mt-0.5 truncate">
+              {expediente.classeJudicial}
+            </div>
+          )}
+          {/* Orgao julgador */}
+          {orgaoJulgador && (
+            <div className="text-[10px] text-muted-foreground/45 mt-0.5 truncate" title={orgaoJulgador}>
+              {orgaoJulgador}
             </div>
           )}
         </div>
@@ -158,7 +202,7 @@ function GlassRow({
               </div>
               {expediente.dataCienciaParte && (
                 <div className="text-[9px] text-muted-foreground/50 mt-0.5">
-                  Ciência: {format(parseISO(expediente.dataCienciaParte), 'dd/MM/yy')}
+                  Ciencia: {format(parseISO(expediente.dataCienciaParte), 'dd/MM/yy')}
                 </div>
               )}
             </>
@@ -189,7 +233,7 @@ function GlassRow({
               <span className="text-[11px] truncate">{responsavel.nomeExibicao || responsavel.nomeCompleto}</span>
             </>
           ) : (
-            <span className="text-[11px] text-destructive/70 italic">Sem responsável</span>
+            <span className="text-[11px] text-destructive/70 italic">Sem responsavel</span>
           )}
         </div>
 
@@ -219,7 +263,7 @@ function GlassRow({
           {onBaixar && !expediente.baixadoEm && (
             <button
               onClick={(e) => { e.stopPropagation(); onBaixar(expediente); }}
-              className="px-2 py-1 rounded-md bg-success/6 text-success text-[10px] font-medium hover:bg-success/12 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+              className="px-2 py-1 rounded-md bg-success/6 text-success text-[10px] font-medium hover:bg-success/12 transition-colors cursor-pointer"
             >
               Baixar
             </button>
@@ -292,6 +336,7 @@ export function ExpedientesGlassList({
   onViewDetail,
   onBaixar,
   usuariosData,
+  tiposExpedientesData,
 }: ExpedientesGlassListProps) {
   if (isLoading) return <ListSkeleton />;
   if (expedientes.length === 0) return <GlassEmptyState />;
@@ -308,6 +353,7 @@ export function ExpedientesGlassList({
             onBaixar={onBaixar}
             isAlt={i % 2 === 1}
             usuariosData={usuariosData}
+            tiposExpedientesData={tiposExpedientesData}
           />
         ))}
       </div>
