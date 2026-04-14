@@ -1,18 +1,18 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Calendar, Clock, Pencil } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader2, User, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Typography } from '@/components/ui/typography';
 import { toast } from 'sonner';
+
+// Design System
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
+import { TabPills } from '@/components/dashboard/tab-pills';
 
 // Feature Components & Hooks
 import {
@@ -36,14 +36,11 @@ import {
 } from '@/app/(authenticated)/usuarios';
 import { actionObterPerfil } from '@/app/(authenticated)/perfil';
 
-function DataField({ label, value }: { label: string; value: string | null | undefined }) {
-  return (
-    <div className="space-y-1">
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
-      <p className="text-sm">{value || '-'}</p>
-    </div>
-  );
-}
+// Detail components
+import { ProfileSidebar } from '../components/detail/profile-sidebar';
+import { ActivityHeatmap } from '../components/activities/activity-heatmap';
+
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 // Extended Usuario type with permission flag
 interface UsuarioComPermissao extends Usuario {
@@ -54,26 +51,18 @@ interface UsuarioDetalhesProps {
   id: number;
 }
 
-function getInitials(name: string): string {
-  if (!name) return 'U';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) {
-    return parts[0].substring(0, 2).toUpperCase();
-  }
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+// ─── DataField ───────────────────────────────────────────────────────────────
+
+function DataField({ label, value }: { label: string; value: string | null | undefined }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
+      <p className="text-sm">{value || '-'}</p>
+    </div>
+  );
 }
 
-function formatarDataCadastro(dateStr: string | null | undefined): string {
-  if (!dateStr) return '-';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-}
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const router = useRouter();
@@ -93,12 +82,13 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     hasChanges
   } = useUsuarioPermissoes(id);
 
-  // States for UI
+  // UI States
   const [usuarioLogado, setUsuarioLogado] = useState<UsuarioComPermissao | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [redefinirSenhaOpen, setRedefinirSenhaOpen] = useState(false);
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
+  const [activeTab, setActiveTab] = useState('visao-geral');
 
   // Fetch logged user profile
   useEffect(() => {
@@ -108,6 +98,20 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
       }
     });
   }, []);
+
+  // Count active permissions for tab badge
+  const totalPermissoesAtivas = useMemo(() => {
+    if (!matriz) return undefined;
+    let count = 0;
+    for (const entry of matriz) {
+      for (const val of Object.values(entry.operacoes)) {
+        if (val) count++;
+      }
+    }
+    return count > 0 ? count : undefined;
+  }, [matriz]);
+
+  // ─── Handlers ──────────────────────────────────────────────────────────────
 
   const salvarSuperAdmin = async (novoValor: boolean) => {
     if (!usuario || !usuarioLogado) return;
@@ -145,164 +149,138 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     return success;
   };
 
-  const isLoading = isLoadingUsuario;
-  const error = errorUsuario;
+  // ─── Loading State ──────────────────────────────────────────────────────────
 
-  if (isLoading) {
+  if (isLoadingUsuario) {
     return (
-      <div className="py-8 space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push('/app/usuarios')}>
-            <ArrowLeft className="h-5 w-5" />
+      <div className="py-8 space-y-4">
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8"
+            aria-label="Voltar"
+            onClick={() => router.push('/app/usuarios')}
+          >
+            <ArrowLeft className="size-4" />
           </Button>
-          <div className="h-8 w-64 bg-muted animate-pulse rounded" />
+          <div className="h-5 w-48 bg-muted/40 animate-pulse rounded" />
         </div>
-        <Card className="p-12">
+        <GlassPanel depth={1} className="p-12">
           <div className="flex items-center justify-center gap-3">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-            <p className="text-base font-medium">Carregando dados do usuário...</p>
+            <Loader2 className="size-5 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">Carregando dados do usuário...</p>
           </div>
-        </Card>
+        </GlassPanel>
       </div>
     );
   }
 
-  if (error || !usuario) {
+  // ─── Error State ────────────────────────────────────────────────────────────
+
+  if (errorUsuario || !usuario) {
     return (
-      <div className="py-8 space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push('/app/usuarios')}>
-            <ArrowLeft className="h-5 w-5" />
+      <div className="py-8 space-y-4">
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8"
+            aria-label="Voltar"
+            onClick={() => router.push('/app/usuarios')}
+          >
+            <ArrowLeft className="size-4" />
           </Button>
-          <Typography.H1>Usuário</Typography.H1>
+          <Heading level="section">Usuário</Heading>
         </div>
-        <Card className="p-6">
+        <GlassPanel depth={1} className="p-6 space-y-4">
           <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             <AlertTitle>Erro ao carregar usuário</AlertTitle>
             <AlertDescription>
-              {error || 'Usuário não encontrado ou você não tem permissão para acessá-lo.'}
+              {errorUsuario || 'Usuário não encontrado ou você não tem permissão para acessá-lo.'}
             </AlertDescription>
           </Alert>
-          <div className="mt-6">
-            <Button onClick={() => router.push('/app/usuarios')} className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Voltar para Usuários
-            </Button>
-          </div>
-        </Card>
+          <Button onClick={() => router.push('/app/usuarios')} className="gap-2">
+            <ArrowLeft className="size-4" />
+            Voltar para Usuários
+          </Button>
+        </GlassPanel>
       </div>
     );
   }
+
+  // ─── Main Layout ────────────────────────────────────────────────────────────
 
   return (
     <div className="py-8 space-y-6">
-      {/* Header do Perfil */}
-      <Card className="p-6">
-        <div className="flex items-start gap-5">
-          {/* Botão voltar */}
-          <Button
-            variant="ghost"
-            size="icon" aria-label="Voltar"
-            onClick={() => router.push('/app/usuarios')}
-            className="shrink-0 -ml-2 -mt-1"
-            title="Voltar para Usuários"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+      {/* Two-column grid: sidebar (sticky) + content */}
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4 items-start">
 
-          {/* Avatar */}
-          <div
-            className="relative group cursor-pointer shrink-0"
-            onClick={() => setAvatarDialogOpen(true)}
-          >
-            <Avatar className="h-20 w-20 border-2 border-muted">
-              <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
-              <AvatarFallback className="text-xl font-medium">
-                {getInitials(usuario.nomeExibicao)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Camera className="h-5 w-5 text-white" />
-            </div>
-          </div>
+        {/* ── Left: ProfileSidebar ─────────────────────────────────────────── */}
+        <ProfileSidebar
+          usuario={usuario}
+          onEditAvatar={() => setAvatarDialogOpen(true)}
+          onEditCover={() => { /* TODO: integrate cover dialog if needed */ }}
+          onEdit={() => setEditDialogOpen(true)}
+          onResetPassword={() => setRedefinirSenhaOpen(true)}
+          onDeactivate={() => { /* TODO: trigger deactivation flow */ }}
+        />
 
-          {/* Info Principal */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <Typography.H2 className="truncate">{usuario.nomeCompleto}</Typography.H2>
-                <p className="text-sm text-muted-foreground mt-0.5">{usuario.emailCorporativo}</p>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                className="shrink-0 gap-2"
-                onClick={() => setEditDialogOpen(true)}
+        {/* ── Right: Breadcrumb + Tabs + Content ───────────────────────────── */}
+        <div className="space-y-4 min-w-0">
+
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2.5">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 shrink-0"
+              aria-label="Voltar"
+              onClick={() => router.push('/app/usuarios')}
+            >
+              <ArrowLeft className="size-4" />
+            </Button>
+            <div className="text-sm text-muted-foreground/50">
+              <span
+                className="hover:text-foreground cursor-pointer transition-colors"
+                onClick={() => router.push('/app/usuarios')}
               >
-                <Pencil className="h-3.5 w-3.5" />
-                Editar
-              </Button>
-            </div>
-
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2 mt-3">
-              {usuario.cargo && (
-                <Badge variant="outline">{usuario.cargo.nome}</Badge>
-              )}
-              {usuario.isSuperAdmin && (
-                <Badge variant="destructive" className="gap-1">
-                  <Shield className="h-3 w-3" />
-                  Super Admin
-                </Badge>
-              )}
-              <Badge variant={usuario.ativo ? 'success' : 'outline'}>
-                {usuario.ativo ? 'Ativo' : 'Inativo'}
-              </Badge>
-            </div>
-
-            {/* Metadados */}
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                <span>Cadastro: {formatarDataCadastro(usuario.createdAt)}</span>
-              </div>
-              {usuario.updatedAt && (
-                <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  <span>Atualizado: {formatarDataCadastro(usuario.updatedAt)}</span>
-                </div>
-              )}
+                Usuários
+              </span>
+              <span className="mx-1.5">/</span>
+              <span className="text-foreground font-medium">{usuario.nomeCompleto}</span>
             </div>
           </div>
-        </div>
-      </Card>
 
-      {/* Tabs com conteúdo organizado */}
-      <Tabs defaultValue="visao-geral" className="space-y-6">
-        <TabsList className="flex w-full overflow-x-auto">
-          <TabsTrigger value="visao-geral">Visão Geral</TabsTrigger>
-          <TabsTrigger value="dados">Dados Cadastrais</TabsTrigger>
-          <TabsTrigger value="atividades">Atividades</TabsTrigger>
-          <TabsTrigger value="permissoes">Permissões</TabsTrigger>
-          <TabsTrigger value="seguranca">Segurança</TabsTrigger>
-        </TabsList>
+          {/* Tab navigation */}
+          <TabPills
+            tabs={[
+              { id: 'visao-geral', label: 'Visão Geral' },
+              { id: 'dados', label: 'Dados Cadastrais' },
+              { id: 'atividades', label: 'Atividades' },
+              { id: 'permissoes', label: 'Permissões', count: totalPermissoesAtivas },
+              { id: 'seguranca', label: 'Segurança' },
+            ]}
+            active={activeTab}
+            onChange={setActiveTab}
+          />
 
-        {/* Tab: Visão Geral */}
-        <TabsContent value="visao-geral" className="space-y-6">
-          <AtividadesCards usuarioId={usuario.id} />
-        </TabsContent>
+          {/* ── Tab: Visão Geral ─────────────────────────────────────────── */}
+          {activeTab === 'visao-geral' && (
+            <div className="space-y-4">
+              <AtividadesCards usuarioId={usuario.id} />
+              <ActivityHeatmap data={[]} />
+            </div>
+          )}
 
-        {/* Tab: Dados Cadastrais */}
-        <TabsContent value="dados" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Informações Pessoais
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+          {/* ── Tab: Dados Cadastrais ────────────────────────────────────── */}
+          {activeTab === 'dados' && (
+            <GlassPanel depth={1} className="p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <User className="size-4 text-muted-foreground/50" />
+                <Heading level="card">Informações Pessoais</Heading>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
                 <DataField label="Nome Completo" value={usuario.nomeCompleto} />
                 <DataField label="Nome de Exibição" value={usuario.nomeExibicao} />
@@ -314,7 +292,10 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                 <DataField label="E-mail Pessoal" value={usuario.emailPessoal} />
                 <DataField label="Telefone" value={formatarTelefone(usuario.telefone)} />
                 <DataField label="Ramal" value={usuario.ramal} />
-                <DataField label="OAB" value={usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : null} />
+                <DataField
+                  label="OAB"
+                  value={usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : null}
+                />
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Cargo</p>
                   <p className="text-sm">{usuario.cargo ? usuario.cargo.nome : '-'}</p>
@@ -326,93 +307,95 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                   <DataField label="Endereço" value={formatarEnderecoCompleto(usuario.endereco)} />
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Tab: Atividades */}
-        <TabsContent value="atividades" className="space-y-6">
-          <AtividadesCards usuarioId={usuario.id} />
-          <AtividadesRecentes usuarioId={usuario.id} />
-        </TabsContent>
-
-        {/* Tab: Permissões */}
-        <TabsContent value="permissoes" className="space-y-6">
-          <PermissoesMatriz
-            matriz={matriz}
-            isSuperAdmin={usuario.isSuperAdmin}
-            hasChanges={hasChanges}
-            isSaving={isSavingPermissoes}
-            isLoading={isLoadingPermissoes}
-            canEdit={!usuario.isSuperAdmin && (usuarioLogado?.isSuperAdmin || usuarioLogado?.podeGerenciarPermissoes || false)}
-            onTogglePermissao={togglePermissao}
-            onSalvar={handleSavePermissoes}
-            onResetar={resetar}
-          />
-        </TabsContent>
-
-        {/* Tab: Segurança */}
-        <TabsContent value="seguranca" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Credenciais de Acesso</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="space-y-1">
-                  <div className="text-sm font-medium">Redefinir Senha</div>
-                  <div className="text-sm text-muted-foreground">
-                    Define uma nova senha para o usuário selecionado.
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setRedefinirSenhaOpen(true)}
-                >
-                  Redefinir Senha
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          <AuthLogsTimeline usuarioId={usuario.id} />
-
-          {usuarioLogado?.isSuperAdmin && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Configurações de Segurança
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="space-y-0.5">
-                    <div className="text-sm font-medium">Super Administrador</div>
-                    <div className="text-sm text-muted-foreground">
-                      Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
-                    </div>
-                    {usuario.id === usuarioLogado.id && (
-                      <div className="text-xs text-warning mt-2">
-                        Você não pode remover seu próprio status de Super Admin
-                      </div>
-                    )}
-                  </div>
-                  <Switch
-                    checked={usuario.isSuperAdmin}
-                    onCheckedChange={salvarSuperAdmin}
-                    disabled={isSavingSuperAdmin || usuario.id === usuarioLogado.id}
-                    aria-label="Marcar como Super Administrador"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            </GlassPanel>
           )}
-        </TabsContent>
-      </Tabs>
 
-      {/* Dialogs */}
+          {/* ── Tab: Atividades ──────────────────────────────────────────── */}
+          {activeTab === 'atividades' && (
+            <div className="space-y-4">
+              <AtividadesCards usuarioId={usuario.id} />
+              <AtividadesRecentes usuarioId={usuario.id} />
+            </div>
+          )}
+
+          {/* ── Tab: Permissões ──────────────────────────────────────────── */}
+          {activeTab === 'permissoes' && (
+            <PermissoesMatriz
+              matriz={matriz}
+              isSuperAdmin={usuario.isSuperAdmin}
+              hasChanges={hasChanges}
+              isSaving={isSavingPermissoes}
+              isLoading={isLoadingPermissoes}
+              canEdit={
+                !usuario.isSuperAdmin &&
+                (usuarioLogado?.isSuperAdmin || usuarioLogado?.podeGerenciarPermissoes || false)
+              }
+              onTogglePermissao={togglePermissao}
+              onSalvar={handleSavePermissoes}
+              onResetar={resetar}
+            />
+          )}
+
+          {/* ── Tab: Segurança ───────────────────────────────────────────── */}
+          {activeTab === 'seguranca' && (
+            <div className="space-y-4">
+              {/* Credentials */}
+              <GlassPanel depth={1} className="p-6">
+                <Heading level="card" className="mb-4">Credenciais de Acesso</Heading>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-1">
+                    <div className="text-sm font-medium">Redefinir Senha</div>
+                    <div className="text-sm text-muted-foreground">
+                      Define uma nova senha para o usuário selecionado.
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setRedefinirSenhaOpen(true)}
+                  >
+                    Redefinir Senha
+                  </Button>
+                </div>
+              </GlassPanel>
+
+              {/* Auth Logs */}
+              <AuthLogsTimeline usuarioId={usuario.id} />
+
+              {/* Super Admin toggle — only for super admins */}
+              {usuarioLogado?.isSuperAdmin && (
+                <GlassPanel depth={1} className="p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Shield className="size-4 text-muted-foreground/50" />
+                    <Heading level="card">Configurações de Segurança</Heading>
+                  </div>
+                  <div className="flex items-center justify-between p-4 border border-border/20 rounded-xl">
+                    <div className="space-y-0.5">
+                      <div className="text-sm font-medium">Super Administrador</div>
+                      <div className="text-sm text-muted-foreground">
+                        Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
+                      </div>
+                      {usuario.id === usuarioLogado.id && (
+                        <div className="text-xs text-warning mt-2">
+                          Você não pode remover seu próprio status de Super Admin
+                        </div>
+                      )}
+                    </div>
+                    <Switch
+                      checked={usuario.isSuperAdmin}
+                      onCheckedChange={salvarSuperAdmin}
+                      disabled={isSavingSuperAdmin || usuario.id === usuarioLogado.id}
+                      aria-label="Marcar como Super Administrador"
+                    />
+                  </div>
+                </GlassPanel>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Dialogs ────────────────────────────────────────────────────────── */}
       <AvatarEditDialog
         open={avatarDialogOpen}
         onOpenChange={setAvatarDialogOpen}
