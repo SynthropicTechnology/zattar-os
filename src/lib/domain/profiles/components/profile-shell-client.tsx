@@ -3,6 +3,7 @@
 import { ProfileConfig, ProfileData, SectionConfig } from "../configs/types";
 import { ProfileHeader } from "./profile-layout/profile-header";
 import { ProfileSidebar } from "./profile-layout/profile-sidebar";
+import { ProfileKpiStrip } from "./profile-layout/profile-kpi-strip";
 import { InfoCards } from "./sections/info-cards";
 import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
@@ -53,6 +54,14 @@ interface ProfileShellClientProps {
   entityId: number;
   initialData: ProfileData;
 }
+
+const TIPO_COLOR_VAR: Record<ProfileShellClientProps['entityType'], string> = {
+  cliente: 'var(--primary)',
+  parte_contraria: 'var(--destructive)',
+  terceiro: 'var(--info)',
+  representante: 'var(--success)',
+  usuario: 'var(--primary)',
+};
 
 const configs: Record<string, ProfileConfig> = {
     cliente: clienteProfileConfig,
@@ -229,12 +238,23 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
 
   const currentTab = config.tabs.find(t => t.id === activeTab);
 
+  const tipoColorStyle = {
+    ['--tipo-color' as string]: TIPO_COLOR_VAR[entityType],
+  } as React.CSSProperties;
+
   return (
-    <div className="mx-auto min-h-screen lg:max-w-7xl xl:pt-6">
+    <div
+      className="mx-auto min-h-screen lg:max-w-7xl xl:pt-6"
+      style={tipoColorStyle}
+    >
       <div className="space-y-4">
         {/* Card com Header + Tabs (estrutura do template) */}
         <Card className="overflow-hidden">
-          <ProfileHeader config={config.headerConfig} data={data} />
+          <ProfileHeader
+            config={config.headerConfig}
+            data={data}
+            entityType={entityType}
+          />
 
           {/* Tabs bar com border-t */}
           <div className="border-t">
@@ -279,6 +299,9 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
             </div>
           </div>
         </Card>
+
+        {/* KPI Strip */}
+        <ProfileKpiStrip entityType={entityType} data={data} />
 
         {/* Grid: Sidebar + Main Content */}
         <div className="gap-4 space-y-4 lg:grid lg:grid-cols-[320px_1fr] lg:space-y-0 xl:grid-cols-[360px_1fr]">
