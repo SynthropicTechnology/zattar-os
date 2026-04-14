@@ -10,6 +10,13 @@ import { createClient } from '@/lib/supabase/client'
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
+function getGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour >= 6 && hour < 12) return 'Bom dia!'
+  if (hour >= 12 && hour < 18) return 'Boa tarde!'
+  return 'Boa noite!'
+}
+
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -68,31 +75,24 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
   return (
     <div className={cn('flex flex-col items-center', className)} {...props}>
-      {/* Statement */}
-      <div className="text-center mb-10">
+      {/* Greeting */}
+      <div className="text-center mb-8">
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease }}
-          className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground"
+          className="font-headline font-extrabold text-3xl leading-tight tracking-tight text-foreground"
         >
-          Acesse seu{' '}
-          <span className="auth-gradient-text">escritório.</span>
+          {getGreeting()}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease }}
-          className="mt-3 text-[0.9375rem] text-muted-foreground"
+          className="mt-2 text-sm text-muted-foreground"
         >
           Entre com suas credenciais para continuar
         </motion.p>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 0.3, ease }}
-          className="auth-accent-line"
-        />
       </div>
 
       {/* Form */}

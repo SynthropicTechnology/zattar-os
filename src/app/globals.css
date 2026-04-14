@@ -1512,28 +1512,6 @@
     background-size: 256px;
   }
 
-  /* Grid lines with radial mask */
-  .auth-grid {
-    @apply fixed inset-0 pointer-events-none;
-    z-index: 1;
-  }
-
-  .auth-grid::before {
-    content: '';
-    @apply absolute inset-0;
-    background-image: repeating-linear-gradient(0deg, oklch(1 0 0 / 0.03) 0px, oklch(1 0 0 / 0.03) 1px, transparent 1px, transparent 72px);
-    mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
-  }
-
-  .auth-grid::after {
-    content: '';
-    @apply absolute inset-0;
-    background-image: repeating-linear-gradient(90deg, oklch(1 0 0 / 0.03) 0px, oklch(1 0 0 / 0.03) 1px, transparent 1px, transparent 72px);
-    mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, black 15%, transparent 75%);
-  }
-
   /* Spotlights */
   .auth-spotlight {
     @apply fixed pointer-events-none;
