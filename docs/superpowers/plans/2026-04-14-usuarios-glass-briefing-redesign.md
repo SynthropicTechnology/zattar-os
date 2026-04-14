@@ -361,7 +361,7 @@ export function RoleBanner({ cargoNome, inactive, height = 'h-14', className }: 
   return (
     <div
       className={cn(
-        'relative w-full bg-gradient-to-br overflow-hidden',
+        'relative w-full bg-linear-to-br overflow-hidden',
         gradient,
         height,
         inactive && 'grayscale',
@@ -369,7 +369,7 @@ export function RoleBanner({ cargoNome, inactive, height = 'h-14', className }: 
       )}
     >
       {/* Subtle highlight overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/60" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background/60" />
     </div>
   );
 }
@@ -494,10 +494,10 @@ export function UsuarioCard({ usuario, lastLoginAt, stats, onView }: UsuarioCard
         )}
 
         {/* Avatar area */}
-        <div className="px-4 -mt-7 relative z-[2]">
+        <div className="px-4 -mt-7 relative z-2">
           <div className="relative inline-block">
             <UserCompletenessRing score={inactive ? 0 : score} size={60} />
-            <Avatar className="size-[52px] border-[3px] border-background m-1">
+            <Avatar className="size-13 border-[3px] border-background m-1">
               <AvatarImage
                 src={getAvatarUrl(usuario.avatarUrl) || undefined}
                 alt={usuario.nomeExibicao}
@@ -851,7 +851,7 @@ export function DepartmentGroupHeader({
           onClick={() => setOpen(!open)}
         >
           {/* Color bar */}
-          <div className={cn('w-1 h-6 rounded-sm bg-gradient-to-b shrink-0', gradient)} />
+          <div className={cn('w-1 h-6 rounded-sm bg-linear-to-b shrink-0', gradient)} />
 
           {/* Title + count */}
           <span className="text-sm font-semibold flex-1 text-left">{cargoNome}</span>
@@ -1088,7 +1088,7 @@ export function UsuariosListView({ usuarios, lastLoginMap, statsMap, onView }: U
           return (
             <div className="flex items-center gap-2.5">
               <div className="relative">
-                <Avatar className="size-[34px]">
+                <Avatar className="size-8.5
                   <AvatarImage src={getAvatarUrl(u.avatarUrl) || undefined} alt={u.nomeExibicao} />
                   <AvatarFallback className="text-xs font-medium">
                     {getInitials(u.nomeExibicao)}
@@ -1330,7 +1330,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
 
       {/* Org tree */}
       <div
-        className="flex flex-col items-center gap-0 min-w-[600px] transition-transform duration-200"
+        className="flex flex-col items-center gap-0 min-w-150 transition-transform duration-200"
         style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'top center' }}
       >
         {levels.map((level, levelIdx) => (
@@ -1391,9 +1391,9 @@ function OrgNode({
         }
       }}
       className={cn(
-        'flex flex-col items-center p-4 rounded-xl border transition-all duration-200 cursor-pointer min-w-[160px]',
+        'flex flex-col items-center p-4 rounded-xl border transition-all duration-200 cursor-pointer min-w-40',
         'bg-muted/4 border-border/15 hover:border-border/30 hover:-translate-y-0.5',
-        isRoot && 'bg-primary/[0.06] border-primary/20 min-w-[200px]',
+        isRoot && 'bg-primary/6 border-primary/20 min-w-50',
       )}
     >
       <Avatar className={cn('border-2 border-background', isRoot ? 'size-12' : 'size-10')}>
@@ -1767,14 +1767,14 @@ export function ProfileSidebar({
       </div>
 
       {/* Avatar */}
-      <div className="flex flex-col items-center -mt-11 px-5 relative z-[2]">
+      <div className="flex flex-col items-center -mt-11 px-5 relative z-2">
         <div
           className="relative cursor-pointer group"
           onClick={onEditAvatar}
         >
           <div className="relative">
             <UserCompletenessRing score={score} size={100} strokeWidth={2.5} />
-            <Avatar className="size-[88px] border-4 border-background m-1.5">
+            <Avatar className="size-22 border-4 border-background m-1.5">
               <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
               <AvatarFallback className="text-2xl font-semibold">
                 {getInitials(usuario.nomeExibicao)}

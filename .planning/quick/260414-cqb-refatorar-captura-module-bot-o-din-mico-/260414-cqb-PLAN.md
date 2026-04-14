@@ -247,8 +247,8 @@ States in credenciais/page-client.tsx:
    ```
    className={`flex items-center justify-between p-3 rounded-xl border ${
      credencial.active
-       ? 'bg-white/[0.03] border-border/10'
-       : 'bg-white/[0.015] border-border/5 opacity-60'
+       ? 'bg-white/3 border-border/10'
+       : 'bg-white/1.5 border-border/5 opacity-60'
    }`}
    ```
   </action>

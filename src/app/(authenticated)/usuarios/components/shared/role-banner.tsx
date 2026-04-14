@@ -41,7 +41,7 @@ export function RoleBanner({
   return (
     <div
       className={cn(
-        'bg-gradient-to-br relative w-full overflow-hidden',
+        'bg-linear-to-br relative w-full overflow-hidden',
         gradient,
         height,
         inactive && 'grayscale',
@@ -49,7 +49,7 @@ export function RoleBanner({
       )}
     >
       {/* Bottom overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/60" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background/60" />
     </div>
   );
 }
