@@ -12,6 +12,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import Link from 'next/link';
 import {
   Plus,
   AlertCircle,
@@ -109,8 +110,17 @@ interface EntityDetailProps {
   onClose: () => void;
 }
 
+const LABEL_TO_SEGMENT: Record<string, string> = {
+  'Cliente': 'clientes',
+  'Parte Contrária': 'partes-contrarias',
+  'Terceiro': 'terceiros',
+  'Representante': 'representantes',
+};
+
 function EntityDetail({ data, onClose }: EntityDetailProps) {
   const { config } = data;
+  const segment = LABEL_TO_SEGMENT[config.label] ?? 'clientes';
+  const perfilHref = `/partes/${segment}/${data.id}`;
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(data.nome).catch(() => {});
@@ -210,10 +220,13 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
 
       {/* Ações */}
       <div className="flex gap-2 mt-5 pt-4 border-t border-border/10">
-        <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer">
+        <Link
+          href={perfilHref}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer"
+        >
           <ExternalLink className="size-3" />
           Ver perfil completo
-        </button>
+        </Link>
         <button
           onClick={handleCopy}
           aria-label="Copiar nome"
