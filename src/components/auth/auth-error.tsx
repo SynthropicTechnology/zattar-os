@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ShieldAlert, ArrowLeft } from 'lucide-react'
+import { AUTH_STYLES } from './styles'
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
@@ -42,7 +43,7 @@ export function AuthError({ error }: { error?: string }) {
         transition={{ delay: 0.3, ease }}
         className="w-full"
       >
-        <Link href="/login" className="auth-btn-primary">
+        <Link href="/login" className={AUTH_STYLES.btnPrimary}>
           <ArrowLeft className="h-4.5 w-4.5" />
           Voltar ao login
         </Link>

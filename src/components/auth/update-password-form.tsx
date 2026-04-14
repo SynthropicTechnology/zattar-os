@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
+import { AUTH_STYLES } from './styles'
 
 const customEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
@@ -129,10 +130,10 @@ export function UpdatePasswordForm() {
             transition={{ duration: 0.3, ease: customEase }}
             className="text-center w-full"
           >
-            <h1 className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground mb-2">
+            <h1 className="font-headline font-extrabold text-3xl leading-tight tracking-tight text-foreground mb-2">
               Tudo certo.
             </h1>
-            <p className="text-[0.9375rem] text-muted-foreground mb-8">
+            <p className="text-sm text-muted-foreground mb-8">
               Sua nova senha foi definida com sucesso.
             </p>
 
@@ -174,12 +175,12 @@ export function UpdatePasswordForm() {
             transition={{ duration: 0.3, ease: customEase }}
             className="w-full"
           >
-            <div className="text-center mb-10">
+            <div className="text-center mb-8">
               <motion.h1
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: customEase }}
-                className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground"
+                className="font-headline font-extrabold text-3xl leading-tight tracking-tight text-foreground"
               >
                 Senha nova.
               </motion.h1>
@@ -187,21 +188,15 @@ export function UpdatePasswordForm() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, ease: customEase }}
-                className="mt-3 text-[0.9375rem] text-muted-foreground"
+                className="mt-2 text-sm text-muted-foreground"
               >
                 Defina sua nova senha abaixo
               </motion.p>
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
-                className="auth-accent-line"
-              />
             </div>
 
             <form onSubmit={handleUpdate} className="w-full space-y-5">
               <div>
-                <label htmlFor="password" className="auth-label">Nova senha</label>
+                <label htmlFor="password" className={AUTH_STYLES.label}>Nova senha</label>
                 <div className="relative">
                   <input
                     id="password"
@@ -210,13 +205,13 @@ export function UpdatePasswordForm() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="auth-input pr-12"
+                    className={cn(AUTH_STYLES.input, 'pr-12')}
                     autoComplete="new-password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="auth-toggle"
+                    className={AUTH_STYLES.toggle}
                     aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -226,7 +221,7 @@ export function UpdatePasswordForm() {
               </div>
 
               <div>
-                <label htmlFor="confirm-password" className="auth-label">Confirmar senha</label>
+                <label htmlFor="confirm-password" className={AUTH_STYLES.label}>Confirmar senha</label>
                 <div className="relative">
                   <input
                     id="confirm-password"
@@ -235,13 +230,13 @@ export function UpdatePasswordForm() {
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={cn('auth-input pr-12', mismatch && 'border-destructive')}
+                    className={cn(AUTH_STYLES.input, 'pr-12', mismatch && 'border-destructive')}
                     autoComplete="new-password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="auth-toggle"
+                    className={AUTH_STYLES.toggle}
                     aria-label={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -269,7 +264,7 @@ export function UpdatePasswordForm() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.25, ease: customEase }}
-                    className="auth-error"
+                    className={AUTH_STYLES.error}
                     role="alert"
                   >
                     <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
@@ -278,7 +273,7 @@ export function UpdatePasswordForm() {
                 )}
               </AnimatePresence>
 
-              <button type="submit" disabled={isLoading} className="auth-btn-primary">
+              <button type="submit" disabled={isLoading} className={AUTH_STYLES.btnPrimary}>
                 {isLoading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (

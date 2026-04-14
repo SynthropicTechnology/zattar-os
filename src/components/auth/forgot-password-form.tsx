@@ -4,7 +4,9 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertCircle, ArrowLeft, ArrowRight, Loader2, Mail } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
+import { AUTH_STYLES } from './styles'
 
 const customEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
@@ -46,10 +48,10 @@ export function ForgotPasswordForm() {
             className="text-center w-full"
           >
             <div className="text-center mb-8">
-              <h1 className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground">
+              <h1 className="font-headline font-extrabold text-3xl leading-tight tracking-tight text-foreground">
                 Pronto.
               </h1>
-              <p className="mt-3 text-[0.9375rem] text-muted-foreground">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Se o email estiver cadastrado, você receberá um link.
               </p>
             </div>
@@ -83,12 +85,12 @@ export function ForgotPasswordForm() {
             transition={{ duration: 0.3, ease: customEase }}
             className="w-full"
           >
-            <div className="text-center mb-10">
+            <div className="text-center mb-8">
               <motion.h1
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: customEase }}
-                className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground"
+                className="font-headline font-extrabold text-3xl leading-tight tracking-tight text-foreground"
               >
                 Sem problemas.
               </motion.h1>
@@ -96,21 +98,15 @@ export function ForgotPasswordForm() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, ease: customEase }}
-                className="mt-3 text-[0.9375rem] text-muted-foreground"
+                className="mt-2 text-sm text-muted-foreground"
               >
                 Digite seu email e enviamos um link para redefinir.
               </motion.p>
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
-                className="auth-accent-line"
-              />
             </div>
 
             <form onSubmit={handleReset} className="w-full space-y-5">
               <div>
-                <label htmlFor="email" className="auth-label">Email</label>
+                <label htmlFor="email" className={AUTH_STYLES.label}>Email</label>
                 <input
                   id="email"
                   type="email"
@@ -118,7 +114,7 @@ export function ForgotPasswordForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="auth-input"
+                  className={AUTH_STYLES.input}
                   autoComplete="email"
                 />
               </div>
@@ -130,7 +126,7 @@ export function ForgotPasswordForm() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.25, ease: customEase }}
-                    className="auth-error"
+                    className={AUTH_STYLES.error}
                     role="alert"
                   >
                     <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
@@ -139,7 +135,7 @@ export function ForgotPasswordForm() {
                 )}
               </AnimatePresence>
 
-              <button type="submit" disabled={isLoading} className="auth-btn-primary">
+              <button type="submit" disabled={isLoading} className={AUTH_STYLES.btnPrimary}>
                 {isLoading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (

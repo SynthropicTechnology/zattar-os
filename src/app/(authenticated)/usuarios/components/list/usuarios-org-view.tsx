@@ -61,9 +61,9 @@ function OrgNode({ usuario, isRoot, onClick }: OrgNodeProps) {
         'transition-all duration-200 select-none',
         'hover:-translate-y-0.5 hover:shadow-md',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
-        'min-w-[100px] max-w-[120px]',
+        'min-w-25 max-w-30',
         isRoot
-          ? 'bg-primary/[0.06] border-primary/20'
+          ? 'bg-primary/6 border-primary/20'
           : 'glass-widget border-border/20',
       )}
     >
@@ -159,7 +159,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
         <button
           type="button"
           onClick={handleZoomReset}
-          className="text-[11px] font-medium tabular-nums text-muted-foreground/60 hover:text-foreground transition-colors min-w-[40px] text-center"
+          className="text-[11px] font-medium tabular-nums text-muted-foreground/60 hover:text-foreground transition-colors min-w-10nter"
           aria-label="Redefinir zoom para 100%"
         >
           {zoom}%

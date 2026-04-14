@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { AlertCircle, ArrowRight, Loader2, Check, Eye, EyeOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
+import { AUTH_STYLES } from './styles'
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
@@ -102,7 +103,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, ease }}
         >
-          <label htmlFor="email" className="auth-label">Email</label>
+          <label htmlFor="email" className={AUTH_STYLES.label}>Email</label>
           <input
             id="email"
             type="email"
@@ -110,7 +111,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="auth-input"
+            className={AUTH_STYLES.input}
             autoComplete="email"
           />
         </motion.div>
@@ -120,7 +121,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, ease }}
         >
-          <label htmlFor="password" className="auth-label">Senha</label>
+          <label htmlFor="password" className={AUTH_STYLES.label}>Senha</label>
           <div className="relative">
             <input
               id="password"
@@ -129,13 +130,13 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="auth-input pr-12"
+              className={cn(AUTH_STYLES.input, 'pr-12')}
               autoComplete="current-password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="auth-toggle"
+              className={AUTH_STYLES.toggle}
               aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -156,7 +157,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.25, ease }}
-              className="auth-error"
+              className={AUTH_STYLES.error}
               role="alert"
             >
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
@@ -173,7 +174,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           <button
             type="submit"
             disabled={isLoading || success}
-            className={cn('auth-btn-primary', success && 'auth-btn-success')}
+            className={cn(AUTH_STYLES.btnPrimary, success && AUTH_STYLES.btnSuccess)}
           >
             {success ? (
               <Check className="h-5 w-5" strokeWidth={3} />

@@ -117,7 +117,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       onClick={() => onClick?.(audiencia)}
       className={cn(
         'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
-        'focus-visible:ring-1 focus-visible:ring-primary/30 hover:bg-foreground/[0.04]',
+        'focus-visible:ring-1 focus-visible:ring-primary/30 hover:bg-foreground/4
         selected && 'bg-primary/6',
         (isPast || isFinalizada || isCancelada) && 'opacity-55',
         className,
@@ -169,7 +169,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* TRT + Grau */}
       {audiencia.trt && (
-        <div className="flex items-center gap-1 shrink-0 hidden md:flex">
+        <div className="flex items-center gap-1 shrink-0 md:flex">
           <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">
             {audiencia.trt}
           </span>
