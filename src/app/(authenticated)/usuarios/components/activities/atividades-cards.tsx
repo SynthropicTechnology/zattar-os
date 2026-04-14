@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
+import { AnimatedNumber } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Briefcase, Calendar, FileText, FileCheck, ExternalLink } from 'lucide-react';
 import { actionBuscarEstatisticasAtividades } from '../../actions/atividades-actions';
@@ -22,18 +24,23 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, href, color }: StatCardProps) {
   const content = (
-    <Card className={cn('transition-all hover:shadow-md', href && 'cursor-pointer')}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <div className={cn('p-2 rounded-lg', color)}>{icon}</div>
-      </CardHeader>
-      <CardContent>
+    <GlassPanel depth={2} className={cn('p-4 transition-all hover:shadow-md', href && 'cursor-pointer')}>
+      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <p className="text-sm font-medium">{title}</p>
+        <IconContainer size="md" className={color}>
+          {icon}
+        </IconContainer>
+      </div>
+      <div>
         <div className="flex items-baseline justify-between">
-          <div className="text-2xl font-bold">{value}</div>
+          <AnimatedNumber value={value} className="text-2xl font-bold" />
           {href && <ExternalLink className="h-4 w-4 text-muted-foreground" />}
         </div>
-      </CardContent>
-    </Card>
+        {href && (
+          <div className="text-[10px] text-primary mt-1 cursor-pointer">Ver todos →</div>
+        )}
+      </div>
+    </GlassPanel>
   );
 
   if (href) {
@@ -72,15 +79,15 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <GlassPanel key={i} depth={2} className="p-4">
+            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-8 w-8 rounded-lg" />
-            </CardHeader>
-            <CardContent>
+            </div>
+            <div>
               <Skeleton className="h-8 w-16" />
-            </CardContent>
-          </Card>
+            </div>
+          </GlassPanel>
         ))}
       </div>
     );
