@@ -11,7 +11,6 @@ import {
   Plus,
 } from 'lucide-react';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
-import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -93,10 +92,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [viewMode, setViewMode] = useState<ViewType>(viewFromUrl);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [refreshCounter, setRefreshCounter] = useState(0);
   const [filters, setFilters] = useState<ExpedientesFilterBarFilters>({
-    trt: null, grau: null, origem: null, responsavel: null, tipo: null,
+    status: 'pendentes', trt: null, grau: null, origem: null, responsavel: null, tipo: null,
   });
 
   // Detail/baixa dialog state
@@ -116,10 +114,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [semanaDate, setSemanaDate] = useState(new Date());
 
   const baixadoFiltroAtivo = useMemo(() => {
-    if (activeTab === 'pendentes') return false;
-    if (activeTab === 'baixados') return true;
+    if (filters.status === 'pendentes') return false;
+    if (filters.status === 'baixados') return true;
     return undefined;
-  }, [activeTab]);
+  }, [filters.status]);
 
   // Busca os expedientes da aba ativa para garantir que a view renderize
   // exatamente o subconjunto esperado, sem depender de uma amostra parcial.
@@ -216,12 +214,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     );
   }, [tabSource, search]);
 
-  const tabs: TabPillOption[] = useMemo(() => [
-    { id: 'pendentes', label: 'Pendentes', count: globalCounts.pendentes },
-    { id: 'baixados', label: 'Baixados', count: globalCounts.baixados },
-    { id: 'todos', label: 'Todos', count: globalCounts.todos },
-  ], [globalCounts]);
-
   // ─── Navigation ──────────────────────────────────────────────────────────────
 
   const handleViewChange = useCallback((view: string) => {
@@ -241,8 +233,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
   // ─── Insight banners ─────────────────────────────────────────────────────────
 
-  const showVencidosBanner = vencidos.length > 0 && activeTab !== 'baixados';
-  const showSemResponsavelBanner = semResponsavel.length > 3 && !showVencidosBanner && activeTab !== 'baixados';
+  const showVencidosBanner = vencidos.length > 0 && filters.status !== 'baixados';
+  const showSemResponsavelBanner = semResponsavel.length > 3 && !showVencidosBanner && filters.status !== 'baixados';
 
   // ─── Detail/action handlers ──────────────────────────────────────────────────
 
@@ -282,7 +274,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       </div>
 
       {/* 2. KPI Strip */}
-      {!isLoading && activeTab !== 'baixados' && (
+      {!isLoading && filters.status !== 'baixados' && (
         <ExpedientesPulseStrip
           vencidos={vencidos.length}
           hoje={hoje.length}
@@ -309,18 +301,13 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
       {/* 4. View Controls — sempre visível conforme Glass Briefing */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <TabPills
-          tabs={tabs}
-          active={activeTab}
-          onChange={(id) => setActiveTab(id as typeof activeTab)}
-        />
-
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className="flex items-center gap-2 flex-1 flex-wrap justify-end">
           <ExpedientesFilterBar
             filters={filters}
             onChange={setFilters}
             usuarios={usuarios || []}
             tiposExpedientes={tiposExpedientes || []}
+            counts={globalCounts}
           />
           <SearchInput
             value={search}
@@ -386,7 +373,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         {viewMode === 'lista' && (
           <ExpedientesListWrapper
             search={search}
-            activeTab={activeTab}
+            activeTab={filters.status}
             refreshCounter={refreshCounter}
             onViewDetail={handleViewDetail}
             onBaixar={handleBaixar}

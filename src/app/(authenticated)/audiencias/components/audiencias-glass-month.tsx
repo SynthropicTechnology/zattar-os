@@ -114,7 +114,7 @@ function DayCell({
       type="button"
       onClick={() => count > 0 && onSelect(day, audienciasDia)}
       className={cn(
-        'relative w-full min-h-[100px] sm:min-h-[120px] p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
+        'relative w-full min-h-25 sm:min-h-30 p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
         'border border-border/40',
         'hover:bg-accent/40 hover:border-border/60',
         'active:bg-accent/20 active:scale-[0.98]',
@@ -138,7 +138,7 @@ function DayCell({
           {audienciasDia.map((aud) => (
             <div
               key={aud.id}
-              className={cn('w-[7px] h-[7px] rounded-full shrink-0', getStatusDotClass(aud.status))}
+              className={cn('w-1.75 h-1.75 rounded-full shrink-0', getStatusDotClass(aud.status))}
             />
           ))}
         </div>
@@ -146,7 +146,7 @@ function DayCell({
 
       {count >= 3 && (
         <div className="flex gap-1 mt-auto pt-1.5">
-          <span className="text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-[18px]">
+          <span className="text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5">
             {count}
           </span>
         </div>
@@ -196,7 +196,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
           </span>
         </div>
         <span className={cn(
-          'text-[10px] font-semibold tracking-[0.03em] px-[7px] py-0.5 rounded-full border shrink-0',
+          'text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
           getStatusBadgeClass(audiencia.status),
         )}>
           {STATUS_AUDIENCIA_LABELS[audiencia.status]}
@@ -204,7 +204,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       </div>
 
       {/* Processo + grau */}
-      <div className="flex items-center gap-1.5 mt-1.5 ml-[18px] min-w-0">
+      <div className="flex items-center gap-1.5 mt-1.5 ml-4.5 min-w-0">
         {audiencia.grau && (
           <span className="text-[9px] text-foreground/30 shrink-0">
             {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
@@ -216,7 +216,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       </div>
 
       {/* Meta: modalidade + órgão */}
-      <div className="flex items-center gap-3 mt-1.5 ml-[18px] text-foreground/35">
+      <div className="flex items-center gap-3 mt-1.5 ml-4.5 text-foreground/35">
         <div className="flex items-center gap-1">
           <ModalidadeIcon className="w-3 h-3" />
           <span className="text-[11px]">{modalidadeLabel}</span>
@@ -320,7 +320,7 @@ export function AudienciasGlassMonth({
               { color: 'bg-destructive', label: 'Cancelada' },
             ].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1.5">
-                <div className={cn('w-[7px] h-[7px] rounded-full', color)} />
+                <div className={cn('w-1.75 h-1.75 rounded-full', color)} />
                 <span className="text-[11px] text-foreground/45">{label}</span>
               </div>
             ))}

@@ -7,14 +7,15 @@ import { cn } from '@/lib/utils';
 import {
   CodigoTribunal,
   GRAU_TRIBUNAL_LABELS,
-  GrauTribunal,
   ORIGEM_EXPEDIENTE_LABELS,
-  OrigemExpediente,
 } from '../domain';
 
 // ── Types ──────────────────────────────────────────────────────────────
 
+export type ExpedientesStatus = 'pendentes' | 'baixados' | 'todos';
+
 export interface ExpedientesFilterBarFilters {
+  status: ExpedientesStatus;
   trt: string | null;
   grau: string | null;
   origem: string | null;
@@ -27,6 +28,7 @@ interface ExpedientesFilterBarProps {
   onChange: (filters: ExpedientesFilterBarFilters) => void;
   usuarios: { id: number; nomeExibicao?: string | null; nomeCompleto?: string | null }[];
   tiposExpedientes: { id: number; tipoExpediente?: string }[];
+  counts: { pendentes: number; baixados: number; todos: number };
 }
 
 // ── Shared ─────────────────────────────────────────────────────────────
@@ -70,6 +72,71 @@ function FilterDropdownTrigger({
         <ChevronDown className={cn('size-3 transition-transform', open && 'rotate-180')} />
       )}
     </div>
+  );
+}
+
+// ── Status Filter (always-present, non-clearable, inline counts) ──────
+
+const STATUS_OPTIONS: { value: ExpedientesStatus; label: string }[] = [
+  { value: 'pendentes', label: 'Pendentes' },
+  { value: 'baixados', label: 'Baixados' },
+  { value: 'todos', label: 'Todos' },
+];
+
+const STATUS_LABELS: Record<ExpedientesStatus, string> = {
+  pendentes: 'Pendentes',
+  baixados: 'Baixados',
+  todos: 'Todos',
+};
+
+function StatusFilter({
+  selected,
+  onChange,
+  counts,
+}: {
+  selected: ExpedientesStatus;
+  onChange: (v: ExpedientesStatus) => void;
+  counts: { pendentes: number; baixados: number; todos: number };
+}) {
+  const [open, setOpen] = React.useState(false);
+  const label = STATUS_LABELS[selected];
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button type="button">
+          <FilterDropdownTrigger
+            label={label}
+            active={selected !== 'pendentes'}
+            open={open}
+          />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
+        <div className="p-2 space-y-0.5">
+          {STATUS_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+              className={cn(
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                selected === opt.value
+                  ? 'bg-primary/8 text-primary'
+                  : 'hover:bg-muted/30 text-muted-foreground/70'
+              )}
+            >
+              <span>{opt.label}</span>
+              <span className="text-[9px] ml-auto tabular-nums opacity-50">{counts[opt.value]}</span>
+              {selected === opt.value && <Check className="size-3" />}
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -150,6 +217,7 @@ export function ExpedientesFilterBar({
   onChange,
   usuarios,
   tiposExpedientes,
+  counts,
 }: ExpedientesFilterBarProps) {
   const responsavelOptions = React.useMemo(
     () => [
@@ -173,6 +241,11 @@ export function ExpedientesFilterBar({
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
+      <StatusFilter
+        selected={filters.status}
+        onChange={(status) => onChange({ ...filters, status })}
+        counts={counts}
+      />
       <SimpleFilter
         label="Tribunal"
         options={TRIBUNAL_OPTIONS}
