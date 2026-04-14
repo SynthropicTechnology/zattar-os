@@ -145,14 +145,6 @@ export default function TribunaisPage() {
           </div>
           <div className="flex items-center gap-2 flex-1 justify-end">
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar tribunais..." />
-            <Button
-              size="sm"
-              className="rounded-xl"
-              onClick={() => setTribunalDialog({ open: true, tribunal: null })}
-            >
-              <Plus className="size-3.5" />
-              Nova Configuração
-            </Button>
           </div>
         </div>
 

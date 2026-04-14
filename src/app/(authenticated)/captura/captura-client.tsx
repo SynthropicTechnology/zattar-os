@@ -8,6 +8,15 @@ import { ViewToggle } from '@/components/dashboard/view-toggle';
 import type { ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { Plus, List, LayoutGrid, AlertTriangle } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
 import { CapturaKpiStrip } from './components/captura-kpi-strip';
 import type { CapturaKpiData } from './components/captura-kpi-strip';
@@ -16,6 +25,11 @@ import type { CapturaFilters } from './components/captura-filter-bar';
 import { CapturaGlassList } from './components/captura-glass-list';
 import { CapturaGlassCards } from './components/captura-glass-cards';
 import { CapturaDialog } from './components/captura-dialog';
+import { AgendamentoDialog } from './components/agendamento-dialog';
+import { TribunaisDialog } from './components/tribunais/tribunais-dialog';
+import { CredenciaisAdvogadoDialog } from './components/advogados/credenciais-advogado-dialog';
+import { AdvogadoCombobox } from '@/app/(authenticated)/captura';
+import { useAdvogados, type Advogado } from '@/app/(authenticated)/advogados';
 
 // Sub-tab content (existing components, will be refactored in later tasks)
 import CredenciaisClient from './credenciais/page-client';
@@ -59,6 +73,19 @@ export function CapturaClient() {
   const [capturaDialogOpen, setCapturaDialogOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // Sub-tab dialog states
+  const [agendamentoDialogOpen, setAgendamentoDialogOpen] = useState(false);
+  const [tribunalDialogOpen, setTribunalDialogOpen] = useState(false);
+  const [selecionarAdvogadoDialog, setSelecionarAdvogadoDialog] = useState(false);
+  const [selectedAdvogadoId, setSelectedAdvogadoId] = useState<number | null>(null);
+  const [credenciaisAdvogadoDialog, setCredenciaisAdvogadoDialog] = useState<{
+    open: boolean;
+    advogado: Advogado | null;
+  }>({ open: false, advogado: null });
+
+  // Advogados for credencial flow
+  const { advogados: advogadosList, isLoading: advogadosLoading } = useAdvogados({ limite: 100 });
+
   // KPI data (computed from capturas in glass-list)
   const [kpiData, setKpiData] = useState<CapturaKpiData>({
     total: 0,
@@ -77,6 +104,27 @@ export function CapturaClient() {
     setRefreshKey((prev) => prev + 1);
   }, []);
 
+  const handleNovaCredencial = useCallback(() => {
+    setSelectedAdvogadoId(null);
+    setSelecionarAdvogadoDialog(true);
+  }, []);
+
+  const handleConfirmarAdvogado = useCallback(() => {
+    if (!selectedAdvogadoId) return;
+    const advogado = advogadosList.find((a) => a.id === selectedAdvogadoId);
+    if (!advogado) return;
+    setSelecionarAdvogadoDialog(false);
+    setCredenciaisAdvogadoDialog({ open: true, advogado });
+  }, [selectedAdvogadoId, advogadosList]);
+
+  // Dynamic header button config per active tab
+  const headerButtonConfig: Record<CapturaTab, { label: string; onClick: () => void }> = {
+    historico: { label: 'Nova Captura', onClick: () => setCapturaDialogOpen(true) },
+    agendamentos: { label: 'Novo Agendamento', onClick: () => setAgendamentoDialogOpen(true) },
+    credenciais: { label: 'Nova Credencial', onClick: handleNovaCredencial },
+    tribunais: { label: 'Nova Configuração', onClick: () => setTribunalDialogOpen(true) },
+  };
+
   return (
     <div className="space-y-5">
       {/* Header */}
@@ -90,10 +138,10 @@ export function CapturaClient() {
         <Button
           size="sm"
           className="rounded-xl"
-          onClick={() => setCapturaDialogOpen(true)}
+          onClick={headerButtonConfig[activeTab].onClick}
         >
           <Plus className="size-3.5" />
-          Nova Captura
+          {headerButtonConfig[activeTab].label}
         </Button>
       </div>
 
@@ -166,6 +214,80 @@ export function CapturaClient() {
         open={capturaDialogOpen}
         onOpenChange={setCapturaDialogOpen}
         onSuccess={handleCapturaSuccess}
+      />
+
+      {/* Agendamento Dialog */}
+      <AgendamentoDialog
+        open={agendamentoDialogOpen}
+        onOpenChange={setAgendamentoDialogOpen}
+        onSuccess={() => {
+          setRefreshKey((prev) => prev + 1);
+          setAgendamentoDialogOpen(false);
+        }}
+      />
+
+      {/* Tribunais Dialog */}
+      <TribunaisDialog
+        tribunal={null}
+        open={tribunalDialogOpen}
+        onOpenChange={setTribunalDialogOpen}
+        onSuccess={() => {
+          setRefreshKey((prev) => prev + 1);
+          setTribunalDialogOpen(false);
+        }}
+      />
+
+      {/* Selecionar Advogado Dialog (for credencial flow) */}
+      <Dialog
+        open={selecionarAdvogadoDialog}
+        onOpenChange={setSelecionarAdvogadoDialog}
+      >
+        <DialogContent className="sm:max-w-112.5">
+          <DialogHeader>
+            <DialogTitle>Nova Credencial</DialogTitle>
+            <DialogDescription>
+              Selecione o advogado para cadastrar credenciais de acesso aos tribunais.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="grid gap-2">
+              <Label>Advogado</Label>
+              <AdvogadoCombobox
+                advogados={advogadosList}
+                selectedId={selectedAdvogadoId}
+                onSelectionChange={setSelectedAdvogadoId}
+                isLoading={advogadosLoading}
+                placeholder="Selecione um advogado..."
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setSelecionarAdvogadoDialog(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmarAdvogado}
+              disabled={!selectedAdvogadoId}
+            >
+              Continuar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Credenciais Advogado Dialog */}
+      <CredenciaisAdvogadoDialog
+        open={credenciaisAdvogadoDialog.open}
+        onOpenChangeAction={(open) =>
+          setCredenciaisAdvogadoDialog({ ...credenciaisAdvogadoDialog, open })
+        }
+        advogado={credenciaisAdvogadoDialog.advogado}
+        onRefreshAction={() => setRefreshKey((prev) => prev + 1)}
       />
     </div>
   );

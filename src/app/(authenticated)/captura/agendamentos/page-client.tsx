@@ -9,7 +9,6 @@ import {
   Zap,
   TrendingUp,
   Clock,
-  Plus,
   MoreHorizontal,
   Trash,
   Power,
@@ -45,7 +44,6 @@ import {
 import { useDebounce } from '@/hooks/use-debounce';
 
 import type { Agendamento } from '@/app/(authenticated)/captura';
-import { AgendamentoDialog } from '../components/agendamento-dialog';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';
 
 // =============================================================================
@@ -107,7 +105,6 @@ export default function AgendamentosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [busca, setBusca] = useState('');
   const buscaDebounced = useDebounce(busca, 500);
-  const [agendamentoDialogOpen, setAgendamentoDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [agendamentoToDelete, setAgendamentoToDelete] = useState<Agendamento | null>(null);
 
@@ -238,14 +235,6 @@ export default function AgendamentosPage() {
           </div>
           <div className="flex items-center gap-2 flex-1 justify-end">
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar agendamentos..." />
-            <Button
-              size="sm"
-              className="rounded-xl"
-              onClick={() => setAgendamentoDialogOpen(true)}
-            >
-              <Plus className="size-3.5" />
-              Novo
-            </Button>
           </div>
         </div>
 
@@ -397,16 +386,6 @@ export default function AgendamentosPage() {
           />
         )}
       </div>
-
-      {/* New Agendamento Dialog */}
-      <AgendamentoDialog
-        open={agendamentoDialogOpen}
-        onOpenChange={setAgendamentoDialogOpen}
-        onSuccess={() => {
-          fetchAgendamentos();
-          setAgendamentoDialogOpen(false);
-        }}
-      />
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

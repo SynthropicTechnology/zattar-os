@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable, RowSelectionState } from '@tanstack/react-table';
-import { Plus, PowerOff, Power, KeyRound, CheckCircle2, XCircle, Landmark, List, LayoutGrid, Users } from 'lucide-react';
+import { PowerOff, Power, KeyRound, CheckCircle2, XCircle, Landmark, List, LayoutGrid, Users } from 'lucide-react';
 import { DataTable } from '@/components/shared/data-shell';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { PulseStrip } from '@/components/dashboard/pulse-strip';
@@ -410,10 +410,6 @@ export default function CredenciaisPage() {
                 placeholder="Buscar credenciais..."
               />
               <ViewToggle mode={viewMode} onChange={setViewMode} options={CRED_VIEW_OPTIONS} />
-              <Button size="sm" className="rounded-xl" onClick={handleNovaCredencial}>
-                <Plus className="size-3.5" />
-                Nova Credencial
-              </Button>
             </div>
           </div>
         </GlassPanel>
