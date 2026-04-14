@@ -9,7 +9,11 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Link2, Trash2, Download, Pencil, Tags, Eye } from 'lucide-react';
+import { Link2, Trash2, Download, Pencil, Tags, FileText, CheckCircle2, Camera, MapPin, Plus } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
+import { Heading, Text } from '@/components/ui/typography';
+import { AssinaturaDigitalPageNav } from '../components/page-nav';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   AlertDialog,
@@ -401,6 +405,27 @@ export function FormulariosClient() {
 
   const { formularios, total, isLoading, error, refetch } = useFormularios(params);
 
+  // -- Stats (fetch sem filtros para contagens globais)
+  const [allFormularios, setAllFormularios] = React.useState<AssinaturaDigitalFormulario[]>([]);
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch('/api/assinatura-digital/formularios?limite=500')
+      .then((r) => r.json())
+      .then((json) => {
+        if (cancelled) return;
+        const list = (json?.formularios ?? json?.data ?? []) as AssinaturaDigitalFormulario[];
+        setAllFormularios(list);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [total]);
+  const stats = React.useMemo(() => ({
+    total: allFormularios.length,
+    ativos: allFormularios.filter((f) => f.ativo).length,
+    comFoto: allFormularios.filter((f) => f.foto_necessaria).length,
+    comGeo: allFormularios.filter((f) => f.geolocation_necessaria).length,
+  }), [allFormularios]);
+
   const handleCreateSuccess = React.useCallback(() => { refetch(); setCreateOpen(false); }, [refetch]);
   const handleEdit = React.useCallback((formulario: AssinaturaDigitalFormulario) => { setSelectedFormulario(formulario); setEditOpen(true); }, []);
   const handleEditSuccess = React.useCallback(() => { refetch(); setEditOpen(false); setSelectedFormulario(null); }, [refetch]);
@@ -502,8 +527,55 @@ export function FormulariosClient() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDeleteClick, canDelete]);
 
+  const statCards = [
+    { label: 'Total', value: stats.total, Icon: FileText, tint: 'bg-primary/8', iconColor: 'text-primary/60' },
+    { label: 'Ativos', value: stats.ativos, Icon: CheckCircle2, tint: 'bg-success/10', iconColor: 'text-success/70' },
+    { label: 'Com foto', value: stats.comFoto, Icon: Camera, tint: 'bg-info/10', iconColor: 'text-info/70' },
+    { label: 'Com geoloc.', value: stats.comGeo, Icon: MapPin, tint: 'bg-warning/12', iconColor: 'text-warning/75' },
+  ];
+
   return (
-    <>
+    <div className="space-y-5">
+      <AssinaturaDigitalPageNav />
+
+      {/* Header */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">Formulários</Heading>
+          <Text variant="meta-label" className="mt-0.5">
+            {stats.total} formulário{stats.total !== 1 ? 's' : ''}
+            {stats.ativos > 0 ? ` · ${stats.ativos} ativo${stats.ativos !== 1 ? 's' : ''}` : ''}
+          </Text>
+        </div>
+        {canCreate && (
+          <Button size="sm" className="h-9" onClick={() => setCreateOpen(true)}>
+            <Plus className="h-4 w-4" />
+            Novo Formulário
+          </Button>
+        )}
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {statCards.map(({ label, value, Icon, tint, iconColor }) => (
+          <GlassPanel key={label} className="px-4 py-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                  {label}
+                </p>
+                <p className="mt-1 font-display text-xl font-bold tabular-nums leading-none">
+                  {value}
+                </p>
+              </div>
+              <IconContainer size="md" className={tint}>
+                <Icon className={`size-4 ${iconColor}`} />
+              </IconContainer>
+            </div>
+          </GlassPanel>
+        ))}
+      </div>
+
       {error && (
         <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
           <p className="font-semibold">Erro ao carregar formulários:</p>
@@ -519,7 +591,6 @@ export function FormulariosClient() {
           table ? (
             <DataTableToolbar
               table={table}
-              title="Formulários"
               density={density}
               onDensityChange={setDensity}
               searchValue={busca}
@@ -528,28 +599,8 @@ export function FormulariosClient() {
                 setPagina(0);
               }}
               searchPlaceholder="Buscar por nome, slug ou descrição..."
-              actionButton={canCreate ? {
-                label: 'Novo Formulário',
-                onClick: () => setCreateOpen(true),
-              } : undefined}
               actionSlot={
                 <>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon" aria-label="Visualizar Kanban de Contratos"
-                        className="bg-white dark:bg-card"
-                        onClick={() => router.push('/app/contratos/kanban')}
-                        title="Visualizar Kanban de Contratos"
-                      >
-                        <Eye className="h-4 w-4" />
-                        <span className="sr-only">Visualizar Kanban de Contratos</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Kanban de Contratos</TooltipContent>
-                  </Tooltip>
-
                   {canCreate && (
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -730,6 +781,6 @@ export function FormulariosClient() {
           setSelectedSegmento(null);
         }}
       />
-    </>
+    </div>
   );
 }

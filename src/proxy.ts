@@ -182,29 +182,6 @@ export async function proxy(request: NextRequest) {
   // WEBSITE - Público (raiz /)
   // ============================================================================
   if (appType === "website") {
-    // Se usuário autenticado acessar "/" redirecionar para o dashboard.
-    // Verificação leve via cookie (sem chamada Supabase para evitar latência).
-    // O (authenticated)/page.tsx foi removido por causar conflito de rota com
-    // app/page.tsx — ambos mapeavam para "/" e causavam InvariantError no standalone.
-    if (pathname === "/" || pathname === "") {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      if (supabaseUrl) {
-        try {
-          const projectRef = new URL(supabaseUrl).hostname.split(".")[0];
-          const authCookiePrefix = `sb-${projectRef}-auth-token`;
-          const hasAuthCookie = request.cookies.getAll().some(({ name }) =>
-            name.startsWith(authCookiePrefix)
-          );
-          if (hasAuthCookie) {
-            const dashboardUrl = request.nextUrl.clone();
-            dashboardUrl.pathname = "/app/dashboard";
-            return applyHeaders(NextResponse.redirect(dashboardUrl));
-          }
-        } catch {
-          // Ignorar erros ao parsear URL — continuar para o site
-        }
-      }
-    }
     return applyHeaders(supabaseResponse);
   }
 

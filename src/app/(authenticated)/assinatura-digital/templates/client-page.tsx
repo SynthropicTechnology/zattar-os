@@ -10,7 +10,11 @@ import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/compon
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import { Pencil, Copy, Trash2, Download } from 'lucide-react';
+import { Pencil, Copy, Trash2, Download, FileText, CheckCircle2, PenLine, FileCode2, Clock, Plus } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
+import { Heading, Text } from '@/components/ui/typography';
+import { AssinaturaDigitalPageNav } from '../components/page-nav';
 import {
   Tooltip,
   TooltipContent,
@@ -353,6 +357,27 @@ export function TemplatesClient() {
 
   const { templates, total, isLoading, error, refetch } = useTemplates(params);
 
+  // -- Stats (fetch sem filtros para contagens globais)
+  const [allTemplates, setAllTemplates] = React.useState<Template[]>([]);
+  React.useEffect(() => {
+    let cancelled = false;
+    listarTemplatesAction({}).then((response) => {
+      if (cancelled) return;
+      if (response.success && 'data' in response && response.data) {
+        setAllTemplates(response.data as Template[]);
+      }
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [total]);
+  const stats = React.useMemo(() => {
+    const ativos = allTemplates.filter((t) => t.status === 'ativo').length;
+    const rascunhos = allTemplates.filter((t) => t.status === 'rascunho').length;
+    const inativos = allTemplates.filter((t) => t.status === 'inativo').length;
+    const markdown = allTemplates.filter((t) => t.tipo_template === 'markdown').length;
+    const pdf = allTemplates.filter((t) => t.tipo_template === 'pdf').length;
+    return { total: allTemplates.length, ativos, rascunhos, inativos, markdown, pdf };
+  }, [allTemplates]);
+
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
     setCreateOpen(false);
@@ -475,8 +500,57 @@ export function TemplatesClient() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
+  const statCards = [
+    { label: 'Total', value: stats.total, Icon: FileText, tint: 'bg-primary/8', iconColor: 'text-primary/60' },
+    { label: 'Ativos', value: stats.ativos, Icon: CheckCircle2, tint: 'bg-success/10', iconColor: 'text-success/70' },
+    { label: 'Rascunhos', value: stats.rascunhos, Icon: PenLine, tint: 'bg-warning/12', iconColor: 'text-warning/75' },
+    { label: 'Markdown', value: stats.markdown, Icon: FileCode2, tint: 'bg-info/10', iconColor: 'text-info/70' },
+    { label: 'Inativos', value: stats.inativos, Icon: Clock, tint: 'bg-muted-foreground/8', iconColor: 'text-muted-foreground/60' },
+  ];
+
   return (
-    <>
+    <div className="space-y-5">
+      <AssinaturaDigitalPageNav />
+
+      {/* Header */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">Templates</Heading>
+          <Text variant="meta-label" className="mt-0.5">
+            {stats.total} template{stats.total !== 1 ? 's' : ''}
+            {stats.ativos > 0 ? ` · ${stats.ativos} ativo${stats.ativos !== 1 ? 's' : ''}` : ''}
+            {stats.rascunhos > 0 ? ` · ${stats.rascunhos} em rascunho` : ''}
+          </Text>
+        </div>
+        {canCreate && (
+          <Button size="sm" className="h-9" onClick={() => setCreateOpen(true)}>
+            <Plus className="h-4 w-4" />
+            Novo Template
+          </Button>
+        )}
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+        {statCards.map(({ label, value, Icon, tint, iconColor }) => (
+          <GlassPanel key={label} className="px-4 py-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                  {label}
+                </p>
+                <p className="mt-1 font-display text-xl font-bold tabular-nums leading-none">
+                  {value}
+                </p>
+              </div>
+              <IconContainer size="md" className={tint}>
+                <Icon className={`size-4 ${iconColor}`} />
+              </IconContainer>
+            </div>
+          </GlassPanel>
+        ))}
+      </div>
+
       {error && (
         <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
           <p className="font-semibold">Erro ao carregar templates:</p>
@@ -492,7 +566,6 @@ export function TemplatesClient() {
           table ? (
             <DataTableToolbar
               table={table}
-              title="Templates"
               density={density}
               onDensityChange={setDensity}
               searchValue={busca}
@@ -501,10 +574,6 @@ export function TemplatesClient() {
                 setPagina(0);
               }}
               searchPlaceholder="Buscar por nome, UUID ou descrição..."
-              actionButton={canCreate ? {
-                label: 'Novo Template',
-                onClick: () => setCreateOpen(true),
-              } : undefined}
               filtersSlot={
                 <>
                   <FilterPopover
@@ -601,7 +670,7 @@ export function TemplatesClient() {
         templates={selectedTemplates}
         onSuccess={handleDeleteSuccess}
       />
-    </>
+    </div>
   );
 }
 

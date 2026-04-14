@@ -96,6 +96,7 @@ const navServicos = [
       { title: "Fluxo de Assinatura", url: "/app/assinatura-digital/assinatura" },
       { title: "Templates", url: "/app/assinatura-digital/templates" },
       { title: "Formulários", url: "/app/assinatura-digital/formularios" },
+      { title: "Segmentos", url: "/app/assinatura-digital/segmentos" },
     ],
   },
   {

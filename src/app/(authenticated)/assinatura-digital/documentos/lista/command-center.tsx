@@ -1,6 +1,16 @@
 "use client";
 
-import { FileSignature, LayoutGrid, List, Plus } from "lucide-react";
+import {
+  FileSignature,
+  LayoutGrid,
+  List,
+  Plus,
+  FileText,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  PenLine,
+} from "lucide-react";
 import Link from "next/link";
 import { InsightBanner } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
 import { TabPills } from "@/components/dashboard/tab-pills";
@@ -9,6 +19,8 @@ import {
   ViewToggle,
   type ViewToggleOption,
 } from "@/components/dashboard/view-toggle";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { IconContainer } from "@/components/ui/icon-container";
 import type { DocumentosStats } from "../../feature/services/documentos.service";
 import type { DocumentoListItem } from "../../feature/adapters/documento-card-adapter";
 import { useDocumentosPage } from "../../feature/hooks/use-documentos-page";
@@ -17,7 +29,7 @@ import { DocumentCard } from "../../feature/components/documento-card";
 import { DocumentListRow } from "../../feature/components/documento-list-row";
 import { DocumentDetail } from "../../feature/components/documento-detail";
 import { SignaturePipeline } from "../../feature/components/signature-pipeline";
-import { SignatureStatsStrip } from "../../feature/components/signature-stats-strip";
+import { AssinaturaDigitalPageNav } from "../../components/page-nav";
 import { Heading } from '@/components/ui/typography';
 
 // ─── View Options ──────────────────────────────────────────────────────
@@ -56,6 +68,9 @@ export function DocumentosCommandCenter({
 
   return (
     <div className="space-y-5">
+      {/* ── Navegação do módulo ──────────────────────────── */}
+      <AssinaturaDigitalPageNav />
+
       {/* ── Header ──────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
@@ -76,8 +91,34 @@ export function DocumentosCommandCenter({
         </Link>
       </div>
 
-      {/* ── Stats Strip ─────────────────────────────────── */}
-      {stats && <SignatureStatsStrip stats={stats} />}
+      {/* ── Stats Cards — padrão canônico Glass Briefing ──── */}
+      {stats && (
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+          {[
+            { label: "Total", value: stats.total, Icon: FileText, tint: "bg-primary/8", iconColor: "text-primary/60" },
+            { label: "Rascunhos", value: stats.rascunhos, Icon: PenLine, tint: "bg-muted-foreground/8", iconColor: "text-muted-foreground/60" },
+            { label: "Aguardando", value: stats.aguardando, Icon: Clock, tint: "bg-info/10", iconColor: "text-info/70" },
+            { label: "Concluídos", value: stats.concluidos, Icon: CheckCircle2, tint: "bg-success/10", iconColor: "text-success/70" },
+            { label: "Cancelados", value: stats.cancelados, Icon: XCircle, tint: "bg-destructive/10", iconColor: "text-destructive/60" },
+          ].map(({ label, value, Icon, tint, iconColor }) => (
+            <GlassPanel key={label} className="px-4 py-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+                    {label}
+                  </p>
+                  <p className="mt-1 font-display text-xl font-bold tabular-nums leading-none">
+                    {value}
+                  </p>
+                </div>
+                <IconContainer size="md" className={tint}>
+                  <Icon className={`size-4 ${iconColor}`} />
+                </IconContainer>
+              </div>
+            </GlassPanel>
+          ))}
+        </div>
+      )}
 
       {/* ── Pipeline ────────────────────────────────────── */}
       {stats && <SignaturePipeline stats={stats} />}
