@@ -6,6 +6,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl, formatarOab, formatarData } from '../../utils';
 import { RoleBanner } from '../shared/role-banner';
@@ -118,7 +119,7 @@ export function ProfileSidebar({
         </div>
 
         {/* 3. Name + Role */}
-        <h2 className="text-lg font-bold mt-3 text-center">{usuario.nomeCompleto}</h2>
+        <Typography.H2 className="text-lg font-bold mt-3 text-center">{usuario.nomeCompleto}</Typography.H2>
         {usuario.cargo?.nome && (
           <p className="text-xs text-muted-foreground/40 mt-0.5 text-center">{usuario.cargo.nome}</p>
         )}

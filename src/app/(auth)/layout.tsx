@@ -29,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* Glass card + content */}
       <main className="relative z-10 w-full max-w-110 px-4">
-        <div className="bg-card/50 backdrop-blur-xl border border-border rounded-3xl px-8 py-10 sm:px-10 sm:py-12 shadow-[0_8px_32px_oklch(0_0_0/0.25)]">
+        <div className="bg-card/50 backdrop-blur-xl border border-border rounded-3xl px-8 py-10 sm:px-10 sm:py-12 shadow-[0_8px_32px_oklch(from_var(--foreground)_0_0_0/0.25)]">
           {children}
         </div>
       </main>

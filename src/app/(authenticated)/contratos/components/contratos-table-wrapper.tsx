@@ -420,7 +420,7 @@ export function ContratosTableWrapper({
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
     setCreateOpen(false);
-  }, [refetch]);
+  }, [refetch, setCreateOpen]);
 
   // ---------- Seleção em Massa ----------
   const selectedIds = React.useMemo(() => {
