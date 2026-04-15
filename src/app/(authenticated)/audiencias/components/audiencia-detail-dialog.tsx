@@ -307,7 +307,7 @@ export function AudienciaDetailDialog({
       <DialogContent
         className={cn(
           'max-h-[92vh] flex p-0 gap-0 overflow-hidden [scrollbar-width:thin] transition-[max-width] duration-300 ease-out',
-          ataOpen ? 'sm:max-w-[1100px]' : 'sm:max-w-2xl'
+          ataOpen ? 'sm:max-w-275' : 'sm:max-w-2xl'
         )}
         showCloseButton
       >
@@ -367,9 +367,9 @@ export function AudienciaDetailDialog({
           {audiencia && !isLoading && !error && (
             <div className="shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
               <div className="flex items-center gap-3 mb-3.5">
-                <Gavel className="size-[18px] text-primary shrink-0" />
+                <Gavel className="size-4.5 text-primary shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <div className="text-[14.5px] font-semibold text-foreground leading-[1.25]">
+                  <div className="text-[14.5px] font-semibold text-foreground leading-tight">
                     {audiencia.tipoDescricao || 'Audiência'}
                   </div>
                   {dataInicio && dataFim && (
@@ -940,7 +940,7 @@ function MetaDot() {
   return (
     <span
       aria-hidden
-      className="inline-block w-[3px] h-[3px] rounded-full bg-muted-foreground/60"
+      className="inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/60"
     />
   );
 }
