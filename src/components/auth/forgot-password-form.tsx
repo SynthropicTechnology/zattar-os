@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertCircle, ArrowLeft, ArrowRight, Loader2, Mail } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { AUTH_STYLES } from './styles'
 

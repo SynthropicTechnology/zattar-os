@@ -12,7 +12,7 @@ interface PermissionToggleProps {
   onToggle: () => void;
 }
 
-export function PermissionToggle({ operacao, label, checked, disabled, changed, onToggle }: PermissionToggleProps) {
+export function PermissionToggle({ operacao: _operacao, label, checked, disabled, changed, onToggle }: PermissionToggleProps) {
   return (
     <label className={cn(
       'flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition-colors hover:bg-muted/4',

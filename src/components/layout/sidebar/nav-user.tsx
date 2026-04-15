@@ -62,6 +62,10 @@ export function NavUser({
   const [mounted, setMounted] = React.useState(false)
   const initials = getInitials(user.name)
 
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
   }

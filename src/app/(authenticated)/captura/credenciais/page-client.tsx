@@ -206,7 +206,7 @@ export default function CredenciaisPage() {
   };
 
   // Handler para "Nova Credencial"
-  const handleNovaCredencial = useCallback(() => {
+  const _handleNovaCredencial = useCallback(() => {
     setSelectedAdvogadoId(null);
     setSelecionarAdvogadoDialog(true);
   }, []);

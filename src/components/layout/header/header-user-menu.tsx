@@ -45,7 +45,7 @@ function getInitials(name: string): string {
 
 export function HeaderUserMenu() {
   const userData = useUser()
-  const { logout } = useAuthSession()
+  const { logout: _logout } = useAuthSession()
   const router = useRouter()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)

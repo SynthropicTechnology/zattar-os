@@ -17,7 +17,6 @@ import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
 
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '../types';

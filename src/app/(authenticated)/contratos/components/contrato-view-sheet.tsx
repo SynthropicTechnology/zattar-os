@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
 import {
   Calendar,

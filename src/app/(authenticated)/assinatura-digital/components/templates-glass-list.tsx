@@ -8,7 +8,6 @@ import * as React from 'react';
 import {
   FileText,
   FileCode2,
-  ChevronRight,
   Pencil,
   Copy,
   Trash2,
@@ -16,7 +15,6 @@ import {
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import {

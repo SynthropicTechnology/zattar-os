@@ -136,7 +136,7 @@ export default function AdvogadosPage() {
   };
 
   // Credenciais map for counting per advogado
-  const { credenciaisMap } = useCredenciaisMap();
+  const { credenciaisMap: _credenciaisMap } = useCredenciaisMap();
 
   // Count credenciais per advogado (we need to fetch all credenciais and group by advogado)
   const [credenciaisPorAdvogado, setCredenciaisPorAdvogado] = useState<Map<number, { ativas: number; inativas: number }>>(new Map());

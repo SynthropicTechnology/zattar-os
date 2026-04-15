@@ -21,8 +21,6 @@ import { PulseStrip } from '@/components/dashboard/pulse-strip';
 import type { PulseItem } from '@/components/dashboard/pulse-strip';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { EmptyState } from '@/components/shared/empty-state';
-import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   DropdownMenu,

@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading, Text } from '@/components/ui/typography';
+import { Text } from '@/components/ui/typography';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Button } from '@/components/ui/button';
 import { Pencil, FileText, CheckCircle2, XCircle } from 'lucide-react';
