@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POC — Audiência Detail Dialog (Glass Briefing)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --radius: 0.5rem;
+        --background: oklch(0.96 0.01 281);
+        --foreground: oklch(0.15 0.01 281);
+        --card: oklch(1 0 0);
+        --muted: oklch(0.92 0.01 281);
+        --muted-foreground: oklch(0.42 0.01 281);
+        --primary: oklch(0.48 0.26 281);
+        --primary-foreground: oklch(1 0 0);
+        --border: oklch(0.87 0.01 281);
+        --success: oklch(0.55 0.18 145);
+        --info: oklch(0.55 0.18 250);
+        --warning: oklch(0.60 0.18 75);
+        --destructive: oklch(0.55 0.22 25);
+        --outline-variant: oklch(0.75 0.01 281);
+
+        --glass-bg: rgba(255, 255, 255, 0.94);
+        --glass-border: rgba(255, 255, 255, 0.6);
+        --glass-shadow:
+          0 24px 48px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08),
+          0 2px 6px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        --overlay-bg: rgba(0, 0, 0, 0.28);
+      }
+
+      html.dark {
+        --background: oklch(0.12 0.005 281);
+        --foreground: oklch(0.98 0 0);
+        --card: oklch(0.17 0.005 281);
+        --muted: oklch(0.22 0.005 281);
+        --muted-foreground: oklch(0.70 0.005 281);
+        --primary: oklch(0.70 0.20 281);
+        --border: oklch(0.35 0.005 281);
+        --success: oklch(0.65 0.18 145);
+        --info: oklch(0.70 0.16 250);
+        --warning: oklch(0.72 0.16 75);
+        --destructive: oklch(0.70 0.20 25);
+        --outline-variant: oklch(0.35 0.005 281);
+        --glass-bg: rgba(18, 18, 22, 0.94);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glass-shadow:
+          0 24px 48px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.3),
+          0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        --overlay-bg: rgba(0, 0, 0, 0.6);
+      }
+
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; padding: 0;
+        font-family: "Inter", sans-serif;
+        background: var(--background);
+        color: var(--foreground);
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      /* Fundo com calendário fake */
+      .page-backdrop {
+        position: fixed; inset: 0; z-index: 0;
+        background-image:
+          radial-gradient(circle at 20% 10%, oklch(from var(--primary) l c h / 0.08) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, oklch(from var(--primary) l c h / 0.05) 0%, transparent 50%),
+          linear-gradient(to bottom right, var(--background), oklch(from var(--background) calc(l + 0.02) c h));
+      }
+      .fake-calendar {
+        position: fixed; inset: 48px 32px 32px 32px;
+        display: grid; grid-template-columns: repeat(7, 1fr);
+        gap: 1px; background: var(--border);
+        border-radius: 16px; overflow: hidden;
+        z-index: 1; opacity: 0.5;
+      }
+      .fake-calendar > div {
+        background: var(--card); padding: 8px 10px;
+        font-size: 11px; color: var(--muted-foreground);
+      }
+      .fake-calendar .dow {
+        background: var(--muted); font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        text-align: center; font-size: 10px; padding: 10px;
+      }
+
+      /* Overlay + Dialog */
+      .overlay {
+        position: fixed; inset: 0; z-index: 10;
+        background: var(--overlay-bg);
+        backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center;
+        padding: 24px;
+      }
+      .dialog {
+        width: 100%;
+        max-width: 672px;
+        max-height: 92vh;
+        background: var(--glass-bg);
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        box-shadow: var(--glass-shadow);
+        display: flex;
+        overflow: hidden;
+        transition: max-width 280ms cubic-bezier(0.32, 0.72, 0, 1);
+        position: relative;
+      }
+      .dialog.split { max-width: 1100px; }
+
+      /* Coluna esquerda (principal) */
+      .dialog-main {
+        flex: 1;
+        display: flex; flex-direction: column;
+        min-width: 0;
+        border-right: 1px solid transparent;
+      }
+      .dialog.split .dialog-main {
+        border-right: 1px solid oklch(from var(--border) l c h / 0.5);
+      }
+
+      /* HEADER capa do processo */
+      .dialog-header {
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid oklch(from var(--border) l c h / 0.5);
+      }
+      .header-top {
+        display: flex; align-items: center;
+        justify-content: space-between; gap: 16px;
+        margin-bottom: 6px;
+      }
+      .processo-titulo {
+        margin: 0;
+        font-size: 16px; font-weight: 600;
+        color: var(--foreground);
+        letter-spacing: -0.01em; line-height: 1.3;
+        flex: 1; min-width: 0;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .processo-titulo .vs {
+        color: var(--muted-foreground);
+        font-weight: 500; margin: 0 6px; opacity: 0.6;
+      }
+      .processo-meta {
+        display: flex; flex-wrap: wrap;
+        align-items: center; gap: 8px;
+        font-size: 12px; color: var(--muted-foreground);
+        font-weight: 500;
+      }
+      .sep-dot {
+        display: inline-block; width: 3px; height: 3px;
+        border-radius: 999px;
+        background: var(--outline-variant); opacity: 0.6;
+      }
+      .status-chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 10px; border-radius: 999px;
+        font-size: 11px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        flex-shrink: 0;
+      }
+      .status-chip.designada {
+        background: oklch(from var(--info) l c h / 0.12);
+        color: var(--info);
+        border: 1px solid oklch(from var(--info) l c h / 0.25);
+      }
+      .status-chip.realizada {
+        background: oklch(from var(--success) l c h / 0.12);
+        color: var(--success);
+        border: 1px solid oklch(from var(--success) l c h / 0.25);
+      }
+      .status-chip .dot {
+        width: 6px; height: 6px; border-radius: 999px;
+        background: currentColor;
+      }
+
+      /* Botão close */
+      .dialog-close {
+        position: absolute; top: 12px; right: 12px;
+        width: 28px; height: 28px; border-radius: 999px;
+        background: transparent; border: none;
+        color: var(--muted-foreground); cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center;
+        z-index: 5;
+      }
+      .dialog-close:hover {
+        background: oklch(from var(--muted) l c h / 0.6);
+        color: var(--foreground);
+      }
+
+      /* Bloco da audiência (meio) */
+      .audiencia-block {
+        margin: 16px 24px 0;
+        padding: 16px;
+        background: oklch(from var(--primary) l c h / 0.05);
+        border: 1px solid oklch(from var(--primary) l c h / 0.15);
+        border-radius: 12px;
+      }
+      .audiencia-block-header {
+        display: flex; align-items: center; gap: 12px;
+        margin-bottom: 14px;
+      }
+      .gavel-icon {
+        width: 18px; height: 18px;
+        color: var(--primary); flex-shrink: 0;
+      }
+      .audiencia-title-block { flex: 1; min-width: 0; }
+      .audiencia-title {
+        font-size: 14.5px; font-weight: 600;
+        color: var(--foreground); line-height: 1.25;
+      }
+      .audiencia-subtitle {
+        font-size: 12.5px; color: var(--muted-foreground);
+        margin-top: 2px;
+      }
+      .audiencia-meta {
+        display: flex; gap: 20px; flex-wrap: wrap;
+        margin-bottom: 14px; padding-bottom: 14px;
+        border-bottom: 1px solid oklch(from var(--border) l c h / 0.4);
+      }
+      .audiencia-meta-item {
+        display: flex; flex-direction: column; gap: 5px;
+      }
+      .meta-label {
+        font-size: 9.5px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--muted-foreground); opacity: 0.75;
+      }
+      .meta-pill {
+        display: inline-flex; align-items: center;
+        gap: 7px; padding: 5px 10px 5px 8px;
+        background: var(--card);
+        border: 1px solid oklch(from var(--border) l c h / 0.6);
+        border-radius: 999px;
+        font-size: 12.5px; font-weight: 500;
+        color: var(--foreground); cursor: pointer;
+        transition: all 150ms; font-family: inherit;
+      }
+      .meta-pill:hover {
+        background: oklch(from var(--muted) l c h / 0.6);
+        border-color: oklch(from var(--border) l c h / 0.9);
+      }
+      .meta-pill svg { width: 13px; height: 13px; color: var(--primary); }
+      .meta-pill .caret {
+        width: 11px; height: 11px; color: var(--muted-foreground);
+        opacity: 0.6; margin-left: 2px;
+      }
+      .responsavel-avatar {
+        width: 18px; height: 18px; border-radius: 999px;
+        background: linear-gradient(135deg, var(--primary), oklch(0.65 0.22 320));
+        color: white; font-size: 8.5px; font-weight: 700;
+        display: inline-flex; align-items: center; justify-content: center;
+      }
+      .audiencia-actions {
+        display: flex; gap: 8px; flex-wrap: wrap;
+      }
+
+      /* Botões */
+      .btn {
+        display: inline-flex; align-items: center;
+        gap: 6px; padding: 9px 14px;
+        border-radius: 8px; font-size: 13px;
+        font-weight: 600; border: 1px solid transparent;
+        cursor: pointer; transition: all 150ms ease;
+        font-family: inherit;
+      }
+      .btn svg { width: 14px; height: 14px; }
+      .btn-primary {
+        background: var(--primary); color: var(--primary-foreground);
+      }
+      .btn-primary:hover {
+        background: oklch(from var(--primary) calc(l - 0.05) c h);
+      }
+      .btn-ghost {
+        background: transparent; color: var(--foreground);
+        border-color: oklch(from var(--border) l c h / 0.6);
+      }
+      .btn-ghost:hover {
+        background: oklch(from var(--muted) l c h / 0.6);
+      }
+      .btn-subtle {
+        background: oklch(from var(--primary) l c h / 0.1);
+        color: var(--primary); border: 0;
+      }
+      .btn-subtle:hover {
+        background: oklch(from var(--primary) l c h / 0.16);
+      }
+      .btn.active {
+        background: var(--primary); color: var(--primary-foreground);
+        border-color: var(--primary);
+      }
+
+      /* Body scroll */
+      .dialog-body {
+        flex: 1; overflow-y: auto;
+        padding: 16px 24px 8px;
+      }
+      .dialog-body::-webkit-scrollbar { width: 6px; }
+      .dialog-body::-webkit-scrollbar-thumb {
+        background: oklch(from var(--muted-foreground) l c h / 0.3);
+        border-radius: 999px;
+      }
+
+      .section { margin-bottom: 18px; }
+      .section-header {
+        display: flex; align-items: center;
+        gap: 8px;
+        font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+        margin-bottom: 10px;
+      }
+      .section-header svg {
+        width: 13px; height: 13px; color: var(--primary);
+      }
+      .section-header .edit-btn {
+        margin-left: auto;
+        background: transparent; border: none;
+        color: var(--muted-foreground);
+        cursor: pointer; padding: 4px;
+        border-radius: 6px;
+        display: inline-flex; align-items: center;
+        font-family: inherit; font-size: 11px; font-weight: 600;
+        gap: 4px;
+        transition: all 150ms;
+      }
+      .section-header .edit-btn:hover {
+        color: var(--primary);
+        background: oklch(from var(--primary) l c h / 0.08);
+      }
+
+      .section-card {
+        background: oklch(from var(--muted) l c h / 0.4);
+        border: 1px solid oklch(from var(--border) l c h / 0.3);
+        border-radius: 14px; padding: 14px 16px;
+      }
+
+      /* Modalidade toggle group */
+      .modalidade-group {
+        display: inline-flex; padding: 3px;
+        background: oklch(from var(--muted) l c h / 0.6);
+        border: 1px solid oklch(from var(--border) l c h / 0.4);
+        border-radius: 10px; gap: 2px;
+      }
+      .modalidade-group .btn {
+        padding: 6px 12px; font-size: 12px;
+        background: transparent; color: var(--muted-foreground);
+        border-radius: 7px; border: none;
+      }
+      .modalidade-group .btn:hover { background: oklch(from var(--muted) l c h / 0.9); color: var(--foreground); }
+      .modalidade-group .btn.active {
+        background: var(--card); color: var(--foreground);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      }
+
+      /* Input */
+      .form-input {
+        width: 100%; padding: 9px 12px;
+        background: var(--card);
+        border: 1px solid oklch(from var(--border) l c h / 0.6);
+        border-radius: 8px;
+        font-size: 13px; color: var(--foreground);
+        font-family: inherit;
+        transition: border-color 150ms;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px oklch(from var(--primary) l c h / 0.15);
+      }
+      .form-input::placeholder { color: var(--muted-foreground); opacity: 0.6; }
+      .form-label {
+        display: block;
+        font-size: 10.5px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.06em;
+        color: var(--muted-foreground);
+        margin-bottom: 4px;
+      }
+      .form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+      .form-field { flex: 1; min-width: 0; }
+
+      /* Matriz híbrida (partes × modalidade) */
+      .hibrida-matriz {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 8px 12px;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .hibrida-head {
+        font-size: 9.5px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.06em;
+        color: var(--muted-foreground); opacity: 0.7;
+      }
+      .hibrida-parte {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 13px; color: var(--foreground);
+      }
+      .parte-chip {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 9px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.06em;
+      }
+      .parte-chip.ativo { background: oklch(from var(--success) l c h / 0.14); color: var(--success); }
+      .parte-chip.passivo { background: oklch(from var(--destructive) l c h / 0.14); color: var(--destructive); }
+      .seg {
+        display: inline-flex;
+        background: oklch(from var(--muted) l c h / 0.6);
+        border: 1px solid oklch(from var(--border) l c h / 0.4);
+        border-radius: 7px; padding: 2px; gap: 2px;
+      }
+      .seg button {
+        background: transparent; border: none;
+        font-family: inherit; font-size: 11px; font-weight: 500;
+        padding: 4px 10px; border-radius: 5px;
+        color: var(--muted-foreground); cursor: pointer;
+      }
+      .seg button.active {
+        background: var(--card); color: var(--foreground);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      }
+
+      /* Observações editor */
+      .obs-display {
+        font-size: 13px; color: var(--foreground);
+        line-height: 1.5; white-space: pre-wrap;
+      }
+      .obs-display.empty {
+        color: var(--muted-foreground); font-style: italic;
+      }
+      textarea.form-input {
+        min-height: 90px; resize: vertical;
+        font-family: inherit;
+      }
+
+      /* Editor-actions */
+      .editor-actions {
+        display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px;
+      }
+      .btn-sm {
+        padding: 6px 12px; font-size: 12px;
+      }
+
+      /* Ata button destaque */
+      .ata-launcher {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 12px;
+        background: oklch(from var(--success) l c h / 0.08);
+        border: 1px solid oklch(from var(--success) l c h / 0.25);
+        border-radius: 10px;
+        cursor: pointer; transition: all 150ms;
+        width: 100%; font-family: inherit;
+        color: var(--foreground); text-align: left;
+      }
+      .ata-launcher:hover {
+        background: oklch(from var(--success) l c h / 0.12);
+      }
+      .ata-launcher .icon-box {
+        width: 32px; height: 32px;
+        background: oklch(from var(--success) l c h / 0.18);
+        color: var(--success);
+        border-radius: 8px;
+        display: inline-flex; align-items: center; justify-content: center;
+      }
+      .ata-launcher .icon-box svg { width: 16px; height: 16px; }
+      .ata-launcher .ata-title {
+        font-size: 13px; font-weight: 600;
+      }
+      .ata-launcher .ata-meta {
+        font-size: 11.5px; color: var(--muted-foreground);
+      }
+      .ata-launcher .open-arrow {
+        margin-left: auto; color: var(--muted-foreground);
+        width: 16px; height: 16px;
+      }
+
+      /* PDF column */
+      .pdf-pane {
+        width: 0;
+        flex-shrink: 0;
+        display: flex; flex-direction: column;
+        background: oklch(from var(--muted) l c h / 0.35);
+        overflow: hidden;
+        transition: width 280ms cubic-bezier(0.32, 0.72, 0, 1);
+      }
+      .dialog.split .pdf-pane {
+        width: 50%;
+      }
+      .pdf-header {
+        padding: 12px 16px;
+        display: flex; align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid oklch(from var(--border) l c h / 0.4);
+        background: var(--card);
+      }
+      .pdf-title {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 12.5px; font-weight: 600;
+      }
+      .pdf-title svg { width: 14px; height: 14px; color: var(--success); }
+      .pdf-close {
+        padding: 5px; border: none; background: transparent;
+        color: var(--muted-foreground); cursor: pointer;
+        border-radius: 6px; display: inline-flex;
+      }
+      .pdf-close:hover { background: oklch(from var(--muted) l c h / 0.6); color: var(--foreground); }
+      .pdf-viewer {
+        flex: 1; padding: 20px; overflow-y: auto;
+        display: flex; flex-direction: column; gap: 16px;
+        align-items: center;
+      }
+      .pdf-page {
+        width: 100%; max-width: 360px;
+        aspect-ratio: 210/297;
+        background: white;
+        color: #1a1a1a;
+        padding: 24px;
+        font-size: 9px;
+        line-height: 1.55;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        border-radius: 4px;
+        font-family: "Times New Roman", serif;
+      }
+      .pdf-page h3 {
+        text-align: center; font-size: 10px;
+        margin: 0 0 14px; letter-spacing: 0.04em;
+      }
+      .pdf-page p { margin: 0 0 8px; text-align: justify; }
+      .pdf-toolbar {
+        display: flex; gap: 6px; align-items: center;
+        font-size: 11px; color: var(--muted-foreground);
+      }
+
+      /* Footer */
+      .dialog-footer {
+        padding: 12px 24px;
+        border-top: 1px solid oklch(from var(--border) l c h / 0.5);
+        display: flex; justify-content: flex-end; gap: 8px;
+        background: oklch(from var(--card) l c h / 0.5);
+      }
+
+      /* Controles fixos */
+      .theme-toggle, .mode-toggle {
+        position: fixed; top: 16px;
+        z-index: 100;
+        padding: 8px 14px;
+        background: var(--card); color: var(--foreground);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 12px; font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        font-family: inherit;
+      }
+      .theme-toggle { right: 16px; }
+      .mode-toggle { right: 160px; }
+
+      .poc-note {
+        position: fixed; bottom: 16px; left: 16px; z-index: 100;
+        padding: 10px 14px;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 11px; color: var(--muted-foreground);
+        max-width: 300px; line-height: 1.5;
+      }
+      .poc-note strong { color: var(--foreground); }
+    </style>
+  </head>
+
+  <body>
+    <div class="page-backdrop"></div>
+    <div class="fake-calendar" aria-hidden="true">
+      <div class="dow">Dom</div><div class="dow">Seg</div><div class="dow">Ter</div>
+      <div class="dow">Qua</div><div class="dow">Qui</div><div class="dow">Sex</div>
+      <div class="dow">Sáb</div>
+    </div>
+
+    <button class="mode-toggle" id="modeToggle">Audiência: Designada</button>
+    <button class="theme-toggle" onclick="document.documentElement.classList.toggle('dark')">
+      Alternar tema
+    </button>
+
+    <div class="poc-note">
+      <strong>POC · Audiência Detail Dialog</strong><br />
+      • Edição inline: modalidade, responsável, link/endereço, observações<br />
+      • Clique em "Ver Ata" (quando realizada) para abrir PDF ao lado<br />
+      • Toggle "Audiência: Designada/Realizada" mostra variação
+    </div>
+
+    <div class="overlay">
+      <div class="dialog" id="dialog">
+
+        <!-- COLUNA PRINCIPAL -->
+        <div class="dialog-main">
+          <button class="dialog-close" aria-label="Fechar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+
+          <!-- HEADER: capa do processo -->
+          <div class="dialog-header">
+            <div class="header-top">
+              <h2 class="processo-titulo">
+                Yuri Santos de Oliveira <span class="vs">×</span> Mottu Tecnologia Ltda
+              </h2>
+              <span class="status-chip designada" id="statusChip">
+                <span class="dot"></span><span id="statusLabel">Designada</span>
+              </span>
+            </div>
+            <div class="processo-meta">
+              <span>0010255-62.2025.5.02.0020</span>
+              <span class="sep-dot"></span>
+              <span>Reclamação Trabalhista</span>
+              <span class="sep-dot"></span>
+              <span>TRT 2ª Região · 1º Grau</span>
+              <span class="sep-dot"></span>
+              <span>20ª Vara do Trabalho de SP</span>
+              <span class="sep-dot"></span>
+              <span>Autuado em 15 mar 2025</span>
+            </div>
+          </div>
+
+          <!-- BLOCO DA AUDIÊNCIA (meio) -->
+          <div class="audiencia-block">
+            <div class="audiencia-block-header">
+              <svg class="gavel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 13l-7 7a1.4 1.4 0 1 1-2-2l7-7M16 16l4-4M19 19l2-2M5 5l6 6M9 3l6 6" />
+              </svg>
+              <div class="audiencia-title-block">
+                <div class="audiencia-title">Inicial por videoconferência</div>
+                <div class="audiencia-subtitle">Qua, 15 abr 2026 · 10:15 – 10:30</div>
+              </div>
+            </div>
+
+            <div class="audiencia-meta">
+              <div class="audiencia-meta-item">
+                <span class="meta-label">Modalidade</span>
+                <button class="meta-pill" id="modalidadePill">
+                  <svg id="modalidadeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="14" rx="2" />
+                    <path d="M8 22h8M12 18v4" />
+                  </svg>
+                  <span id="modalidadeLabel">Virtual</span>
+                  <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+              </div>
+              <div class="audiencia-meta-item">
+                <span class="meta-label">Responsável</span>
+                <button class="meta-pill" id="responsavelPill">
+                  <span class="responsavel-avatar">VB</span>
+                  <span>Viviane Batista</span>
+                  <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="audiencia-actions" id="audienciaActions">
+              <button class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="23 7 16 12 23 17 23 7" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" />
+                </svg>
+                Entrar na Sala Virtual
+              </button>
+              <button class="btn btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Abrir no PJe
+              </button>
+            </div>
+          </div>
+
+          <!-- BODY -->
+          <div class="dialog-body">
+
+            <!-- ATA (apenas quando realizada) -->
+            <div class="section" id="ataSection" style="display:none">
+              <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+                Ata da Audiência
+              </div>
+              <button class="ata-launcher" id="ataLauncher">
+                <span class="icon-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                </span>
+                <div>
+                  <div class="ata-title">Ata assinada · PDF</div>
+                  <div class="ata-meta">Sincronizada há 2 h · 3 páginas</div>
+                </div>
+                <svg class="open-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- LOCAL / ACESSO (condicional à modalidade) -->
+            <div class="section" id="localSection">
+              <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Local / Acesso
+              </div>
+              <div class="section-card" id="localContent">
+                <!-- preenchido por JS -->
+              </div>
+            </div>
+
+            <!-- INDICADORES -->
+            <div class="section">
+              <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                Indicadores
+              </div>
+              <div class="section-card" style="display:flex; gap:10px; flex-wrap:wrap">
+                <span class="status-chip designada" style="background: oklch(from var(--warning) l c h / 0.12); color: var(--warning); border-color: oklch(from var(--warning) l c h / 0.25)">
+                  <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1 8H7V7.5h2V12.5z"/></svg>
+                  Juízo 100% Digital
+                </span>
+                <span class="status-chip designada" style="background: oklch(from var(--primary) l c h / 0.1); color: var(--primary); border-color: oklch(from var(--primary) l c h / 0.2)">
+                  Designada
+                </span>
+              </div>
+            </div>
+
+            <!-- RESPONSÁVEL no card (já editável acima, mas aparecendo dados completos aqui) -->
+            <!-- OBSERVAÇÕES (inline edit) -->
+            <div class="section">
+              <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                Observações
+                <button class="edit-btn" id="obsEditBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                  </svg>
+                  Editar
+                </button>
+              </div>
+              <div class="section-card" id="obsCard">
+                <div class="obs-display" id="obsDisplay">
+                  Parte autora confirmou presença. Juntar documentação de horas extras antes da audiência.
+                </div>
+              </div>
+            </div>
+
+            <!-- HISTÓRICO (placeholder) -->
+            <div class="section">
+              <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 8v4l3 3M21 12a9 9 0 1 1-9-9" />
+                </svg>
+                Histórico
+              </div>
+              <div class="section-card" style="font-size: 12px; color: var(--muted-foreground); font-style: italic">
+                Timeline de auditoria — mantida como hoje.
+              </div>
+            </div>
+          </div>
+
+          <div class="dialog-footer">
+            <button class="btn btn-ghost">Fechar</button>
+          </div>
+        </div>
+
+        <!-- COLUNA PDF (split view) -->
+        <div class="pdf-pane" id="pdfPane">
+          <div class="pdf-header">
+            <div class="pdf-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              Ata · 15 abr 2026
+            </div>
+            <div class="pdf-toolbar">
+              <button class="btn-ghost btn btn-sm" style="padding:4px 8px;font-size:11px">Baixar</button>
+              <button class="pdf-close" id="pdfCloseBtn" aria-label="Fechar PDF">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="pdf-viewer">
+            <div class="pdf-page">
+              <h3>ATA DE AUDIÊNCIA</h3>
+              <p><strong>Processo:</strong> 0010255-62.2025.5.02.0020</p>
+              <p><strong>Autor:</strong> Yuri Santos de Oliveira</p>
+              <p><strong>Réu:</strong> Mottu Tecnologia Ltda</p>
+              <p><strong>Data:</strong> 15 de abril de 2026, às 10h15min</p>
+              <p><strong>Modalidade:</strong> Videoconferência — Sala virtual PJE TRT2</p>
+              <p style="margin-top:14px">Aos quinze dias do mês de abril do ano de dois mil e vinte e seis, às dez horas e quinze minutos, na sala virtual de audiências deste juízo, reuniram-se as partes para audiência inicial, constando-se a presença do reclamante, da reclamada por seu preposto, e dos respectivos advogados.</p>
+              <p>Aberta a audiência, foi proposta a tentativa de conciliação, a qual restou prejudicada em razão da impossibilidade de acordo entre as partes.</p>
+              <p>A reclamada apresentou defesa escrita, cuja juntada foi determinada aos autos. Foram deferidos os prazos legais para manifestação.</p>
+            </div>
+            <div class="pdf-page">
+              <h3>ATA DE AUDIÊNCIA — pág. 2</h3>
+              <p>Na sequência, foram ouvidas as partes e as testemunhas arroladas, conforme registro em vídeo disponível no sistema.</p>
+              <p>Ante o exposto, fica designada nova audiência em continuação, a ser marcada oportunamente.</p>
+              <p style="margin-top:24px">_____________________________<br/>Juiz do Trabalho</p>
+              <p>_____________________________<br/>Advogado autor(a) — OAB/SP 123.456</p>
+              <p>_____________________________<br/>Advogado reclamada — OAB/SP 654.321</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Fill fake calendar
+      const cal = document.querySelector(".fake-calendar");
+      for (let i = 1; i <= 35; i++) {
+        const cell = document.createElement("div");
+        cell.textContent = i > 31 ? "" : i;
+        cal.appendChild(cell);
+      }
+
+      // Estado
+      const state = {
+        modalidade: "Virtual",
+        realizada: false,
+        obsEditing: false,
+        modalidadeEditing: false,
+        responsavelEditing: false,
+        pdfOpen: false,
+      };
+
+      const localContent = document.getElementById("localContent");
+      const obsCard = document.getElementById("obsCard");
+      const obsEditBtn = document.getElementById("obsEditBtn");
+      const modalidadePill = document.getElementById("modalidadePill");
+      const modalidadeLabel = document.getElementById("modalidadeLabel");
+      const modalidadeIcon = document.getElementById("modalidadeIcon");
+      const responsavelPill = document.getElementById("responsavelPill");
+      const statusChip = document.getElementById("statusChip");
+      const statusLabel = document.getElementById("statusLabel");
+      const ataSection = document.getElementById("ataSection");
+      const ataLauncher = document.getElementById("ataLauncher");
+      const audienciaActions = document.getElementById("audienciaActions");
+      const dialog = document.getElementById("dialog");
+      const pdfCloseBtn = document.getElementById("pdfCloseBtn");
+      const modeToggle = document.getElementById("modeToggle");
+
+      const icons = {
+        Virtual: `<rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 22h8M12 18v4"/>`,
+        Presencial: `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
+        Híbrida: `<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>`,
+      };
+
+      function renderLocal() {
+        if (state.modalidade === "Virtual") {
+          localContent.innerHTML = `
+            <div class="form-field">
+              <label class="form-label">Link da sala virtual</label>
+              <div style="display:flex;gap:6px">
+                <input class="form-input" placeholder="https://…" value="https://pje.trt2.jus.br/salavirtual/abc123" />
+                <button class="btn btn-subtle btn-sm" title="Copiar link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <rect x="9" y="9" width="13" height="13" rx="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                </button>
+              </div>
+            </div>`;
+        } else if (state.modalidade === "Presencial") {
+          localContent.innerHTML = `
+            <div class="form-row">
+              <div class="form-field" style="flex:3"><label class="form-label">Logradouro</label>
+                <input class="form-input" value="Av. Marquês de São Vicente" /></div>
+              <div class="form-field" style="flex:1"><label class="form-label">Nº</label>
+                <input class="form-input" value="235" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label class="form-label">Complemento</label>
+                <input class="form-input" value="Sala 702" /></div>
+              <div class="form-field"><label class="form-label">Bairro</label>
+                <input class="form-input" value="Barra Funda" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field" style="flex:3"><label class="form-label">Cidade</label>
+                <input class="form-input" value="São Paulo" /></div>
+              <div class="form-field" style="flex:1"><label class="form-label">UF</label>
+                <input class="form-input" value="SP" /></div>
+              <div class="form-field" style="flex:2"><label class="form-label">CEP</label>
+                <input class="form-input" value="01139-001" /></div>
+            </div>`;
+        } else if (state.modalidade === "Híbrida") {
+          localContent.innerHTML = `
+            <div class="hibrida-matriz">
+              <div class="hibrida-head">Parte</div>
+              <div class="hibrida-head">Presença</div>
+              <div></div>
+
+              <div class="hibrida-parte">
+                <span class="parte-chip ativo">Autor</span>
+                <span>Yuri Santos de Oliveira</span>
+                <span style="color:var(--muted-foreground);font-size:11px">(cliente)</span>
+              </div>
+              <div class="seg">
+                <button class="active" data-p="autor" data-m="virtual">Virtual</button>
+                <button data-p="autor" data-m="presencial">Presencial</button>
+              </div><div></div>
+
+              <div class="hibrida-parte">
+                <span class="parte-chip ativo">Adv. Autor</span>
+                <span>Dra. Clara Mendes</span>
+                <span style="color:var(--muted-foreground);font-size:11px">(advogado)</span>
+              </div>
+              <div class="seg">
+                <button data-p="advAutor" data-m="virtual">Virtual</button>
+                <button class="active" data-p="advAutor" data-m="presencial">Presencial</button>
+              </div><div></div>
+
+              <div class="hibrida-parte">
+                <span class="parte-chip passivo">Réu</span>
+                <span>Mottu Tecnologia Ltda</span>
+                <span style="color:var(--muted-foreground);font-size:11px">(preposto)</span>
+              </div>
+              <div class="seg">
+                <button data-p="reu" data-m="virtual">Virtual</button>
+                <button class="active" data-p="reu" data-m="presencial">Presencial</button>
+              </div><div></div>
+
+              <div class="hibrida-parte">
+                <span class="parte-chip passivo">Adv. Réu</span>
+                <span>Dr. Roberto Lima</span>
+                <span style="color:var(--muted-foreground);font-size:11px">(advogado)</span>
+              </div>
+              <div class="seg">
+                <button class="active" data-p="advReu" data-m="virtual">Virtual</button>
+                <button data-p="advReu" data-m="presencial">Presencial</button>
+              </div><div></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:10px;border-top:1px solid oklch(from var(--border) l c h / 0.4)">
+              <div class="form-field">
+                <label class="form-label">Link (para quem está virtual)</label>
+                <input class="form-input" value="https://pje.trt2.jus.br/salavirtual/abc123" />
+              </div>
+              <div class="form-field">
+                <label class="form-label">Endereço (para quem está presencial)</label>
+                <input class="form-input" value="Av. Marquês de São Vicente, 235 — Sala 702, São Paulo/SP" />
+              </div>
+            </div>`;
+
+          localContent.querySelectorAll(".seg button").forEach((b) => {
+            b.addEventListener("click", () => {
+              const parte = b.dataset.p;
+              b.parentElement.querySelectorAll("button").forEach((s) => s.classList.remove("active"));
+              b.classList.add("active");
+            });
+          });
+        }
+      }
+
+      function renderMode() {
+        modalidadeLabel.textContent = state.modalidade;
+        modalidadeIcon.innerHTML = icons[state.modalidade];
+        renderLocal();
+
+        // actions conditional
+        let html = "";
+        if (state.realizada) {
+          html = `
+            <button class="btn btn-ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              Abrir no PJe
+            </button>`;
+        } else {
+          if (state.modalidade !== "Presencial") {
+            html += `
+              <button class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="23 7 16 12 23 17 23 7"/>
+                  <rect x="1" y="5" width="15" height="14" rx="2"/>
+                </svg>
+                Entrar na Sala Virtual
+              </button>`;
+          }
+          html += `
+            <button class="btn btn-ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              Abrir no PJe
+            </button>`;
+        }
+        audienciaActions.innerHTML = html;
+      }
+
+      function renderRealizada() {
+        if (state.realizada) {
+          statusChip.classList.remove("designada");
+          statusChip.classList.add("realizada");
+          statusLabel.textContent = "Realizada";
+          ataSection.style.display = "";
+          modeToggle.textContent = "Audiência: Realizada";
+        } else {
+          statusChip.classList.remove("realizada");
+          statusChip.classList.add("designada");
+          statusLabel.textContent = "Designada";
+          ataSection.style.display = "none";
+          closePdf();
+          modeToggle.textContent = "Audiência: Designada";
+        }
+        renderMode();
+      }
+
+      modeToggle.addEventListener("click", () => {
+        state.realizada = !state.realizada;
+        renderRealizada();
+      });
+
+      // Modalidade popover (inline edit)
+      modalidadePill.addEventListener("click", () => {
+        const card = document.querySelector(".audiencia-block");
+        if (state.modalidadeEditing) return;
+        state.modalidadeEditing = true;
+
+        const existing = document.getElementById("modalidadeEditor");
+        if (existing) return;
+
+        const editor = document.createElement("div");
+        editor.id = "modalidadeEditor";
+        editor.style.cssText = "margin-top:10px;padding-top:10px;border-top:1px solid oklch(from var(--border) l c h / 0.4)";
+        editor.innerHTML = `
+          <div class="meta-label" style="margin-bottom:6px">Alterar modalidade</div>
+          <div class="modalidade-group">
+            <button class="btn ${state.modalidade === 'Virtual' ? 'active' : ''}" data-m="Virtual">Virtual</button>
+            <button class="btn ${state.modalidade === 'Presencial' ? 'active' : ''}" data-m="Presencial">Presencial</button>
+            <button class="btn ${state.modalidade === 'Híbrida' ? 'active' : ''}" data-m="Híbrida">Híbrida</button>
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-ghost btn-sm" id="modCancel">Cancelar</button>
+          </div>`;
+        card.appendChild(editor);
+        editor.querySelectorAll("[data-m]").forEach((b) => {
+          b.addEventListener("click", () => {
+            state.modalidade = b.dataset.m;
+            renderMode();
+            cleanupModalidade();
+          });
+        });
+        editor.querySelector("#modCancel").addEventListener("click", cleanupModalidade);
+      });
+
+      function cleanupModalidade() {
+        state.modalidadeEditing = false;
+        const editor = document.getElementById("modalidadeEditor");
+        if (editor) editor.remove();
+      }
+
+      // Responsável popover (mock)
+      responsavelPill.addEventListener("click", () => {
+        const card = document.querySelector(".audiencia-block");
+        if (state.responsavelEditing) return;
+        state.responsavelEditing = true;
+        if (document.getElementById("respEditor")) return;
+
+        const editor = document.createElement("div");
+        editor.id = "respEditor";
+        editor.style.cssText = "margin-top:10px;padding-top:10px;border-top:1px solid oklch(from var(--border) l c h / 0.4)";
+        editor.innerHTML = `
+          <div class="meta-label" style="margin-bottom:6px">Alterar responsável</div>
+          <input class="form-input" placeholder="Buscar usuário…" />
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">
+            ${["Viviane Batista", "Clara Mendes", "Roberto Lima", "Ana Souza"]
+              .map(
+                (n) => `
+              <button class="btn btn-ghost btn-sm" style="justify-content:flex-start">
+                <span class="responsavel-avatar">${n.split(" ").map((x)=>x[0]).slice(0,2).join("")}</span>
+                ${n}
+              </button>`
+              )
+              .join("")}
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-ghost btn-sm" id="respCancel">Cancelar</button>
+          </div>`;
+        card.appendChild(editor);
+        editor.querySelector("#respCancel").addEventListener("click", () => {
+          state.responsavelEditing = false;
+          editor.remove();
+        });
+      });
+
+      // Observações inline
+      obsEditBtn.addEventListener("click", () => {
+        if (state.obsEditing) return;
+        state.obsEditing = true;
+        const current = document.getElementById("obsDisplay").textContent.trim();
+        obsCard.innerHTML = `
+          <textarea class="form-input" id="obsTextarea">${current}</textarea>
+          <div class="editor-actions">
+            <button class="btn btn-ghost btn-sm" id="obsCancel">Cancelar</button>
+            <button class="btn btn-primary btn-sm" id="obsSave">Salvar</button>
+          </div>`;
+        document.getElementById("obsCancel").addEventListener("click", () => {
+          restoreObs(current);
+        });
+        document.getElementById("obsSave").addEventListener("click", () => {
+          const val = document.getElementById("obsTextarea").value;
+          restoreObs(val);
+        });
+      });
+      function restoreObs(text) {
+        state.obsEditing = false;
+        obsCard.innerHTML = `<div class="obs-display${text ? "" : " empty"}" id="obsDisplay">${text || "Nenhuma observação registrada."}</div>`;
+      }
+
+      // PDF split
+      ataLauncher.addEventListener("click", () => {
+        state.pdfOpen = true;
+        dialog.classList.add("split");
+      });
+      pdfCloseBtn.addEventListener("click", closePdf);
+      function closePdf() {
+        state.pdfOpen = false;
+        dialog.classList.remove("split");
+      }
+
+      // Init
+      renderMode();
+      renderRealizada();
+    </script>
+  </body>
+</html>

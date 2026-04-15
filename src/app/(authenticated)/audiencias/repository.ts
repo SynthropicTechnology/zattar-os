@@ -43,6 +43,21 @@ function converterParaAudiencia(data: AudienciaRow): Audiencia {
   if ('orgao_julgador_origem' in data) {
     converted.orgaoJulgadorOrigem = data.orgao_julgador_origem as string;
   }
+
+  // Descrições vindas de JOINs (classe_judicial, orgao_julgador, acervo)
+  if (data.classe_judicial && typeof data.classe_judicial === 'object') {
+    const cj = data.classe_judicial as { descricao?: string | null };
+    converted.classeJudicialDescricao = cj.descricao ?? null;
+  }
+  if (data.orgao_julgador && typeof data.orgao_julgador === 'object') {
+    const oj = data.orgao_julgador as { descricao?: string | null };
+    converted.orgaoJulgadorDescricao = oj.descricao ?? null;
+  }
+  if (data.processo && typeof data.processo === 'object') {
+    const p = data.processo as { data_autuacao?: string | null };
+    converted.dataAutuacao = p.data_autuacao ?? null;
+  }
+
   return converted;
 }
 
@@ -59,7 +74,12 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
       async () => {
         const result = await db
           .from('audiencias_com_origem')
-          .select(getAudienciaColumnsComOrigem())
+          .select(
+            `${getAudienciaColumnsComOrigem()},
+             classe_judicial!classe_judicial_id(descricao),
+             orgao_julgador!orgao_julgador_id(descricao),
+             processo:acervo!processo_id(data_autuacao)`
+          )
           .eq('id', id)
           .single();
         return result;

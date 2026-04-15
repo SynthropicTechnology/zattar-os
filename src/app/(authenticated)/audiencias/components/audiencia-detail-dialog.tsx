@@ -2,24 +2,22 @@
 
 import * as React from 'react';
 import {
-  Gavel,
   Clock,
   ExternalLink,
   Copy,
   Pencil,
-  MapPin,
   Video,
   FileText,
   Building2,
   Loader2,
   Check,
   AlertCircle,
-  Scale,
-  ClipboardList,
   MessageSquare,
-  ShieldCheck,
-  Landmark,
   X,
+  Gavel,
+  ChevronDown,
+  ChevronRight,
+  Globe,
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -27,19 +25,16 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { IconContainer } from '@/components/ui/icon-container';
-import { ParteBadge } from '@/components/ui/parte-badge';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
-import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
-import { PrepScore } from './prep-score';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
 import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
-// EditarAudienciaDialog removido — edição agora é inline
 import {
   type Audiencia,
   type EnderecoPresencial,
   ModalidadeAudiencia,
+  PresencaHibrida,
   GRAU_TRIBUNAL_LABELS,
   TRT_NOMES,
   isAudienciaCapturada,
@@ -52,15 +47,23 @@ import {
   actionAtualizarObservacoes,
   actionAtualizarAudienciaPayload,
 } from '../actions';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
+import { cn } from '@/lib/utils';
+
+const MODALIDADE_LABELS: Record<ModalidadeAudiencia, string> = {
+  [ModalidadeAudiencia.Virtual]: 'Virtual',
+  [ModalidadeAudiencia.Presencial]: 'Presencial',
+  [ModalidadeAudiencia.Hibrida]: 'Híbrida',
+};
+
+const MODALIDADE_ICONS: Record<ModalidadeAudiencia, React.ComponentType<{ className?: string }>> = {
+  [ModalidadeAudiencia.Virtual]: Video,
+  [ModalidadeAudiencia.Presencial]: Building2,
+  [ModalidadeAudiencia.Hibrida]: Globe,
+};
 
 // =============================================================================
-// HELPERS
-// =============================================================================
-
-// =============================================================================
-// SECTION HEADER — ícone + label uppercase (padrão do POC)
+// SECTION HELPERS
 // =============================================================================
 
 function SectionHeader({
@@ -73,30 +76,31 @@ function SectionHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between mb-3">
-      <h4 className="flex items-center gap-2 text-xs font-semibold text-muted-foreground/60 uppercase tracking-wider">
-        <Icon className="size-3.5 text-muted-foreground/40" />
+    <div className="flex items-center gap-2 mb-2.5">
+      <Icon className="size-3.5 text-primary" />
+      <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
         {label}
       </h4>
-      {action}
+      {action && <div className="ml-auto">{action}</div>}
     </div>
   );
 }
 
-// =============================================================================
-// SECTION CARD — glass-card-light (fundo opaco suave)
-// =============================================================================
-
 function SectionCard({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-[14px] bg-muted/40 border border-border/[0.06] p-[18px_20px] ${className ?? ''}`}>
+    <div
+      className={cn(
+        'rounded-[14px] bg-muted/40 border border-border/30 p-[14px_16px]',
+        className
+      )}
+    >
       {children}
     </div>
   );
 }
 
 // =============================================================================
-// TYPES
+// PROPS
 // =============================================================================
 
 export interface AudienciaDetailDialogProps {
@@ -121,7 +125,6 @@ export function AudienciaDetailDialog({
   const [error, setError] = React.useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = React.useState(false);
 
-  // ── Inline editing states ──
   const [editingUrl, setEditingUrl] = React.useState(false);
   const [urlDraft, setUrlDraft] = React.useState('');
   const [savingUrl, setSavingUrl] = React.useState(false);
@@ -138,6 +141,10 @@ export function AudienciaDetailDialog({
 
   const [savingModalidade, setSavingModalidade] = React.useState(false);
   const [modalidadePopoverOpen, setModalidadePopoverOpen] = React.useState(false);
+
+  const [savingPresenca, setSavingPresenca] = React.useState(false);
+
+  const [ataOpen, setAtaOpen] = React.useState(false);
 
   const { usuarios } = useUsuarios();
 
@@ -169,17 +176,30 @@ export function AudienciaDetailDialog({
         if (!cancelled) setIsLoading(false);
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [audienciaId, shouldFetch, open]);
+
+  React.useEffect(() => {
+    if (!open) setAtaOpen(false);
+  }, [open]);
 
   const audiencia = audienciaProp || fetchedAudiencia;
   const isPje = audiencia ? isAudienciaCapturada(audiencia) : false;
   const pjeUrl = audiencia ? buildPjeUrl(audiencia.trt, audiencia.numeroProcesso) : '';
-  const hasAta = !!(audiencia?.urlAtaAudiencia);
+  const hasAta = !!audiencia?.urlAtaAudiencia;
 
   const dataInicio = audiencia ? parseISO(audiencia.dataInicio) : null;
   const dataFim = audiencia ? parseISO(audiencia.dataFim) : null;
 
+  const poloAtivo = audiencia?.poloAtivoOrigem || audiencia?.poloAtivoNome || '—';
+  const poloPassivo = audiencia?.poloPassivoOrigem || audiencia?.poloPassivoNome || '—';
+  const orgaoJulgador =
+    audiencia?.orgaoJulgadorDescricao ||
+    audiencia?.orgaoJulgadorOrigem ||
+    audiencia?.salaAudienciaNome ||
+    null;
 
   const handleCopyUrl = React.useCallback(async (url: string) => {
     try {
@@ -191,7 +211,6 @@ export function AudienciaDetailDialog({
     }
   }, []);
 
-  // ── Inline save handlers ──
   const handleStartEditUrl = React.useCallback(() => {
     setUrlDraft(audiencia?.urlAudienciaVirtual || '');
     setEditingUrl(true);
@@ -245,206 +264,251 @@ export function AudienciaDetailDialog({
     setSavingObs(false);
   }, [audiencia, obsDraft, onOpenChange]);
 
-  const handleChangeModalidade = React.useCallback(async (novaModalidade: ModalidadeAudiencia) => {
-    if (!audiencia || novaModalidade === audiencia.modalidade) {
+  const handleChangeModalidade = React.useCallback(
+    async (novaModalidade: ModalidadeAudiencia) => {
+      if (!audiencia || novaModalidade === audiencia.modalidade) {
+        setModalidadePopoverOpen(false);
+        return;
+      }
+      setSavingModalidade(true);
       setModalidadePopoverOpen(false);
-      return;
-    }
-    setSavingModalidade(true);
-    setModalidadePopoverOpen(false);
-    const result = await actionAtualizarAudienciaPayload(audiencia.id, { modalidade: novaModalidade });
-    if (result.success) {
-      onOpenChange(false);
-    }
-    setSavingModalidade(false);
-  }, [audiencia, onOpenChange]);
-
-  const hasIndicadores = audiencia && (
-    audiencia.segredoJustica ||
-    audiencia.juizoDigital ||
-    audiencia.designada ||
-    audiencia.documentoAtivo
+      const result = await actionAtualizarAudienciaPayload(audiencia.id, { modalidade: novaModalidade });
+      if (result.success) {
+        onOpenChange(false);
+      }
+      setSavingModalidade(false);
+    },
+    [audiencia, onOpenChange]
   );
 
+  const handleChangePresencaHibrida = React.useCallback(
+    async (valor: PresencaHibrida) => {
+      if (!audiencia) return;
+      setSavingPresenca(true);
+      const result = await actionAtualizarAudienciaPayload(audiencia.id, { presencaHibrida: valor });
+      if (result.success) {
+        onOpenChange(false);
+      }
+      setSavingPresenca(false);
+    },
+    [audiencia, onOpenChange]
+  );
+
+  const hasIndicadores =
+    audiencia &&
+    (audiencia.segredoJustica || audiencia.juizoDigital || audiencia.designada || audiencia.documentoAtivo);
+
+  const isVirtual = audiencia?.modalidade === ModalidadeAudiencia.Virtual;
+  const isPresencial = audiencia?.modalidade === ModalidadeAudiencia.Presencial;
+  const isHibrida = audiencia?.modalidade === ModalidadeAudiencia.Hibrida;
+
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent
-          className="sm:max-w-[780px] max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden [scrollbar-width:thin]"
-          showCloseButton
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className={cn(
+          'max-h-[92vh] flex p-0 gap-0 overflow-hidden [scrollbar-width:thin] transition-[max-width] duration-300 ease-out',
+          ataOpen ? 'sm:max-w-[1100px]' : 'sm:max-w-2xl'
+        )}
+        showCloseButton
+      >
+        <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
+
+        {/* ═══ COLUNA PRINCIPAL ═══ */}
+        <div
+          className={cn(
+            'flex-1 flex flex-col min-w-0',
+            ataOpen && 'border-r border-border/50'
+          )}
         >
-          <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
-          {/* ══ HEADER (fixo) ══ */}
-          <div className="shrink-0" style={{ padding: '24px 28px 0' }}>
-            {/* Título + Badge */}
-            <div className="flex items-start gap-3.5 mb-4">
-              <IconContainer size="lg" className="bg-primary/10 shrink-0 mt-0.5">
-                <Gavel className="size-5 text-primary" />
-              </IconContainer>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2.5 flex-wrap mb-1">
-                  <DialogTitle className="text-[17px] font-bold text-foreground">
-                    {audiencia?.tipoDescricao || 'Audiência'}
-                  </DialogTitle>
-                  {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
-                </div>
-                {dataInicio && (
-                  <p className="text-[13px] text-muted-foreground flex items-center gap-1.5 capitalize">
-                    {format(dataInicio, "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                  </p>
-                )}
-              </div>
+          {/* HEADER · Capa do processo */}
+          <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/50">
+            <div className="flex items-center justify-between gap-4 mb-1.5">
+              <DialogTitle className="flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate">
+                {poloAtivo}
+                <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
+                {poloPassivo}
+              </DialogTitle>
+              {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
             </div>
 
-            {/* Meta strip — card opaco horizontal com separadores verticais */}
-            {audiencia && !isLoading && !error && (
-              <SectionCard className="flex gap-0 mb-4">
-                {/* Horário */}
-                <div className="flex-1">
-                  <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em] block">Horário</span>
-                  <span className="text-[13.5px] font-medium text-foreground flex items-center gap-1.5 mt-1">
-                    <Clock className="size-3.5 text-muted-foreground/40" />
-                    {dataInicio && dataFim && (
+            {audiencia && (
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-muted-foreground">
+                <span>{audiencia.numeroProcesso}</span>
+                {audiencia.classeJudicialDescricao && (
+                  <>
+                    <MetaDot />
+                    <span>{audiencia.classeJudicialDescricao}</span>
+                  </>
+                )}
+                <MetaDot />
+                <span>
+                  {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+                </span>
+                {orgaoJulgador && (
+                  <>
+                    <MetaDot />
+                    <span>{orgaoJulgador}</span>
+                  </>
+                )}
+                {audiencia.dataAutuacao && (
+                  <>
+                    <MetaDot />
+                    <span>
+                      Autuado em{' '}
+                      {format(parseISO(audiencia.dataAutuacao), "dd MMM yyyy", { locale: ptBR })}
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* BLOCO DA AUDIÊNCIA · meio */}
+          {audiencia && !isLoading && !error && (
+            <div className="shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
+              <div className="flex items-center gap-3 mb-3.5">
+                <Gavel className="size-[18px] text-primary shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-[14.5px] font-semibold text-foreground leading-[1.25]">
+                    {audiencia.tipoDescricao || 'Audiência'}
+                  </div>
+                  {dataInicio && dataFim && (
+                    <div className="text-[12.5px] text-muted-foreground mt-0.5 capitalize">
+                      {format(dataInicio, "EEE, dd MMM yyyy", { locale: ptBR })}
+                      {' · '}
                       <span className="tabular-nums">
                         {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
                       </span>
-                    )}
-                  </span>
+                    </div>
+                  )}
                 </div>
-                <div className="w-px bg-border/40 mx-4" />
-                {/* Modalidade — inline popover para trocar */}
-                <div className="flex-1">
-                  <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em] block">Modalidade</span>
-                  <div className="mt-1">
-                    <Popover open={modalidadePopoverOpen} onOpenChange={setModalidadePopoverOpen}>
-                      <PopoverTrigger asChild>
-                        <button
-                          type="button"
-                          className="flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5 transition-colors hover:bg-muted/50 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                          disabled={savingModalidade}
-                        >
-                          {savingModalidade ? (
-                            <Loader2 className="size-3 animate-spin text-muted-foreground" />
-                          ) : (
-                            <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
-                          )}
-                        </button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-40 p-1.5 rounded-xl glass-dropdown" align="start" side="bottom">
-                        <p className="text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider px-2 pt-1.5 pb-1">
-                          Modalidade
-                        </p>
-                        {([
-                          { value: ModalidadeAudiencia.Virtual, label: 'Virtual', icon: Video },
-                          { value: ModalidadeAudiencia.Presencial, label: 'Presencial', icon: Building2 },
-                          { value: ModalidadeAudiencia.Hibrida, label: 'Híbrida', icon: Video },
-                        ] as const).map(({ value, label, icon: Icon }) => (
+              </div>
+
+              <div className="flex flex-wrap gap-5 pb-3.5 mb-3.5 border-b border-border/40">
+                {/* Modalidade */}
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[9.5px] font-semibold text-muted-foreground/75 uppercase tracking-[0.08em]">
+                    Modalidade
+                  </span>
+                  <Popover open={modalidadePopoverOpen} onOpenChange={setModalidadePopoverOpen}>
+                    <PopoverTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={savingModalidade}
+                        className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-card border border-border/60 text-[12.5px] font-medium text-foreground hover:bg-muted/60 hover:border-border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                      >
+                        {savingModalidade ? (
+                          <Loader2 className="size-3 animate-spin text-muted-foreground" />
+                        ) : (
+                          <>
+                            {audiencia.modalidade &&
+                              React.createElement(MODALIDADE_ICONS[audiencia.modalidade], {
+                                className: 'size-3.5 text-primary',
+                              })}
+                            <span>
+                              {audiencia.modalidade
+                                ? MODALIDADE_LABELS[audiencia.modalidade]
+                                : 'Definir'}
+                            </span>
+                            <ChevronDown className="size-3 text-muted-foreground opacity-60" />
+                          </>
+                        )}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-44 p-1.5 rounded-xl glass-dropdown" align="start">
+                      <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider px-2 pt-1 pb-1.5">
+                        Modalidade
+                      </p>
+                      {(Object.values(ModalidadeAudiencia) as ModalidadeAudiencia[]).map((m) => {
+                        const Icon = MODALIDADE_ICONS[m];
+                        return (
                           <button
-                            key={value}
+                            key={m}
                             type="button"
-                            onClick={() => handleChangeModalidade(value)}
-                            className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-xs hover:bg-muted/50 transition-colors cursor-pointer"
+                            onClick={() => handleChangeModalidade(m)}
+                            className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[12px] hover:bg-muted/60 transition-colors cursor-pointer"
                           >
-                            <Icon className="size-3.5 text-muted-foreground/50" />
-                            <span>{label}</span>
-                            {audiencia.modalidade === value && (
+                            <Icon className="size-3.5 text-muted-foreground" />
+                            <span>{MODALIDADE_LABELS[m]}</span>
+                            {audiencia.modalidade === m && (
                               <Check className="size-3 ml-auto text-primary" />
                             )}
                           </button>
-                        ))}
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                        );
+                      })}
+                    </PopoverContent>
+                  </Popover>
                 </div>
-                <div className="w-px bg-border/40 mx-4" />
-                {/* Tribunal */}
-                <div className="flex-1">
-                  <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em] block">Tribunal</span>
-                  <span className="text-[13.5px] font-medium text-foreground flex items-center gap-1.5 mt-1">
-                    <Landmark className="size-3.5 text-muted-foreground/40" />
-                    <span className="truncate">{TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+
+                {/* Responsável */}
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[9.5px] font-semibold text-muted-foreground/75 uppercase tracking-[0.08em]">
+                    Responsável
                   </span>
-                </div>
-                <div className="w-px bg-border/40 mx-4" />
-                {/* Responsável — inline popover */}
-                <div className="flex-1">
-                  <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em] block">Responsável</span>
-                  <div className="mt-1">
-                    <AudienciaResponsavelPopover
-                      audienciaId={audiencia.id}
+                  <AudienciaResponsavelPopover
+                    audienciaId={audiencia.id}
+                    responsavelId={audiencia.responsavelId}
+                    usuarios={usuarios}
+                    onSuccess={() => onOpenChange(false)}
+                  >
+                    <ResponsavelTriggerContent
                       responsavelId={audiencia.responsavelId}
                       usuarios={usuarios}
-                      onSuccess={() => onOpenChange(false)}
-                    >
-                      <ResponsavelTriggerContent
-                        responsavelId={audiencia.responsavelId}
-                        usuarios={usuarios}
-                        size="md"
-                      />
-                    </AudienciaResponsavelPopover>
-                  </div>
+                      size="md"
+                    />
+                  </AudienciaResponsavelPopover>
                 </div>
-              </SectionCard>
-            )}
+              </div>
 
-            {/* Botões de ação */}
-            {audiencia && (
-              <div className="flex items-center gap-2.5 mb-5 flex-wrap">
-                <Button
-                  asChild={!!audiencia.urlAudienciaVirtual}
-                  disabled={!audiencia.urlAudienciaVirtual}
-                >
-                  {audiencia.urlAudienciaVirtual ? (
-                    <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer">
-                      <Video className="size-4" />
-                      Entrar na Sala Virtual
-                    </a>
-                  ) : (
-                    <>
-                      <Video className="size-4" />
-                      Entrar na Sala Virtual
-                    </>
-                  )}
-                </Button>
-
-                {hasAta && (
-                  <Button variant="outline" asChild>
-                    <a href={audiencia.urlAtaAudiencia!} target="_blank" rel="noopener noreferrer">
-                      <FileText className="size-4" />
-                      Visualizar Ata
-                    </a>
+              {/* Ações */}
+              <div className="flex flex-wrap gap-2">
+                {(isVirtual || isHibrida) && (
+                  <Button
+                    asChild={!!audiencia.urlAudienciaVirtual}
+                    disabled={!audiencia.urlAudienciaVirtual}
+                    size="sm"
+                  >
+                    {audiencia.urlAudienciaVirtual ? (
+                      <a
+                        href={audiencia.urlAudienciaVirtual}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Video className="size-4" />
+                        Entrar na Sala Virtual
+                      </a>
+                    ) : (
+                      <>
+                        <Video className="size-4" />
+                        Entrar na Sala Virtual
+                      </>
+                    )}
                   </Button>
                 )}
-
-                <Button variant="outline" asChild={isPje} disabled={!isPje}>
+                <Button variant="outline" size="sm" asChild={isPje} disabled={!isPje}>
                   {isPje ? (
                     <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="size-4" />
-                      Abrir PJe
+                      Abrir no PJe
                     </a>
                   ) : (
                     <>
                       <ExternalLink className="size-4" />
-                      Abrir PJe
+                      Abrir no PJe
                     </>
                   )}
                 </Button>
               </div>
-            )}
+            </div>
+          )}
 
-            <div className="h-px bg-border/20" />
-          </div>
-
-          {/* ══ BODY (scrollável) ══ */}
-          <div className="flex-1 overflow-y-auto px-7 py-5 [scrollbar-width:thin]">
-            {/* Loading */}
+          {/* BODY scrollável */}
+          <div className="flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]">
             {isLoading && (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="size-6 animate-spin text-muted-foreground" />
               </div>
             )}
-
-            {/* Error */}
             {error && !isLoading && (
               <div className="flex flex-col items-center justify-center py-12 gap-2 text-center">
                 <AlertCircle className="size-6 text-destructive" />
@@ -453,161 +517,294 @@ export function AudienciaDetailDialog({
             )}
 
             {audiencia && !isLoading && !error && (
-              <div className="space-y-5">
-                {/* ── Processo Vinculado ── */}
-                <div>
-                  <SectionHeader icon={ClipboardList} label="Processo Vinculado" />
-                  <SectionCard>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-[12px] font-semibold text-foreground tabular-nums">
-                          {audiencia.numeroProcesso}
+              <div className="space-y-4">
+                {/* ATA · só quando existe */}
+                {hasAta && (
+                  <div>
+                    <SectionHeader icon={FileText} label="Ata da Audiência" />
+                    <button
+                      type="button"
+                      onClick={() => setAtaOpen((v) => !v)}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-success/8 hover:bg-success/12 border border-success/25 text-left transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <span className="w-8 h-8 rounded-lg bg-success/18 text-success inline-flex items-center justify-center shrink-0">
+                        <FileText className="size-4" />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[13px] font-semibold text-foreground">
+                          Ata assinada · PDF
                         </div>
-                        <div className="text-[11px] text-muted-foreground mt-1">
-                          {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+                        <div className="text-[11.5px] text-muted-foreground">
+                          Clique para {ataOpen ? 'fechar' : 'ler ao lado'}
                         </div>
                       </div>
-                    </div>
-                    <div className="h-px bg-border/20 my-3" />
-                    <div className="flex gap-6">
-                      <div>
-                        <ParteBadge polo="ATIVO" truncate maxWidth="250px">
-                          {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '—'}
-                        </ParteBadge>
-                        {audiencia.poloAtivoRepresentaVarios && (
-                          <span className="text-[10px] text-muted-foreground ml-1">e outros</span>
+                      <ChevronRight
+                        className={cn(
+                          'size-4 text-muted-foreground transition-transform',
+                          ataOpen && 'rotate-90'
                         )}
-                      </div>
-                      <div>
-                        <ParteBadge polo="PASSIVO" truncate maxWidth="250px">
-                          {audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '—'}
-                        </ParteBadge>
-                        {audiencia.poloPassivoRepresentaVarios && (
-                          <span className="text-[10px] text-muted-foreground ml-1">e outros</span>
-                        )}
-                      </div>
-                    </div>
-                  </SectionCard>
-                </div>
+                      />
+                    </button>
+                  </div>
+                )}
 
-                {/* ── Local / Acesso (sempre visível) ── */}
+                {/* LOCAL / ACESSO — condicional por modalidade */}
                 <div>
                   <SectionHeader icon={Building2} label="Local / Acesso" />
                   <SectionCard>
-                    <div className="space-y-3">
-                      {/* URL Virtual — inline edit */}
-                      {(audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && (
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em]">Sala Virtual</span>
-                            {!editingUrl && (
-                              <button type="button" onClick={handleStartEditUrl} className="text-[10px] text-primary/60 hover:text-primary transition-colors cursor-pointer flex items-center gap-0.5">
-                                <Pencil className="size-2.5" />
-                                {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
-                              </button>
-                            )}
+                    {(isVirtual || isHibrida) && (
+                      <div className={isHibrida ? 'mb-3 pb-3 border-b border-border/40' : ''}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
+                            Link da sala virtual
+                          </span>
+                          {!editingUrl && (
+                            <button
+                              type="button"
+                              onClick={handleStartEditUrl}
+                              className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                            >
+                              <Pencil className="size-2.5" />
+                              {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
+                            </button>
+                          )}
+                        </div>
+                        {editingUrl ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="url"
+                              placeholder="https://..."
+                              value={urlDraft}
+                              onChange={(e) => setUrlDraft(e.target.value)}
+                              className="h-8 text-xs flex-1"
+                              autoFocus
+                            />
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="size-7 shrink-0"
+                              onClick={handleSaveUrl}
+                              disabled={savingUrl}
+                            >
+                              {savingUrl ? (
+                                <Loader2 className="size-3 animate-spin" />
+                              ) : (
+                                <Check className="size-3.5 text-success" />
+                              )}
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="size-7 shrink-0"
+                              onClick={() => setEditingUrl(false)}
+                            >
+                              <X className="size-3.5 text-muted-foreground" />
+                            </Button>
                           </div>
-                          {editingUrl ? (
-                            <div className="flex items-center gap-2">
+                        ) : audiencia.urlAudienciaVirtual ? (
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Video className="size-3.5 text-muted-foreground/60 shrink-0" />
+                            <a
+                              href={audiencia.urlAudienciaVirtual}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[13px] text-primary truncate hover:underline"
+                            >
+                              {audiencia.urlAudienciaVirtual}
+                            </a>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-7 shrink-0"
+                              onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}
+                            >
+                              {copiedUrl ? (
+                                <Check className="size-3.5 text-success" />
+                              ) : (
+                                <Copy className="size-3.5" />
+                              )}
+                            </Button>
+                          </div>
+                        ) : (
+                          <p className="text-[13px] text-muted-foreground/60 italic">
+                            Nenhum link cadastrado
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {(isPresencial || isHibrida) && (
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
+                            Endereço presencial
+                          </span>
+                          {!editingEndereco && (
+                            <button
+                              type="button"
+                              onClick={handleStartEditEndereco}
+                              className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                            >
+                              <Pencil className="size-2.5" />
+                              {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
+                            </button>
+                          )}
+                        </div>
+                        {editingEndereco ? (
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-[1fr_80px] gap-2">
                               <Input
-                                type="url"
-                                placeholder="https://zoom.us/..."
-                                value={urlDraft}
-                                onChange={(e) => setUrlDraft(e.target.value)}
-                                className="h-8 text-xs flex-1"
+                                placeholder="Logradouro"
+                                value={enderecoDraft.logradouro}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
+                                }
+                                className="h-8 text-xs"
                                 autoFocus
                               />
-                              <Button size="icon" variant="ghost" className="size-7 shrink-0" onClick={handleSaveUrl} disabled={savingUrl}>
-                                {savingUrl ? <Loader2 className="size-3 animate-spin" /> : <Check className="size-3.5 text-success" />}
+                              <Input
+                                placeholder="Nº"
+                                value={enderecoDraft.numero}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))
+                                }
+                                className="h-8 text-xs"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Input
+                                placeholder="Complemento"
+                                value={enderecoDraft.complemento || ''}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))
+                                }
+                                className="h-8 text-xs"
+                              />
+                              <Input
+                                placeholder="Bairro"
+                                value={enderecoDraft.bairro}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))
+                                }
+                                className="h-8 text-xs"
+                              />
+                            </div>
+                            <div className="grid grid-cols-[1fr_60px_100px] gap-2">
+                              <Input
+                                placeholder="Cidade"
+                                value={enderecoDraft.cidade}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))
+                                }
+                                className="h-8 text-xs"
+                              />
+                              <Input
+                                placeholder="UF"
+                                maxLength={2}
+                                value={enderecoDraft.uf}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({
+                                    ...d,
+                                    uf: e.target.value.toUpperCase(),
+                                  }))
+                                }
+                                className="h-8 text-xs"
+                              />
+                              <Input
+                                placeholder="CEP"
+                                value={enderecoDraft.cep}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))
+                                }
+                                className="h-8 text-xs"
+                              />
+                            </div>
+                            <div className="flex justify-end gap-1.5 mt-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setEditingEndereco(false)}
+                                className="h-7 text-xs"
+                              >
+                                Cancelar
                               </Button>
-                              <Button size="icon" variant="ghost" className="size-7 shrink-0" onClick={() => setEditingUrl(false)}>
-                                <X className="size-3.5 text-muted-foreground" />
+                              <Button
+                                size="sm"
+                                onClick={handleSaveEndereco}
+                                disabled={savingEndereco}
+                                className="h-7 text-xs"
+                              >
+                                {savingEndereco && (
+                                  <Loader2 className="size-3 animate-spin mr-1" />
+                                )}
+                                Salvar
                               </Button>
                             </div>
-                          ) : audiencia.urlAudienciaVirtual ? (
-                            <div className="flex items-center gap-2 min-w-0">
-                              <Video className="size-3.5 text-muted-foreground/40 shrink-0" />
-                              <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer" className="text-[13px] text-primary truncate hover:underline">
-                                {audiencia.urlAudienciaVirtual}
-                              </a>
-                              <Button variant="ghost" size="icon" className="size-7 shrink-0" onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}>
-                                {copiedUrl ? <Check className="size-3.5 text-success" /> : <Copy className="size-3.5" />}
-                              </Button>
-                            </div>
-                          ) : (
-                            <p className="text-[13px] text-muted-foreground/40 italic">Nenhum link cadastrado</p>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Endereço Presencial — inline edit */}
-                      {(audiencia.modalidade === 'presencial' || audiencia.modalidade === 'hibrida') && (
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em]">Endereço</span>
-                            {!editingEndereco && (
-                              <button type="button" onClick={handleStartEditEndereco} className="text-[10px] text-primary/60 hover:text-primary transition-colors cursor-pointer flex items-center gap-0.5">
-                                <Pencil className="size-2.5" />
-                                {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
-                              </button>
-                            )}
                           </div>
-                          {editingEndereco ? (
-                            <div className="space-y-2">
-                              <div className="grid grid-cols-[1fr_80px] gap-2">
-                                <Input placeholder="Logradouro" value={enderecoDraft.logradouro} onChange={(e) => setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))} className="h-8 text-xs" autoFocus />
-                                <Input placeholder="Nº" value={enderecoDraft.numero} onChange={(e) => setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))} className="h-8 text-xs" />
-                              </div>
-                              <div className="grid grid-cols-2 gap-2">
-                                <Input placeholder="Complemento" value={enderecoDraft.complemento || ''} onChange={(e) => setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))} className="h-8 text-xs" />
-                                <Input placeholder="Bairro" value={enderecoDraft.bairro} onChange={(e) => setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))} className="h-8 text-xs" />
-                              </div>
-                              <div className="grid grid-cols-[1fr_60px_100px] gap-2">
-                                <Input placeholder="Cidade" value={enderecoDraft.cidade} onChange={(e) => setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))} className="h-8 text-xs" />
-                                <Input placeholder="UF" maxLength={2} value={enderecoDraft.uf} onChange={(e) => setEnderecoDraft((d) => ({ ...d, uf: e.target.value.toUpperCase() }))} className="h-8 text-xs" />
-                                <Input placeholder="CEP" value={enderecoDraft.cep} onChange={(e) => setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))} className="h-8 text-xs" />
-                              </div>
-                              <div className="flex justify-end gap-1.5 mt-1">
-                                <Button size="sm" variant="ghost" onClick={() => setEditingEndereco(false)} className="h-7 text-xs">Cancelar</Button>
-                                <Button size="sm" onClick={handleSaveEndereco} disabled={savingEndereco} className="h-7 text-xs">
-                                  {savingEndereco ? <Loader2 className="size-3 animate-spin mr-1" /> : null}
-                                  Salvar
-                                </Button>
-                              </div>
-                            </div>
-                          ) : audiencia.enderecoPresencial ? (
-                            <div className="flex items-start gap-2">
-                              <MapPin className="size-3.5 text-muted-foreground/40 mt-0.5 shrink-0" />
-                              <p className="text-[13px] text-foreground/80 leading-relaxed">
-                                {audiencia.enderecoPresencial.logradouro}, {audiencia.enderecoPresencial.numero}
-                                {audiencia.enderecoPresencial.complemento && ` – ${audiencia.enderecoPresencial.complemento}`}
-                                <br />
-                                <span className="text-muted-foreground">
-                                  {audiencia.enderecoPresencial.bairro}, {audiencia.enderecoPresencial.cidade} – {audiencia.enderecoPresencial.uf}
-                                </span>
-                              </p>
-                            </div>
-                          ) : (
-                            <p className="text-[13px] text-muted-foreground/40 italic">Nenhum endereço cadastrado</p>
-                          )}
-                        </div>
-                      )}
+                        ) : audiencia.enderecoPresencial ? (
+                          <p className="text-[13px] text-foreground/90 leading-relaxed">
+                            {audiencia.enderecoPresencial.logradouro},{' '}
+                            {audiencia.enderecoPresencial.numero}
+                            {audiencia.enderecoPresencial.complemento &&
+                              ` — ${audiencia.enderecoPresencial.complemento}`}
+                            <br />
+                            <span className="text-muted-foreground">
+                              {audiencia.enderecoPresencial.bairro},{' '}
+                              {audiencia.enderecoPresencial.cidade} —{' '}
+                              {audiencia.enderecoPresencial.uf}
+                              {audiencia.enderecoPresencial.cep &&
+                                ` · CEP ${audiencia.enderecoPresencial.cep}`}
+                            </span>
+                          </p>
+                        ) : (
+                          <p className="text-[13px] text-muted-foreground/60 italic">
+                            Nenhum endereço cadastrado
+                          </p>
+                        )}
+                      </div>
+                    )}
 
-                      {audiencia.presencaHibrida !== null && (
-                        <AudienciaIndicadorBadges
-                          audiencia={audiencia}
-                          show={['presenca_hibrida']}
-                          showPresencaDetail
-                        />
-                      )}
-                    </div>
+                    {/* Híbrida: quem é presencial? */}
+                    {isHibrida && (
+                      <div className="mt-3 pt-3 border-t border-border/40">
+                        <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em] block mb-2">
+                          Quem participa presencialmente?
+                        </span>
+                        <div className="inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40">
+                          {(
+                            [
+                              { v: PresencaHibrida.Advogado, label: 'Advogados' },
+                              { v: PresencaHibrida.Cliente, label: 'Clientes' },
+                            ] as const
+                          ).map(({ v, label }) => (
+                            <button
+                              key={v}
+                              type="button"
+                              disabled={savingPresenca}
+                              onClick={() => handleChangePresencaHibrida(v)}
+                              className={cn(
+                                'px-3 py-1 rounded-md text-[11.5px] font-medium transition-colors',
+                                audiencia.presencaHibrida === v
+                                  ? 'bg-card text-foreground shadow-sm'
+                                  : 'text-muted-foreground hover:text-foreground'
+                              )}
+                            >
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground/80 mt-2 leading-relaxed">
+                          Os demais participam por videoconferência.
+                        </p>
+                      </div>
+                    )}
                   </SectionCard>
                 </div>
 
-                {/* ── Indicadores ── */}
+                {/* INDICADORES */}
                 {hasIndicadores && (
                   <div>
-                    <SectionHeader icon={Scale} label="Indicadores" />
+                    <SectionHeader icon={Clock} label="Indicadores" />
                     <SectionCard>
                       <AudienciaIndicadorBadges
                         audiencia={audiencia}
@@ -617,22 +814,18 @@ export function AudienciaDetailDialog({
                   </div>
                 )}
 
-                {/* ── Preparo ── */}
-                <div>
-                  <SectionHeader icon={ShieldCheck} label="Preparo" />
-                  <SectionCard>
-                    <PrepScore audiencia={audiencia} showBreakdown size="lg" />
-                  </SectionCard>
-                </div>
-
-                {/* ── Observações (sempre visível, inline edit) ── */}
+                {/* OBSERVAÇÕES — inline edit */}
                 <div>
                   <SectionHeader
                     icon={MessageSquare}
                     label="Observações"
                     action={
                       !editingObs && (
-                        <button type="button" onClick={handleStartEditObs} className="text-[10px] text-primary/60 hover:text-primary transition-colors cursor-pointer flex items-center gap-0.5">
+                        <button
+                          type="button"
+                          onClick={handleStartEditObs}
+                          className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                        >
                           <Pencil className="size-2.5" />
                           {audiencia.observacoes ? 'Editar' : 'Adicionar'}
                         </button>
@@ -651,24 +844,38 @@ export function AudienciaDetailDialog({
                           autoFocus
                         />
                         <div className="flex justify-end gap-1.5">
-                          <Button size="sm" variant="ghost" onClick={() => setEditingObs(false)} className="h-7 text-xs">Cancelar</Button>
-                          <Button size="sm" onClick={handleSaveObs} disabled={savingObs} className="h-7 text-xs">
-                            {savingObs ? <Loader2 className="size-3 animate-spin mr-1" /> : null}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingObs(false)}
+                            className="h-7 text-xs"
+                          >
+                            Cancelar
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={handleSaveObs}
+                            disabled={savingObs}
+                            className="h-7 text-xs"
+                          >
+                            {savingObs && <Loader2 className="size-3 animate-spin mr-1" />}
                             Salvar
                           </Button>
                         </div>
                       </div>
                     ) : audiencia.observacoes ? (
-                      <p className="text-[13px] text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                      <p className="text-[13px] text-foreground/90 leading-relaxed whitespace-pre-wrap">
                         {audiencia.observacoes}
                       </p>
                     ) : (
-                      <p className="text-[13px] text-muted-foreground/40 italic">Nenhuma observação</p>
+                      <p className="text-[13px] text-muted-foreground/60 italic">
+                        Nenhuma observação registrada
+                      </p>
                     )}
                   </SectionCard>
                 </div>
 
-                {/* ── Histórico ── */}
+                {/* HISTÓRICO */}
                 <div>
                   <SectionHeader icon={Clock} label="Histórico de Alterações" />
                   <AudienciaTimeline audienciaId={audiencia.id} audiencia={audiencia} />
@@ -677,14 +884,63 @@ export function AudienciaDetailDialog({
             )}
           </div>
 
-          {/* ══ FOOTER (fixo) ══ */}
-          <div className="shrink-0 px-7 py-4 border-t border-border/20 flex items-center justify-end">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+          {/* FOOTER */}
+          <div className="shrink-0 px-6 py-3 border-t border-border/50 flex items-center justify-end bg-card/40">
+            <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+        </div>
+
+        {/* ═══ COLUNA PDF (split view) ═══ */}
+        {ataOpen && audiencia?.urlAtaAudiencia && (
+          <aside className="w-1/2 shrink-0 flex flex-col bg-muted/30 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card">
+              <div className="flex items-center gap-2 text-[12.5px] font-semibold">
+                <FileText className="size-3.5 text-success" />
+                Ata{' '}
+                {dataInicio && (
+                  <span className="text-muted-foreground font-medium">
+                    · {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-1">
+                <Button variant="ghost" size="sm" asChild className="h-7 px-2 text-[11px]">
+                  <a href={audiencia.urlAtaAudiencia} target="_blank" rel="noopener noreferrer">
+                    Baixar
+                  </a>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-7"
+                  onClick={() => setAtaOpen(false)}
+                  aria-label="Fechar PDF"
+                >
+                  <X className="size-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <iframe
+                src={audiencia.urlAtaAudiencia}
+                title="Ata da Audiência"
+                className="w-full h-full border-0"
+              />
+            </div>
+          </aside>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function MetaDot() {
+  return (
+    <span
+      aria-hidden
+      className="inline-block w-[3px] h-[3px] rounded-full bg-muted-foreground/60"
+    />
   );
 }

@@ -92,6 +92,10 @@ export interface Audiencia {
   poloAtivoOrigem?: string; // Quem ajuizou a ação (autor original)
   poloPassivoOrigem?: string; // Contra quem foi ajuizada (réu original)
   orgaoJulgadorOrigem?: string; // Órgão julgador do 1º grau
+
+  classeJudicialDescricao?: string | null;
+  orgaoJulgadorDescricao?: string | null;
+  dataAutuacao?: string | null;
 }
 
 // Zod Schemas
@@ -101,6 +105,7 @@ const baseAudienciaSchema = z.object({
   dataFim: z.string({ required_error: 'Data de fim é obrigatória.' }).datetime('Formato de data inválido.'),
   tipoAudienciaId: z.number().optional().nullable(),
   modalidade: z.nativeEnum(ModalidadeAudiencia).optional().nullable(),
+  presencaHibrida: z.nativeEnum(PresencaHibrida).optional().nullable(),
   urlAudienciaVirtual: z.string().url('URL inválida.').optional().nullable(),
   enderecoPresencial: z.custom<EnderecoPresencial>().optional().nullable(),
   responsavelId: z.number().optional().nullable(),
