@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { gerarZipPdfsParaContrato } from '@/app/(authenticated)/contratos/services/documentos-contratacao.service';
+import { checkRateLimit } from '@/app/(authenticated)/contratos/services/rate-limit-local';
 
 export const runtime = 'nodejs';
 
@@ -20,6 +21,19 @@ export async function POST(
   const authResult = await authenticateRequest(req);
   if (!authResult.authenticated) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
+  const userIdForKey = authResult.userId ?? 'anon';
+  const allowed = checkRateLimit({
+    key: `pdfs-contratacao:${userIdForKey}`,
+    budget: 10,
+    windowMs: 60_000,
+  });
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Muitas solicitações. Tente novamente em alguns instantes.' },
+      { status: 429 },
+    );
   }
 
   const { id } = await params;
