@@ -814,6 +814,103 @@ export type Database = {
           },
         ]
       }
+      assinatura_digital_pacote_documentos: {
+        Row: {
+          documento_id: number
+          id: number
+          ordem: number
+          pacote_id: number
+        }
+        Insert: {
+          documento_id: number
+          id?: number
+          ordem: number
+          pacote_id: number
+        }
+        Update: {
+          documento_id?: number
+          id?: number
+          ordem?: number
+          pacote_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assinatura_digital_pacote_documentos_documento_id_fkey"
+            columns: ["documento_id"]
+            isOneToOne: false
+            referencedRelation: "assinatura_digital_documentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assinatura_digital_pacote_documentos_pacote_id_fkey"
+            columns: ["pacote_id"]
+            isOneToOne: false
+            referencedRelation: "assinatura_digital_pacotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assinatura_digital_pacotes: {
+        Row: {
+          contrato_id: number
+          created_at: string
+          criado_por: number | null
+          expira_em: string
+          formulario_id: number
+          id: number
+          pacote_uuid: string
+          status: string
+          token_compartilhado: string
+          updated_at: string
+        }
+        Insert: {
+          contrato_id: number
+          created_at?: string
+          criado_por?: number | null
+          expira_em: string
+          formulario_id: number
+          id?: number
+          pacote_uuid?: string
+          status?: string
+          token_compartilhado: string
+          updated_at?: string
+        }
+        Update: {
+          contrato_id?: number
+          created_at?: string
+          criado_por?: number | null
+          expira_em?: string
+          formulario_id?: number
+          id?: number
+          pacote_uuid?: string
+          status?: string
+          token_compartilhado?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assinatura_digital_pacotes_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assinatura_digital_pacotes_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assinatura_digital_pacotes_formulario_id_fkey"
+            columns: ["formulario_id"]
+            isOneToOne: false
+            referencedRelation: "assinatura_digital_formularios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assinatura_digital_sessoes_assinatura: {
         Row: {
           contrato_id: number | null
@@ -1241,6 +1338,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      blog_posts: {
+        Row: {
+          author_name: string
+          category: string
+          content: string
+          cover_url: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          is_published: boolean
+          published_at: string | null
+          read_time: number
+          slug: string
+          subtitle: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_name?: string
+          category?: string
+          content?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string | null
+          read_time?: number
+          slug: string
+          subtitle?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string
+          category?: string
+          content?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string | null
+          read_time?: number
+          slug?: string
+          subtitle?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       cadastros_pje: {
         Row: {
@@ -2029,6 +2180,150 @@ export type Database = {
             columns: ["expediente_id"]
             isOneToOne: true
             referencedRelation: "expedientes_com_origem"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comunica_cnj_resumos: {
+        Row: {
+          comunicacao_id: number
+          created_at: string
+          id: number
+          resumo: string
+          tags: Json
+          updated_at: string
+        }
+        Insert: {
+          comunicacao_id: number
+          created_at?: string
+          id?: number
+          resumo: string
+          tags?: Json
+          updated_at?: string
+        }
+        Update: {
+          comunicacao_id?: number
+          created_at?: string
+          id?: number
+          resumo?: string
+          tags?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunica_cnj_resumos_comunicacao_id_fkey"
+            columns: ["comunicacao_id"]
+            isOneToOne: true
+            referencedRelation: "comunica_cnj"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comunica_cnj_sync_log: {
+        Row: {
+          created_at: string
+          duplicados: number
+          duracao_ms: number | null
+          erros: Json
+          executado_por: number
+          id: number
+          novos: number
+          orfaos: number
+          parametros: Json
+          status: string
+          tipo: string
+          total_processados: number
+          vinculados_auto: number
+        }
+        Insert: {
+          created_at?: string
+          duplicados?: number
+          duracao_ms?: number | null
+          erros?: Json
+          executado_por: number
+          id?: number
+          novos?: number
+          orfaos?: number
+          parametros?: Json
+          status: string
+          tipo: string
+          total_processados?: number
+          vinculados_auto?: number
+        }
+        Update: {
+          created_at?: string
+          duplicados?: number
+          duracao_ms?: number | null
+          erros?: Json
+          executado_por?: number
+          id?: number
+          novos?: number
+          orfaos?: number
+          parametros?: Json
+          status?: string
+          tipo?: string
+          total_processados?: number
+          vinculados_auto?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunica_cnj_sync_log_executado_por_fkey"
+            columns: ["executado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comunica_cnj_views: {
+        Row: {
+          colunas: Json
+          created_at: string
+          criado_por: number
+          densidade: string
+          filtros: Json
+          icone: string | null
+          id: number
+          modo_visualizacao: string
+          nome: string
+          sort: Json
+          updated_at: string
+          visibilidade: string
+        }
+        Insert: {
+          colunas?: Json
+          created_at?: string
+          criado_por: number
+          densidade?: string
+          filtros?: Json
+          icone?: string | null
+          id?: number
+          modo_visualizacao?: string
+          nome: string
+          sort?: Json
+          updated_at?: string
+          visibilidade?: string
+        }
+        Update: {
+          colunas?: Json
+          created_at?: string
+          criado_por?: number
+          densidade?: string
+          filtros?: Json
+          icone?: string | null
+          id?: number
+          modo_visualizacao?: string
+          nome?: string
+          sort?: Json
+          updated_at?: string
+          visibilidade?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunica_cnj_views_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -2861,6 +3156,36 @@ export type Database = {
           },
         ]
       }
+      copilotkit_runs: {
+        Row: {
+          created_at: number
+          events: Json
+          id: number
+          inserted_at: string | null
+          parent_run_id: string | null
+          run_id: string
+          thread_id: string
+        }
+        Insert: {
+          created_at: number
+          events?: Json
+          id?: never
+          inserted_at?: string | null
+          parent_run_id?: string | null
+          run_id: string
+          thread_id: string
+        }
+        Update: {
+          created_at?: number
+          events?: Json
+          id?: never
+          inserted_at?: string | null
+          parent_run_id?: string | null
+          run_id?: string
+          thread_id?: string
+        }
+        Relationships: []
+      }
       credenciais: {
         Row: {
           active: boolean
@@ -3376,6 +3701,107 @@ export type Database = {
         }
         Relationships: []
       }
+      entrevista_anexos: {
+        Row: {
+          arquivo_url: string
+          created_at: string
+          descricao: string | null
+          entrevista_id: number
+          id: number
+          modulo: string
+          no_referencia: string | null
+          tipo_anexo: string
+        }
+        Insert: {
+          arquivo_url: string
+          created_at?: string
+          descricao?: string | null
+          entrevista_id: number
+          id?: never
+          modulo: string
+          no_referencia?: string | null
+          tipo_anexo: string
+        }
+        Update: {
+          arquivo_url?: string
+          created_at?: string
+          descricao?: string | null
+          entrevista_id?: number
+          id?: never
+          modulo?: string
+          no_referencia?: string | null
+          tipo_anexo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entrevista_anexos_entrevista_id_fkey"
+            columns: ["entrevista_id"]
+            isOneToOne: false
+            referencedRelation: "entrevistas_trabalhistas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entrevistas_trabalhistas: {
+        Row: {
+          contrato_id: number
+          created_at: string
+          created_by: number | null
+          id: number
+          modulo_atual: string | null
+          notas_operador: Json | null
+          perfil_reclamante: string | null
+          respostas: Json
+          status: Database["public"]["Enums"]["status_entrevista"]
+          testemunhas_mapeadas: boolean
+          tipo_litigio: Database["public"]["Enums"]["tipo_litigio_trabalhista"]
+          updated_at: string
+        }
+        Insert: {
+          contrato_id: number
+          created_at?: string
+          created_by?: number | null
+          id?: never
+          modulo_atual?: string | null
+          notas_operador?: Json | null
+          perfil_reclamante?: string | null
+          respostas?: Json
+          status?: Database["public"]["Enums"]["status_entrevista"]
+          testemunhas_mapeadas?: boolean
+          tipo_litigio: Database["public"]["Enums"]["tipo_litigio_trabalhista"]
+          updated_at?: string
+        }
+        Update: {
+          contrato_id?: number
+          created_at?: string
+          created_by?: number | null
+          id?: never
+          modulo_atual?: string | null
+          notas_operador?: Json | null
+          perfil_reclamante?: string | null
+          respostas?: Json
+          status?: Database["public"]["Enums"]["status_entrevista"]
+          testemunhas_mapeadas?: boolean
+          tipo_litigio?: Database["public"]["Enums"]["tipo_litigio_trabalhista"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entrevistas_trabalhistas_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: true
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entrevistas_trabalhistas_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       especialidades_pericia: {
         Row: {
           ativo: boolean
@@ -3447,6 +3873,9 @@ export type Database = {
           qtde_parte_autora: number
           qtde_parte_re: number
           responsavel_id: number | null
+          resultado_decisao:
+            | Database["public"]["Enums"]["resultado_decisao_enum"]
+            | null
           segredo_justica: boolean
           sigla_orgao_julgador: string | null
           tipo_expediente_id: number | null
@@ -3490,6 +3919,9 @@ export type Database = {
           qtde_parte_autora?: number
           qtde_parte_re?: number
           responsavel_id?: number | null
+          resultado_decisao?:
+            | Database["public"]["Enums"]["resultado_decisao_enum"]
+            | null
           segredo_justica?: boolean
           sigla_orgao_julgador?: string | null
           tipo_expediente_id?: number | null
@@ -3533,6 +3965,9 @@ export type Database = {
           qtde_parte_autora?: number
           qtde_parte_re?: number
           responsavel_id?: number | null
+          resultado_decisao?:
+            | Database["public"]["Enums"]["resultado_decisao_enum"]
+            | null
           segredo_justica?: boolean
           sigla_orgao_julgador?: string | null
           tipo_expediente_id?: number | null
@@ -7951,6 +8386,9 @@ export type Database = {
           qtde_parte_autora: number | null
           qtde_parte_re: number | null
           responsavel_id: number | null
+          resultado_decisao:
+            | Database["public"]["Enums"]["resultado_decisao_enum"]
+            | null
           segredo_justica: boolean | null
           sigla_orgao_julgador: string | null
           tipo_expediente_id: number | null
@@ -8138,6 +8576,43 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vw_queries_mais_frequentes: {
+        Row: {
+          calls: number | null
+          query_resumida: string | null
+          queryid: number | null
+          rows: number | null
+          tempo_medio_ms: number | null
+          tempo_total_ms: number | null
+        }
+        Relationships: []
+      }
+      vw_queries_mais_lentas: {
+        Row: {
+          calls: number | null
+          percentual_tempo: number | null
+          query_resumida: string | null
+          queryid: number | null
+          rows: number | null
+          tempo_maximo_ms: number | null
+          tempo_medio_ms: number | null
+          tempo_minimo_ms: number | null
+          tempo_total_ms: number | null
+        }
+        Relationships: []
+      }
+      vw_queries_outliers: {
+        Row: {
+          calls: number | null
+          desvio_padrao_ms: number | null
+          query_resumida: string | null
+          queryid: number | null
+          rows: number | null
+          tempo_maximo_ms: number | null
+          tempo_medio_ms: number | null
+        }
+        Relationships: []
       }
     }
     Functions: {
@@ -8489,6 +8964,10 @@ export type Database = {
         | "concluido"
         | "cancelado"
       polo_processual: "autor" | "re"
+      resultado_decisao_enum:
+        | "desfavoravel"
+        | "parcialmente_favoravel"
+        | "favoravel"
       situacao_pericia: "S" | "L" | "C" | "F" | "P" | "R"
       status_audiencia: "C" | "M" | "F"
       status_captura: "pending" | "in_progress" | "completed" | "failed"
@@ -8499,6 +8978,7 @@ export type Database = {
         | "contratado"
         | "distribuido"
         | "desistencia"
+      status_entrevista: "rascunho" | "em_andamento" | "concluida"
       status_lancamento: "pendente" | "confirmado" | "cancelado" | "estornado"
       status_orcamento: "rascunho" | "aprovado" | "em_execucao" | "encerrado"
       StatusArquivamento: "ATIVO" | "ARQUIVADO" | "BAIXADO"
@@ -8541,6 +9021,10 @@ export type Database = {
         | "extrajudicial"
         | "parecer"
       tipo_lancamento: "receita" | "despesa"
+      tipo_litigio_trabalhista:
+        | "trabalhista_classico"
+        | "gig_economy"
+        | "pejotizacao"
       tipo_notificacao_usuario:
         | "processo_atribuido"
         | "processo_movimentacao"
@@ -8828,6 +9312,11 @@ export const Constants = {
         "cancelado",
       ],
       polo_processual: ["autor", "re"],
+      resultado_decisao_enum: [
+        "desfavoravel",
+        "parcialmente_favoravel",
+        "favoravel",
+      ],
       situacao_pericia: ["S", "L", "C", "F", "P", "R"],
       status_audiencia: ["C", "M", "F"],
       status_captura: ["pending", "in_progress", "completed", "failed"],
@@ -8839,6 +9328,7 @@ export const Constants = {
         "distribuido",
         "desistencia",
       ],
+      status_entrevista: ["rascunho", "em_andamento", "concluida"],
       status_lancamento: ["pendente", "confirmado", "cancelado", "estornado"],
       status_orcamento: ["rascunho", "aprovado", "em_execucao", "encerrado"],
       StatusArquivamento: ["ATIVO", "ARQUIVADO", "BAIXADO"],
@@ -8886,6 +9376,11 @@ export const Constants = {
         "parecer",
       ],
       tipo_lancamento: ["receita", "despesa"],
+      tipo_litigio_trabalhista: [
+        "trabalhista_classico",
+        "gig_economy",
+        "pejotizacao",
+      ],
       tipo_notificacao_usuario: [
         "processo_atribuido",
         "processo_movimentacao",
@@ -8957,3 +9452,4 @@ export const Constants = {
     },
   },
 } as const
+

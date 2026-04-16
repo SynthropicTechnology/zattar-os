@@ -232,6 +232,11 @@ export type {
 } from './services/mapeamento-contrato-input-data';
 
 // ============================================================================
+// Pacote de Assinatura (Caminho B — Pacote Compartilhado)
+// ============================================================================
+export { actionEnviarContratoParaAssinatura } from './actions/enviar-contrato-assinatura-action';
+
+// ============================================================================
 // Server-only exports
 // ============================================================================
 // Services e Repositories devem ser importados diretamente:

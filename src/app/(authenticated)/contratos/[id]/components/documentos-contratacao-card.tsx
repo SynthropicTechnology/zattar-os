@@ -6,8 +6,10 @@ import { toast } from 'sonner';
 import { WidgetContainer } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { actionValidarGeracaoPdfs } from '@/app/(authenticated)/contratos/actions/gerar-pdfs-contrato-action';
+import { actionEnviarContratoParaAssinatura } from '../../actions/enviar-contrato-assinatura-action';
 import type { CampoFaltante } from '@/app/(authenticated)/contratos/services/mapeamento-contrato-input-data';
 import { ModalCamposFaltantesDialog } from './modal-campos-faltantes-dialog';
+import { ModalLinkAssinaturaDialog } from './modal-link-assinatura-dialog';
 
 interface DocumentosContratacaoCardProps {
   contratoId: number;
@@ -53,10 +55,51 @@ export function DocumentosContratacaoCard({
   const [loading, setLoading] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [camposFaltantes, setCamposFaltantes] = React.useState<CampoFaltante[]>([]);
+  const [linkModalOpen, setLinkModalOpen] = React.useState(false);
+  const [linkPayload, setLinkPayload] = React.useState<{
+    token: string;
+    expiraEm: string;
+    reaproveitado: boolean;
+  } | null>(null);
+  const [modoOverride, setModoOverride] = React.useState<'baixar' | 'enviar'>('baixar');
 
   if (segmentoId !== SEGMENTO_TRABALHISTA) return null;
 
+  const handleEnviar = async () => {
+    setLoading(true);
+    setModoOverride('enviar');
+    try {
+      const validation = await actionEnviarContratoParaAssinatura({ contratoId });
+      if (!validation.success) {
+        toast.error(validation.message);
+        return;
+      }
+      const r = validation.data;
+      if (r.status === 'erro') {
+        toast.error(r.mensagem);
+        return;
+      }
+      if (r.status === 'campos_faltantes') {
+        setCamposFaltantes(r.camposFaltantes);
+        setModalOpen(true);
+        return;
+      }
+      // criado | reaproveitado
+      setLinkPayload({
+        token: r.token,
+        expiraEm: r.expiraEm,
+        reaproveitado: r.status === 'reaproveitado',
+      });
+      setLinkModalOpen(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao enviar');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleBaixar = async () => {
+    setModoOverride('baixar');
     setLoading(true);
     try {
       const validation = await actionValidarGeracaoPdfs({ contratoId });
@@ -86,11 +129,34 @@ export function DocumentosContratacaoCard({
   const handleSubmitOverrides = async (overrides: Record<string, string>) => {
     setLoading(true);
     try {
-      await baixarZip(contratoId, overrides);
-      toast.success('PDFs gerados com sucesso');
-      setModalOpen(false);
+      if (modoOverride === 'enviar') {
+        const validation = await actionEnviarContratoParaAssinatura({ contratoId, overrides });
+        if (!validation.success) {
+          toast.error(validation.message);
+          return;
+        }
+        const r = validation.data;
+        if (r.status === 'erro') { toast.error(r.mensagem); return; }
+        if (r.status === 'campos_faltantes') {
+          // Still missing something — leave modal open
+          setCamposFaltantes(r.camposFaltantes);
+          return;
+        }
+        setLinkPayload({
+          token: r.token,
+          expiraEm: r.expiraEm,
+          reaproveitado: r.status === 'reaproveitado',
+        });
+        setLinkModalOpen(true);
+        setModalOpen(false);
+        toast.success('Link gerado com sucesso');
+      } else {
+        await baixarZip(contratoId, overrides);
+        toast.success('PDFs gerados com sucesso');
+        setModalOpen(false);
+      }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Erro ao gerar PDFs');
+      toast.error(err instanceof Error ? err.message : 'Erro');
     } finally {
       setLoading(false);
     }
@@ -107,7 +173,7 @@ export function DocumentosContratacaoCard({
               <FileDown className="size-4 mr-1" />
               {loading ? 'Gerando…' : 'Baixar PDFs preenchidos'}
             </Button>
-            <Button size="sm" variant="outline" disabled>
+            <Button size="sm" variant="outline" onClick={handleEnviar} disabled={loading}>
               <Send className="size-4 mr-1" />
               Enviar pra cliente assinar
             </Button>
@@ -128,6 +194,16 @@ export function DocumentosContratacaoCard({
         onSubmit={handleSubmitOverrides}
         isSubmitting={loading}
       />
+
+      {linkPayload && (
+        <ModalLinkAssinaturaDialog
+          open={linkModalOpen}
+          onOpenChange={setLinkModalOpen}
+          token={linkPayload.token}
+          expiraEm={linkPayload.expiraEm}
+          reaproveitado={linkPayload.reaproveitado}
+        />
+      )}
     </>
   );
 }
