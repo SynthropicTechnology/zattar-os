@@ -48,7 +48,8 @@
       "Skill(gsd:execute-phase)",
       "Skill(gsd:execute-phase:*)",
       "Skill(gsd:debug)",
-      "Skill(gsd:debug:*)"
+      "Skill(gsd:debug:*)",
+      "mcp__plugin_supabase_supabase__generate_typescript_types"
     ]
   },
   "enableAllProjectMcpServers": true,
