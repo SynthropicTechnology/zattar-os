@@ -25,8 +25,8 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
-import type { Template } from '../feature';
-import { formatFileSize, getTemplateDisplayName } from '../feature';
+import type { Template } from '@/shared/assinatura-digital';
+import { formatFileSize, getTemplateDisplayName } from '@/shared/assinatura-digital';
 
 // =============================================================================
 // TIPOS

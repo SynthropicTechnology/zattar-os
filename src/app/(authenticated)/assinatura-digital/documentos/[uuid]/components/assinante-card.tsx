@@ -34,8 +34,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { SignatarioVerificacaoData } from "../../../feature/types/types";
-import { actionGetPresignedPdfUrl } from "../../../feature/actions/documentos-actions";
+import type { SignatarioVerificacaoData } from '@/shared/assinatura-digital/types/types';
+import { actionGetPresignedPdfUrl } from '@/shared/assinatura-digital/actions/documentos-actions';
 import { SegurancaSection } from "./seguranca-section";
 import { Heading } from "@/components/ui/typography";
 

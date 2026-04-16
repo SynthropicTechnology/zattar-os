@@ -21,7 +21,7 @@ import { Combobox } from '@/components/ui/combobox';
 import { toast } from 'sonner';
 import { Loader2, X } from 'lucide-react';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { generateSlug, type AssinaturaDigitalSegmento, type AssinaturaDigitalTemplate } from '../../feature';
+import { generateSlug, type AssinaturaDigitalSegmento, type AssinaturaDigitalTemplate } from '@/shared/assinatura-digital';
 
 const SELECT_CLASS =
   'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';

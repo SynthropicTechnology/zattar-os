@@ -11,7 +11,7 @@ import {
   Plus,
 } from 'lucide-react';
 
-import { listarTemplatesAction } from '../feature/actions';
+import { listarTemplatesAction } from '@/shared/assinatura-digital/actions';
 import { LayoutGrid, List } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { usePermissoes } from '@/providers/user-provider';
@@ -25,8 +25,8 @@ import { FilterChipMulti, type FilterChipOption } from '../components/filter-chi
 
 import {
   type Template,
-} from '../feature';
-import { TemplateCreateDialog } from '../feature';
+} from '@/shared/assinatura-digital';
+import { TemplateCreateDialog } from '@/app/(authenticated)/assinatura-digital/components/templates';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
 import { AssinaturaDigitalPageNav } from '../components/page-nav';

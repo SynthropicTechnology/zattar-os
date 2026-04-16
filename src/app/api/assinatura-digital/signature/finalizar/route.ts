@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { finalizeSignature } from '@/app/(authenticated)/assinatura-digital/feature/services/signature.service';
-import type { FinalizePayload } from '@/app/(authenticated)/assinatura-digital/feature';
+import { finalizeSignature } from '@/shared/assinatura-digital/services/signature.service';
+import type { FinalizePayload } from '@/shared/assinatura-digital';
 import {
   applyRateLimit,
-} from '@/app/(authenticated)/assinatura-digital/feature/utils/rate-limit';
-import { validateMultipleImages } from '@/app/(authenticated)/assinatura-digital/feature/utils/file-validation';
+} from '@/shared/assinatura-digital/utils/rate-limit';
+import { validateMultipleImages } from '@/shared/assinatura-digital/utils/file-validation';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 /** Tamanho máximo para imagens: 5MB */

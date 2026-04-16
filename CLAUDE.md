@@ -26,20 +26,30 @@ Todos os domínios funcionais do ZattarOS residem sob a hierarquia de rotas em `
 ```text
 src/
 ├── app/
-│   ├── (authenticated)/         # FSD Area
+│   ├── (authenticated)/         # FSD Area (admin)
 │   │   ├── processos/           # Módulo `processos`
 │   │   │   ├── domain.ts        # Tipos/Schemas (Zod)
 │   │   │   ├── service.ts       # Lógica e regras
 │   │   │   ├── repository.ts    # Fetch de Dados
 │   │   │   ├── actions/         # Actions que invocam services (+ safe-action)
-│   │   │   ├── components/      # UI (React) 
+│   │   │   ├── components/      # UI (React)
 │   │   │   ├── hooks/           # Interação UI/Logic
 │   │   │   ├── RULES.md         # Documento de Contexto
 │   │   │   ├── index.ts         # Exportação autorizada
 │   │   │   └── page.tsx         # Página e Rota Front-End
+│   └── (assinatura-digital)/    # Rota pública (wizard + assinatura por token)
+│       ├── _wizard/             # Steps do wizard de formulário público
+│       ├── formulario/          # Rota dinâmica pública
+│       └── assinatura/[token]/  # Rota de assinatura por token
+├── shared/                      # Domínios compartilhados entre rotas públicas e admin
+│   └── assinatura-digital/      # Store, types, services, actions, inputs, pdf, signature
 ├── components/                  # UI Shared, Shadcn, Shells, Layouts
 ├── lib/                         # Core infra (Supabase, MCP, redis, AI)
 ```
+
+**Convenção `shared/`**: quando um domínio é consumido por mais de uma rota (ex: público em `(assinatura-digital)/` + admin em `(authenticated)/...`) e/ou por API routes (`src/app/api/...`), o código compartilhado (store, types, services, actions, utils, validations, inputs genéricos) vive em `src/shared/<dominio>/`. Componentes exclusivos de uma rota ficam colocados naquela rota (`_wizard/`, `components/`, etc.). **Evita cross-group imports público↔authenticated**.
+
+**Backlog arquitetural** — migrar as rotas admin de `src/app/(authenticated)/assinatura-digital/` (e outros módulos espelhados) para um sistema de permissões por perfil no painel. Objetivo: uma única rota por domínio, com visibilidade de ações (criar/editar/apagar template, etc.) condicionada a `user.role === 'admin'` em vez de segregação por path. Não iniciar antes de terminar o redesign do fluxo público + testes.
 
 **Regras Absolutas**:
 1. **Nada de Cross-Deep Imports**: Componentes de `processos` não podem importar de `financeiro/components/...`. Exija `import { x } from "@/app/(authenticated)/financeiro"`.
@@ -158,16 +168,9 @@ Architecture not yet mapped. Follow existing patterns found in the codebase.
 <!-- GSD:architecture-end -->
 
 <!-- GSD:workflow-start source:GSD defaults -->
-## GSD Workflow Enforcement
+## Workflow
 
-Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
-
-Use these entry points:
-- `/gsd:quick` for small fixes, doc updates, and ad-hoc tasks
-- `/gsd:debug` for investigation and bug fixing
-- `/gsd:execute-phase` for planned phase work
-
-Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+Edit directly. Não é necessário invocar GSD antes de Edit/Write.
 <!-- GSD:workflow-end -->
 
 <!-- GSD:profile-start -->

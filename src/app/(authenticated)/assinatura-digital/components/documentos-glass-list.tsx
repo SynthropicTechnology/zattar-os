@@ -24,8 +24,8 @@ import { ProgressRing } from '@/app/(authenticated)/dashboard/mock/widgets/primi
 import type {
   DocumentoCardData,
   DocStatus,
-} from '../feature/adapters/documento-card-adapter';
-import { getSignerProgress, timeAgo } from '../feature/components/documento-card';
+} from '@/shared/assinatura-digital/adapters/documento-card-adapter';
+import { getSignerProgress, timeAgo } from '@/app/(authenticated)/assinatura-digital/components/documento-card';
 
 // =============================================================================
 // TIPOS

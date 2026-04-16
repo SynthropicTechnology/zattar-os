@@ -21,12 +21,12 @@ import {
 import { GlassPanel } from "@/components/shared/glass-panel";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/typography";
-import type { DocumentosStats } from "../../feature/services/documentos.service";
-import type { DocumentoListItem } from "../../feature/adapters/documento-card-adapter";
-import { useDocumentosPage } from "../../feature/hooks/use-documentos-page";
-import { useDocumentosStats } from "../../feature/hooks/use-documentos-stats";
-import { DocumentDetail } from "../../feature/components/documento-detail";
-import { SignaturePipeline } from "../../feature/components/signature-pipeline";
+import type { DocumentosStats } from '@/shared/assinatura-digital/services/documentos.service';
+import type { DocumentoListItem } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
+import { useDocumentosPage } from '@/shared/assinatura-digital/hooks/use-documentos-page';
+import { useDocumentosStats } from '@/shared/assinatura-digital/hooks/use-documentos-stats';
+import { DocumentDetail } from '@/app/(authenticated)/assinatura-digital/components/documento-detail';
+import { SignaturePipeline } from '@/app/(authenticated)/assinatura-digital/components/signature-pipeline';
 import { AssinaturaDigitalPageNav } from "../../components/page-nav";
 import { DocumentosGlassList } from "../../components/documentos-glass-list";
 

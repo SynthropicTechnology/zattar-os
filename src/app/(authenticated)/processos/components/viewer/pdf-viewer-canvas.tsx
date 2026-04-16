@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { Loader2 } from 'lucide-react';
 
 const PdfPreview = dynamic(
-  () => import('@/app/(authenticated)/assinatura-digital/feature/components/pdf/PdfPreview'),
+  () => import('@/shared/assinatura-digital/components/pdf/PdfPreview'),
   {
     ssr: false,
     loading: () => (

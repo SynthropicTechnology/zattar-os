@@ -17,8 +17,8 @@ import {
   MousePointerClick,
   Info,
 } from "lucide-react";
-import { DocumentFlowShell } from "../../feature/components/flow";
-import { DocumentUploadDropzone } from "../../feature/components/upload";
+import { DocumentFlowShell } from '@/app/(authenticated)/assinatura-digital/components/flow';
+import { DocumentUploadDropzone } from '@/app/(authenticated)/assinatura-digital/components/upload';
 import { GlassPanel } from "@/components/shared/glass-panel";
 
 // ─── Dados dos passos ──────────────────────────────────────────────────

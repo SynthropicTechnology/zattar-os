@@ -27,7 +27,7 @@ import {
   type AssinaturaDigitalFormulario,
   type AssinaturaDigitalSegmento,
   type AssinaturaDigitalTemplate,
-} from '../feature';
+} from '@/shared/assinatura-digital';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioEditDialog } from './components/formulario-edit-dialog';
 import { FormularioDeleteDialog } from './components/formulario-delete-dialog';

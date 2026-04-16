@@ -10,12 +10,12 @@
  * - Sidebar com divisor vertical ambient (sem border-l duro)
  */
 
-import { useDocumentEditor } from "../../../feature/components/editor/hooks/use-document-editor";
-import { PDF_CANVAS_SIZE } from "../../../feature/types/pdf-preview.types";
-import EditorCanvas from "../../../feature/components/editor/components/EditorCanvas";
-import FloatingSidebar from "../../../feature/components/editor/components/FloatingSidebar";
+import { useDocumentEditor } from '@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-document-editor';
+import { PDF_CANVAS_SIZE } from '@/shared/assinatura-digital/types/pdf-preview.types';
+import EditorCanvas from '@/app/(authenticated)/assinatura-digital/components/editor/components/EditorCanvas';
+import FloatingSidebar from '@/app/(authenticated)/assinatura-digital/components/editor/components/FloatingSidebar';
 import { Loader2 } from "lucide-react";
-import { DocumentFlowShell } from "../../../feature/components/flow";
+import { DocumentFlowShell } from '@/app/(authenticated)/assinatura-digital/components/flow';
 
 interface EditarDocumentoClientProps {
   uuid: string;

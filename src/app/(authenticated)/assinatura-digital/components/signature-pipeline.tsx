@@ -1,0 +1,87 @@
+"use client";
+
+import { GitBranch } from "lucide-react";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { Heading } from "@/components/ui/typography";
+import type { DocumentosStats } from '@/shared/assinatura-digital/services/documentos.service';
+import type { DocStatus } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
+import { STATUS_CONFIG } from "./documento-card";
+
+interface SignaturePipelineProps {
+  stats: DocumentosStats;
+}
+
+export function SignaturePipeline({ stats }: SignaturePipelineProps) {
+  const stages: { status: DocStatus; count: number }[] = [
+    { status: "rascunho", count: stats.rascunhos },
+    { status: "pronto", count: stats.aguardando },
+    { status: "concluido", count: stats.concluidos },
+  ];
+  const maxCount = Math.max(...stages.map((s) => s.count), 1);
+
+  return (
+    <GlassPanel className="p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/8">
+          <GitBranch className="size-3.5 text-primary/70" />
+        </span>
+        <Heading level="widget">Pipeline de Assinaturas</Heading>
+        {stats.cancelados > 0 && (
+          <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-destructive/10 border border-destructive/25 text-destructive px-2 py-0.5 text-[10px] font-medium">
+            {stats.cancelados} cancelado{stats.cancelados !== 1 ? "s" : ""}
+          </span>
+        )}
+      </div>
+
+      <div className="flex items-stretch gap-3">
+        {stages.map((stage, i) => {
+          const cfg = STATUS_CONFIG[stage.status];
+          const Icon = cfg.icon;
+          const prevCount = i > 0 ? stages[i - 1].count : stage.count;
+          const convRate =
+            i > 0 && prevCount > 0
+              ? Math.round((stage.count / prevCount) * 100)
+              : null;
+          const barWidth =
+            maxCount > 0 ? Math.max(15, (stage.count / maxCount) * 100) : 15;
+
+          return (
+            <div
+              key={stage.status}
+              className="flex-1 flex flex-col items-center gap-2"
+            >
+              <div className="flex items-center gap-1.5">
+                <Icon className={`size-3.5 ${cfg.color}`} />
+                <span className="text-[10px] font-medium uppercase tracking-[0.06em] text-muted-foreground/65">
+                  {cfg.label}
+                </span>
+              </div>
+              <p className="font-heading text-2xl font-bold tabular-nums">
+                {stage.count}
+              </p>
+              <div
+                className="h-2 rounded-full transition-all duration-700"
+                style={{
+                  width: `${barWidth}%`,
+                  backgroundColor: cfg.cssColor,
+                  opacity: 0.65,
+                }}
+              />
+              {convRate !== null ? (
+                <span
+                  className={`text-[10px] font-medium tabular-nums ${convRate >= 70 ? "text-success" : "text-warning"}`}
+                >
+                  {convRate}% conversão
+                </span>
+              ) : (
+                <span className="text-[10px] text-transparent" aria-hidden>
+                  -
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </GlassPanel>
+  );
+}

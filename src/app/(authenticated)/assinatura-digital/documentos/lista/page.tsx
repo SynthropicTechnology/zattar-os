@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageShell } from "@/components/shared/page-shell";
-import * as documentosService from "../../feature/services/documentos.service";
+import * as documentosService from '@/shared/assinatura-digital/services/documentos.service';
 import { DocumentosCommandCenter } from "./command-center";
 
 export const dynamic = "force-dynamic";

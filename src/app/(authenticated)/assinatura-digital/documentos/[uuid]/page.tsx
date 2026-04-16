@@ -4,11 +4,11 @@ import { notFound } from "next/navigation";
 import {
   getDocumentoByUuid,
   getAssinaturaById,
-} from "../../feature/services/documentos.service";
+} from '@/shared/assinatura-digital/services/documentos.service';
 import type {
   DocumentoVerificacaoData,
   SignatarioVerificacaoData,
-} from "../../feature/types/types";
+} from '@/shared/assinatura-digital/types/types';
 import { DocumentoVerificacaoClient } from "./client-page";
 import { PageShell } from "@/components/shared/page-shell";
 import { Loader2 } from "lucide-react";

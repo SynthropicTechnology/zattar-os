@@ -23,7 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DataTableColumnHeader } from "@/components/shared/data-shell/data-table-column-header";
-import type { AssinaturaDigitalDocumentoStatus } from "../../../feature/domain";
+import type { AssinaturaDigitalDocumentoStatus } from '@/shared/assinatura-digital/domain';
 import { statuses } from "./data/data";
 
 // ---------------------------------------------------------------------------

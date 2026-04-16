@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requirePermission } from "@/lib/auth/require-permission";
-import { setDocumentoAnchors } from "@/app/(authenticated)/assinatura-digital/feature/services/documentos.service";
+import { setDocumentoAnchors } from "@/shared/assinatura-digital/services/documentos.service";
 
 const schema = z.object({
   anchors: z.array(

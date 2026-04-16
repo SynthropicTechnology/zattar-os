@@ -18,7 +18,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import type { SignatarioVerificacaoData } from "../../../feature/types/types";
+import type { SignatarioVerificacaoData } from '@/shared/assinatura-digital/types/types';
 
 interface SegurancaSectionProps {
   signatario: SignatarioVerificacaoData;

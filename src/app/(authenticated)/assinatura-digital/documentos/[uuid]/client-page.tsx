@@ -35,10 +35,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { DocumentoVerificacaoData } from "../../feature/types/types";
-import { usePresignedPdfUrl } from "../../feature/hooks/use-presigned-pdf-url";
-import { actionGetPresignedPdfUrl } from "../../feature/actions/documentos-actions";
-import PdfPreviewDynamic from "../../feature/components/pdf/PdfPreviewDynamic";
+import type { DocumentoVerificacaoData } from '@/shared/assinatura-digital/types/types';
+import { usePresignedPdfUrl } from '@/shared/assinatura-digital/hooks/use-presigned-pdf-url';
+import { actionGetPresignedPdfUrl } from '@/shared/assinatura-digital/actions/documentos-actions';
+import PdfPreviewDynamic from '@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic';
 import { AssinanteCard } from "./components/assinante-card";
 import { Heading } from '@/components/ui/typography';
 

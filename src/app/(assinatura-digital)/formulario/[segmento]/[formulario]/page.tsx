@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import {
-  FormularioPage,
-  getSegmentoBySlug,
-  getFormularioBySlugAndSegmentoId,
-  getTemplate,
-} from '@/app/(authenticated)/assinatura-digital/feature'
-import type { DynamicFormSchema, MetadadoSeguranca } from '@/app/(authenticated)/assinatura-digital/feature'
+import FormularioPage from '@/app/(assinatura-digital)/_wizard/form/formulario-page'
+import { getSegmentoBySlug } from '@/shared/assinatura-digital/services/segmentos.service'
+import { getFormularioBySlugAndSegmentoId } from '@/shared/assinatura-digital/services/formularios.service'
+import { getTemplate } from '@/shared/assinatura-digital/services/templates.service'
+import type { DynamicFormSchema, MetadadoSeguranca } from '@/shared/assinatura-digital'
 
 interface PageProps {
   params: Promise<{ segmento: string; formulario: string }>

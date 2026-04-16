@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
 import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { randomUUID } from 'crypto';
-import { validatePdfFile } from '@/app/(authenticated)/assinatura-digital/feature/utils/file-validation';
+import { validatePdfFile } from '@/shared/assinatura-digital/utils/file-validation';
 
 /**
  * POST /api/assinatura-digital/templates/upload

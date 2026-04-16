@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
-import { getDashboardStats } from '@/app/(authenticated)/assinatura-digital/feature/services/dashboard.service';
+import { getDashboardStats } from '@/shared/assinatura-digital/services/dashboard.service';
 
 export async function GET(request: NextRequest) {
   const authOrError = await requirePermission(request, 'assinatura_digital', 'visualizar');

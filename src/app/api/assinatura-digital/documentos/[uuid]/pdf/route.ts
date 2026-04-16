@@ -3,9 +3,9 @@ import { requirePermission } from "@/lib/auth/require-permission";
 import {
   getDocumentoByUuid,
   getAssinaturaById,
-} from "@/app/(authenticated)/assinatura-digital/feature/services/documentos.service";
-import { downloadFromStorageUrl } from "@/app/(authenticated)/assinatura-digital/feature/services/signature";
-import { validatePdfBuffer } from "@/app/(authenticated)/assinatura-digital/feature/utils/file-validation";
+} from "@/shared/assinatura-digital/services/documentos.service";
+import { downloadFromStorageUrl } from "@/shared/assinatura-digital/services/signature";
+import { validatePdfBuffer } from "@/shared/assinatura-digital/utils/file-validation";
 
 /**
  * Proxy para servir PDFs de documentos de assinatura digital.

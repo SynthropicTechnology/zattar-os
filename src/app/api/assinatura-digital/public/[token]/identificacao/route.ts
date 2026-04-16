@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { updatePublicSignerIdentification } from "@/app/(authenticated)/assinatura-digital/feature/services/documentos.service";
-import { applyRateLimit } from "@/app/(authenticated)/assinatura-digital/feature/utils/rate-limit";
+import { updatePublicSignerIdentification } from "@/shared/assinatura-digital/services/documentos.service";
+import { applyRateLimit } from "@/shared/assinatura-digital/utils/rate-limit";
 
 const schema = z.object({
   nome_completo: z.string().min(3),

@@ -22,7 +22,7 @@ import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
 
-import { generateSlug, type AssinaturaDigitalFormulario } from "../../feature";
+import { generateSlug, type AssinaturaDigitalFormulario } from '@/shared/assinatura-digital';
 
 const duplicateSchema = z.object({
   nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),

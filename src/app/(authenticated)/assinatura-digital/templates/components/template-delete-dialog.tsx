@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Loader2 } from "lucide-react";
-import type { Template as AssinaturaDigitalTemplate } from "../../feature";
+import type { Template as AssinaturaDigitalTemplate } from '@/shared/assinatura-digital';
 
 interface TemplateDeleteDialogProps {
   open: boolean;

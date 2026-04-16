@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { requirePermission } from '@/lib/auth/require-permission';
-import { listSessoes } from '@/app/(authenticated)/assinatura-digital/feature/services/signature.service';
-import type { ListSessoesParams } from '@/app/(authenticated)/assinatura-digital/feature';
+import { listSessoes } from '@/shared/assinatura-digital/services/signature.service';
+import type { ListSessoesParams } from '@/shared/assinatura-digital';
 
 const querySchema = z.object({
   segmento_id: z.string().optional(),

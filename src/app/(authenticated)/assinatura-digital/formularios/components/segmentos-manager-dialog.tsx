@@ -7,7 +7,7 @@ import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-sh
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
-import type { AssinaturaDigitalSegmento } from "../../feature";
+import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
 import { SegmentoCreateDialog } from "./segmento-create-dialog";
 

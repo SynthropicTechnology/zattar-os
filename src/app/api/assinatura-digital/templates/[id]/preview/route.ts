@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTemplate } from '@/app/(authenticated)/assinatura-digital/feature/services/templates.service';
+import { getTemplate } from '@/shared/assinatura-digital/services/templates.service';
 import { generatePresignedUrl } from '@/lib/storage/backblaze-b2.service';
 
 /**

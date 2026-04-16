@@ -21,7 +21,7 @@ import { FilterChipMulti, type FilterChipOption } from '../components/filter-chi
 import { useDebounce } from '@/hooks/use-debounce';
 import { usePermissoes } from '@/providers/user-provider';
 
-import type { AssinaturaDigitalSegmento } from '../feature';
+import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 import { AssinaturaDigitalPageNav } from '../components/page-nav';
 import { SegmentosGlassList } from '../components/segmentos-glass-list';
 import {

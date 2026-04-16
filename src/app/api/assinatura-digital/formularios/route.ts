@@ -4,8 +4,8 @@ import { requirePermission } from '@/lib/auth/require-permission';
 import {
   createFormulario,
   listFormularios,
-} from '@/app/(authenticated)/assinatura-digital/feature/services/formularios.service';
-import type { UpsertFormularioInput } from '@/app/(authenticated)/assinatura-digital/feature';
+} from '@/shared/assinatura-digital/services/formularios.service';
+import type { UpsertFormularioInput } from '@/shared/assinatura-digital';
 
 const contratoConfigSchema = z.object({
   tipo_contrato_id: z.number().int().positive(),

@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { generateSlug, type AssinaturaDigitalSegmento } from '../../feature';
+import { generateSlug, type AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
 // Schema local para garantir tipagem correta com useForm
 const editSegmentoSchema = z.object({

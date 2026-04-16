@@ -21,7 +21,7 @@ import { Switch } from '@/components/ui/switch';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
 
-import { generateSlug, type AssinaturaDigitalSegmento } from '../../feature';
+import { generateSlug, type AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
 // Schema local para garantir tipagem correta com useForm
 const duplicateSchema = z.object({

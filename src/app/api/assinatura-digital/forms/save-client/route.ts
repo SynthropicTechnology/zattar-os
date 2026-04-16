@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { NACIONALIDADES } from '@/app/(authenticated)/assinatura-digital/feature/constants/nacionalidades';
+import { NACIONALIDADES } from '@/shared/assinatura-digital/constants/nacionalidades';
 
 // ---------------------------------------------------------------------------
 // Schema — aceita os campos exatamente como o form envia

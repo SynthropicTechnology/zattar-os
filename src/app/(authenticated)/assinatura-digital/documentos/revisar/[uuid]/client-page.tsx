@@ -38,10 +38,10 @@ import {
   actionGetDocumento,
   usePresignedPdfUrl,
   PdfPreviewDynamic,
-} from "../../../feature";
-import { actionFinalizeDocumento } from "../../../feature/actions/documentos-actions";
-import { DocumentFlowShell } from "../../../feature/components/flow";
-import type { AssinaturaDigitalDocumentoAssinanteTipo } from "../../../feature/domain";
+} from '@/shared/assinatura-digital';
+import { actionFinalizeDocumento } from '@/shared/assinatura-digital/actions/documentos-actions';
+import { DocumentFlowShell } from '@/app/(authenticated)/assinatura-digital/components/flow';
+import type { AssinaturaDigitalDocumentoAssinanteTipo } from '@/shared/assinatura-digital/domain';
 import { GlassPanel } from "@/components/shared/glass-panel";
 
 // ─── Types ─────────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
-import type { TipoTemplate } from '../../feature';
+import type { TipoTemplate } from '@/shared/assinatura-digital';
 
 export interface TemplatesFilters {
   status?: 'ativo' | 'inativo' | 'rascunho';

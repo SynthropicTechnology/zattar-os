@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
-import type { AssinaturaDigitalSegmento } from '../feature';
+import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
 // =============================================================================
 // TIPOS

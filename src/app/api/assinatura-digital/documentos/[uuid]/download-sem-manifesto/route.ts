@@ -4,8 +4,8 @@ import { requirePermission } from "@/lib/auth/require-permission";
 import {
   getDocumentoByUuid,
   getAssinaturaById,
-} from "@/app/(authenticated)/assinatura-digital/feature/services/documentos.service";
-import { downloadFromStorageUrl } from "@/app/(authenticated)/assinatura-digital/feature/services/signature";
+} from "@/shared/assinatura-digital/services/documentos.service";
+import { downloadFromStorageUrl } from "@/shared/assinatura-digital/services/signature";
 
 /**
  * Faz download do PDF assinado SEM a última página (manifesto de auditoria).

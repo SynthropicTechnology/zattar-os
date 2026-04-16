@@ -17,7 +17,7 @@ import type { ActionResult } from '@/lib/safe-action';
 export async function registerAssinaturaDigitalTools(): Promise<void> {
   const {
     listarTemplatesAction,
-  } = await import('@/app/(authenticated)/assinatura-digital/feature/actions');
+  } = await import('@/shared/assinatura-digital/actions');
 
   /**
    * Lista templates de assinatura digital disponíveis

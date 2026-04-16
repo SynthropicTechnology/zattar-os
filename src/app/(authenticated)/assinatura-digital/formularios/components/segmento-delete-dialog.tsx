@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, AlertTriangle } from "lucide-react";
-import type { AssinaturaDigitalSegmento } from "../../feature";
+import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
 interface SegmentoDeleteDialogProps {
   open: boolean;

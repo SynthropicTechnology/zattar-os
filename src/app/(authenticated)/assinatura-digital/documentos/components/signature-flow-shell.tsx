@@ -16,8 +16,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SignatureWorkflowStepper } from "../../feature/components/workflow";
-import { useFormularioStore } from "../../feature/store/formulario-store";
+import { SignatureWorkflowStepper } from '@/app/(authenticated)/assinatura-digital/components/workflow';
+import { useFormularioStore } from '@/shared/assinatura-digital/store/formulario-store';
 
 /**
  * Mapeamento de segmentos de rota para indice do step.
