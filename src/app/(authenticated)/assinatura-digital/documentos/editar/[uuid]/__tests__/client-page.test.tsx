@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { EditarDocumentoClient } from "../client-page";
-import { useDocumentEditor } from "../../../../feature/components/editor/hooks/use-document-editor";
+import { useDocumentEditor } from "@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-document-editor";
 
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
 
-jest.mock("../../../../feature/components/flow", () => ({
+jest.mock("@/app/(authenticated)/assinatura-digital/components/flow", () => ({
   DocumentFlowShell: ({
     children,
     fullHeight,
@@ -21,18 +21,18 @@ jest.mock("../../../../feature/components/flow", () => ({
 }));
 
 jest.mock(
-  "../../../../feature/components/editor/hooks/use-document-editor",
+  "@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-document-editor",
   () => ({
     useDocumentEditor: jest.fn(),
   }),
 );
 
-jest.mock("../../../../feature/types/pdf-preview.types", () => ({
+jest.mock("@/shared/assinatura-digital/types/pdf-preview.types", () => ({
   PDF_CANVAS_SIZE: { width: 800, height: 1100 },
 }));
 
 jest.mock(
-  "../../../../feature/components/editor/components/EditorCanvas",
+  "@/app/(authenticated)/assinatura-digital/components/editor/components/EditorCanvas",
   () => {
     return function MockEditorCanvas() {
       return <div data-testid="editor-canvas">Editor Canvas</div>;
@@ -41,7 +41,7 @@ jest.mock(
 );
 
 jest.mock(
-  "../../../../feature/components/editor/components/FloatingSidebar",
+  "@/app/(authenticated)/assinatura-digital/components/editor/components/FloatingSidebar",
   () => {
     return function MockFloatingSidebar(props: Record<string, unknown>) {
       return (

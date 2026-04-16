@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { DocumentUploadDropzone } from "../../components/upload/document-upload-dropzone";
-import { SignatureWorkflowStepper } from "../../components/workflow/signature-workflow-stepper";
-import FloatingSidebar from "../../components/editor/components/FloatingSidebar";
-import { useFormularioStore } from "../../store/formulario-store";
-import { useDocumentUpload } from "../../components/upload/hooks/use-document-upload";
-import { useSigners } from "../../components/editor/hooks/use-signers";
+import { DocumentUploadDropzone } from "@/app/(authenticated)/assinatura-digital/components/upload/document-upload-dropzone";
+import { SignatureWorkflowStepper } from "@/app/(authenticated)/assinatura-digital/components/workflow/signature-workflow-stepper";
+import FloatingSidebar from "@/app/(authenticated)/assinatura-digital/components/editor/components/FloatingSidebar";
+import { useFormularioStore } from "@/shared/assinatura-digital/store/formulario-store";
+import { useDocumentUpload } from "@/app/(authenticated)/assinatura-digital/components/upload/hooks/use-document-upload";
+import { useSigners } from "@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-signers";
 
 // Mocks
 jest.mock("next/navigation", () => ({
@@ -20,9 +20,9 @@ jest.mock("next/navigation", () => ({
   usePathname: jest.fn(() => "/app/assinatura-digital"),
   useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
-jest.mock("../../components/upload/hooks/use-document-upload");
-jest.mock("../../components/editor/hooks/use-signers");
-jest.mock("../../store/formulario-store");
+jest.mock("@/app/(authenticated)/assinatura-digital/components/upload/hooks/use-document-upload");
+jest.mock("@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-signers");
+jest.mock("@/shared/assinatura-digital/store/formulario-store");
 jest.mock("sonner", () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));

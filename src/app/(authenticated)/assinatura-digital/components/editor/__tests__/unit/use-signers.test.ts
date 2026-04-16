@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
-import { useSigners } from '@/shared/assinatura-digital/hooks/use-signers';
-import { SIGNER_COLORS } from '../types';
+import { useSigners } from '@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-signers';
+import { SIGNER_COLORS } from '../../types';
 
 // Mock sonner toast
 jest.mock('sonner', () => ({

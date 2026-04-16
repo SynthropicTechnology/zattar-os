@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DocumentUploadDropzone } from '../document-upload-dropzone';
-import { useDocumentUpload } from '@/shared/assinatura-digital/hooks/use-document-upload';
+import { useDocumentUpload } from '@/app/(authenticated)/assinatura-digital/components/upload/hooks/use-document-upload';
 import { toast } from 'sonner';
 
 // Mocks
@@ -18,7 +18,7 @@ jest.mock('next/navigation', () => ({
   useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
 jest.mock('../hooks/use-document-upload');
-jest.mock('../../../actions/documentos-actions', () => ({
+jest.mock('@/shared/assinatura-digital/actions', () => ({
   actionCreateDocumento: jest.fn(),
 }));
 jest.mock('sonner', () => ({

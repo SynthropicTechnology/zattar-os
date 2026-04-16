@@ -13,7 +13,7 @@ jest.mock('sonner', () => ({
 }));
 
 // Mock do formatFileSize — path relative to this test resolves to feature/utils
-jest.mock('../../../utils', () => ({
+jest.mock('@/shared/assinatura-digital/utils/display', () => ({
   formatFileSize: (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;

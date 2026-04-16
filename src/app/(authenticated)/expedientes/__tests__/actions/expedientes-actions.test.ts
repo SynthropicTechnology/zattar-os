@@ -199,7 +199,7 @@ describe('Expediente Actions', () => {
             }
             expect(authenticateRequest).toHaveBeenCalled();
             expect(mockService.criarExpediente).toHaveBeenCalled();
-            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes');
+            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
         it('deve rejeitar input com campos obrigatórios faltando (validação Zod)', async () => {
@@ -274,7 +274,7 @@ describe('Expediente Actions', () => {
                 expect(result.message).toContain('atualizado');
             }
             expect(mockService.atualizarExpediente).toHaveBeenCalledWith(1, expect.any(Object));
-            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes');
+            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
         it('deve retornar erro quando ID é inválido', async () => {
@@ -344,7 +344,7 @@ describe('Expediente Actions', () => {
                 expect.objectContaining({ expedienteId: 1, protocoloId: 'PROT-001' }),
                 1,
             );
-            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes');
+            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
         it('deve retornar erro quando expedienteId é inválido', async () => {
@@ -457,7 +457,7 @@ describe('Expediente Actions', () => {
                 expect(result.message).toContain('revertida');
             }
             expect(mockService.reverterBaixa).toHaveBeenCalledWith(1, 1);
-            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes');
+            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
         it('deve retornar erro quando ID é inválido', async () => {
@@ -608,7 +608,7 @@ describe('Expediente Bulk Actions', () => {
             }
             expect(authenticateRequest).toHaveBeenCalled();
             expect(mockService.atribuirResponsavel).toHaveBeenCalledTimes(3);
-            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes');
+            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
         it('deve retornar erro quando formData não é FormData', async () => {
@@ -695,7 +695,7 @@ describe('Expediente Bulk Actions', () => {
             }
             expect(authenticateRequest).toHaveBeenCalled();
             expect(mockService.realizarBaixa).toHaveBeenCalledTimes(2);
-            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes');
+            expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
         it('deve retornar erro quando formData não é FormData', async () => {

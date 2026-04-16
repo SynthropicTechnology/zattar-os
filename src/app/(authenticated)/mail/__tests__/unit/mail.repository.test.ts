@@ -20,12 +20,28 @@ describe('Mail Repository', () => {
         expect(repo).toBeDefined();
     });
 
-    it('não deve exportar funções de negócio (stub atual)', async () => {
+    it('deve exportar as funções e constantes esperadas do repositório', async () => {
         const repo = await import('../../repository');
         // Filtra chaves internas do módulo ES (__esModule, default)
         const businessKeys = Object.keys(repo).filter(
             (k) => !['__esModule', 'default'].includes(k),
         );
-        expect(businessKeys).toHaveLength(0);
+        // O repository foi implementado com CRUD de credenciais_email via Supabase.
+        // Operações de IMAP/SMTP continuam nas API routes (/api/mail/*).
+        // TODO: expandir testes de unidade seguindo o padrão do módulo notas
+        //       (createChainableMock + jest.mock('@/lib/supabase')) quando necessário.
+        expect(businessKeys).toEqual(
+            expect.arrayContaining([
+                'CLOUDRON_DEFAULTS',
+                'getEmailCredentialsById',
+                'getEmailCredentials',
+                'getAllEmailCredentials',
+                'credentialsToMailConfig',
+                'getUserMailConfig',
+                'saveEmailCredentials',
+                'deleteEmailCredentials',
+            ]),
+        );
+        expect(businessKeys).toHaveLength(8);
     });
 });

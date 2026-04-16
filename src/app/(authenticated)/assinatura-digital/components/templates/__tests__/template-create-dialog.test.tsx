@@ -6,7 +6,7 @@ import { listarSegmentosAction, criarTemplateAction } from '@/shared/assinatura-
 import { toast } from 'sonner';
 
 // Mock das dependências
-jest.mock('../../../actions', () => ({
+jest.mock('@/shared/assinatura-digital/actions', () => ({
   listarSegmentosAction: jest.fn(),
   criarTemplateAction: jest.fn(),
 }));

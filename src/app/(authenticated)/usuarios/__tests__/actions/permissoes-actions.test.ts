@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache';
 import { requireAuth } from '../../actions/utils';
 import * as repository from '../../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTodasPermissoes } from '../../types/types';
+import { obterTodasPermissoes, validarAtribuirPermissaoDTO } from '../../types/types';
 import {
   actionListarPermissoes,
   actionSalvarPermissoes,
@@ -20,6 +20,7 @@ const mockRequireAuth = requireAuth as jest.MockedFunction<typeof requireAuth>;
 const mockRepository = repository as jest.Mocked<typeof repository>;
 const mockCreateServiceClient = createServiceClient as jest.MockedFunction<typeof createServiceClient>;
 const mockObterTodasPermissoes = obterTodasPermissoes as jest.MockedFunction<typeof obterTodasPermissoes>;
+const mockValidarAtribuirPermissaoDTO = validarAtribuirPermissaoDTO as jest.MockedFunction<typeof validarAtribuirPermissaoDTO>;
 const mockRevalidatePath = revalidatePath as jest.MockedFunction<typeof revalidatePath>;
 
 interface MockSupabaseClient {
@@ -40,6 +41,8 @@ describe('Permissoes Actions - Unit Tests', () => {
     mockRequireAuth.mockResolvedValue(mockUser);
     // createServiceClient is now sync (returns client directly)
     mockCreateServiceClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createServiceClient>);
+    // validarAtribuirPermissaoDTO is mocked as part of '../../types/types' — default to valid
+    mockValidarAtribuirPermissaoDTO.mockReturnValue(true);
   });
 
   describe('actionListarPermissoes', () => {

@@ -1,8 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
-import { usePaletteDrag } from '@/shared/assinatura-digital/hooks/use-palette-drag';
+import { usePaletteDrag } from '@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-palette-drag';
 import { toast } from 'sonner';
-import { SIGNER_COLORS } from '../types';
-import type { EditorField, Signatario, SignatureFieldType } from '../types';
+import { SIGNER_COLORS } from '../../types';
+import type { EditorField, Signatario, SignatureFieldType } from '../../types';
 
 // Mock sonner toast
 jest.mock('sonner', () => ({

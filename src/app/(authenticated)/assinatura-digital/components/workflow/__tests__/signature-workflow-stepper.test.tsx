@@ -8,7 +8,7 @@ jest.mock('@/hooks/use-viewport', () => ({
   useViewport: jest.fn(),
 }));
 
-jest.mock('../../../store/formulario-store', () => ({
+jest.mock('@/shared/assinatura-digital/store/formulario-store', () => ({
   useFormularioStore: jest.fn(),
 }));
 

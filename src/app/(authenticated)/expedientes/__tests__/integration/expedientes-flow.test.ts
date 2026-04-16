@@ -52,15 +52,15 @@ describe('Expedientes Integration - Criação', () => {
       processoId: 1,
     });
 
-    (processoExists as jest.Mock).mockResolvedValue(ok(true));
     (saveExpediente as jest.Mock).mockResolvedValue(ok(expectedExpediente));
 
     // Act: Chamar criarExpediente
     const result = await criarExpediente(input);
 
-    // Assert: Verificar validação de processo
+    // Assert: Verificar criação com processoId
+    // Nota: processoExists foi removido do service (FK constraints do Postgres validam).
     expect(result.success).toBe(true);
-    expect(processoExists).toHaveBeenCalledWith(1);
+    expect(processoExists).not.toHaveBeenCalled();
     expect(saveExpediente).toHaveBeenCalledWith(
       expect.objectContaining({
         numero_processo: input.numeroProcesso,
@@ -74,8 +74,9 @@ describe('Expedientes Integration - Criação', () => {
     }
   });
 
-  it('deve validar tipo de expediente se fornecido', async () => {
-    // Arrange: Mock tipoExpedienteExists
+  it('deve criar expediente com tipoExpedienteId fornecido', async () => {
+    // Nota: tipoExpedienteExists foi removido do service (FK constraints do Postgres validam).
+    // O service delega a validação ao banco e chama saveExpediente diretamente.
     const input = {
       numeroProcesso: '1234567-89.2023.5.01.0001',
       trt: 'TRT1' as const,
@@ -85,22 +86,26 @@ describe('Expedientes Integration - Criação', () => {
       tipoExpedienteId: 5,
     };
 
-    (tipoExpedienteExists as jest.Mock).mockResolvedValue(ok(false));
+    const expectedExpediente = mockExpediente({ tipoExpedienteId: 5 });
+    (saveExpediente as jest.Mock).mockResolvedValue(ok(expectedExpediente));
 
     // Act: Criar com tipoExpedienteId
     const result = await criarExpediente(input);
 
-    // Assert: Verificar validação
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error.code).toBe('NOT_FOUND');
-      expect(result.error.message).toContain('Tipo de expediente');
-    }
-    expect(saveExpediente).not.toHaveBeenCalled();
+    // Assert: Verificar criação direta sem pré-validação
+    expect(result.success).toBe(true);
+    expect(tipoExpedienteExists).not.toHaveBeenCalled();
+    expect(saveExpediente).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tipo_expediente_id: 5,
+      })
+    );
   });
 
-  it('deve falhar se processo não existir', async () => {
-    // Arrange
+  it('deve delegar validação de processo ao banco (FK constraint)', async () => {
+    // Nota: processoExists foi removido do service para eliminar N+1.
+    // A validação é feita via FK constraint do Postgres — se o processo
+    // não existir, saveExpediente retorna erro de banco.
     const input = {
       numeroProcesso: '1234567-89.2023.5.01.0001',
       trt: 'TRT1' as const,
@@ -110,17 +115,16 @@ describe('Expedientes Integration - Criação', () => {
       processoId: 999,
     };
 
-    (processoExists as jest.Mock).mockResolvedValue(ok(false));
+    const fkError = { success: false as const, error: { code: 'DATABASE_ERROR' as const, message: 'violates foreign key constraint' } };
+    (saveExpediente as jest.Mock).mockResolvedValue(fkError);
 
     // Act
     const result = await criarExpediente(input);
 
-    // Assert
+    // Assert: processoExists nunca é chamado; erro vem do banco via saveExpediente
+    expect(processoExists).not.toHaveBeenCalled();
+    expect(saveExpediente).toHaveBeenCalled();
     expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error.code).toBe('NOT_FOUND');
-      expect(result.error.message).toContain('Processo');
-    }
   });
 
   it('deve criar expediente sem validações opcionais', async () => {
@@ -204,6 +208,7 @@ describe('Expedientes Integration - Baixa', () => {
       protocoloId: 'PROT-12345',
       justificativaBaixa: 'Protocolo realizado',
       baixadoEm: undefined,
+      resultadoDecisao: undefined,
     });
     expect(mockDb.rpc).toHaveBeenCalledWith('registrar_baixa_expediente', {
       p_expediente_id: 1,

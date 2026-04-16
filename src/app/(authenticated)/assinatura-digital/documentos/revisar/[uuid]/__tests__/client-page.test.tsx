@@ -15,7 +15,7 @@ jest.mock("next/navigation", () => ({
 
 const mockActionGetDocumento = jest.fn();
 const mockUsePresignedPdfUrl = jest.fn();
-jest.mock("../../../../feature", () => ({
+jest.mock("@/shared/assinatura-digital", () => ({
   actionGetDocumento: (...args: unknown[]) => mockActionGetDocumento(...args),
   usePresignedPdfUrl: (...args: unknown[]) => mockUsePresignedPdfUrl(...args),
   PdfPreviewDynamic: () => (
@@ -24,12 +24,12 @@ jest.mock("../../../../feature", () => ({
 }));
 
 const mockActionFinalizeDocumento = jest.fn();
-jest.mock("../../../../feature/actions/documentos-actions", () => ({
+jest.mock("@/shared/assinatura-digital/actions/documentos-actions", () => ({
   actionFinalizeDocumento: (...args: unknown[]) =>
     mockActionFinalizeDocumento(...args),
 }));
 
-jest.mock("../../../../feature/components/flow", () => ({
+jest.mock("@/app/(authenticated)/assinatura-digital/components/flow", () => ({
   DocumentFlowShell: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="document-flow-shell">{children}</div>
   ),

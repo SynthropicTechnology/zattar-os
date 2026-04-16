@@ -2,13 +2,13 @@ import { render, screen } from "@testing-library/react";
 import { NovoDocumentoClient } from "../client-page";
 
 // Mocks
-jest.mock("../../../feature/components/flow", () => ({
+jest.mock("@/app/(authenticated)/assinatura-digital/components/flow", () => ({
   DocumentFlowShell: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="document-flow-shell">{children}</div>
   ),
 }));
 
-jest.mock("../../../feature/components/upload", () => ({
+jest.mock("@/app/(authenticated)/assinatura-digital/components/upload", () => ({
   DocumentUploadDropzone: () => (
     <div data-testid="document-upload-dropzone">Upload Dropzone</div>
   ),
