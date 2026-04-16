@@ -253,7 +253,7 @@ export default function DadosEndereco() {
                 <FormControl>
                   <InputCEP
                     placeholder="00000-000"
-                    className="h-12"
+                    className="glass-field"
                     onAddressFound={handleAddressFound}
                     {...field}
                   />
@@ -273,7 +273,7 @@ export default function DadosEndereco() {
                   <FormControl>
                     <Input
                       placeholder="Rua, Avenida, etc."
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -291,7 +291,7 @@ export default function DadosEndereco() {
                   <FormControl>
                     <Input
                       placeholder="Número"
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -310,7 +310,7 @@ export default function DadosEndereco() {
                 <FormControl>
                   <Input
                     placeholder="Apto, Bloco, etc."
-                    className="h-12"
+                    className="glass-field"
                     {...field}
                   />
                 </FormControl>
@@ -329,7 +329,7 @@ export default function DadosEndereco() {
                   <FormControl>
                     <Input
                       placeholder="Bairro"
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -347,7 +347,7 @@ export default function DadosEndereco() {
                   <FormControl>
                     <Input
                       placeholder="Cidade"
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -364,7 +364,7 @@ export default function DadosEndereco() {
                   <FormLabel>Estado</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-12">
+                      <SelectTrigger className="glass-field">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>

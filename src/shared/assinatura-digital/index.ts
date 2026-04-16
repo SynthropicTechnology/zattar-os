@@ -41,6 +41,10 @@ export {
 
 // Hooks
 export { usePresignedPdfUrl } from './hooks/use-presigned-pdf-url'
+export {
+  useWizardProgress,
+  type WizardProgress,
+} from './hooks/use-wizard-progress'
 
 // Utils comumente usados
 export {

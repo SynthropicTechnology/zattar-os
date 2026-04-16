@@ -121,7 +121,7 @@ export default function DadosIdentidade() {
                 <FormControl>
                   <Input
                     placeholder="Digite seu nome completo"
-                    className="h-12"
+                    className="glass-field"
                     {...field}
                   />
                 </FormControl>
@@ -141,7 +141,7 @@ export default function DadosIdentidade() {
                     <InputCPF
                       placeholder="000.000.000-00"
                       disabled
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -159,7 +159,7 @@ export default function DadosIdentidade() {
                   <FormControl>
                     <Input
                       placeholder="Digite seu RG"
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -181,7 +181,7 @@ export default function DadosIdentidade() {
                 <FormControl>
                   <InputData
                     placeholder="dd/mm/aaaa"
-                    className="h-12"
+                    className="glass-field"
                     {...field}
                   />
                 </FormControl>
@@ -199,7 +199,7 @@ export default function DadosIdentidade() {
                   <FormLabel>Gênero</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-12">
+                      <SelectTrigger className="glass-field">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>
@@ -224,7 +224,7 @@ export default function DadosIdentidade() {
                   <FormLabel>Nacionalidade</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-12">
+                      <SelectTrigger className="glass-field">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>
@@ -253,7 +253,7 @@ export default function DadosIdentidade() {
                   <FormLabel>Estado Civil</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-12">
+                      <SelectTrigger className="glass-field">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>

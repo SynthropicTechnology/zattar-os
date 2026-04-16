@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useFormularioStore } from '@/shared/assinatura-digital/store'
 import VerificarCPF from './verificar-cpf'
 import ContratosPendentesStep from './contratos-pendentes-step'
@@ -17,26 +17,16 @@ import Sucesso from './sucesso'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { StepConfig } from '@/shared/assinatura-digital/types/store'
 import {
   PublicWizardShell,
   type PublicWizardStep,
 } from '@/shared/assinatura-digital'
-
-const STEP_LABELS: Record<string, string> = {
-  cpf: 'CPF',
-  pendentes: 'Pendentes',
-  pessoais: 'Dados',
-  identidade: 'Identidade',
-  contatos: 'Contatos',
-  endereco: 'Endereço',
-  acao: 'Ação',
-  visualizacao: 'Revisão',
-  foto: 'Selfie',
-  termos: 'Termos',
-  assinatura: 'Assinar',
-  sucesso: 'Pronto',
-}
+import {
+  STEP_LABELS,
+  STEPS_HIDDEN_FROM_PROGRESS,
+} from '@/shared/assinatura-digital/constants/step-labels'
 
 function formatResumeHint(timestamp: number | null, etapa: number): string | null {
   if (!timestamp || etapa === 0) return null
@@ -298,7 +288,7 @@ export default function FormularioContainer() {
 
   // Steps visíveis no progress (exclui pendentes/sucesso da barra)
   const stepItems: PublicWizardStep[] = (stepConfigs ?? [])
-    .filter((c) => c.id !== 'pendentes' && c.id !== 'sucesso')
+    .filter((c) => !STEPS_HIDDEN_FROM_PROGRESS.includes(c.id))
     .map((c) => ({ id: c.id, label: STEP_LABELS[c.id] ?? c.component }))
 
   const currentId = stepConfigs?.find((c) => c.index === etapaAtual)?.id ?? 'cpf'
@@ -317,7 +307,37 @@ export default function FormularioContainer() {
       resumeHint={formatResumeHint(timestamp, etapaAtual)}
       tint={isSuccessStep ? 'success' : 'primary'}
     >
-      {renderEtapa()}
+      <StepTransition stepKey={etapaAtual}>{renderEtapa()}</StepTransition>
     </PublicWizardShell>
+  )
+}
+
+/**
+ * Transição sutil entre steps: fade + deslocamento horizontal curto.
+ * Respeita prefers-reduced-motion — usuários com motion reduzido só veem
+ * a mudança do conteúdo sem animação.
+ */
+function StepTransition({
+  stepKey,
+  children,
+}: {
+  stepKey: number
+  children: React.ReactNode
+}) {
+  const prefersReducedMotion = useReducedMotion()
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={stepKey}
+        initial={prefersReducedMotion ? false : { opacity: 0, x: 12 }}
+        animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+        exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: -12 }}
+        transition={{ duration: 0.22, ease: [0.2, 0.8, 0.2, 1] }}
+        className="flex h-full min-h-0 flex-1 flex-col"
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   )
 }

@@ -87,7 +87,7 @@ export function ClientSearchInput({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('space-y-3', className)}>
       <div className="flex gap-2">
         <div className="flex-1">
           <InputCPF
@@ -104,7 +104,7 @@ export function ClientSearchInput({
           onClick={handleSearch}
           disabled={disabled || isSearching || !searchValue || searchValue.trim().length === 0}
           size="default"
-          className="shrink-0"
+          className="h-11 shrink-0 shadow-[0_1px_2px_0_color-mix(in_oklch,black_8%,transparent),0_4px_16px_-4px_color-mix(in_oklch,var(--primary)_35%,transparent)] hover:shadow-[0_2px_4px_0_color-mix(in_oklch,black_10%,transparent),0_6px_24px_-4px_color-mix(in_oklch,var(--primary)_45%,transparent)] dark:shadow-[0_1px_2px_0_color-mix(in_oklch,black_40%,transparent),0_4px_20px_-4px_color-mix(in_oklch,var(--primary)_50%,transparent)] dark:hover:shadow-[0_2px_4px_0_color-mix(in_oklch,black_50%,transparent),0_6px_28px_-4px_color-mix(in_oklch,var(--primary)_65%,transparent)] transition-shadow"
         >
           {isSearching ? (
             <>
@@ -120,25 +120,31 @@ export function ClientSearchInput({
         </Button>
       </div>
 
-      {/* Status indicator */}
+      {/* Status indicator — pills glass coerentes */}
       {searchStatus === 'found' && (
-        <div className="flex items-center gap-2 text-sm text-success">
-          <CheckCircle2 className="w-4 h-4" />
-          <span>Cliente encontrado e preenchido automaticamente</span>
+        <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 ring-1 ring-success/20">
+          <CheckCircle2 className="h-3.5 w-3.5 text-success" strokeWidth={2.5} />
+          <span className="text-xs font-medium text-success">
+            Cliente encontrado — dados preenchidos
+          </span>
         </div>
       )}
 
       {searchStatus === 'notFound' && (
-        <div className="flex items-center gap-2 text-sm text-warning">
-          <XCircle className="w-4 h-4" />
-          <span>Cliente não encontrado. Preencha os dados manualmente.</span>
+        <div className="inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 ring-1 ring-warning/20">
+          <XCircle className="h-3.5 w-3.5 text-warning" strokeWidth={2.5} />
+          <span className="text-xs font-medium text-warning">
+            Cliente não encontrado — preencha manualmente
+          </span>
         </div>
       )}
 
       {searchStatus === 'error' && (
-        <div className="flex items-center gap-2 text-sm text-destructive">
-          <XCircle className="w-4 h-4" />
-          <span>Erro ao buscar cliente. Tente novamente.</span>
+        <div className="inline-flex items-center gap-2 rounded-full bg-destructive/10 px-3 py-1 ring-1 ring-destructive/20">
+          <XCircle className="h-3.5 w-3.5 text-destructive" strokeWidth={2.5} />
+          <span className="text-xs font-medium text-destructive">
+            Erro ao buscar — tente novamente
+          </span>
         </div>
       )}
     </div>

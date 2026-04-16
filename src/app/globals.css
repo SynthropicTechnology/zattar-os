@@ -1974,6 +1974,44 @@ body[data-theme-content-layout="centered"] .content-container {
     @apply bg-surface-variant/60 backdrop-blur-[20px];
   }
 
+  /* Field Glass — input/textarea/trigger styling alinhado ao Glass Briefing.
+     Use junto de className para sobrescrever bordas, fundos e altura herdados
+     de wrappers que ainda usam classes hardcoded do shadcn (InputCPF, InputCNPJ,
+     InputTelefone, InputCEP). Combina com <Input variant="glass" /> e SelectTrigger. */
+  .glass-field.glass-field {
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    border-color: color-mix(in oklch, var(--outline-variant) 60%, transparent);
+    background-color: color-mix(in oklch, var(--surface-container-lowest) 70%, transparent);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: color 200ms, background-color 200ms, border-color 200ms, box-shadow 200ms;
+  }
+  .glass-field.glass-field:hover {
+    border-color: var(--outline-variant);
+    background-color: var(--surface-container-lowest);
+  }
+  .glass-field.glass-field:focus,
+  .glass-field.glass-field:focus-visible {
+    border-color: color-mix(in oklch, var(--primary) 40%, transparent);
+    background-color: var(--surface-container-lowest);
+    box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 20%, transparent);
+    outline: none;
+  }
+  .dark .glass-field.glass-field {
+    background-color: color-mix(in oklch, var(--surface-container-low) 40%, transparent);
+  }
+  .dark .glass-field.glass-field:hover {
+    background-color: color-mix(in oklch, var(--surface-container-low) 60%, transparent);
+  }
+  .dark .glass-field.glass-field:focus,
+  .dark .glass-field.glass-field:focus-visible {
+    background-color: color-mix(in oklch, var(--surface-container-low) 70%, transparent);
+  }
+
   .glass-glow {
     @apply relative overflow-hidden;
   }

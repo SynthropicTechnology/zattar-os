@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { IMaskInput } from 'react-imask';
 import { cn } from '@/lib/utils';
+import { INPUT_GLASS_BASE_CLASSES } from '@/components/ui/input-styles';
 
 export interface InputTelefoneProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'onBlur'> {
@@ -13,7 +14,7 @@ export interface InputTelefoneProps
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-const inputClassName = "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none ring-0 file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm aria-invalid:border-destructive";
+const inputClassName = INPUT_GLASS_BASE_CLASSES;
 
 const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
   ({ label, error, className, mode = 'auto', onChange, onBlur, value, ...props }, ref) => {

@@ -10,13 +10,14 @@ import {
   PublicStepCard,
   PublicStepFooter,
 } from '@/shared/assinatura-digital/components/public-shell'
+import { useWizardProgress } from '@/shared/assinatura-digital/hooks/use-wizard-progress'
 
 interface FormStepLayoutProps {
   title: string
   description?: string
-  /** Número legível da etapa atual (1-based). Opcional — shell exibe progresso. */
+  /** Número legível da etapa atual (1-based). Opcional — por default, deriva do store. */
   currentStep?: number
-  /** Total de etapas legíveis. Opcional — shell exibe progresso. */
+  /** Total de etapas legíveis. Opcional — por default, deriva do store. */
   totalSteps?: number
   onPrevious?: () => void
   onNext?: () => void
@@ -46,6 +47,8 @@ interface FormStepLayoutProps {
 export default function FormStepLayout({
   title,
   description,
+  currentStep,
+  totalSteps,
   onPrevious,
   onNext,
   nextLabel = 'Continuar',
@@ -60,6 +63,8 @@ export default function FormStepLayout({
   formId,
   context = 'public',
 }: FormStepLayoutProps) {
+  const progress = useWizardProgress()
+
   if (context === 'internal') {
     const nextButtonType = formId ? 'submit' : 'button'
     const handleNextClick = formId ? undefined : onNext
@@ -119,11 +124,24 @@ export default function FormStepLayout({
   }
 
   // Public: viewport-fit com PublicStepCard + PublicStepFooter
+  // Chip derivado automaticamente via useWizardProgress se props explícitos ausentes
+  const resolvedCurrent = currentStep ?? progress.currentStep
+  const resolvedTotal = totalSteps ?? progress.totalSteps
+  const chip =
+    resolvedCurrent > 0 && resolvedTotal > 0
+      ? `Etapa ${resolvedCurrent} de ${resolvedTotal}`
+      : undefined
+
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex min-h-0 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-        <div className={cn('mx-auto w-full max-w-2xl', cardClassName)}>
-          <PublicStepCard title={title} description={description}>
+      <div className="flex min-h-0 flex-1 p-4 sm:p-6 md:p-8">
+        <div
+          className={cn(
+            'mx-auto flex min-h-0 w-full max-w-2xl flex-1',
+            cardClassName,
+          )}
+        >
+          <PublicStepCard title={title} description={description} chip={chip}>
             {children}
           </PublicStepCard>
         </div>

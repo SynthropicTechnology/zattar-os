@@ -112,7 +112,7 @@ export default function DadosContatos() {
                     type="email"
                     inputMode="email"
                     placeholder="seu@email.com"
-                    className="h-12"
+                    className="glass-field"
                     {...field}
                   />
                 </FormControl>
@@ -135,7 +135,7 @@ export default function DadosContatos() {
                     <InputTelefone
                       mode="cell"
                       placeholder="(00) 00000-0000"
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -154,7 +154,7 @@ export default function DadosContatos() {
                     <InputTelefone
                       mode="landline"
                       placeholder="(00) 0000-0000"
-                      className="h-12"
+                      className="glass-field"
                       {...field}
                     />
                   </FormControl>

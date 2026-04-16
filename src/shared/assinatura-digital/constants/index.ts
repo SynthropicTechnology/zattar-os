@@ -23,5 +23,8 @@ export {
 // Configuração de etapas
 export { DEFAULT_TOTAL_STEPS } from './step-config';
 
+// Labels dos steps (sidebar, chip de card)
+export { STEP_LABELS, STEPS_HIDDEN_FROM_PROGRESS } from './step-labels';
+
 // Rotas de API
 export { API_ROUTES } from './api-routes';

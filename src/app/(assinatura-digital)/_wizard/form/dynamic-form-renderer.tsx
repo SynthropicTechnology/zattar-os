@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { generateZodSchema } from '@/shared/assinatura-digital/utils';
@@ -37,11 +37,23 @@ import { Separator } from '@/components/ui/separator';
 import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import { InputCPF, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSearchInput } from '@/shared/assinatura-digital/components/inputs';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import { Info } from 'lucide-react';
+import {
+  Info,
+  Search,
+  User,
+  Building2,
+  MapPin,
+  IdCard,
+  Briefcase,
+  FileText,
+  Sparkles,
+  type LucideIcon,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Cliente, ParteContraria } from '@/app/(authenticated)/partes/types';
 import { UseFormReturn } from 'react-hook-form';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 interface DynamicFormRendererProps {
   schema: DynamicFormSchema;
@@ -183,6 +195,70 @@ export default function DynamicFormRenderer({
   }, [schema]);
 
   /**
+   * Detecta campo de tipo de pessoa em uma lista de fields.
+   * Procura por id contendo "tipo_pessoa" ou "tipopessoa" ou "tipo-pessoa" (case-insensitive).
+   */
+  const findTipoPessoaField = (fields: FormFieldSchema[]): FormFieldSchema | undefined => {
+    return fields.find((f) => {
+      const key = f.id.toLowerCase().replace(/[-_]/g, '');
+      return key.includes('tipopessoa');
+    });
+  };
+
+  /**
+   * Normaliza valor de tipo_pessoa para 'pj' | 'pf' | null.
+   * Aceita: "pj", "pessoa jurídica", "juridica", "j", "cnpj", "empresa"
+   *     vs: "pf", "pessoa física", "fisica", "f", "cpf", "individual"
+   */
+  const normalizeTipoPessoa = (value: unknown): 'pj' | 'pf' | null => {
+    if (value == null) return null;
+    const normalized = String(value)
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+    if (!normalized) return null;
+    if (/pj|juridic|cnpj|empres/.test(normalized)) return 'pj';
+    if (/pf|fisic|cpf|individ/.test(normalized)) return 'pf';
+    // Letra única ambígua — decide pelo prefixo
+    if (normalized === 'j') return 'pj';
+    if (normalized === 'f') return 'pf';
+    return null;
+  };
+
+  /**
+   * Efeito: quando tipo_pessoa muda, limpa o campo do documento oposto
+   * (evita submit com CPF residual quando usuário seleciona PJ e vice-versa).
+   */
+  useEffect(() => {
+    for (const section of schema.sections) {
+      const tipoField = findTipoPessoaField(section.fields);
+      if (!tipoField) continue;
+      const tipo = normalizeTipoPessoa(formValues[tipoField.id]);
+      if (!tipo) continue;
+
+      const fieldToClear = section.fields.find((f) => {
+        const id = f.id.toLowerCase();
+        if (tipo === 'pj') return id.endsWith('_cpf') || id === 'cpf';
+        return id.endsWith('_cnpj') || id === 'cnpj';
+      });
+      if (fieldToClear && formValues[fieldToClear.id]) {
+        form.setValue(fieldToClear.id, '', { shouldValidate: false, shouldDirty: false });
+      }
+    }
+    // formValues é o objeto de watch — reagir apenas às mudanças dos campos tipo_pessoa
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    schema,
+    // Concatenar valores dos campos tipo_pessoa de todas as seções como dep
+    schema.sections
+      .map((s) => findTipoPessoaField(s.fields))
+      .filter((f): f is FormFieldSchema => !!f)
+      .map((f) => formValues[f.id])
+      .join('|'),
+  ]);
+
+  /**
    * Evaluate conditional rule to determine if field should be rendered
    */
   const evaluateConditional = (
@@ -311,21 +387,21 @@ export default function DynamicFormRenderer({
       case FormFieldType.EMAIL:
         return (
           <FormControl>
-            <Input {...commonProps} {...stringFieldProps} />
+            <Input variant="glass" {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
       case FormFieldType.TEXTAREA:
         return (
           <FormControl>
-            <Textarea rows={4} {...commonProps} {...stringFieldProps} />
+            <Textarea rows={4} className="glass-field !h-auto min-h-[6rem] py-3" {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
       case FormFieldType.NUMBER:
         return (
           <FormControl>
-            <Input type="number" {...commonProps} {...stringFieldProps} />
+            <Input type="number" variant="glass" {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
@@ -340,6 +416,7 @@ export default function DynamicFormRenderer({
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
               ref={ref as React.Ref<HTMLInputElement>}
+              className="glass-field"
             />
           </FormControl>
         );
@@ -355,6 +432,7 @@ export default function DynamicFormRenderer({
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
               ref={ref as React.Ref<HTMLInputElement>}
+              className="glass-field"
             />
           </FormControl>
         );
@@ -370,6 +448,7 @@ export default function DynamicFormRenderer({
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
               ref={ref as React.Ref<HTMLInputElement>}
+              className="glass-field"
             />
           </FormControl>
         );
@@ -385,6 +464,7 @@ export default function DynamicFormRenderer({
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
               ref={ref as React.Ref<HTMLInputElement>}
+              className="glass-field"
             />
           </FormControl>
         );
@@ -401,6 +481,7 @@ export default function DynamicFormRenderer({
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
               ref={ref as React.Ref<HTMLInputElement>}
+              className="glass-field"
             />
           </FormControl>
         );
@@ -415,7 +496,7 @@ export default function DynamicFormRenderer({
             disabled={field.disabled || isSubmitting}
           >
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className="glass-field">
                 <SelectValue
                   placeholder={field.placeholder || 'Selecione'}
                 />
@@ -517,58 +598,135 @@ export default function DynamicFormRenderer({
       default:
         return (
           <FormControl>
-            <Input {...commonProps} {...stringFieldProps} />
+            <Input variant="glass" {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
     }
   };
 
   /**
-   * Render section with fields
+   * Infer a semantic icon for a section from its id or first field type.
+   * Falls back to FileText when no pattern matches.
+   */
+  const getSectionIcon = (section: FormSectionSchema): LucideIcon => {
+    const id = section.id.toLowerCase();
+    if (id.includes('parte-contraria') || id.includes('parte_contraria')) return Building2;
+    if (id.includes('cliente') || id.includes('identidade')) return IdCard;
+    if (id.includes('endereco') || id.includes('address')) return MapPin;
+    if (id.includes('acao') || id.includes('trabalho') || id.includes('acao-trabalhista')) return Briefcase;
+    if (id.includes('busca') || id.includes('search')) return Search;
+    if (id.includes('contato')) return User;
+    return FileText;
+  };
+
+  /**
+   * Render section with fields — split search field (if any) into its own
+   * GlassPanel depth=2 as the preferred path, then render remaining manual
+   * fields in the grid below.
    */
   const renderSection = (section: FormSectionSchema) => {
+    const Icon = getSectionIcon(section);
+
+    // Fase 1: filtro base (hidden + conditional do schema)
+    let visibleFields = section.fields.filter((f) => {
+      if (f.hidden) return false;
+      if (f.conditional) return evaluateConditional(f.conditional, formValues);
+      return true;
+    });
+
+    // Fase 2: heurística tipo_pessoa — esconde CPF se PJ, CNPJ se PF.
+    // Só aplica se houver campo de tipo_pessoa na seção E ele estiver respondido.
+    const tipoField = findTipoPessoaField(section.fields);
+    const tipo = tipoField ? normalizeTipoPessoa(formValues[tipoField.id]) : null;
+    if (tipo) {
+      visibleFields = visibleFields.filter((f) => {
+        const id = f.id.toLowerCase();
+        const isCpf = id.endsWith('_cpf') || id === 'cpf';
+        const isCnpj = id.endsWith('_cnpj') || id === 'cnpj';
+        if (tipo === 'pj' && isCpf) return false;
+        if (tipo === 'pf' && isCnpj) return false;
+        return true;
+      });
+    }
+
+    const searchField = visibleFields.find(
+      (f) =>
+        f.type === FormFieldType.PARTE_CONTRARIA_SEARCH ||
+        f.type === FormFieldType.CLIENT_SEARCH,
+    );
+    const manualFields = visibleFields.filter((f) => f !== searchField);
+
     return (
-      <div key={section.id} className="space-y-4">
-        <div>
-          <Heading level="card" className="text-base">{section.title}</Heading>
-          {section.description && (
-            <p className="text-sm text-muted-foreground">
-              {section.description}
-            </p>
-          )}
+      <div key={section.id} className="space-y-5">
+        {/* Header */}
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
+            <Icon className="h-4 w-4" strokeWidth={2.25} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <Heading
+              level="section"
+              className="font-display text-lg tracking-tight sm:text-xl"
+            >
+              {section.title}
+            </Heading>
+            {section.description && (
+              <Text variant="caption" className="mt-0.5 text-muted-foreground">
+                {section.description}
+              </Text>
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {section.fields.map((field) => {
-            // Skip hidden fields (they are in schema but not rendered)
-            if (field.hidden) {
-              return null;
-            }
-
-            // Evaluate conditional rendering
-            if (field.conditional) {
-              const shouldRender = evaluateConditional(
-                field.conditional,
-                formValues
-              );
-              if (!shouldRender) return null;
-            }
-
-            // Determine grid class based on gridColumns
-            const gridClass =
-              field.gridColumns === 1
-                ? 'md:col-span-3'
-                : field.gridColumns === 2
-                  ? 'md:col-span-2'
-                  : 'md:col-span-1';
-
-            return (
-              <div key={field.id} className={cn(gridClass)}>
-                {renderField(field)}
+        {/* Search card — entidade existente (caminho preferencial) */}
+        {searchField && (
+          <>
+            <GlassPanel
+              depth={2}
+              className="space-y-3 p-4 sm:p-5"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-primary" />
+                <Text
+                  variant="overline"
+                  className="text-primary"
+                >
+                  Busca rápida
+                </Text>
               </div>
-            );
-          })}
-        </div>
+              {renderField(searchField)}
+            </GlassPanel>
+
+            {manualFields.length > 0 && (
+              <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-outline-variant/40" />
+                <Text variant="caption" className="text-muted-foreground">
+                  Não encontrou? Preencha abaixo
+                </Text>
+                <div className="h-px flex-1 bg-outline-variant/40" />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Grid de campos manuais */}
+        {manualFields.length > 0 && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {manualFields.map((field) => {
+              const gridClass =
+                field.gridColumns === 1
+                  ? 'md:col-span-3'
+                  : field.gridColumns === 2
+                    ? 'md:col-span-2'
+                    : 'md:col-span-1';
+              return (
+                <div key={field.id} className={cn(gridClass)}>
+                  {renderField(field)}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   };
@@ -579,12 +737,14 @@ export default function DynamicFormRenderer({
         id={formId}
         role="form"
         onSubmit={form.handleSubmit((data) => onSubmit(data as DynamicFormData))}
-        className="space-y-6"
+        className="space-y-8"
       >
         {schema.sections.map((section, index) => (
           <React.Fragment key={section.id}>
             {renderSection(section)}
-            {index < schema.sections.length - 1 && <Separator />}
+            {index < schema.sections.length - 1 && (
+              <Separator className="bg-outline-variant/30" />
+            )}
           </React.Fragment>
         ))}
 

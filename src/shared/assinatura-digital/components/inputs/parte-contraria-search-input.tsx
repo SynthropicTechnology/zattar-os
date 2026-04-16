@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Loader2, CheckCircle2, Building2, User } from 'lucide-react';
+import { Loader2, CheckCircle2, Building2, User, SearchX } from 'lucide-react';
 import { searchPartesContrariasList } from '../../actions';
 import type { ParteContrariaComEndereco } from '@/app/(authenticated)/partes/types';
 import { cn } from '@/lib/utils';
@@ -148,6 +148,7 @@ export function ParteContrariaSearchInput({
       <div className="relative">
         <Input
           ref={inputRef}
+          variant="glass"
           value={searchValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
@@ -169,35 +170,41 @@ export function ParteContrariaSearchInput({
 
       {/* Dropdown de resultados */}
       {showDropdown && results.length > 0 && (
-        <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-lg">
-          <ul className="max-h-64 overflow-auto py-1" role="listbox">
+        <div className="glass-dropdown absolute z-50 mt-2 w-full rounded-xl overflow-hidden">
+          <ul className="max-h-64 overflow-auto p-1.5" role="listbox">
             {results.map((parte, index) => {
               const doc = formatDocument(parte);
+              const isPj = parte.tipo_pessoa === 'pj';
+              const EntityIcon = isPj ? Building2 : User;
               return (
                 <li
                   key={parte.id}
                   role="option"
                   aria-selected={highlightedIndex === index}
                   className={cn(
-                    'flex cursor-pointer items-start gap-3 px-3 py-2.5 text-sm transition-colors',
-                    highlightedIndex === index && 'bg-accent',
-                    'hover:bg-accent'
+                    'flex cursor-pointer items-start gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors',
+                    highlightedIndex === index
+                      ? 'bg-primary/10 text-foreground'
+                      : 'hover:bg-primary/5',
                   )}
                   onClick={() => handleSelect(parte)}
                   onMouseEnter={() => setHighlightedIndex(index)}
                 >
-                  <div className="mt-0.5 shrink-0">
-                    {parte.tipo_pessoa === 'pj' ? (
-                      <Building2 className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <User className="h-4 w-4 text-muted-foreground" />
+                  <span
+                    className={cn(
+                      'mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ring-1 transition-colors',
+                      highlightedIndex === index
+                        ? 'bg-primary/15 text-primary ring-primary/20'
+                        : 'bg-surface-container-low text-muted-foreground ring-outline-variant/30',
                     )}
-                  </div>
+                  >
+                    <EntityIcon className="h-3.5 w-3.5" strokeWidth={2.25} />
+                  </span>
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium truncate">{parte.nome}</p>
+                    <p className="truncate font-medium">{parte.nome}</p>
                     <p className="text-xs text-muted-foreground">
-                      {parte.tipo_pessoa === 'pj' ? 'Pessoa Jurídica' : 'Pessoa Física'}
-                      {doc && ` · ${doc}`}
+                      {isPj ? 'Pessoa Jurídica' : 'Pessoa Física'}
+                      {doc && <span className="font-mono"> · {doc}</span>}
                     </p>
                   </div>
                 </li>
@@ -209,18 +216,30 @@ export function ParteContrariaSearchInput({
 
       {/* Sem resultados */}
       {showDropdown && results.length === 0 && !isSearching && searchValue.trim().length >= 2 && (
-        <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover p-3 shadow-lg">
-          <p className="text-sm text-muted-foreground">
-            Nenhuma parte contrária encontrada. Preencha os dados manualmente.
-          </p>
+        <div className="glass-dropdown absolute z-50 mt-2 w-full rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted/50 text-muted-foreground ring-1 ring-outline-variant/30">
+              <SearchX className="h-4 w-4" strokeWidth={2.25} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-foreground">
+                Nenhuma parte contrária encontrada
+              </p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Preencha os dados abaixo para cadastrar uma nova.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Status de seleção */}
       {selectedParte && (
-        <div className="flex items-center gap-2 text-sm text-success">
-          <CheckCircle2 className="h-4 w-4" />
-          <span>Parte contrária selecionada: {selectedParte.nome}</span>
+        <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 ring-1 ring-success/20">
+          <CheckCircle2 className="h-3.5 w-3.5 text-success" strokeWidth={2.5} />
+          <span className="text-xs font-medium text-success">
+            Selecionada: <span className="font-semibold text-foreground">{selectedParte.nome}</span>
+          </span>
         </div>
       )}
     </div>
