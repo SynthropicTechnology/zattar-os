@@ -39,6 +39,7 @@ import {
   ContratoDocumentosCard,
   ContratoTimeline,
 } from './components';
+import { DocumentosContratacaoCard } from './components/documentos-contratacao-card';
 
 // =============================================================================
 // Seções compactas para tab Resumo
@@ -278,8 +279,12 @@ export function ContratoDetalhesClient({
           <ContratoFinanceiroCard lancamentos={lancamentos} />
         </TabsContent>
 
-        <TabsContent value="documentos">
+        <TabsContent value="documentos" className="space-y-4">
           <ContratoDocumentosCard contratoId={contrato.id} />
+          <DocumentosContratacaoCard
+            contratoId={contrato.id}
+            segmentoId={contrato.segmentoId ?? null}
+          />
         </TabsContent>
 
         <TabsContent value="historico">

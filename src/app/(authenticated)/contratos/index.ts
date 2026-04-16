@@ -218,6 +218,20 @@ export type {
 } from './tipos-config/types';
 
 // ============================================================================
+// PDFs de Contratação (Caminho A — Rascunho Efêmero)
+// ============================================================================
+export { actionValidarGeracaoPdfs } from './actions/gerar-pdfs-contrato-action';
+export {
+  validarGeracaoPdfs,
+  gerarZipPdfsParaContrato,
+} from './services/documentos-contratacao.service';
+export type {
+  CampoFaltante,
+  DadosContratoParaMapping,
+  InputDataMapeado,
+} from './services/mapeamento-contrato-input-data';
+
+// ============================================================================
 // Server-only exports
 // ============================================================================
 // Services e Repositories devem ser importados diretamente:
