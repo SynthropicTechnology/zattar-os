@@ -1,6 +1,9 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { TemplateBasico } from '@/shared/assinatura-digital/services/data.service';
 import type { DadosContratoParaMapping } from './mapeamento-contrato-input-data';
+import { contratoParaInputData } from './mapeamento-contrato-input-data';
+import { generatePdfFromTemplate } from '@/shared/assinatura-digital/services/template-pdf.service';
+import JSZip from 'jszip';
 
 export const FORMULARIO_SLUG_TRABALHISTA = 'contratacao';
 export const SEGMENTO_ID_TRABALHISTA = 1;
@@ -88,4 +91,76 @@ export async function carregarTemplatesPorUuids(
 
   if (error || !data) return [];
   return data as TemplateBasico[];
+}
+
+// ---------------------------------------------------------------------------
+// ZIP orchestration
+// ---------------------------------------------------------------------------
+
+export interface GerarZipInput {
+  dados: DadosContratoParaMapping;
+  templates: TemplateBasico[];
+  formulario: FormularioComTemplates;
+  overrides?: Record<string, string>;
+}
+
+function sanitizarNomeArquivo(nome: string): string {
+  return nome.replace(/[/\\:*?"<>|]/g, '_').trim() || 'documento';
+}
+
+export async function gerarZipPdfsContratacao(
+  input: GerarZipInput,
+): Promise<Buffer> {
+  const { dados, templates, formulario, overrides = {} } = input;
+
+  const mapeado = contratoParaInputData(dados);
+
+  const segmentoPlaceholder = {
+    id: formulario.segmento_id,
+    nome: 'Trabalhista',
+    slug: 'trabalhista',
+    ativo: true,
+  };
+
+  const formularioPlaceholder = {
+    id: formulario.id,
+    formulario_uuid: formulario.formulario_uuid,
+    nome: formulario.nome,
+    slug: formulario.slug,
+    segmento_id: formulario.segmento_id,
+    ativo: formulario.ativo,
+  };
+
+  const ctx = {
+    cliente: mapeado.cliente,
+    segmento: segmentoPlaceholder,
+    formulario: formularioPlaceholder,
+    protocolo: `CTR-${dados.contrato.id}-${Date.now()}`,
+    parte_contraria: mapeado.parteContrariaNome
+      ? { nome: mapeado.parteContrariaNome }
+      : undefined,
+  };
+
+  const extras: Record<string, unknown> = {
+    ...mapeado.ctxExtras,
+    ...overrides,
+  };
+
+  const buffers = await Promise.all(
+    templates.map(async (template) => {
+      const buffer = await generatePdfFromTemplate(
+        template,
+        ctx,
+        extras,
+        undefined,
+      );
+      return { nome: template.nome, buffer };
+    }),
+  );
+
+  const zip = new JSZip();
+  for (const { nome, buffer } of buffers) {
+    zip.file(`${sanitizarNomeArquivo(nome)}.pdf`, buffer);
+  }
+  return zip.generateAsync({ type: 'nodebuffer' });
 }
