@@ -85,3 +85,14 @@ export { getTemplate } from './services/templates.service'
 export { generatePdfFromTemplate } from './services/template-pdf.service'
 export { storePdf } from './services/storage.service'
 export { generateMockDataForPreview } from './utils/mock-data-generator'
+
+// Pacote de assinatura (agrupamento de múltiplos documentos sob 1 link compartilhado)
+export { criarPacote, lerPacotePorToken } from './services/pacote.service'
+export type {
+  Pacote,
+  PacoteComDocumentos,
+  DocumentoNoPacote,
+  PacoteStatus,
+} from './types/pacote'
+export { criarPacoteInputSchema } from './schemas/pacote'
+export type { CriarPacoteInput } from './schemas/pacote'
