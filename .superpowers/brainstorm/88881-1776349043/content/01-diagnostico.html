@@ -1,0 +1,85 @@
+<h2>Diagnóstico — Fluxo público de Assinatura Digital hoje</h2>
+<p class="subtitle">Duas rotas públicas com inconsistências de shell, progresso e hierarquia visual. Antes de desenhar o novo, alinhe o recorte.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Rota A · /assinatura/[token]  (link recebido por e-mail)</div>
+    <div class="mockup-body" style="padding:16px">
+      <div class="mock-nav" style="text-align:center">Logo Zattar</div>
+      <div class="placeholder" style="margin:12px 0;padding:20px;border:1px solid #e5e7eb;border-radius:12px;background:#fff">
+        <div style="font-size:11px;color:#6b7280;margin-bottom:6px">Passo 2 de 4 · 50%</div>
+        <div style="height:6px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-bottom:14px"><div style="height:100%;width:50%;background:#2563eb"></div></div>
+        <h3 style="margin:0">Revisar e Assinar</h3>
+        <div style="margin-top:10px;padding:10px;border:1px solid #e5e7eb;border-radius:8px">📄 Contrato.pdf · Zattar Advogados</div>
+        <ul style="font-size:12px;color:#6b7280;margin-top:10px">
+          <li>Welcome → Confirmar dados → Revisar → [Selfie] → Assinar → Sucesso</li>
+        </ul>
+        <div style="display:flex;justify-content:space-between;margin-top:12px">
+          <button class="mock-button" style="background:#fff;color:#111;border:1px solid #e5e7eb">← Voltar</button>
+          <button class="mock-button">Continuar →</button>
+        </div>
+      </div>
+      <p class="label" style="color:#dc2626">⚠ Usa Card shadcn (sem Glass), sem AmbientBackdrop, bg-muted plano</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Rota B · /formulario/[segmento]/[formulario]  (cliente preenche e assina)</div>
+    <div class="mockup-body" style="padding:16px">
+      <div style="display:flex;gap:12px">
+        <div class="mock-sidebar" style="width:140px">
+          <div class="label" style="margin-bottom:10px">Progresso</div>
+          <ol style="font-size:11px;color:#6b7280;padding-left:16px;margin:0">
+            <li>CPF</li>
+            <li>Identidade</li>
+            <li>Contatos</li>
+            <li>Endereço</li>
+            <li>Formulário</li>
+            <li>Revisão</li>
+            <li>Selfie</li>
+            <li>Termos</li>
+            <li>Assinar</li>
+            <li>Pronto</li>
+          </ol>
+        </div>
+        <div class="mock-content" style="flex:1">
+          <h3 style="margin:0">Informe seu CPF</h3>
+          <div style="margin-top:10px">
+            <input class="mock-input" placeholder="000.000.000-00" />
+          </div>
+          <button class="mock-button" style="margin-top:12px">Continuar →</button>
+        </div>
+      </div>
+      <p class="label" style="color:#16a34a">✓ Já usa AmbientBackdrop + GlassPanel, mas 10-12 steps e inconsistente com Rota A</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:28px">
+  <h3>Qual é o escopo do redesign?</h3>
+  <p class="subtitle">Clique na opção que melhor representa o que você quer</p>
+
+  <div class="options">
+    <div class="option" data-choice="a" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>Só padronização visual</h3>
+        <p>Alinhar ambas ao Glass Briefing · Mantém os steps atuais · Mesmo shell, mesmo stepper, mesmo progress, mesmas superfícies. Menor risco, resultado principalmente estético.</p>
+      </div>
+    </div>
+    <div class="option" data-choice="b" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>Redesign + simplificação de fluxo  <span style="color:#16a34a">(recomendado)</span></h3>
+        <p>Shell unificado glass + redução de steps (condensar Identidade/Contatos/Endereço, mover Termos para dentro da tela de assinar, Selfie opcional não-bloqueante) · nova hero de boas-vindas mobile-first · sucesso celebratório. Fluxo "sem impedimentos".</p>
+      </div>
+    </div>
+    <div class="option" data-choice="c" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h3>Redesign + simplificação + unificação de shell compartilhado</h3>
+        <p>Tudo do B + extrair um único <code>PublicWizardShell</code> usado pelas duas rotas (evita duplicação entre PublicPageShell e PublicFormShell) e um único step-progress. Maior economia de código, maior escopo de mudança.</p>
+      </div>
+    </div>
+  </div>
+</div>

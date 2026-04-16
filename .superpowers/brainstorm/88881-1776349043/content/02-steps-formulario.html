@@ -1,0 +1,68 @@
+<h2>Consolidação de steps — rota de formulário público</h2>
+<p class="subtitle">Hoje são 10-12 steps (CPF → Identidade → Contatos → Endereço → Form → Revisão → Selfie → [Geo] → Termos → Assinar → Sucesso). Quanto condensar?</p>
+
+<div class="cards">
+  <div class="card" data-choice="enxuto" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;flex-direction:column;justify-content:center;padding:16px">
+      <div style="font-size:40px;font-weight:700;color:#1e3a8a">5</div>
+      <div style="font-size:13px;color:#1e3a8a;font-weight:600">steps</div>
+      <ol style="margin:10px 0 0 0;padding-left:18px;font-size:11px;color:#1e3a8a;line-height:1.8">
+        <li><b>Identificar</b> (CPF + Welcome)</li>
+        <li><b>Seus dados</b> (nome, RG, email, tel, endereço em 1 tela, com cards/accordion)</li>
+        <li><b>Formulário</b> (campos dinâmicos + revisão PDF inline)</li>
+        <li><b>Assinar</b> (selfie + canvas + termos inline)</li>
+        <li><b>Pronto!</b> (celebração + download)</li>
+      </ol>
+    </div>
+    <div class="card-body">
+      <h3>A · Enxuto (5 steps)</h3>
+      <p><b>Pró:</b> Fricção mínima, mobile-first real. <b>Contra:</b> Step 2 vira tela longa; menos granularidade de progresso percebido.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="balanceado" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);display:flex;flex-direction:column;justify-content:center;padding:16px">
+      <div style="font-size:40px;font-weight:700;color:#14532d">7</div>
+      <div style="font-size:13px;color:#14532d;font-weight:600">steps  ★ recomendado</div>
+      <ol style="margin:10px 0 0 0;padding-left:18px;font-size:11px;color:#14532d;line-height:1.8">
+        <li><b>Boas-vindas + CPF</b></li>
+        <li><b>Dados pessoais</b> (nome, RG, data, email, tel)</li>
+        <li><b>Endereço</b></li>
+        <li><b>Formulário</b> (só se houver campos dinâmicos)</li>
+        <li><b>Revisar documento</b> (PDF/Markdown)</li>
+        <li><b>Assinar</b> (selfie opcional + canvas + termos inline)</li>
+        <li><b>Pronto!</b></li>
+      </ol>
+    </div>
+    <div class="card-body">
+      <h3>B · Balanceado (7 steps)</h3>
+      <p><b>Pró:</b> Cada tela tem 1 contexto claro, fácil preencher no celular, progress bar legível. <b>Contra:</b> 2 steps a mais que o enxuto.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="conservador" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#fef3c7,#fde68a);display:flex;flex-direction:column;justify-content:center;padding:16px">
+      <div style="font-size:40px;font-weight:700;color:#78350f">9</div>
+      <div style="font-size:13px;color:#78350f;font-weight:600">steps</div>
+      <ol style="margin:10px 0 0 0;padding-left:18px;font-size:11px;color:#78350f;line-height:1.8">
+        <li>Boas-vindas + CPF</li>
+        <li>Identidade</li>
+        <li>Contatos</li>
+        <li>Endereço</li>
+        <li>Formulário</li>
+        <li>Revisar</li>
+        <li>Selfie</li>
+        <li>Assinar (termos inline)</li>
+        <li>Pronto!</li>
+      </ol>
+    </div>
+    <div class="card-body">
+      <h3>C · Conservador (9 steps)</h3>
+      <p><b>Pró:</b> Mudança mínima estrutural, menor risco de regressão. <b>Contra:</b> Ainda longo no mobile, pouco ganho real em simplicidade.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px">
+  <p class="label" style="color:#6b7280">Observação: Termos vão inline na tela Assinar (checkbox + link). Geolocation roda em background sem step dedicado. Selfie entra como sub-tela opcional dentro de "Assinar" ou como step isolado conforme sua escolha.</p>
+</div>

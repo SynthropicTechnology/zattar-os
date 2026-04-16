@@ -40,6 +40,24 @@ const REALTIME_CONFIG = {
 } as const;
 
 /**
+ * Detecta erros transientes de rede/transporte (RSC abortado por timeout
+ * ao Supabase, fetch do navegador caindo, etc). O polling reativa-se na
+ * próxima iteração — não há valor em poluir o console com stack traces.
+ */
+function isTransientNetworkError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  const message = error.message || "";
+  return (
+    message.includes("An unexpected response was received from the server") ||
+    message.includes("Failed to fetch") ||
+    message.includes("NetworkError") ||
+    message.includes("Load failed") ||
+    message.includes("ConnectTimeoutError") ||
+    message.includes("fetch failed")
+  );
+}
+
+/**
  * Extrai informações úteis de um erro do Realtime
  * O erro pode ser um Error, CloseEvent, ou objeto genérico
  */
@@ -592,6 +610,15 @@ export function useNotificacoesRealtime(options?: {
             "🔄 [Notificações Polling] Server Action não encontrada - recarregando..."
           );
           await handleVersionMismatchError();
+          return;
+        }
+        // Erros transientes de rede/RSC: a próxima iteração resolve.
+        // Mantemos um warn discreto (sem stack) para sinalizar instabilidade
+        // sem poluir o console com erros vermelhos a cada 60s.
+        if (isTransientNetworkError(error)) {
+          console.warn(
+            "⚠️ [Notificações Polling] Falha transiente de rede - tentando novamente no próximo ciclo"
+          );
           return;
         }
         console.error("❌ [Notificações Polling] Erro ao verificar:", error);
