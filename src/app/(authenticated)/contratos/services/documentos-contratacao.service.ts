@@ -1,7 +1,7 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { TemplateBasico } from '@/shared/assinatura-digital/services/data.service';
-import type { DadosContratoParaMapping } from './mapeamento-contrato-input-data';
-import { contratoParaInputData } from './mapeamento-contrato-input-data';
+import type { DadosContratoParaMapping, CampoFaltante } from './mapeamento-contrato-input-data';
+import { contratoParaInputData, detectarCamposFaltantes } from './mapeamento-contrato-input-data';
 import { generatePdfFromTemplate } from '@/shared/assinatura-digital/services/template-pdf.service';
 import JSZip from 'jszip';
 
@@ -163,4 +163,104 @@ export async function gerarZipPdfsContratacao(
     zip.file(`${sanitizarNomeArquivo(nome)}.pdf`, buffer);
   }
   return zip.generateAsync({ type: 'nodebuffer' });
+}
+
+// ---------------------------------------------------------------------------
+// High-level validation + generation helpers
+// ---------------------------------------------------------------------------
+
+export type { CampoFaltante };
+
+export type ResultadoValidacao =
+  | { status: 'pronto'; formularioId: number; qtdTemplates: number }
+  | { status: 'campos_faltantes'; camposFaltantes: CampoFaltante[] }
+  | { status: 'erro'; mensagem: string };
+
+type ContextoResult =
+  | {
+      status: 'success';
+      dados: DadosContratoParaMapping;
+      formulario: FormularioComTemplates;
+      templates: TemplateBasico[];
+    }
+  | { status: 'error'; mensagem: string };
+
+async function carregarContexto(contratoId: number): Promise<ContextoResult> {
+  const dados = await carregarDadosContrato(contratoId);
+  if (!dados || !dados.cliente) {
+    return { status: 'error', mensagem: 'Contrato sem cliente vinculado' };
+  }
+
+  const formulario = await carregarFormularioContratacao();
+  if (!formulario || formulario.template_ids.length === 0) {
+    return {
+      status: 'error',
+      mensagem: 'Formulário de contratação trabalhista não está disponível',
+    };
+  }
+
+  const templates = await carregarTemplatesPorUuids(formulario.template_ids);
+  if (templates.length !== formulario.template_ids.length) {
+    return {
+      status: 'error',
+      mensagem: 'Um ou mais templates não estão disponíveis',
+    };
+  }
+
+  return { status: 'success', dados, formulario, templates };
+}
+
+export async function validarGeracaoPdfs(
+  contratoId: number,
+  overrides: Record<string, string> = {},
+): Promise<ResultadoValidacao> {
+  const ctx = await carregarContexto(contratoId);
+  if (ctx.status === 'error') return { status: 'erro', mensagem: ctx.mensagem };
+
+  let inputData: Record<string, unknown>;
+  try {
+    const mapeado = contratoParaInputData(ctx.dados);
+    inputData = {
+      cliente: mapeado.cliente,
+      'acao.nome_empresa_pessoa': mapeado.parteContrariaNome,
+      'cliente.email': mapeado.ctxExtras['cliente.email'],
+      ...overrides,
+    };
+  } catch (err) {
+    return {
+      status: 'erro',
+      mensagem: err instanceof Error ? err.message : 'Erro no mapeamento',
+    };
+  }
+
+  const faltantes = detectarCamposFaltantes(inputData, ctx.templates);
+  if (faltantes.length > 0) {
+    return { status: 'campos_faltantes', camposFaltantes: faltantes };
+  }
+
+  return {
+    status: 'pronto',
+    formularioId: ctx.formulario.id,
+    qtdTemplates: ctx.templates.length,
+  };
+}
+
+export async function gerarZipPdfsParaContrato(
+  contratoId: number,
+  overrides: Record<string, string> = {},
+): Promise<{ buffer: Buffer; nomeCliente: string }> {
+  const ctx = await carregarContexto(contratoId);
+  if (ctx.status === 'error') throw new Error(ctx.mensagem);
+
+  const buffer = await gerarZipPdfsContratacao({
+    dados: ctx.dados,
+    templates: ctx.templates,
+    formulario: ctx.formulario,
+    overrides,
+  });
+
+  return {
+    buffer,
+    nomeCliente: ctx.dados.cliente?.nome ?? 'Contrato',
+  };
 }
