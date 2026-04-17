@@ -134,7 +134,7 @@ export default function FormStepLayout({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex min-h-0 flex-1 p-4 sm:p-6 md:p-8">
+      <div className="flex min-h-0 flex-1 px-6 py-8 sm:px-10 sm:py-10">
         <div
           className={cn(
             'mx-auto flex min-h-0 w-full max-w-2xl flex-1',

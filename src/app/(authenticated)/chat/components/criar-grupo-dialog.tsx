@@ -182,6 +182,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
                 <FormLabel>Nome do Grupo</FormLabel>
                 <FormControl>
                   <Input
+                    variant="glass"
                     placeholder="Ex: Equipe de Vendas"
                     {...field}
                   />

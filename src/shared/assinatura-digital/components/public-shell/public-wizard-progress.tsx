@@ -17,29 +17,42 @@ interface BaseProps {
 }
 
 function Vertical({ steps, currentIndex, onRestart, resumeHint }: BaseProps) {
+  const total = steps.length
+  const currentDisplay = Math.min(currentIndex + 1, total)
+
   return (
-    <div className="flex h-full flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <ListChecks className="h-3.5 w-3.5 text-primary" />
-          <Text variant="overline" className="text-muted-foreground">
-            Progresso
-          </Text>
+    <div className="flex h-full flex-col gap-8">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <ListChecks className="h-3.5 w-3.5 text-primary" />
+            <Text variant="overline" className="text-muted-foreground">
+              Progresso
+            </Text>
+          </div>
+          <div className="flex items-baseline gap-1.5">
+            <Text variant="kpi-value" className="text-foreground">
+              {currentDisplay}
+            </Text>
+            <Text variant="caption" className="text-muted-foreground">
+              de {total}
+            </Text>
+          </div>
         </div>
         {onRestart && (
           <button
             type="button"
             onClick={onRestart}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary active:scale-95 cursor-pointer"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary active:scale-95 cursor-pointer"
             aria-label="Recomeçar"
             title="Recomeçar"
           >
-            <RotateCcw className="h-3.5 w-3.5" />
+            <RotateCcw className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      <ol className="relative flex flex-1 flex-col gap-3">
+      <ol className="relative flex flex-1 flex-col gap-4">
         {steps.map((step, index) => {
           const isPast = index < currentIndex
           const isCurrent = index === currentIndex
@@ -51,32 +64,33 @@ function Vertical({ steps, currentIndex, onRestart, resumeHint }: BaseProps) {
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'absolute left-[13px] top-8 h-[calc(100%-4px)] w-px transition-colors',
+                    'absolute left-[15px] top-9 h-[calc(100%-8px)] w-px transition-colors',
                     isPast ? 'bg-primary/40' : 'bg-outline-variant/30',
                   )}
                 />
               )}
               <span
                 className={cn(
-                  'relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition-all',
-                  isPast && 'border-primary bg-primary text-primary-foreground shadow-[0_0_0_3px_color-mix(in_oklch,var(--primary)_15%,transparent)]',
-                  isCurrent && 'border-primary bg-primary/10 text-primary shadow-[0_0_0_4px_color-mix(in_oklch,var(--primary)_12%,transparent),0_0_20px_color-mix(in_oklch,var(--primary)_25%,transparent)]',
+                  'relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition-colors',
+                  isPast && 'border-primary bg-primary text-primary-foreground',
+                  isCurrent && 'border-primary bg-primary/10 text-primary ring-4 ring-primary/12',
                   isFuture && 'border-outline-variant/60 bg-surface-container-lowest/40 text-muted-foreground/70 backdrop-blur-sm',
                 )}
                 aria-current={isCurrent ? 'step' : undefined}
               >
-                {isPast ? <Check className="h-3.5 w-3.5" strokeWidth={3} /> : index + 1}
+                {isPast ? <Check className="h-4 w-4" strokeWidth={3} /> : index + 1}
               </span>
-              <span
+              <Text
+                variant="label"
                 className={cn(
-                  'truncate text-sm transition-colors',
-                  isCurrent && 'font-semibold text-foreground',
-                  isPast && 'text-foreground/80',
-                  isFuture && 'text-muted-foreground/60',
+                  'truncate transition-colors',
+                  isCurrent && 'text-foreground',
+                  isPast && 'text-foreground/80 font-normal',
+                  isFuture && 'text-muted-foreground/60 font-normal',
                 )}
               >
                 {step.label}
-              </span>
+              </Text>
             </li>
           )
         })}

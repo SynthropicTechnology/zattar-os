@@ -37,7 +37,7 @@ export function PublicWizardShell({
         {hasSteps && (
           <aside
             aria-label="Progresso do formulário"
-            className="relative z-10 hidden w-64 shrink-0 flex-col bg-surface-container-lowest/50 px-6 py-8 backdrop-blur-xl shadow-[1px_0_0_0_color-mix(in_oklch,var(--outline-variant)_25%,transparent),4px_0_32px_-8px_color-mix(in_oklch,black_5%,transparent)] dark:shadow-[1px_0_0_0_color-mix(in_oklch,var(--outline-variant)_30%,transparent),4px_0_32px_-8px_color-mix(in_oklch,black_50%,transparent)] lg:flex"
+            className="relative z-10 hidden w-72 shrink-0 flex-col border-r border-outline-variant/20 bg-surface-container-lowest/50 px-8 py-10 backdrop-blur-xl lg:flex"
           >
             <PublicWizardProgress.Vertical
               steps={steps}

@@ -93,6 +93,7 @@ export function AddReminderDialog() {
             <Label htmlFor="reminder-text">Nota</Label>
             <Input
               id="reminder-text"
+              variant="glass"
               placeholder="Digite seu lembrete"
               value={newReminder.texto}
               onChange={(e) =>

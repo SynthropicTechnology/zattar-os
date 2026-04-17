@@ -160,20 +160,20 @@ export default function VerificarCPF() {
         <form
           id="verificar-cpf-form"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
+          className="space-y-3"
         >
           <FormField
             control={form.control}
             name="cpf"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>CPF</FormLabel>
+              <FormItem className="space-y-2">
+                <FormLabel className="text-meta-label text-muted-foreground">CPF</FormLabel>
                 <FormControl>
                   <InputCPF
                     placeholder="000.000.000-00"
                     disabled={isValidating}
                     autoFocus={true}
-                    className="h-12"
+                    className="h-14 text-lg tracking-wide"
                     {...field}
                   />
                 </FormControl>
@@ -181,9 +181,6 @@ export default function VerificarCPF() {
               </FormItem>
             )}
           />
-          <button type="submit" className="sr-only" aria-hidden="true" tabIndex={-1}>
-            Submit
-          </button>
         </form>
       </Form>
     </FormStepLayout>

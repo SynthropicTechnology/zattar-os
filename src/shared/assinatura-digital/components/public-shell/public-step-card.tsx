@@ -33,10 +33,16 @@ interface PublicStepCardProps {
   className?: string
 }
 
-const CHIP_TONE_CLASSES: Record<NonNullable<PublicStepCardProps['chipTone']>, { bg: string; dot: string; text: string }> = {
-  primary: { bg: 'bg-primary/10', dot: 'bg-primary', text: 'text-primary' },
-  success: { bg: 'bg-success/10', dot: 'bg-success', text: 'text-success' },
-  info: { bg: 'bg-info/10', dot: 'bg-info', text: 'text-info' },
+const CHIP_TONE_CLASSES: Record<NonNullable<PublicStepCardProps['chipTone']>, string> = {
+  primary: 'bg-primary/10 text-primary',
+  success: 'bg-success/10 text-success',
+  info: 'bg-info/10 text-info',
+}
+
+const CHIP_DOT_CLASSES: Record<NonNullable<PublicStepCardProps['chipTone']>, string> = {
+  primary: 'bg-primary',
+  success: 'bg-success',
+  info: 'bg-info',
 }
 
 export function PublicStepCard({
@@ -47,7 +53,6 @@ export function PublicStepCard({
   children,
   className,
 }: PublicStepCardProps) {
-  const tone = CHIP_TONE_CLASSES[chipTone]
   const titleId = useId()
   const descriptionId = useId()
   const contentRef = useRef<HTMLDivElement>(null)
@@ -74,28 +79,28 @@ export function PublicStepCard({
   return (
     <GlassPanel
       depth={1}
-      className={cn('flex h-full min-h-0 flex-col gap-4 p-6 sm:p-8', className)}
+      className={cn('flex h-full min-h-0 flex-col gap-8 p-8 sm:p-10', className)}
     >
       <section
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         className="contents"
       >
-        <header className="space-y-2">
+        <header className="flex flex-col gap-4">
           {chip && (
             <div
               role="status"
               aria-label={`Progresso: ${chip}`}
               className={cn(
-                'inline-flex items-center gap-2 rounded-full px-3 py-1',
-                tone.bg,
+                'inline-flex w-fit items-center gap-2 rounded-full px-3 py-1',
+                CHIP_TONE_CLASSES[chipTone],
               )}
             >
               <span
                 aria-hidden="true"
-                className={cn('h-1.5 w-1.5 rounded-full', tone.dot)}
+                className={cn('h-1.5 w-1.5 rounded-full', CHIP_DOT_CLASSES[chipTone])}
               />
-              <Text variant="overline" className={tone.text}>
+              <Text variant="overline" className="text-current">
                 {chip}
               </Text>
             </div>
@@ -104,7 +109,7 @@ export function PublicStepCard({
             id={titleId}
             tabIndex={-1}
             level="page"
-            className="font-display tracking-tight text-2xl sm:text-3xl outline-none"
+            className="text-[28px] sm:text-[32px] leading-tight tracking-tight outline-none"
           >
             {title}
           </Heading>
@@ -112,7 +117,7 @@ export function PublicStepCard({
             <Text
               id={descriptionId}
               variant="caption"
-              className="text-muted-foreground"
+              className="text-muted-foreground text-base"
             >
               {description}
             </Text>
