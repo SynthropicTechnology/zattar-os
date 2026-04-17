@@ -122,6 +122,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
             <div className="space-y-2">
               <Label>Buscar Processo</Label>
               <Input
+                variant="glass"
                 placeholder="Digite para buscar..."
                 value={buscaProcesso}
                 onChange={e => setBuscaProcesso(e.target.value)}

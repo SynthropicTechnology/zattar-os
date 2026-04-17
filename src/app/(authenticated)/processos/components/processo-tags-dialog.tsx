@@ -210,6 +210,7 @@ export function ProcessoTagsDialog({
             <div className="mb-3 p-3 border rounded-md bg-muted/30 space-y-3">
               <div className="flex gap-2">
                 <Input
+                  variant="glass"
                   placeholder="Nome da etiqueta"
                   value={newTagNome}
                   onChange={(e) => setNewTagNome(e.target.value)}

@@ -7,9 +7,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { TERMOS_TEXTO_DECLARACAO, TERMOS_VERSAO_ATUAL } from '@/shared/assinatura-digital/constants/termos';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldCheck, Info } from "lucide-react";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { Heading, Text } from "@/components/ui/typography";
 
 export default function TermosAceiteStep() {
   const { termosAceite } = useFormularioStore.getState();
@@ -29,10 +29,6 @@ export default function TermosAceiteStep() {
 
     const timestamp = new Date().toISOString();
     setTermosAceite(true, TERMOS_VERSAO_ATUAL, timestamp);
-    console.log("📜 Termos de aceite salvos no store:", {
-      versao: TERMOS_VERSAO_ATUAL,
-      data: timestamp,
-    });
     proximaEtapa();
   };
 
@@ -45,55 +41,72 @@ export default function TermosAceiteStep() {
       nextLabel="Continuar"
       isNextDisabled={!aceiteCheckbox}
     >
-      <div className="space-y-6">
-        <Alert variant="default" className="border-info/15 bg-info/10">
-          <Info className="h-4 w-4 text-info" />
-          <AlertTitle className="text-info font-semibold">
-            Importância Legal do seu Acordo
-          </AlertTitle>
-          <AlertDescription className="text-info">
-            Ao marcar a caixa abaixo, você está concordando legalmente com os
-            termos do documento. Esta ação tem validade jurídica e é um passo
-            essencial para a conclusão do processo.
-          </AlertDescription>
-        </Alert>
+      <div className="space-y-5">
+        {/* Banner de importância legal — tint info glass */}
+        <div className="flex items-start gap-3 rounded-xl border border-info/20 bg-info/10 p-4 backdrop-blur-sm">
+          <Info
+            aria-hidden="true"
+            className="mt-0.5 h-4 w-4 shrink-0 text-info"
+            strokeWidth={2.25}
+          />
+          <div className="space-y-1">
+            <Text variant="label" className="text-info block">
+              Importância legal do seu aceite
+            </Text>
+            <Text variant="caption" className="text-foreground/85 leading-relaxed">
+              Ao marcar a caixa abaixo, você está concordando legalmente com os
+              termos do documento. Esta ação tem validade jurídica e é um passo
+              essencial para a conclusão do processo.
+            </Text>
+          </div>
+        </div>
 
-        <Card className="shadow-md">
-          <CardHeader className="flex flex-row items-center space-x-4 bg-muted/50">
-            <ShieldCheck className="h-8 w-8 text-primary" />
-            <div className="flex-1">
-              <CardTitle>Declaração de Aceite</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
-                Baseado na Medida Provisória nº 2.200-2/2001.
-              </p>
+        {/* Card principal — GlassPanel depth=2 com header tintado primary */}
+        <GlassPanel
+          depth={2}
+          className="overflow-hidden rounded-2xl p-0"
+        >
+          <header className="flex items-start gap-3 border-b border-outline-variant/20 bg-primary/5 p-5">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
+              <ShieldCheck className="h-4.5 w-4.5" strokeWidth={2.25} />
+            </span>
+            <div className="flex-1 min-w-0">
+              <Heading level="section" className="font-display text-lg tracking-tight">
+                Declaração de Aceite
+              </Heading>
+              <Text variant="caption" className="text-muted-foreground mt-0.5">
+                Baseado na Medida Provisória nº 2.200-2/2001
+              </Text>
             </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="flex items-start space-x-4 rounded-md border p-4 bg-background">
+          </header>
+
+          <div className="p-5">
+            <label
+              htmlFor="termos-aceite"
+              className="flex items-start gap-4 rounded-xl border border-outline-variant/40 bg-surface-container-lowest/70 p-4 backdrop-blur-sm cursor-pointer transition-colors hover:border-primary/40 hover:bg-surface-container-lowest"
+            >
               <Checkbox
                 id="termos-aceite"
                 checked={aceiteCheckbox}
                 onCheckedChange={(checked) => setAceiteCheckbox(checked === true)}
-                className="min-w-11 min-h-11 shrink-0 mt-1"
+                className="mt-0.5 size-5 shrink-0"
                 aria-label="Aceitar os termos e condições"
               />
               <Label
                 htmlFor="termos-aceite"
-                className="flex-1 text-base font-normal text-foreground leading-relaxed cursor-pointer"
+                className="flex-1 text-sm leading-relaxed text-foreground cursor-pointer font-normal"
               >
                 {TERMOS_TEXTO_DECLARACAO}
               </Label>
-            </div>
-          </CardContent>
-        </Card>
+            </label>
+          </div>
+        </GlassPanel>
 
-        <div className="text-center text-xs text-muted-foreground">
-          <p>
-            As informações coletadas nesta etapa, incluindo data, hora e
-            versão dos termos, serão armazenadas de forma segura como parte da
-            evidência de sua assinatura.
-          </p>
-        </div>
+        {/* Footer legal — discrete */}
+        <Text variant="micro-caption" className="block text-center text-muted-foreground/70 leading-relaxed">
+          As informações coletadas nesta etapa — data, hora e versão dos termos —
+          serão armazenadas de forma segura como evidência de sua assinatura.
+        </Text>
       </div>
     </FormStepLayout>
   );

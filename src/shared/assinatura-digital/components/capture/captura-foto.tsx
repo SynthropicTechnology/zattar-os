@@ -3,9 +3,10 @@
 import { useState, useRef, useImperativeHandle, forwardRef, useCallback } from "react";
 import Webcam from "react-webcam";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Camera, RefreshCw, AlertCircle } from "lucide-react";
+import { Camera, RefreshCw, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { Text } from "@/components/ui/typography";
 
 export interface CapturaFotoRef {
   getPhotoBase64: () => string;
@@ -50,7 +51,6 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
         }
 
         setOverriddenPhoto(imageSrc);
-        // Persist immediately to store
         onPhotoCaptured?.(imageSrc);
       }
     }
@@ -74,21 +74,33 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full max-w-md mx-auto">
       {!capturedPhoto && (
         <>
-          {/* Webcam Error Alert */}
+          {/* Webcam error — glass destructive */}
           {webcamError && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{webcamError}</AlertDescription>
-            </Alert>
+            <div
+              role="alert"
+              className="flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/10 p-4 backdrop-blur-sm"
+            >
+              <AlertCircle
+                aria-hidden="true"
+                className="mt-0.5 h-4 w-4 shrink-0 text-destructive"
+                strokeWidth={2.25}
+              />
+              <Text variant="caption" className="text-destructive leading-relaxed">
+                {webcamError}
+              </Text>
+            </div>
           )}
 
-          {/* Webcam Mode */}
+          {/* Webcam viewport */}
           {!webcamError && (
             <div className="space-y-4">
-              <div className="relative aspect-square w-full overflow-hidden rounded-md border border-input bg-muted">
+              <GlassPanel
+                depth={2}
+                className="relative aspect-square w-full overflow-hidden rounded-2xl p-0"
+              >
                 <Webcam
                   ref={webcamRef}
                   audio={false}
@@ -103,13 +115,33 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
                   onUserMediaError={handleWebcamError}
                   className="w-full h-full object-cover"
                 />
-                {!isWebcamReady && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                    <p className="text-sm text-muted-foreground">Carregando câmera...</p>
+
+                {/* Moldura oval tracejada pra guiar enquadramento */}
+                {isWebcamReady && (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                  >
+                    <div className="h-[70%] w-[60%] rounded-[50%] border-2 border-dashed border-white/60 shadow-[0_0_0_9999px_color-mix(in_oklch,black_25%,transparent)]" />
                   </div>
                 )}
-              </div>
-              <Button onClick={handleCapturePhoto} disabled={!isWebcamReady} className="w-full">
+
+                {/* Loading overlay */}
+                {!isWebcamReady && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-container-lowest/80 backdrop-blur-sm">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <Text variant="caption" className="text-muted-foreground">
+                      Carregando câmera...
+                    </Text>
+                  </div>
+                )}
+              </GlassPanel>
+
+              <Button
+                onClick={handleCapturePhoto}
+                disabled={!isWebcamReady}
+                className="h-12 w-full cursor-pointer active:scale-[0.98] transition-colors"
+              >
                 <Camera className="mr-2 h-4 w-4" />
                 Capturar Foto
               </Button>
@@ -118,13 +150,24 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
         </>
       )}
 
-      {/* Photo Preview */}
+      {/* Preview da foto */}
       {capturedPhoto && (
         <div className="space-y-4">
-          <div className="relative aspect-square w-full overflow-hidden rounded-md border border-input">
-            <img src={capturedPhoto} alt="Foto capturada" className="w-full h-full object-cover" />
-          </div>
-          <Button variant="outline" onClick={handleRetakePhoto} className="w-full">
+          <GlassPanel
+            depth={2}
+            className="relative aspect-square w-full overflow-hidden rounded-2xl p-0"
+          >
+            <img
+              src={capturedPhoto}
+              alt="Foto capturada"
+              className="w-full h-full object-cover"
+            />
+          </GlassPanel>
+          <Button
+            variant="outline"
+            onClick={handleRetakePhoto}
+            className="h-12 w-full cursor-pointer border-outline-variant/60 bg-surface-container-lowest/70 backdrop-blur-sm hover:bg-surface-container-lowest hover:border-outline-variant active:scale-[0.98]"
+          >
             <RefreshCw className="mr-2 h-4 w-4" />
             Trocar Foto
           </Button>

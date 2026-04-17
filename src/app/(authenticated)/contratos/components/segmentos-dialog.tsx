@@ -289,6 +289,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                       </Label>
                       <Input
                         id="nome"
+                        variant="glass"
                         value={formData.nome}
                         onChange={(e) => handleNomeChange(e.target.value)}
                         placeholder="Ex: Trabalhista, Civil, Previdenciário..."
@@ -302,6 +303,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                       </Label>
                       <Input
                         id="slug"
+                        variant="glass"
                         value={formData.slug}
                         onChange={(e) =>
                           setFormData({ ...formData, slug: e.target.value })

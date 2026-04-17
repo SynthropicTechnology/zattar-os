@@ -1,9 +1,11 @@
 "use client";
 import { useRef, useImperativeHandle, forwardRef, useEffect, useState } from "react";
 import SignatureCanvas from "react-signature-canvas";
-import { RotateCcw } from "lucide-react";
+import { PenLine, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { Text } from "@/components/ui/typography";
 import { AssinaturaMetrics } from "../../utils";
 
 export interface CanvasAssinaturaRef {
@@ -166,24 +168,58 @@ const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
   }));
 
   return (
-    <div ref={containerRef} className="space-y-3 w-full max-w-150 mx-auto">
-      <div className="border border-input rounded-md bg-white overflow-hidden shadow-sm dark:shadow-none dark:border-border">
-        <SignatureCanvas
-          ref={signatureRef}
-          canvasProps={{
-            width: canvasWidth,
-            height: canvasHeight,
-            className: "w-full touch-none",
+    <div ref={containerRef} className="space-y-4 w-full max-w-150 mx-auto">
+      <GlassPanel
+        depth={2}
+        className="relative overflow-hidden rounded-2xl p-0"
+      >
+        {/* Canvas em branco — legibilidade da tinta preta exige fundo claro.
+            Wrapper glass + grid pontilhado sutil criam coerência com Glass Briefing. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.05] dark:opacity-[0.08]"
+          style={{
+            backgroundImage:
+              'radial-gradient(var(--primary) 1px, transparent 1px)',
+            backgroundSize: '16px 16px',
           }}
-          backgroundColor="white"
-          penColor="black"
-          onBegin={handleBeginStroke}
-          onEnd={handleEndStroke}
         />
-      </div>
+        <div className="bg-white/95 dark:bg-surface-container-lowest">
+          <SignatureCanvas
+            ref={signatureRef}
+            canvasProps={{
+              width: canvasWidth,
+              height: canvasHeight,
+              className: "relative z-10 w-full touch-none",
+            }}
+            backgroundColor="transparent"
+            penColor="black"
+            onBegin={handleBeginStroke}
+            onEnd={handleEndStroke}
+          />
+        </div>
+
+        {/* Baseline guide — linha tracejada no ~70% da altura + hint "Assine aqui" */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-8 bottom-8 flex items-center gap-2"
+        >
+          <div className="h-px flex-1 border-t border-dashed border-outline-variant/50" />
+          <div className="flex items-center gap-1.5 text-muted-foreground/60">
+            <PenLine className="h-3 w-3" />
+            <Text variant="micro-caption">Assine aqui</Text>
+          </div>
+          <div className="h-px flex-1 border-t border-dashed border-outline-variant/50" />
+        </div>
+      </GlassPanel>
+
       {!hideClearButton && (
         <div className="flex justify-center">
-          <Button variant="outline" onClick={handleClear} className="w-full sm:w-auto">
+          <Button
+            variant="outline"
+            onClick={handleClear}
+            className="h-10 w-full sm:w-auto cursor-pointer border-outline-variant/60 bg-surface-container-lowest/70 backdrop-blur-sm hover:bg-surface-container-lowest hover:border-outline-variant active:scale-[0.98]"
+          >
             <RotateCcw className="mr-2 h-4 w-4" />
             Limpar
           </Button>

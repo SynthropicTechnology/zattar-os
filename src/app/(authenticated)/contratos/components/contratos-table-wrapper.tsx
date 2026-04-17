@@ -14,33 +14,18 @@
  */
 
 import * as React from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useAgentContext } from '@copilotkit/react-core/v2';
-import { Settings, List, Kanban } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   DataShell,
   DataTable,
-  DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes';
-import { ViewModePopover, type ViewModeOption } from '@/components/shared/view-mode-popover';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Table as TanstackTable, SortingState, RowSelectionState } from '@tanstack/react-table';
 
 import { getContratosColumns } from './columns';
 import type { ContratosTableMeta } from './columns';
 import { ContratoForm } from './contrato-form';
-import { SegmentosFilter } from './segmentos-filter';
 import { ContratoDeleteDialog } from './contrato-delete-dialog';
 import {
   ContratosBulkActionsBar,
@@ -61,35 +46,9 @@ import type {
 } from '../domain';
 import type { PaginationInfo, ClienteInfo } from '../types';
 import {
-  TIPO_CONTRATO_LABELS,
-  TIPO_COBRANCA_LABELS,
-  STATUS_CONTRATO_LABELS,
-} from '../domain';
-import {
   actionListarContratos,
   actionResolverNomesEntidadesContrato,
 } from '../actions';
-
-// =============================================================================
-// OPÇÕES DE FILTRO
-// =============================================================================
-
-const TIPO_CONTRATO_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_CONTRATO_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const TIPO_COBRANCA_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_COBRANCA_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const STATUS_CONTRATO_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_CONTRATO_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const CONTRATOS_VIEW_OPTIONS: ViewModeOption[] = [
-  { value: 'lista', label: 'Lista', icon: List },
-  { value: 'quadro', label: 'Kanban', icon: Kanban },
-];
 
 // =============================================================================
 // TIPOS
@@ -108,6 +67,16 @@ interface ContratosTableWrapperProps {
   createOpen?: boolean;
   /** Callback when the create dialog open state changes. */
   onCreateOpenChange?: (open: boolean) => void;
+  /**
+   * Oculta o DataTableToolbar interno e aceita busca/filtros controlados
+   * externamente. Usado quando o orquestrador pai (ContratosContent)
+   * renderiza o próprio filter-bar Glass Briefing.
+   */
+  hideToolbar?: boolean;
+  externalBusca?: string;
+  externalSegmentoId?: string;
+  externalTipoContrato?: string;
+  externalTipoCobranca?: string;
 }
 
 // =============================================================================
@@ -124,20 +93,17 @@ export function ContratosTableWrapper({
   statusFilter: externalStatusFilter,
   createOpen: externalCreateOpen,
   onCreateOpenChange: externalOnCreateOpenChange,
+  hideToolbar = false,
+  externalBusca,
+  externalSegmentoId,
+  externalTipoContrato,
+  externalTipoCobranca,
 }: ContratosTableWrapperProps) {
-  // ---------- Navegação (view mode) ----------
-  const router = useRouter();
-
-  const handleViewChange = React.useCallback((value: string) => {
-    if (value === 'quadro') {
-      router.push('/app/contratos/kanban');
-    }
-  }, [router]);
 
   // ---------- Estado dos Dados ----------
   const [contratos, setContratos] = React.useState<Contrato[]>(initialData);
   const [table, setTable] = React.useState<TanstackTable<Contrato> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const density: 'compact' | 'standard' | 'relaxed' = 'standard';
 
   // Opções dinâmicas (para evitar fallback "Cliente #ID" quando mudar de página/refetch)
   const [clientesOptionsState, setClientesOptionsState] = React.useState<ClienteInfo[]>(clientesOptions);
@@ -204,6 +170,43 @@ export function ContratosTableWrapper({
       return next;
     });
   }, [externalStatusFilter]);
+
+  // ── Sync busca/filtros externos (ContratosContent) → estado interno ──
+  React.useEffect(() => {
+    if (externalBusca === undefined) return;
+    setBusca((prev) => {
+      if (prev === externalBusca) return prev;
+      setPageIndex(0);
+      return externalBusca;
+    });
+  }, [externalBusca]);
+
+  React.useEffect(() => {
+    if (externalSegmentoId === undefined) return;
+    setSegmentoId((prev) => {
+      if (prev === externalSegmentoId) return prev;
+      setPageIndex(0);
+      return externalSegmentoId;
+    });
+  }, [externalSegmentoId]);
+
+  React.useEffect(() => {
+    if (externalTipoContrato === undefined) return;
+    setTipoContrato((prev) => {
+      if (prev === externalTipoContrato) return prev;
+      setPageIndex(0);
+      return externalTipoContrato;
+    });
+  }, [externalTipoContrato]);
+
+  React.useEffect(() => {
+    if (externalTipoCobranca === undefined) return;
+    setTipoCobranca((prev) => {
+      if (prev === externalTipoCobranca) return prev;
+      setPageIndex(0);
+      return externalTipoCobranca;
+    });
+  }, [externalTipoCobranca]);
 
   // ── Copilot: expor contexto de contratos ──
   useAgentContext({
@@ -461,104 +464,13 @@ export function ContratosTableWrapper({
   }, [table]);
 
   // ---------- Render ----------
+  // Nota: o toolbar (busca, filtros, view toggle) é renderizado pelo
+  // `ContratosContent` externamente. Aqui ficamos apenas com DataTable +
+  // Pagination + BulkActions, em estilo Glass Briefing.
+  void hideToolbar; // mantido por compatibilidade da API externa
   return (
     <>
       <DataShell
-        header={
-          table ? (
-            <DataTableToolbar
-              table={table}
-              density={density}
-              onDensityChange={setDensity}
-              searchValue={busca}
-              onSearchValueChange={(value) => {
-                setBusca(value);
-                setPageIndex(0);
-              }}
-              searchPlaceholder="Buscar contratos..."
-              filtersSlot={
-                <>
-                  <SegmentosFilter
-                    value={segmentoId}
-                    onValueChange={(val) => {
-                      setSegmentoId(val);
-                      setPageIndex(0);
-                    }}
-                  />
-
-                  <FilterPopover
-                    label="Tipo Contrato"
-                    options={TIPO_CONTRATO_OPTIONS}
-                    value={tipoContrato || 'all'}
-                    onValueChange={(val) => {
-                      setTipoContrato(val === 'all' ? '' : val);
-                      setPageIndex(0);
-                    }}
-                  />
-
-                  <FilterPopover
-                    label="Cobrança"
-                    options={TIPO_COBRANCA_OPTIONS}
-                    value={tipoCobranca || 'all'}
-                    onValueChange={(val) => {
-                      setTipoCobranca(val === 'all' ? '' : val);
-                      setPageIndex(0);
-                    }}
-                  />
-
-                  <FilterPopover
-                    label="Status"
-                    options={STATUS_CONTRATO_OPTIONS}
-                    value={status || 'all'}
-                    onValueChange={(val) => {
-                      setStatus(val === 'all' ? '' : val);
-                      setPageIndex(0);
-                    }}
-                  />
-                </>
-              }
-              actionSlot={
-                <DropdownMenu>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-9 w-9 bg-card"
-                          aria-label="Configurações de contratos"
-                        >
-                          <Settings className="h-4 w-4" aria-hidden="true" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>Configurações</TooltipContent>
-                  </Tooltip>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
-                      <Link href="/app/contratos/tipos">Tipos de Contrato</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/app/contratos/tipos-cobranca">Tipos de Cobrança</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/app/contratos/pipelines">Pipelines</Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              }
-              viewModeSlot={
-                <ViewModePopover
-                  value="lista"
-                  onValueChange={handleViewChange}
-                  options={CONTRATOS_VIEW_OPTIONS}
-                />
-              }
-            />
-          ) : (
-            <div className="p-6" />
-          )
-        }
         footer={
           totalPages > 0 ? (
             <DataPagination

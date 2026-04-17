@@ -3,18 +3,17 @@
 /**
  * DocumentFlowShell — Shell do fluxo de criacao/edicao/revisao de documentos.
  *
- * Alinhado ao Design System Glass Briefing:
- * - Header sticky com backdrop-blur glass
- * - Breadcrumb contextual (muda conforme a etapa)
- * - Stepper horizontal em pills glass (ativo/done/pending)
- * - Botao Voltar ghost
- * - Slot opcional `primaryAction` para acao contextual (Continuar, Finalizar...)
+ * Alinhado ao padrão de página admin do ZattarOS:
+ * - Header transparente (integrado ao AmbientBackdrop global, sem "barra" glass)
+ * - Stepper horizontal em pills (Enviar / Configurar / Revisar)
+ * - Botão Voltar como pill com ícone e label sempre visível
+ * - Slot opcional `primaryAction` para ação contextual
  * - Progress bar mobile fallback
  */
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useMemo, type ReactNode } from "react";
-import { ArrowLeft, Check, ChevronRight, Upload, Settings, Eye } from "lucide-react";
+import { ArrowLeft, Check, Upload, Settings, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -26,31 +25,12 @@ interface FlowStep {
   label: string;
   icon: React.ElementType;
   pathPattern: string;
-  crumb: string;
 }
 
 const FLOW_STEPS: FlowStep[] = [
-  {
-    id: "upload",
-    label: "Enviar",
-    icon: Upload,
-    pathPattern: "/novo",
-    crumb: "Novo documento",
-  },
-  {
-    id: "configurar",
-    label: "Configurar",
-    icon: Settings,
-    pathPattern: "/editar",
-    crumb: "Configurar assinantes",
-  },
-  {
-    id: "revisar",
-    label: "Revisar",
-    icon: Eye,
-    pathPattern: "/revisar",
-    crumb: "Revisar e enviar",
-  },
+  { id: "upload", label: "Enviar", icon: Upload, pathPattern: "/novo" },
+  { id: "configurar", label: "Configurar", icon: Settings, pathPattern: "/editar" },
+  { id: "revisar", label: "Revisar", icon: Eye, pathPattern: "/revisar" },
 ];
 
 function useCurrentFlowStep() {
@@ -168,24 +148,6 @@ function FlowMobileProgress({ currentStep }: { currentStep: number }) {
   );
 }
 
-// ─── Breadcrumb ────────────────────────────────────────────────────────
-
-function FlowBreadcrumb({ currentStep }: { currentStep: number }) {
-  const current = FLOW_STEPS[currentStep]?.crumb ?? "Documento";
-  return (
-    <nav
-      aria-label="Breadcrumb"
-      className="hidden sm:flex items-center gap-1.5 text-[11px] text-muted-foreground"
-    >
-      <span>Assinatura Digital</span>
-      <ChevronRight className="size-3 opacity-40" />
-      <span>Documentos</span>
-      <ChevronRight className="size-3 opacity-40" />
-      <span className="font-medium text-foreground">{current}</span>
-    </nav>
-  );
-}
-
 // ─── Main Shell ────────────────────────────────────────────────────────
 
 interface DocumentFlowShellProps {
@@ -209,24 +171,20 @@ export function DocumentFlowShell({
       className="-m-6 flex flex-col overflow-hidden"
       style={{ height: "calc(100% + 3rem)", minHeight: "calc(100% + 3rem)" }}
     >
-      {/* ── Sticky Header (glass) ─────────────────── */}
-      <header className="shrink-0 z-10 border-b border-border/30 bg-background/70 backdrop-blur-xl supports-backdrop-filter:bg-background/55">
-        <div className="px-4 sm:px-6 pt-3 pb-3 space-y-2.5">
-          {/* Breadcrumb */}
-          <FlowBreadcrumb currentStep={currentStep} />
-
-          {/* Top row: back + stepper + primary action */}
-          <div className="flex items-center justify-between gap-3">
+      {/* Header transparente — integrado ao AmbientBackdrop global */}
+      <header className="shrink-0">
+        <div className="px-6 sm:px-8 pt-5 pb-4 sm:pb-5">
+          <div className="flex items-center justify-between gap-4">
             <Button
-              variant="ghost"
-              size="sm"
+              type="button"
+              variant="outline"
               onClick={() =>
                 router.push("/app/assinatura-digital/documentos/lista")
               }
-              className="gap-1.5 text-muted-foreground hover:text-foreground -ml-2"
+              className="h-10 gap-2 rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors"
             >
               <ArrowLeft className="size-4" />
-              <span className="hidden sm:inline">Voltar</span>
+              <span>Voltar</span>
             </Button>
 
             <div className="hidden sm:flex">
@@ -239,7 +197,7 @@ export function DocumentFlowShell({
           </div>
 
           {/* Mobile fallback */}
-          <div className="block sm:hidden">
+          <div className="mt-4 block sm:hidden">
             <FlowMobileProgress currentStep={currentStep} />
           </div>
         </div>

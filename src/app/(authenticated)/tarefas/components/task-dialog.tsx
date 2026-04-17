@@ -86,6 +86,7 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
                         <Label htmlFor="title">Título</Label>
                         <Input
                             id="title"
+                            variant="glass"
                             value={form.title}
                             onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))}
                             placeholder="Ex: Revisar documento"

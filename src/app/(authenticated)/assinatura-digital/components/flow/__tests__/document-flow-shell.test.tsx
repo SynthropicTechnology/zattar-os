@@ -88,12 +88,6 @@ describe("DocumentFlowShell", () => {
       expect(connectors.length).toBe(2);
     });
 
-    it("deve renderizar breadcrumb com etapa atual", () => {
-      renderShell();
-      expect(screen.getByLabelText("Breadcrumb")).toBeInTheDocument();
-      expect(screen.getByText("Novo documento")).toBeInTheDocument();
-    });
-
     it("deve renderizar primaryAction quando fornecida", () => {
       renderShell({
         primaryAction: <button data-testid="primary-action">Continuar</button>,

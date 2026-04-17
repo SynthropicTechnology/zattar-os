@@ -59,6 +59,12 @@ const NAV: NavSection[] = [
     ],
   },
   {
+    title: 'Public Shell',
+    items: [
+      { href: '/library/public-shell', label: 'Wizard components', status: 'new' },
+    ],
+  },
+  {
     title: 'Domain Mocks',
     items: [
       { href: '/library/domain-mocks', label: 'Visão geral dos mocks' },

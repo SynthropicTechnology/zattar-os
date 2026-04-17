@@ -37,10 +37,12 @@ import FormStepLayout from "./form-step-layout";
 import PdfPreviewDynamic from '@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic';
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, FileText, Info } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { Text } from "@/components/ui/typography";
 import { apiFetch } from "@/lib/http/api-fetch";
 import type { PreviewResult } from '@/shared/assinatura-digital/types/api';
 import type { SalvarAcaoRequest } from '@/shared/assinatura-digital/types/api';
@@ -431,13 +433,38 @@ export default function VisualizacaoPdfStep() {
       isLoading={isLoading}
     >
       {isLoading && (
-        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="text-lg font-medium text-muted-foreground">
-            {isFetchingTemplate ? 'Buscando template...' : 'Gerando documento...'}
-          </p>
-          <p className="text-sm text-muted-foreground">Isso pode levar alguns segundos</p>
-        </div>
+        <GlassPanel depth={1} className="p-8 sm:p-10">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="relative">
+              {/* Glow pulsante ao redor do ícone */}
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse"
+              />
+              <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/20">
+                <FileText className="h-6 w-6" strokeWidth={2} />
+              </span>
+            </div>
+            <div className="text-center space-y-1">
+              <Text variant="label" className="text-foreground">
+                {isFetchingTemplate ? 'Buscando template...' : 'Gerando documento...'}
+              </Text>
+              <Text variant="caption" className="text-muted-foreground">
+                Isso pode levar alguns segundos
+              </Text>
+            </div>
+
+            {/* Skeleton do PDF abaixo — dá sensação de progresso tangível */}
+            <div className="mt-4 w-full space-y-2">
+              <div className="h-3 w-3/4 animate-pulse rounded-md bg-surface-container-high/60" />
+              <div className="h-3 w-full animate-pulse rounded-md bg-surface-container-high/60" />
+              <div className="h-3 w-5/6 animate-pulse rounded-md bg-surface-container-high/60" />
+              <div className="mt-4 h-3 w-2/3 animate-pulse rounded-md bg-surface-container-high/60" />
+              <div className="h-3 w-full animate-pulse rounded-md bg-surface-container-high/60" />
+              <div className="h-3 w-4/5 animate-pulse rounded-md bg-surface-container-high/60" />
+            </div>
+          </div>
+        </GlassPanel>
       )}
 
       {error && !isLoading && (
@@ -459,13 +486,16 @@ export default function VisualizacaoPdfStep() {
       )}
 
       {pdfUrl && !isLoading && (
-        <div className="space-y-4">
-          {/* Multi-template selector (Comment 1) */}
+        <div className="space-y-5">
+          {/* Multi-template selector */}
           {templateMetadatas.length > 1 && (
-            <div className="bg-card border border-border rounded-lg p-4 space-y-3">
-              <Label className="text-sm font-medium text-muted-foreground">
-                Escolha o modelo do documento
-              </Label>
+            <GlassPanel depth={2} className="space-y-3 p-4 sm:p-5">
+              <div className="flex items-center gap-2">
+                <FileText className="h-3.5 w-3.5 text-primary" />
+                <Text variant="overline" className="text-primary">
+                  Escolha o modelo do documento
+                </Text>
+              </div>
               <RadioGroup
                 value={templateIdSelecionado || ''}
                 onValueChange={handleTemplateChange}
@@ -480,17 +510,29 @@ export default function VisualizacaoPdfStep() {
                   </div>
                 ))}
               </RadioGroup>
-            </div>
+            </GlassPanel>
           )}
 
-          <div className="bg-info/5 border border-info/15 rounded-lg p-4">
-            <p className="text-sm text-info">
-              <strong>Importante:</strong> Revise cuidadosamente todas as informações do documento antes de prosseguir para a assinatura.
-            </p>
+          {/* Info banner glass com tint info */}
+          <div className="flex items-start gap-3 rounded-xl border border-info/20 bg-info/10 p-4 backdrop-blur-sm">
+            <Info
+              aria-hidden="true"
+              className="mt-0.5 h-4 w-4 shrink-0 text-info"
+              strokeWidth={2.25}
+            />
+            <Text variant="caption" className="text-foreground/85 leading-relaxed">
+              <span className="font-semibold text-info">Revise com atenção:</span>{' '}
+              confira todas as informações do documento antes de prosseguir para a assinatura.
+            </Text>
           </div>
-          <div className="border rounded-lg overflow-hidden bg-muted">
+
+          {/* PDF preview em GlassPanel depth=1 — container neutro que deixa o PDF protagonizar */}
+          <GlassPanel
+            depth={1}
+            className="overflow-hidden rounded-2xl p-0"
+          >
             <PdfPreviewDynamic pdfUrl={pdfUrl} />
-          </div>
+          </GlassPanel>
         </div>
       )}
     </FormStepLayout>

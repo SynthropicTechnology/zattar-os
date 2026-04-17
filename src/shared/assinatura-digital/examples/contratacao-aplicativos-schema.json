@@ -6,6 +6,8 @@
       "id": "etapa-1-busca-cliente",
       "title": "Etapa 1: Busca de Cliente",
       "description": "Busque o cliente por CPF para preencher automaticamente os dados",
+      "icon": "idcard",
+      "preferredField": "busca_cliente",
       "fields": [
         {
           "id": "busca_cliente",
@@ -37,6 +39,7 @@
       "id": "etapa-2-dados-cliente",
       "title": "Etapa 2: Dados do Cliente",
       "description": "Dados pessoais do cliente",
+      "icon": "user",
       "fields": [
         {
           "id": "cliente_nome",
@@ -148,6 +151,8 @@
       "id": "etapa-3-parte-contraria",
       "title": "Etapa 3: Parte Contrária",
       "description": "Busque ou cadastre a parte contrária",
+      "icon": "building",
+      "preferredField": "busca_parte_contraria",
       "fields": [
         {
           "id": "busca_parte_contraria",
@@ -242,6 +247,7 @@
       "id": "etapa-4-dados-acao",
       "title": "Etapa 4: Dados da Ação Trabalhista",
       "description": "Informações sobre a ação trabalhista",
+      "icon": "briefcase",
       "fields": [
         {
           "id": "data_inicio_trabalho",

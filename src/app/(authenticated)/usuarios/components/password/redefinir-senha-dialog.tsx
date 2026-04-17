@@ -156,6 +156,7 @@ export function RedefinirSenhaDialog({
           <div className="relative">
             <Input
               id="novaSenha"
+              variant="glass"
               type={showNovaSenha ? 'text' : 'password'}
               value={novaSenha}
               onChange={(e) => setNovaSenha(e.target.value)}
@@ -187,6 +188,7 @@ export function RedefinirSenhaDialog({
           <div className="relative">
             <Input
               id="confirmarSenha"
+              variant="glass"
               type={showConfirmarSenha ? 'text' : 'password'}
               value={confirmarSenha}
               onChange={(e) => setConfirmarSenha(e.target.value)}

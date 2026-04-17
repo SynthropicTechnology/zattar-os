@@ -364,17 +364,59 @@ export default function DynamicFormStep() {
     );
   }
 
-  // Loading state
+  // Loading state — skeleton do form ao invés de spinner cru
   if (isLoading || !schema) {
     return (
       <FormStepLayout
-        title="Carregando formulário..."
-        description="Aguarde enquanto carregamos o formulário."
+        title="Carregando formulário"
+        description="Preparando campos da ação..."
         hideNext={true}
         hidePrevious={true}
       >
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <div className="space-y-8" aria-busy="true" aria-live="polite">
+          {/* Seção 1 skeleton — header com ícone + title + description */}
+          <div className="space-y-5">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 h-9 w-9 shrink-0 animate-pulse rounded-xl bg-primary/10" />
+              <div className="flex-1 space-y-2">
+                <div className="h-5 w-48 animate-pulse rounded-md bg-surface-container-high/60" />
+                <div className="h-3 w-64 animate-pulse rounded-md bg-surface-container-high/40" />
+              </div>
+            </div>
+            {/* Glass search panel skeleton */}
+            <div className="space-y-3 rounded-2xl border border-primary/10 bg-primary/4 p-5 backdrop-blur-sm">
+              <div className="h-3 w-24 animate-pulse rounded-md bg-primary/20" />
+              <div className="h-11 w-full animate-pulse rounded-xl bg-surface-container-lowest/70" />
+            </div>
+            {/* Grid de campos */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="h-17 animate-pulse rounded-xl bg-surface-container-high/40 md:col-span-3" />
+              <div className="h-17 animate-pulse rounded-xl bg-surface-container-high/40 md:col-span-1" />
+              <div className="h-17 animate-pulse rounded-xl bg-surface-container-high/40 md:col-span-2" />
+            </div>
+          </div>
+
+          <div className="h-px bg-outline-variant/30" />
+
+          {/* Seção 2 skeleton */}
+          <div className="space-y-5">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 h-9 w-9 shrink-0 animate-pulse rounded-xl bg-primary/10" />
+              <div className="flex-1 space-y-2">
+                <div className="h-5 w-40 animate-pulse rounded-md bg-surface-container-high/60" />
+                <div className="h-3 w-56 animate-pulse rounded-md bg-surface-container-high/40" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="h-17 animate-pulse rounded-xl bg-surface-container-high/40 md:col-span-1" />
+              <div className="h-17 animate-pulse rounded-xl bg-surface-container-high/40 md:col-span-2" />
+              <div className="h-24 animate-pulse rounded-xl bg-surface-container-high/40 md:col-span-3" />
+            </div>
+          </div>
+
+          <span className="sr-only">
+            <Loader2 aria-hidden="true" /> Carregando formulário...
+          </span>
         </div>
       </FormStepLayout>
     );
