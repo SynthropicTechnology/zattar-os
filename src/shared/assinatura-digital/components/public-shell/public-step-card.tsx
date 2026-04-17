@@ -7,17 +7,20 @@ import { cn } from '@/lib/utils'
 
 /**
  * Seletor CSS que identifica o primeiro elemento interativo focável.
- * Exclui elementos disabled, readonly-e-hidden, e tabindex negativo.
+ * Exclui elementos disabled, hidden, readonly, aria-hidden ou tabindex negativo.
+ *
+ * `:not([tabindex="-1"])` é repetido em cada seletor base — sem isso, o
+ * filtro só vale pra `[tabindex]` genérico e deixa passar `<input tabindex="-1">`.
  */
 const FIRST_FOCUSABLE_SELECTOR = [
   'input:not([disabled]):not([type="hidden"]):not([readonly])',
   'select:not([disabled])',
-  'textarea:not([disabled])',
-  'button:not([disabled]):not([aria-hidden="true"])',
+  'textarea:not([disabled]):not([readonly])',
+  'button:not([disabled])',
   '[contenteditable="true"]',
   '[tabindex]:not([tabindex="-1"]):not([disabled])',
 ]
-  .map((s) => `${s}:not([aria-hidden="true"])`)
+  .map((s) => `${s}:not([tabindex="-1"]):not([aria-hidden="true"])`)
   .join(', ')
 
 interface PublicStepCardProps {
