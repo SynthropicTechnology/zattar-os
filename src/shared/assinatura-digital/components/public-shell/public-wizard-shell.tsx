@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react'
 import { AmbientBackdrop } from '@/components/shared/ambient-backdrop'
+import { SkipLink } from '@/components/shared/skip-link'
 import { PublicWizardHeader } from './public-wizard-header'
 import { PublicWizardProgress, type PublicWizardStep } from './public-wizard-progress'
 
@@ -26,7 +27,8 @@ export function PublicWizardShell({
   const hasSteps = steps.length > 0
 
   return (
-    <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-surface-dim">
+    <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-surface-dim">
+      <SkipLink />
       <AmbientBackdrop blurIntensity={55} tint={tint} />
 
       <PublicWizardHeader />
@@ -47,6 +49,7 @@ export function PublicWizardShell({
         )}
 
         <main
+          id="main-content"
           className="relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden"
           aria-label="Formulário de assinatura digital"
         >

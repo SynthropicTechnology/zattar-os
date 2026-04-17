@@ -120,10 +120,14 @@ export function ClientSearchInput({
         </Button>
       </div>
 
-      {/* Status indicator — pills glass coerentes */}
+      {/* Status indicator — pills glass coerentes com live region */}
       {searchStatus === 'found' && (
-        <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 ring-1 ring-success/20">
-          <CheckCircle2 className="h-3.5 w-3.5 text-success" strokeWidth={2.5} />
+        <div
+          role="status"
+          aria-live="polite"
+          className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 ring-1 ring-success/20"
+        >
+          <CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5 text-success" strokeWidth={2.5} />
           <span className="text-xs font-medium text-success">
             Cliente encontrado — dados preenchidos
           </span>
@@ -131,8 +135,12 @@ export function ClientSearchInput({
       )}
 
       {searchStatus === 'notFound' && (
-        <div className="inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 ring-1 ring-warning/20">
-          <XCircle className="h-3.5 w-3.5 text-warning" strokeWidth={2.5} />
+        <div
+          role="status"
+          aria-live="polite"
+          className="inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 ring-1 ring-warning/20"
+        >
+          <XCircle aria-hidden="true" className="h-3.5 w-3.5 text-warning" strokeWidth={2.5} />
           <span className="text-xs font-medium text-warning">
             Cliente não encontrado — preencha manualmente
           </span>
@@ -140,8 +148,12 @@ export function ClientSearchInput({
       )}
 
       {searchStatus === 'error' && (
-        <div className="inline-flex items-center gap-2 rounded-full bg-destructive/10 px-3 py-1 ring-1 ring-destructive/20">
-          <XCircle className="h-3.5 w-3.5 text-destructive" strokeWidth={2.5} />
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="inline-flex items-center gap-2 rounded-full bg-destructive/10 px-3 py-1 ring-1 ring-destructive/20"
+        >
+          <XCircle aria-hidden="true" className="h-3.5 w-3.5 text-destructive" strokeWidth={2.5} />
           <span className="text-xs font-medium text-destructive">
             Erro ao buscar — tente novamente
           </span>

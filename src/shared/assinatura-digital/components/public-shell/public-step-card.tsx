@@ -1,9 +1,24 @@
 'use client'
 
-import { useId, type ReactNode } from 'react'
+import { useEffect, useId, useRef, type ReactNode } from 'react'
 import { GlassPanel } from '@/components/shared/glass-panel'
 import { Heading, Text } from '@/components/ui/typography'
 import { cn } from '@/lib/utils'
+
+/**
+ * Seletor CSS que identifica o primeiro elemento interativo focável.
+ * Exclui elementos disabled, readonly-e-hidden, e tabindex negativo.
+ */
+const FIRST_FOCUSABLE_SELECTOR = [
+  'input:not([disabled]):not([type="hidden"]):not([readonly])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  'button:not([disabled]):not([aria-hidden="true"])',
+  '[contenteditable="true"]',
+  '[tabindex]:not([tabindex="-1"]):not([disabled])',
+]
+  .map((s) => `${s}:not([aria-hidden="true"])`)
+  .join(', ')
 
 interface PublicStepCardProps {
   title: string
@@ -32,6 +47,26 @@ export function PublicStepCard({
   const tone = CHIP_TONE_CLASSES[chipTone]
   const titleId = useId()
   const descriptionId = useId()
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  // Focus management: ao montar, foca no primeiro input interativo do step.
+  // Se não houver input, foca no heading (útil pra telas de sucesso/info).
+  // Usa preventScroll para não saltar a viewport sob o teclado em mobile.
+  useEffect(() => {
+    const rafId = requestAnimationFrame(() => {
+      const firstFocusable =
+        contentRef.current?.querySelector<HTMLElement>(FIRST_FOCUSABLE_SELECTOR)
+      if (firstFocusable) {
+        firstFocusable.focus({ preventScroll: true })
+        return
+      }
+      // Fallback: foca no heading (identificado por id único)
+      const heading = document.getElementById(titleId) as HTMLHeadingElement | null
+      heading?.focus({ preventScroll: true })
+    })
+    return () => cancelAnimationFrame(rafId)
+    // title muda entre steps — serve como trigger pra re-focar
+  }, [title, titleId])
 
   return (
     <GlassPanel
@@ -64,8 +99,9 @@ export function PublicStepCard({
           )}
           <Heading
             id={titleId}
+            tabIndex={-1}
             level="page"
-            className="font-display tracking-tight text-2xl sm:text-3xl"
+            className="font-display tracking-tight text-2xl sm:text-3xl outline-none"
           >
             {title}
           </Heading>
@@ -79,7 +115,10 @@ export function PublicStepCard({
             </Text>
           )}
         </header>
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1 -mr-1">
+        <div
+          ref={contentRef}
+          className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1 -mr-1"
+        >
           {children}
         </div>
       </section>

@@ -83,8 +83,16 @@ function Vertical({ steps, currentIndex, onRestart, resumeHint }: BaseProps) {
       </ol>
 
       {resumeHint && (
-        <div className="flex items-start gap-2 rounded-xl border border-outline-variant/30 bg-surface-container-lowest/50 px-3 py-2.5 backdrop-blur-sm">
-          <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="flex items-start gap-2 rounded-xl border border-outline-variant/30 bg-surface-container-lowest/50 px-3 py-2.5 backdrop-blur-sm"
+        >
+          <Clock
+            aria-hidden="true"
+            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success"
+          />
           <Text variant="caption" className="text-foreground/70 leading-snug">
             {resumeHint}
           </Text>
@@ -136,8 +144,13 @@ function Horizontal({ steps, currentIndex, onRestart, resumeHint }: BaseProps) {
       </div>
 
       {resumeHint && (
-        <div className="flex items-center gap-1.5 pt-0.5">
-          <Clock className="h-3 w-3 text-success" />
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="flex items-center gap-1.5 pt-0.5"
+        >
+          <Clock aria-hidden="true" className="h-3 w-3 text-success" />
           <Text variant="micro-caption" className="text-foreground/60">
             {resumeHint}
           </Text>

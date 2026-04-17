@@ -216,9 +216,16 @@ export function ParteContrariaSearchInput({
 
       {/* Sem resultados */}
       {showDropdown && results.length === 0 && !isSearching && searchValue.trim().length >= 2 && (
-        <div className="glass-dropdown absolute z-50 mt-2 w-full rounded-xl p-4">
+        <div
+          role="status"
+          aria-live="polite"
+          className="glass-dropdown absolute z-50 mt-2 w-full rounded-xl p-4"
+        >
           <div className="flex items-start gap-3">
-            <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted/50 text-muted-foreground ring-1 ring-outline-variant/30">
+            <span
+              aria-hidden="true"
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted/50 text-muted-foreground ring-1 ring-outline-variant/30"
+            >
               <SearchX className="h-4 w-4" strokeWidth={2.25} />
             </span>
             <div className="min-w-0 flex-1">
@@ -233,10 +240,21 @@ export function ParteContrariaSearchInput({
         </div>
       )}
 
+      {/* Anúncio invisível do count de resultados (live region) */}
+      {showDropdown && results.length > 0 && (
+        <span role="status" aria-live="polite" className="sr-only">
+          {results.length} {results.length === 1 ? 'resultado encontrado' : 'resultados encontrados'}
+        </span>
+      )}
+
       {/* Status de seleção */}
       {selectedParte && (
-        <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 ring-1 ring-success/20">
-          <CheckCircle2 className="h-3.5 w-3.5 text-success" strokeWidth={2.5} />
+        <div
+          role="status"
+          aria-live="polite"
+          className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 ring-1 ring-success/20"
+        >
+          <CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5 text-success" strokeWidth={2.5} />
           <span className="text-xs font-medium text-success">
             Selecionada: <span className="font-semibold text-foreground">{selectedParte.nome}</span>
           </span>
