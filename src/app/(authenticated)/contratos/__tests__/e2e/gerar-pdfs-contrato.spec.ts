@@ -69,7 +69,7 @@ async function mockValidacaoOk(
 /**
  * Intercepta a Server Action de validação e retorna campos faltantes.
  */
-async function mockValidacaoCamposFaltantes(
+async function _mockValidacaoCamposFaltantes(
   page: Parameters<Parameters<typeof test>[1]>[0]['page'],
   campos: Array<{ chave: string; label: string; templates: string[] }>,
 ) {

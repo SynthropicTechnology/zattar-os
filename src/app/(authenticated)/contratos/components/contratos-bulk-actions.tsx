@@ -29,7 +29,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2, X, Trash2, UserRound, ArrowRightLeft, FolderKanban } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Loader2, X, Trash2, UserRound, ArrowRightLeft, FolderKanban, CheckSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   actionAlterarStatusContratosEmMassa,
@@ -64,35 +65,36 @@ export function ContratosBulkActionsBar({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
-      <span className="text-sm font-medium whitespace-nowrap">
+    <GlassPanel depth={2} className="flex flex-wrap items-center gap-2 px-3.5 py-2">
+      <div className="flex items-center gap-2 text-sm font-medium whitespace-nowrap text-primary">
+        <CheckSquare className="size-3.5" aria-hidden="true" />
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
-      </span>
+      </div>
 
-      <div className="flex items-center gap-1 ml-2">
-        <Button variant="outline" size="sm" onClick={onAlterarStatus}>
-          <ArrowRightLeft className="mr-1.5 h-3.5 w-3.5" />
+      <div className="flex flex-wrap items-center gap-1 ml-2">
+        <Button variant="outline" size="sm" className="rounded-lg" onClick={onAlterarStatus}>
+          <ArrowRightLeft className="size-3.5" />
           Alterar Status
         </Button>
-        <Button variant="outline" size="sm" onClick={onAtribuirResponsavel}>
-          <UserRound className="mr-1.5 h-3.5 w-3.5" />
+        <Button variant="outline" size="sm" className="rounded-lg" onClick={onAtribuirResponsavel}>
+          <UserRound className="size-3.5" />
           Responsável
         </Button>
-        <Button variant="outline" size="sm" onClick={onAlterarSegmento}>
-          <FolderKanban className="mr-1.5 h-3.5 w-3.5" />
+        <Button variant="outline" size="sm" className="rounded-lg" onClick={onAlterarSegmento}>
+          <FolderKanban className="size-3.5" />
           Segmento
         </Button>
-        <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={onExcluir}>
-          <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+        <Button variant="outline" size="sm" className="rounded-lg text-destructive hover:text-destructive" onClick={onExcluir}>
+          <Trash2 className="size-3.5" />
           Excluir
         </Button>
       </div>
 
-      <Button variant="ghost" size="sm" onClick={onClearSelection} className="ml-auto">
-        <X className="mr-1 h-3.5 w-3.5" />
+      <Button variant="ghost" size="sm" onClick={onClearSelection} className="ml-auto rounded-lg">
+        <X className="size-3.5" />
         Limpar
       </Button>
-    </div>
+    </GlassPanel>
   );
 }
 

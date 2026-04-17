@@ -40,6 +40,7 @@ import { formatarData, formatarDataHora } from '../utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Heading } from '@/components/ui/typography';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 // =============================================================================
 // TIPOS
@@ -167,7 +168,7 @@ export function ContratoViewSheet({
             {/* Partes */}
             <Section title="Partes do Contrato" icon={<Users className="h-4 w-4" />}>
               <div className="space-y-3">
-                <div className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
+                <GlassPanel depth={2} className="p-3">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-muted-foreground">Cliente</span>
                     <AppBadge variant="outline" className="text-xs">
@@ -175,21 +176,16 @@ export function ContratoViewSheet({
                     </AppBadge>
                   </div>
                   <p className="font-medium">{clienteNome}</p>
-                </div>
+                </GlassPanel>
 
                 {contrato.partes.filter(p => p.tipoEntidade === 'parte_contraria').map((parte, idx) => (
-                  <div key={idx} className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
+                  <GlassPanel key={idx} depth={2} className="p-3">
                     <span className="text-xs text-muted-foreground block mb-1">
                       Parte Contrária
                     </span>
                     <p className="font-medium">{parte.nomeSnapshot || parteContrariaNome || 'N/A'}</p>
-                  </div>
+                  </GlassPanel>
                 ))}
-                {/*
-                Note: The previous code iterated over `contrato.parteAutora` which was removed from domain.
-                We should simply list the parts found in `contrato.partes` if we want detailed breakdown,
-                but for now showing specific entities is safer.
-            */}
               </div>
             </Section>
 
@@ -241,9 +237,9 @@ export function ContratoViewSheet({
               <>
                 <Separator />
                 <Section title="Observações" icon={<FileText className="h-4 w-4" />}>
-                  <div className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
+                  <GlassPanel depth={2} className="p-3">
                     <p className="text-sm whitespace-pre-wrap">{contrato.observacoes}</p>
-                  </div>
+                  </GlassPanel>
                 </Section>
               </>
             )}
@@ -297,7 +293,7 @@ export function ContratoViewSheet({
                 <Section title="Histórico de Status" icon={<Clock className="h-4 w-4" />}>
                   <div className="space-y-2">
                     {contrato.statusHistorico.map((item) => (
-                      <div key={item.id} className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
+                      <GlassPanel key={item.id} depth={2} className="p-3">
                         <div className="flex items-center justify-between gap-2">
                           <AppBadge variant="outline" className="text-xs">
                             {item.fromStatus ? STATUS_CONTRATO_LABELS[item.fromStatus] : '—'}
@@ -314,7 +310,7 @@ export function ContratoViewSheet({
                             {item.changedBy ? <div>{`Usuário #${item.changedBy}`}</div> : null}
                           </div>
                         )}
-                      </div>
+                      </GlassPanel>
                     ))}
                   </div>
                 </Section>

@@ -64,7 +64,7 @@ function Vertical({ steps, currentIndex, onRestart, resumeHint }: BaseProps) {
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'absolute left-[15px] top-9 h-[calc(100%-8px)] w-px transition-colors',
+                    'absolute left-3.75 top-9 h-[calc(100%-8px)] w-px transition-colors',
                     isPast ? 'bg-primary/40' : 'bg-outline-variant/30',
                   )}
                 />

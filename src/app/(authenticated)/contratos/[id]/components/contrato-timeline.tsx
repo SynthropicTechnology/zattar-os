@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { History, CheckCircle2, XCircle, Clock, Plus, ArrowRightLeft } from 'lucide-react';
 
-import { WidgetContainer } from '@/components/shared/glass-panel';
+import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
 import { Text } from '@/components/ui/typography';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
@@ -149,9 +149,9 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                       </Text>
 
                       {item.reason && (
-                        <div className="text-[12px] text-muted-foreground mt-1.5 p-2 bg-muted/50 rounded-md">
-                          {item.reason}
-                        </div>
+                        <GlassPanel depth={2} className="mt-2 px-2.5 py-1.5">
+                          <Text variant="caption">{item.reason}</Text>
+                        </GlassPanel>
                       )}
                     </div>
                   </div>

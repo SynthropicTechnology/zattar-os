@@ -230,6 +230,13 @@ export default function DynamicFormRenderer({
    * Efeito: quando tipo_pessoa muda, limpa o campo do documento oposto
    * (evita submit com CPF residual quando usuário seleciona PJ e vice-versa).
    */
+  // Concatenar valores dos campos tipo_pessoa de todas as seções como dep
+  const tipoPessoaValuesKey = schema.sections
+    .map((s) => findTipoPessoaField(s.fields))
+    .filter((f): f is FormFieldSchema => !!f)
+    .map((f) => formValues[f.id])
+    .join('|');
+
   useEffect(() => {
     for (const section of schema.sections) {
       const tipoField = findTipoPessoaField(section.fields);
@@ -248,15 +255,7 @@ export default function DynamicFormRenderer({
     }
     // formValues é o objeto de watch — reagir apenas às mudanças dos campos tipo_pessoa
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    schema,
-    // Concatenar valores dos campos tipo_pessoa de todas as seções como dep
-    schema.sections
-      .map((s) => findTipoPessoaField(s.fields))
-      .filter((f): f is FormFieldSchema => !!f)
-      .map((f) => formValues[f.id])
-      .join('|'),
-  ]);
+  }, [schema, tipoPessoaValuesKey]);
 
   /**
    * Evaluate conditional rule to determine if field should be rendered

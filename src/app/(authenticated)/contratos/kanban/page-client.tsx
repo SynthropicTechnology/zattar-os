@@ -17,7 +17,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { RefreshCw, Settings, List, Kanban as KanbanIcon } from 'lucide-react';
+import { RefreshCw, Settings, List, Kanban as KanbanIcon, Layers, FolderOpen } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -28,6 +28,9 @@ import {
   KanbanOverlay,
 } from '@/components/ui/kanban';
 import { ViewModePopover, type ViewModeOption } from '@/components/shared/view-mode-popover';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { EmptyState } from '@/components/shared/empty-state';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { Heading } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import {
@@ -47,6 +50,7 @@ import {
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { formatarData } from '../utils';
 
 import {
   useSegmentos,
@@ -67,24 +71,6 @@ const CONTRATOS_VIEW_OPTIONS: ViewModeOption[] = [
 ];
 
 // =============================================================================
-// HELPERS
-// =============================================================================
-
-function formatDate(dateStr: string): string {
-  if (!dateStr) return '';
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  } catch {
-    return dateStr;
-  }
-}
-
-// =============================================================================
 // CARD DE CONTRATO
 // =============================================================================
 
@@ -95,8 +81,9 @@ interface ContratoCardProps {
 
 function ContratoCard({ contrato, stageCor }: ContratoCardProps) {
   return (
-    <div
-      className="bg-card rounded-md border shadow-sm p-3 flex flex-col gap-1.5 text-sm"
+    <GlassPanel
+      depth={2}
+      className="p-3 flex flex-col gap-1.5 text-sm"
       style={{ borderLeft: `3px solid ${stageCor}` }}
     >
       <p className="font-semibold text-foreground leading-tight line-clamp-2">
@@ -111,9 +98,9 @@ function ContratoCard({ contrato, stageCor }: ContratoCardProps) {
         </Badge>
       </div>
       <p className="text-xs text-muted-foreground mt-0.5">
-        {formatDate(contrato.cadastradoEm)}
+        {formatarData(contrato.cadastradoEm)}
       </p>
-    </div>
+    </GlassPanel>
   );
 }
 
@@ -138,49 +125,50 @@ function KanbanColumnContent({
   return (
     <KanbanColumn
       value={estagioId}
-      className="bg-muted/60 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 shrink-0"
+      className="min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 shrink-0"
     >
-      {/* Header da coluna */}
-      <div
-        className="flex items-center justify-between px-2 py-2 rounded-md mb-1"
-        style={{ borderTop: `3px solid ${cor}` }}
-      >
-        <div className="flex items-center gap-2">
+      <GlassPanel depth={1} className="flex flex-col gap-2 p-2.5 min-h-28">
+        {/* Header da coluna */}
+        <div
+          className="flex items-center justify-between px-1 pb-2 border-b-2"
+          style={{ borderColor: cor }}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <span
+              className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
+              style={{ backgroundColor: cor }}
+              aria-hidden="true"
+            />
+            <span className="font-heading text-xs font-semibold text-foreground truncate">
+              {nome}
+            </span>
+          </div>
           <span
-            className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
-            style={{ backgroundColor: cor }}
-            aria-hidden="true"
-          />
-          <span className="font-semibold text-sm text-foreground leading-tight">
-            {nome}
+            className="text-[10px] px-1.5 py-0.5 rounded-full bg-border/10 text-muted-foreground tabular-nums shrink-0"
+            aria-label={`${contratos.length} contratos`}
+          >
+            {contratos.length}
           </span>
         </div>
-        <Badge
-          variant="secondary"
-          className="text-xs h-5 px-1.5 font-mono tabular-nums"
-          aria-label={`${contratos.length} contratos`}
-        >
-          {contratos.length}
-        </Badge>
-      </div>
 
-      {/* Cards */}
-      {contratos.length === 0 ? (
-        <div className="flex items-center justify-center h-16 text-xs text-muted-foreground border border-dashed rounded-md">
-          Nenhum contrato
-        </div>
-      ) : (
-        contratos.map((contrato) => (
-          <KanbanItem
-            key={contrato.id}
-            value={String(contrato.id)}
-            asHandle
-            className="rounded-md"
-          >
-            <ContratoCard contrato={contrato} stageCor={cor} />
-          </KanbanItem>
-        ))
-      )}
+        {/* Cards */}
+        {contratos.length === 0 ? (
+          <div className="flex items-center justify-center h-16 text-xs text-muted-foreground border border-dashed border-border/40 rounded-xl">
+            Nenhum contrato
+          </div>
+        ) : (
+          contratos.map((contrato) => (
+            <KanbanItem
+              key={contrato.id}
+              value={String(contrato.id)}
+              asHandle
+              className="rounded-xl"
+            >
+              <ContratoCard contrato={contrato} stageCor={cor} />
+            </KanbanItem>
+          ))
+        )}
+      </GlassPanel>
     </KanbanColumn>
   );
 }
@@ -191,20 +179,21 @@ function KanbanColumnContent({
 
 function KanbanBoardSkeleton() {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 pt-2">
+    <div className="flex gap-3 overflow-x-auto pb-4 pt-2">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div
+        <GlassPanel
           key={i}
-          className="flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 bg-muted/60 rounded-lg p-2.5"
+          depth={1}
+          className="flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 p-2.5"
         >
           <div className="flex items-center justify-between mb-1">
             <Skeleton className="h-5 w-32" />
             <Skeleton className="h-5 w-8 rounded-full" />
           </div>
           {Array.from({ length: i % 2 === 0 ? 3 : 2 }).map((_, j) => (
-            <Skeleton key={j} className="h-24 w-full rounded-md" />
+            <Skeleton key={j} className="h-24 w-full rounded-xl" />
           ))}
-        </div>
+        </GlassPanel>
       ))}
     </div>
   );
@@ -216,32 +205,26 @@ function KanbanBoardSkeleton() {
 
 function EmptyNoPipeline({ segmentoNome }: { segmentoNome: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center gap-3">
-      <div className="text-4xl" aria-hidden="true">
-        🗂️
-      </div>
-      <p className="text-base font-semibold text-foreground">
-        Nenhum pipeline configurado
-      </p>
-      <p className="text-sm text-muted-foreground max-w-sm">
-        O segmento <strong>{segmentoNome}</strong> ainda não possui um pipeline
-        de contratos. Configure um pipeline nas configurações para visualizar o
-        kanban.
-      </p>
-    </div>
+    <EmptyState
+      icon={Layers}
+      title="Nenhum pipeline configurado"
+      description={`O segmento "${segmentoNome}" ainda não possui um pipeline de contratos. Configure um pipeline nas configurações para visualizar o kanban.`}
+      action={
+        <Button asChild variant="outline">
+          <Link href="/app/contratos/pipelines">Configurar pipeline</Link>
+        </Button>
+      }
+    />
   );
 }
 
 function EmptyNoSegmento() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center gap-3">
-      <p className="text-base font-semibold text-foreground">
-        Selecione um segmento
-      </p>
-      <p className="text-sm text-muted-foreground max-w-sm">
-        Escolha um segmento acima para visualizar o quadro kanban de contratos.
-      </p>
-    </div>
+    <EmptyState
+      icon={FolderOpen}
+      title="Selecione um segmento"
+      description="Escolha um segmento acima para visualizar o quadro kanban de contratos."
+    />
   );
 }
 
@@ -560,12 +543,7 @@ export function KanbanContratosClient() {
 
       {/* Erro */}
       {!isLoading && error && (
-        <div
-          role="alert"
-          className="flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
-        >
-          <span className="font-semibold">Erro:</span> {error}
-        </div>
+        <InsightBanner type="alert">{error}</InsightBanner>
       )}
 
       {/* Nenhum segmento selecionado */}

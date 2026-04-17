@@ -84,7 +84,7 @@ test.describe('Wizard público — smoke tests', () => {
     expect(hasHeaderOrMain).toBe(true)
   })
 
-  test.skip('[FUTURO] happy path: percorrer 9 steps completos até sucesso', async ({ page }) => {
+  test.skip('[FUTURO] happy path: percorrer 9 steps completos até sucesso', async ({ page: _page }) => {
     // Depende de fixture publicWizardMockedPage + schema mockado.
     // Exemplo de implementação quando disponível:
     //
@@ -122,7 +122,6 @@ test.describe('Wizard público — mobile viewport (iPhone SE)', () => {
 })
 
 // Helpers skeleton pra step fills — implementar quando o happy-path for desmocado
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function _fillStep5AcaoExample(page: Page) {
   // Exemplo do pattern:
   // await page.getByRole('button', { name: /pessoa jurídica/i }).click()

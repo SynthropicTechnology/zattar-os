@@ -439,24 +439,43 @@ export async function countContratosPorStatus(params?: {
   try {
     const db = createDbClient();
 
-    let query = db.from(TABLE_CONTRATOS).select("status");
+    const STATUSES: StatusContrato[] = [
+      "em_contratacao",
+      "contratado",
+      "distribuido",
+      "desistencia",
+    ];
 
-    if (params?.dataInicio) {
-      query = query.gte("created_at", params.dataInicio.toISOString());
-    }
-    if (params?.dataFim) {
-      query = query.lte("created_at", params.dataFim.toISOString());
-    }
+    // Uma query de agregação real por status (head: true) evita o limite
+    // default de 1000 linhas do supabase-js quando usamos select("status").
+    const results = await Promise.all(
+      STATUSES.map(async (status) => {
+        let query = db
+          .from(TABLE_CONTRATOS)
+          .select("*", { count: "exact", head: true })
+          .eq("status", status);
 
-    const { data, error } = await query;
+        if (params?.dataInicio) {
+          query = query.gte("created_at", params.dataInicio.toISOString());
+        }
+        if (params?.dataFim) {
+          query = query.lte("created_at", params.dataFim.toISOString());
+        }
 
-    if (error) {
+        const { count, error } = await query;
+        return { status, count: count ?? 0, error };
+      }),
+    );
+
+    const firstError = results.find((r) => r.error)?.error;
+    if (firstError) {
       return err(
-        appError("DATABASE_ERROR", error.message, { code: error.code }),
+        appError("DATABASE_ERROR", firstError.message, {
+          code: firstError.code,
+        }),
       );
     }
 
-    // Inicializar contadores para todos os status possíveis
     const contadores: Record<StatusContrato, number> = {
       em_contratacao: 0,
       contratado: 0,
@@ -464,12 +483,8 @@ export async function countContratosPorStatus(params?: {
       desistencia: 0,
     };
 
-    // Contar por status
-    (data || []).forEach((row) => {
-      const status = row.status as StatusContrato;
-      if (status in contadores) {
-        contadores[status]++;
-      }
+    results.forEach(({ status, count }) => {
+      contadores[status] = count;
     });
 
     return ok(contadores);

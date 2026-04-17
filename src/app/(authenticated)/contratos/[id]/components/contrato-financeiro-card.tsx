@@ -123,7 +123,7 @@ export function ContratoFinanceiroCard({
             <p>Nenhum lançamento financeiro</p>
           </div>
         ) : (
-          <div className="rounded-md border">
+          <GlassPanel depth={2} className="overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -139,7 +139,7 @@ export function ContratoFinanceiroCard({
                     <TableCell className="font-medium max-w-50 truncate">
                       {lancamento.descricao}
                     </TableCell>
-                    <TableCell className="text-right font-mono">
+                    <TableCell className="text-right tabular-nums">
                       {formatCurrency(lancamento.valor)}
                     </TableCell>
                     <TableCell>
@@ -158,11 +158,11 @@ export function ContratoFinanceiroCard({
               </TableBody>
             </Table>
             {lancamentos.length > 10 && (
-              <div className="p-2 text-center text-sm text-muted-foreground border-t">
+              <div className="p-2 text-center text-sm text-muted-foreground border-t border-border/20">
                 Mostrando 10 de {lancamentos.length} lançamentos
               </div>
             )}
-          </div>
+          </GlassPanel>
         )}
     </WidgetContainer>
   );

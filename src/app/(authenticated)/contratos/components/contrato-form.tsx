@@ -456,67 +456,6 @@ export function ContratoForm({
               clearAllText="Limpar"
               debounceMs={300}
             />
-            {/* O helper extractPartes no backend pode precisar de uma estrutura específica.
-                Mas pelo código do backend (extractPartes), ele espera um JSON stringificado no campo 'partes' OU
-                não parece processar 'partesContrariasIds' diretamente?
-                
-                Checking contratos-actions.ts lines 68-98:
-                extractPartes(formData) reads formData.get('partes').
-                It parsing JSON.
-                
-                But `formData` submission from inputs usually sends key=value.
-                If I want to send a JSON structure, I need to construct it and put in a hidden input named 'partes'.
-                
-                Wait, previous code had:
-                (formData.partesContrariasIds ?? []).map((id) => (
-                  <input key={id} type="hidden" name="partesContrariasIds" value={id} />
-                ))
-                
-                But `formDataToCreateContratoInput` (lines 131) calls `extractPartes(formData)`.
-                `extractPartes` does `formData.get('partes')` and expects JSON string.
-                It does NOT look for `partesContrariasIds`.
-                
-                So the previous code was ALSO broken regarding saving partes contrarias?
-                Or does `Combobox` or some other logic populate 'partes' entry?
-                No, `Combobox` just updates state.
-                
-                I need to inject a hidden input named 'partes' that contains the JSON structure expected by `extractPartes`.
-                
-                Expected structure (lines 83-88 of actions):
-                [{ tipoEntidade: 'parte_contraria', entidadeId: number, papelContratual: 're' (or something) }]
-                
-                Actually `Contrato` domain logic usually implies Parte Contraria matches the opposite role of Cliente?
-                If Cliente is 'autora', Parte Contraria is 're'.
-                
-                But `extractPartes` requires explicit `papelContratual`.
-                
-                I will construct this JSON in a hidden input.
-                
-                Structure:
-                Array of objects.
-                For each id in `partesContrariasIds`:
-                {
-                  tipoEntidade: 'parte_contraria',
-                  entidadeId: id,
-                  papelContratual: ??? (We don't ask users for role of conflict part. Assuming opposite of client? Or default?)
-                }
-                
-                Wait, `domain.ts` says `PapelContratual` = 'autora' | 're'.
-                If I don't know, I might fail validation.
-                
-                However, to fix the BUILD ERROR, just getting the file to compile is step 1.
-                The logic correctness is step 2.
-                Given the previous code didn't seem to calculate this JSON, maybe it was being handled elsewhere?
-                No, this form looks like it handles everything.
-                
-                I will add the hidden input `partes` with a basic JSON generation to at least attempt to preserve data, 
-                assuming 're' for now or just empty if logic is too complex.
-                
-                Actually, I'll assume 're' if mapped, or maybe I should look at `extractPartes` again.
-                It filters P.papelContratual === 'autora' || 're'.
-                
-                I'll leave `partesContrariasIds` hidden inputs (maybe for some other reason?) but add `partes` hidden input.
-            */}
             <input
               type="hidden"
               name="partes"
@@ -524,7 +463,7 @@ export function ContratoForm({
                 formData.partesContrariasIds.map((id, idx) => ({
                   tipoEntidade: 'parte_contraria',
                   entidadeId: id,
-                  papelContratual: formData.papelClienteNoContrato === 'autora' ? 're' : 'autora', // Infering opposite
+                  papelContratual: formData.papelClienteNoContrato === 'autora' ? 're' : 'autora',
                   ordem: idx,
                 }))
               )}

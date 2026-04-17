@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Scale, ExternalLink, Calendar } from 'lucide-react';
 
-import { WidgetContainer } from '@/components/shared/glass-panel';
+import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import type { ContratoProcessoVinculo } from '@/app/(authenticated)/contratos';
@@ -56,12 +56,13 @@ export function ContratoProcessosCard({ processos }: ContratoProcessosCardProps)
             if (!processo) return null;
 
             return (
-              <div
+              <GlassPanel
                 key={vinculo.id}
-                className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
+                depth={2}
+                className="flex items-center justify-between p-3"
               >
-                <div className="space-y-1">
-                  <div className="font-mono text-sm font-medium">
+                <div className="space-y-1 min-w-0">
+                  <div className="text-sm font-medium tabular-nums truncate">
                     {processo.numeroProcesso || `Processo #${processo.id}`}
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -88,7 +89,7 @@ export function ContratoProcessosCard({ processos }: ContratoProcessosCardProps)
                     <ExternalLink className="size-4" />
                   </Link>
                 </Button>
-              </div>
+              </GlassPanel>
             );
           })}
         </div>

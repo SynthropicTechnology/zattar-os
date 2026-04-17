@@ -35,6 +35,7 @@ export interface GlassPanelProps {
    * - 3: primary tint — destaque máximo com backdrop-blur (chamadas à ação)
    */
   depth?: 1 | 2 | 3;
+  style?: React.CSSProperties;
 }
 
 const DEPTH_STYLES = {
@@ -47,9 +48,11 @@ export function GlassPanel({
   children,
   className,
   depth = 1,
+  style,
 }: GlassPanelProps) {
   return (
     <div
+      style={style}
       className={cn(
         'rounded-2xl border transition-all duration-300 flex flex-col',
         DEPTH_STYLES[depth],

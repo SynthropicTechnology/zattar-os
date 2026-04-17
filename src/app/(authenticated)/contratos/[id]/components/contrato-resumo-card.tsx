@@ -2,7 +2,8 @@
 
 import { Mail, MapPin, PhoneCall, FolderOpen, Hash, ClipboardList } from 'lucide-react';
 
-import { WidgetContainer } from '@/components/shared/glass-panel';
+import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
+import { Text } from '@/components/ui/typography';
 import { formatPhone as formatPhoneLib } from '@/lib/formatters';
 import type {
   Contrato,
@@ -66,19 +67,19 @@ export function ContratoResumoCard({
     <WidgetContainer title="Resumo" icon={ClipboardList}>
       <div className="space-y-6">
         {/* Estatisticas */}
-        <div className="bg-muted grid grid-cols-3 divide-x rounded-md border text-center *:py-3">
-          <div>
-            <div className="text-lg font-semibold">{stats.totalPartes}</div>
-            <div className="text-muted-foreground text-xs">Partes</div>
-          </div>
-          <div>
-            <div className="text-lg font-semibold">{stats.totalProcessos}</div>
-            <div className="text-muted-foreground text-xs">Processos</div>
-          </div>
-          <div>
-            <div className="text-lg font-semibold">{stats.totalDocumentos}</div>
-            <div className="text-muted-foreground text-xs">Documentos</div>
-          </div>
+        <div className="grid grid-cols-3 gap-2">
+          <GlassPanel depth={2} className="px-3 py-3 text-center">
+            <p className="font-display text-lg font-bold tabular-nums">{stats.totalPartes}</p>
+            <Text variant="meta-label">Partes</Text>
+          </GlassPanel>
+          <GlassPanel depth={2} className="px-3 py-3 text-center">
+            <p className="font-display text-lg font-bold tabular-nums">{stats.totalProcessos}</p>
+            <Text variant="meta-label">Processos</Text>
+          </GlassPanel>
+          <GlassPanel depth={2} className="px-3 py-3 text-center">
+            <p className="font-display text-lg font-bold tabular-nums">{stats.totalDocumentos}</p>
+            <Text variant="meta-label">Documentos</Text>
+          </GlassPanel>
         </div>
 
         {/* Contato do cliente */}

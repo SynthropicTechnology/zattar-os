@@ -378,9 +378,11 @@ export function ContratosTableWrapper({
 
   // ---------- Refetch reativo a filtros ----------
   // Usa snapshot dos valores anteriores para:
-  // 1. Pular o render inicial (dados já vieram do server)
-  // 2. Funcionar corretamente com React StrictMode (refs persistem entre mount/unmount)
+  // 1. Pular o render inicial quando `initialData` já veio hidratado
+  // 2. Disparar fetch no mount quando chamado sem dados iniciais (ex: ContratosContent)
+  // 3. Funcionar corretamente com React StrictMode (refs persistem entre mount/unmount)
   const prevFiltersRef = React.useRef<string | null>(null);
+  const hasInitialData = initialData.length > 0;
 
   React.useEffect(() => {
     const filterKey = JSON.stringify([pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting]);
@@ -390,10 +392,10 @@ export function ContratosTableWrapper({
     const isInitial = prevFiltersRef.current === null;
     prevFiltersRef.current = filterKey;
 
-    if (isInitial) return; // dados já carregados pelo Server Component
+    if (isInitial && hasInitialData) return; // dados já vieram hidratados do server
 
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, refetch]);
+  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, refetch, hasInitialData]);
 
   // ---------- Handlers ----------
   const handleEdit = React.useCallback((contrato: Contrato) => {
@@ -466,7 +468,6 @@ export function ContratosTableWrapper({
           table ? (
             <DataTableToolbar
               table={table}
-              title="Contratos"
               density={density}
               onDensityChange={setDensity}
               searchValue={busca}
@@ -475,10 +476,6 @@ export function ContratosTableWrapper({
                 setPageIndex(0);
               }}
               searchPlaceholder="Buscar contratos..."
-              actionButton={{
-                label: 'Novo Contrato',
-                onClick: () => setCreateOpen(true),
-              }}
               filtersSlot={
                 <>
                   <SegmentosFilter
