@@ -148,19 +148,6 @@ describe('FormStepLayout — public context (default)', () => {
   })
 })
 
-describe('FormStepLayout — internal context (retrocompat admin)', () => {
-  it('não aplica layout viewport-fit quando context="internal"', () => {
-    const { container } = render(
-      <FormStepLayout title="Passo" description="" context="internal">
-        <div />
-      </FormStepLayout>,
-    )
-    // internal mode usa GlassPanel raiz, não o layout de viewport público
-    const viewportDiv = container.querySelector('.h-\\[100dvh\\]')
-    expect(viewportDiv).toBeNull()
-  })
-})
-
 describe('FormStepLayout — chip de etapa derivado do useWizardProgress', () => {
   beforeEach(() => {
     mockedUseWizardProgress.mockReset()

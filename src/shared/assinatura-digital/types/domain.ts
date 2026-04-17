@@ -261,6 +261,20 @@ export interface FormFieldSchema {
 }
 
 /**
+ * Chaves semânticas de ícone pra uso em FormSectionSchema.icon.
+ * Cada chave resolve para um ícone Lucide específico no DynamicFormRenderer.
+ * Quando omitido, o renderer usa heurística baseada no `section.id`.
+ */
+export type FormSectionIcon =
+  | 'search'
+  | 'building' // PJ / parte contrária
+  | 'user' // PF / contato
+  | 'idcard' // identidade / cliente
+  | 'mappin' // endereço
+  | 'briefcase' // ação trabalhista
+  | 'file'; // fallback genérico
+
+/**
  * Agrupamento de campos em seções
  */
 export interface FormSectionSchema {
@@ -270,6 +284,21 @@ export interface FormSectionSchema {
   fields: FormFieldSchema[];
   collapsible?: boolean;
   defaultCollapsed?: boolean;
+
+  /**
+   * Ícone semântico da seção. Opcional — quando omitido, o renderer
+   * infere pelo `section.id` (ex: id contendo "parte-contraria" → building).
+   * Prefira explicitar em schemas novos.
+   */
+  icon?: FormSectionIcon;
+
+  /**
+   * ID do campo que deve ser destacado em GlassPanel depth=2 como
+   * "caminho preferencial" (busca rápida). Opcional — quando omitido,
+   * o renderer pega o primeiro campo tipo PARTE_CONTRARIA_SEARCH ou CLIENT_SEARCH.
+   * Use pra destacar campos de busca customizados.
+   */
+  preferredField?: string;
 }
 
 /**

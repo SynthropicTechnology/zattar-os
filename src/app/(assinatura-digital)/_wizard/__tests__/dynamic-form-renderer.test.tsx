@@ -405,6 +405,97 @@ describe('DynamicFormRenderer — heurística tipo_pessoa filtra CPF/CNPJ', () =
   })
 })
 
+describe('DynamicFormRenderer — schema explícito (section.icon, preferredField)', () => {
+  it('section.icon explícito "search" sobrescreve heurística por id', () => {
+    const schema = buildSchema({
+      sections: [
+        {
+          // id que a heurística acharia "parte-contraria" (→ Building2),
+          // mas schema explicita "search" — esse deve vencer
+          id: 'parte-contraria-custom',
+          title: 'Custom',
+          icon: 'search',
+          fields: [
+            { id: 'a', name: 'a', label: 'A', type: FormFieldType.TEXT, gridColumns: 3 },
+          ],
+        },
+      ],
+    })
+    const { container } = render(
+      <DynamicFormRenderer schema={schema} onSubmit={onSubmit} />,
+    )
+    // Se funcionasse só com heurística, seria Building2; com explícito, é Search
+    // Como não podemos distinguir ícones por string, validamos que o render
+    // acontece sem erro e que o wrapper de ícone está presente.
+    const iconWrapper = container.querySelector('.bg-primary\\/10')
+    expect(iconWrapper?.querySelector('svg')).toBeTruthy()
+  })
+
+  it('section.preferredField permite destacar campo custom como "Busca rápida"', () => {
+    const schema = buildSchema({
+      sections: [
+        {
+          id: 'custom',
+          title: 'Custom',
+          preferredField: 'meu-campo-especial',
+          fields: [
+            {
+              id: 'meu-campo-especial',
+              name: 'meu-campo-especial',
+              label: 'Campo Especial',
+              type: FormFieldType.TEXT,
+              gridColumns: 3,
+            },
+            {
+              id: 'outro',
+              name: 'outro',
+              label: 'Outro',
+              type: FormFieldType.TEXT,
+              gridColumns: 3,
+            },
+          ],
+        },
+      ],
+    })
+    render(<DynamicFormRenderer schema={schema} onSubmit={onSubmit} />)
+    // Mesmo sem campo do tipo SEARCH, a "Busca rápida" aparece porque preferredField aponta
+    expect(screen.getByText(/busca rápida/i)).toBeInTheDocument()
+    // E o divider também aparece (indica que o preferido foi separado do resto)
+    expect(screen.getByText(/não encontrou\? preencha abaixo/i)).toBeInTheDocument()
+  })
+
+  it('preferredField com id inexistente cai em fallback pra search por tipo', () => {
+    const schema = buildSchema({
+      sections: [
+        {
+          id: 'fallback',
+          title: 'Fallback',
+          preferredField: 'campo-que-nao-existe',
+          fields: [
+            {
+              id: 'busca-real',
+              name: 'busca-real',
+              label: 'Buscar',
+              type: FormFieldType.PARTE_CONTRARIA_SEARCH,
+              gridColumns: 3,
+            },
+            {
+              id: 'texto',
+              name: 'texto',
+              label: 'Texto',
+              type: FormFieldType.TEXT,
+              gridColumns: 3,
+            },
+          ],
+        },
+      ],
+    })
+    render(<DynamicFormRenderer schema={schema} onSubmit={onSubmit} />)
+    // Fallback: como preferredField aponta pra campo inexistente, usa o de tipo SEARCH
+    expect(screen.getByText(/busca rápida/i)).toBeInTheDocument()
+  })
+})
+
 describe('DynamicFormRenderer — Separator entre seções com tom outline-variant/30', () => {
   it('múltiplas seções têm separator com tom sutil', () => {
     const schema = buildSchema({

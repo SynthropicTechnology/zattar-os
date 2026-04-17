@@ -139,11 +139,35 @@ Caso raro. Usar `autoFocus` no input desejado dentro do step. **Não desabilitar
 
 ## Testes
 
-Testes unitários do shell em `src/app/(assinatura-digital)/_wizard/__tests__/form-step-layout.test.tsx`. Cobrem:
+### Component tests (Jest + RTL) — fonte da verdade
 
-- Renderização básica + props
-- Chip derivado do hook (mock de `useWizardProgress`)
-- Acessibilidade do `<section>` (aria-labelledby/describedby)
-- Focus management (rAF + fallback heading + filtros tabindex/disabled/hidden)
+| Suite | Arquivo | Escopo |
+|-------|---------|--------|
+| FormStepLayout | `src/app/(assinatura-digital)/_wizard/__tests__/form-step-layout.test.tsx` | Chip derivado, a11y do section, focus management |
+| DynamicFormRenderer | `src/app/(assinatura-digital)/_wizard/__tests__/dynamic-form-renderer.test.tsx` | Ícone semântico, busca depth=2, tipo_pessoa, preferredField/icon explícitos |
+| PublicWizardProgress | `__tests__/public-wizard-progress.test.tsx` | Spine conector, ring primary no current, live regions |
+| PublicStepFooter | `__tests__/public-step-footer.test.tsx` | Glass, mobile flex-1, loading, formId |
 
-Ao mudar o `FIRST_FOCUSABLE_SELECTOR` ou a lógica de chip, **rodar** `npx jest --testPathPatterns=form-step-layout`.
+Rodar: `npx jest --testPathPatterns="form-step-layout|dynamic-form-renderer|public-wizard"`
+
+### E2E (Playwright) — smoke tests
+
+`src/app/(assinatura-digital)/__tests__/e2e/wizard-public-smoke.spec.ts` cobre:
+- Rotas carregam sem crash
+- SkipLink focável via Tab
+- Landmarks presentes
+- Mobile 320px sem overflow horizontal
+
+**NÃO cobre flow completo** do wizard (requer fixture `publicWizardMockedPage` com mock de schema/template). Quando desmocar, expandir o `test.skip('[FUTURO] happy path ...')` desse mesmo arquivo.
+
+### Visual review — sem Storybook (deliberado)
+
+**Não adotamos Storybook**. Alternativas:
+
+1. **Dev server local** (`npm run dev`) + navegar pras rotas reais — validação mais próxima do produto
+2. **Component tests** como "golden source" de comportamento (73 asserções atuais)
+3. **Screenshots em PR reviews** — compartilhar print direto no GitHub antes de merge
+
+Storybook seria justificado se: (a) fluxo de revisão visual assíncrono virar gargalo, (b) design system for consumido por outras apps, (c) novos devs precisarem aprender o DS sem contexto do produto. Nenhum desses cenários se aplica hoje.
+
+Se no futuro fizer sentido, começar pelo `@storybook/experimental-nextjs-vite` (menor config) e migrar 4-5 stories dos componentes do public-shell primeiro.

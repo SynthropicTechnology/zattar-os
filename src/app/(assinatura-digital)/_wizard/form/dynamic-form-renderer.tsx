@@ -394,7 +394,7 @@ export default function DynamicFormRenderer({
       case FormFieldType.TEXTAREA:
         return (
           <FormControl>
-            <Textarea rows={4} className="glass-field !h-auto min-h-[6rem] py-3" {...commonProps} {...stringFieldProps} />
+            <Textarea rows={4} className="glass-field h-auto! min-h-24 py-3" {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
@@ -605,10 +605,29 @@ export default function DynamicFormRenderer({
   };
 
   /**
-   * Infer a semantic icon for a section from its id or first field type.
-   * Falls back to FileText when no pattern matches.
+   * Resolve a FormSectionIcon key into a Lucide icon component.
+   */
+  const ICON_MAP: Record<NonNullable<FormSectionSchema['icon']>, LucideIcon> = {
+    search: Search,
+    building: Building2,
+    user: User,
+    idcard: IdCard,
+    mappin: MapPin,
+    briefcase: Briefcase,
+    file: FileText,
+  };
+
+  /**
+   * Obtém ícone semântico pra uma seção.
+   * Prioridade: section.icon explícito > heurística por section.id.
+   * Fallback final: FileText (genérico).
    */
   const getSectionIcon = (section: FormSectionSchema): LucideIcon => {
+    // 1. Schema explícito (preferido — schemas novos)
+    if (section.icon && ICON_MAP[section.icon]) {
+      return ICON_MAP[section.icon];
+    }
+    // 2. Heurística por id (retrocompat com schemas antigos sem icon)
     const id = section.id.toLowerCase();
     if (id.includes('parte-contraria') || id.includes('parte_contraria')) return Building2;
     if (id.includes('cliente') || id.includes('identidade')) return IdCard;
@@ -617,6 +636,28 @@ export default function DynamicFormRenderer({
     if (id.includes('busca') || id.includes('search')) return Search;
     if (id.includes('contato')) return User;
     return FileText;
+  };
+
+  /**
+   * Determina qual campo é o "caminho preferencial" (busca rápida) de uma seção.
+   * Prioridade: section.preferredField explícito > primeiro campo de busca por type.
+   * Retorna undefined quando nenhum dos dois está disponível.
+   */
+  const getPreferredField = (
+    section: FormSectionSchema,
+    visibleFields: FormFieldSchema[],
+  ): FormFieldSchema | undefined => {
+    // 1. Schema explícito
+    if (section.preferredField) {
+      const explicit = visibleFields.find((f) => f.id === section.preferredField);
+      if (explicit) return explicit;
+    }
+    // 2. Heurística por tipo
+    return visibleFields.find(
+      (f) =>
+        f.type === FormFieldType.PARTE_CONTRARIA_SEARCH ||
+        f.type === FormFieldType.CLIENT_SEARCH,
+    );
   };
 
   /**
@@ -649,11 +690,7 @@ export default function DynamicFormRenderer({
       });
     }
 
-    const searchField = visibleFields.find(
-      (f) =>
-        f.type === FormFieldType.PARTE_CONTRARIA_SEARCH ||
-        f.type === FormFieldType.CLIENT_SEARCH,
-    );
+    const searchField = getPreferredField(section, visibleFields);
     const manualFields = visibleFields.filter((f) => f !== searchField);
 
     return (

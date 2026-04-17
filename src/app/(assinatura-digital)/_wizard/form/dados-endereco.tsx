@@ -36,6 +36,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
 import FormStepLayout from './form-step-layout'
 
 export default function DadosEndereco() {
@@ -234,11 +235,9 @@ export default function DadosEndereco() {
           className="space-y-6"
         >
           {clienteExistente && (
-            <div className="flex">
-              <span className="inline-flex items-center rounded-full border border-info/20 bg-info/10 px-3 py-1 text-xs font-medium text-info">
-                Dados importados
-              </span>
-            </div>
+            <Badge tone="soft" variant="info">
+              Dados importados
+            </Badge>
           )}
 
           <FormField
@@ -383,10 +382,6 @@ export default function DadosEndereco() {
               )}
             />
           </div>
-
-          <button type="submit" className="sr-only" aria-hidden="true" tabIndex={-1}>
-            Submit
-          </button>
         </form>
       </Form>
     </FormStepLayout>
