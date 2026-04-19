@@ -30,7 +30,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import FormStepLayout from './form-step-layout'
 
 export default function DadosIdentidade() {
@@ -105,12 +104,6 @@ export default function DadosIdentidade() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6"
         >
-          {clienteExistente && (
-            <Badge tone="soft" variant="info">
-              Dados importados
-            </Badge>
-          )}
-
           <FormField
             control={form.control}
             name="name"
@@ -120,7 +113,7 @@ export default function DadosIdentidade() {
                 <FormControl>
                   <Input
                     placeholder="Digite seu nome completo"
-                    className="glass-field"
+                    variant="glass"
                     {...field}
                   />
                 </FormControl>
@@ -129,7 +122,7 @@ export default function DadosIdentidade() {
             )}
           />
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
               control={form.control}
               name="cpf"
@@ -140,7 +133,6 @@ export default function DadosIdentidade() {
                     <InputCPF
                       placeholder="000.000.000-00"
                       disabled
-                      className="glass-field"
                       {...field}
                     />
                   </FormControl>
@@ -158,7 +150,7 @@ export default function DadosIdentidade() {
                   <FormControl>
                     <Input
                       placeholder="Digite seu RG"
-                      className="glass-field"
+                      variant="glass"
                       {...field}
                     />
                   </FormControl>
@@ -168,28 +160,27 @@ export default function DadosIdentidade() {
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name="dataNascimento"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2">
-                  Data de Nascimento
-                  <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                </FormLabel>
-                <FormControl>
-                  <InputData
-                    placeholder="dd/mm/aaaa"
-                    className="glass-field"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="dataNascimento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    Data de Nascimento
+                    <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                  </FormLabel>
+                  <FormControl>
+                    <InputData
+                      placeholder="dd/mm/aaaa"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <FormField
               control={form.control}
               name="genero"
@@ -198,7 +189,7 @@ export default function DadosIdentidade() {
                   <FormLabel>Gênero</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="glass-field">
+                      <SelectTrigger variant="glass">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>
@@ -214,7 +205,9 @@ export default function DadosIdentidade() {
                 </FormItem>
               )}
             />
+          </div>
 
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
               control={form.control}
               name="nacionalidade"
@@ -223,7 +216,7 @@ export default function DadosIdentidade() {
                   <FormLabel>Nacionalidade</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="glass-field">
+                      <SelectTrigger variant="glass">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>
@@ -252,7 +245,7 @@ export default function DadosIdentidade() {
                   <FormLabel>Estado Civil</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="glass-field">
+                      <SelectTrigger variant="glass">
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                     </FormControl>

@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrato Detalhes — Redesign POC · ZattarOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   ZATTAROS · CONTRATO DETALHES — POC Redesign
+   Tokens OKLCH extraídos de src/app/globals.css
+   Zero CSS inline no JSX final — só tokens e classes.
+   ================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Core semantic tokens — light */
+  --background: oklch(0.96 0.01 281);
+  --foreground: oklch(0.15 0.01 281);
+  --card: oklch(1.0 0 0);
+  --card-foreground: oklch(0.15 0.01 281);
+  --popover: oklch(1.0 0 0);
+  --primary: oklch(0.48 0.26 281);
+  --primary-foreground: oklch(1.0 0 0);
+  --secondary: oklch(0.95 0.04 281);
+  --muted: oklch(0.92 0.01 281);
+  --muted-foreground: oklch(0.42 0.01 281);
+  --accent: oklch(0.95 0.04 281);
+  --border: oklch(0.87 0.01 281);
+  --input: oklch(0.87 0.01 281);
+  --ring: oklch(0.48 0.26 281);
+
+  /* Status semantic colors */
+  --success: oklch(0.55 0.18 145);
+  --warning: oklch(0.60 0.18 75);
+  --info: oklch(0.55 0.18 250);
+  --destructive: oklch(0.55 0.22 25);
+
+  /* Surface (MD3) */
+  --surface-dim: oklch(0.90 0.005 281);
+  --surface-container-lowest: oklch(1.0 0 0);
+  --outline-variant: oklch(0.78 0.01 281);
+
+  /* Radii */
+  --radius: 0.5rem;
+  --radius-card: 20px;
+  --radius-input: 12px;
+  --radius-pill: 999px;
+
+  /* Fontes */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --font-display: 'Manrope', sans-serif;
+
+  /* Sombras glass */
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04),
+                 0 12px 32px -12px oklch(0.15 0.1 281 / 0.18);
+  --shadow-hover: 0 4px 14px oklch(0 0 0 / 0.06);
+
+  /* Glass backgrounds (light) */
+  --glass-depth-1: oklch(1.0 0 0 / 0.72);
+  --glass-depth-2: oklch(1.0 0 0 / 0.85);
+  --glass-border: oklch(0.87 0.01 281 / 0.5);
+}
+
+.dark {
+  --background: oklch(0.17 0.005 281);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.22 0.005 281);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.22 0.005 281);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.70 0.20 281);
+  --primary-foreground: oklch(0.15 0.10 281);
+  --secondary: oklch(0.28 0.01 281);
+  --muted: oklch(0.28 0.005 281);
+  --muted-foreground: oklch(0.65 0.005 281);
+  --accent: oklch(0.28 0.01 281);
+  --border: oklch(1.0 0 0 / 0.12);
+  --input: oklch(1.0 0 0 / 0.12);
+
+  --success: oklch(0.70 0.18 145);
+  --warning: oklch(0.78 0.16 85);
+  --info: oklch(0.70 0.18 250);
+  --destructive: oklch(0.65 0.20 25);
+
+  --surface-dim: oklch(0.12 0.005 281);
+  --surface-container-lowest: oklch(0.06 0.005 281);
+  --outline-variant: oklch(0.35 0.005 281);
+
+  --glass-depth-1: oklch(0.22 0.005 281 / 0.6);
+  --glass-depth-2: oklch(0.26 0.005 281 / 0.72);
+  --glass-border: oklch(1.0 0 0 / 0.1);
+
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.3),
+                 0 24px 64px -16px oklch(0 0 0 / 0.5);
+  --shadow-hover: 0 4px 14px oklch(0 0 0 / 0.4);
+}
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--surface-dim);
+  color: var(--foreground);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+/* Ambient gradient backdrop */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, oklch(0.48 0.26 281 / 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 90%, oklch(0.55 0.18 250 / 0.06) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ============================================================
+   BREADCRUMB
+   ============================================================ */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.breadcrumb a {
+  color: var(--muted-foreground);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: background 0.15s, color 0.15s;
+}
+.breadcrumb a:hover { background: var(--muted); color: var(--foreground); }
+.breadcrumb .sep { color: oklch(from var(--muted-foreground) l c h / 0.4); }
+.breadcrumb .current { color: var(--foreground); font-weight: 500; padding: 0.25rem 0; }
+
+/* ============================================================
+   GLASS PANEL (depth variants)
+   ============================================================ */
+.glass {
+  background: var(--glass-depth-1);
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+.glass-2 {
+  background: var(--glass-depth-2);
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+}
+
+/* ============================================================
+   HERO COCKPIT
+   ============================================================ */
+.hero {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.hero-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.hero-identity .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-pill);
+  background: oklch(from var(--primary) l c h / 0.08);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.hero-identity .dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: oklch(from var(--muted-foreground) l c h / 0.5);
+}
+.hero-identity .meta { font-variant-numeric: tabular-nums; font-weight: 500; }
+
+/* Partes row (cliente vs parte contrária) */
+.parties {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+.party {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+.party-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.party-label .chip-mini {
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 9px;
+  background: oklch(from var(--primary) l c h / 0.1);
+  color: var(--primary);
+  border: 1px solid oklch(from var(--primary) l c h / 0.2);
+}
+.party-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--foreground);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.party-sub {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.party.passivo { text-align: right; }
+.party.passivo .party-label { justify-content: flex-end; }
+.vs-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  padding: 0 0.75rem;
+}
+
+/* Status pills */
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Actions rail */
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+  border-top: 1px solid oklch(from var(--border) l c h / 0.5);
+}
+.hero-actions .spacer { flex: 1; }
+
+/* Back button (top-left of hero) */
+.hero-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.75rem;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.15s;
+  align-self: flex-start;
+  margin-bottom: -0.5rem;
+}
+.hero-back:hover { background: var(--muted); color: var(--foreground); }
+
+/* ============================================================
+   BADGES & PILLS
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  font-variant-numeric: tabular-nums;
+}
+.badge-primary { background: oklch(from var(--primary) l c h / 0.1); color: var(--primary); border-color: oklch(from var(--primary) l c h / 0.2); }
+.badge-success { background: oklch(from var(--success) l c h / 0.1); color: var(--success); border-color: oklch(from var(--success) l c h / 0.2); }
+.badge-warning { background: oklch(from var(--warning) l c h / 0.1); color: var(--warning); border-color: oklch(from var(--warning) l c h / 0.2); }
+.badge-info { background: oklch(from var(--info) l c h / 0.1); color: var(--info); border-color: oklch(from var(--info) l c h / 0.2); }
+.badge-destructive { background: oklch(from var(--destructive) l c h / 0.1); color: var(--destructive); border-color: oklch(from var(--destructive) l c h / 0.2); }
+.badge-muted { background: var(--muted); color: var(--muted-foreground); border-color: var(--border); }
+
+.badge svg { width: 11px; height: 11px; }
+
+/* Solid status badges (stronger visibility in hero) */
+.badge-solid-success { background: var(--success); color: oklch(1 0 0); }
+.badge-solid-warning { background: var(--warning); color: oklch(0.15 0 0); }
+.badge-solid-info { background: var(--info); color: oklch(1 0 0); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.75rem;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  font-family: inherit;
+  background: transparent;
+  color: var(--foreground);
+}
+.btn svg { width: 14px; height: 14px; }
+.btn-primary { background: var(--primary); color: var(--primary-foreground); }
+.btn-primary:hover { filter: brightness(1.08); box-shadow: 0 4px 12px oklch(from var(--primary) l c h / 0.25); }
+.btn-outline { border-color: var(--border); background: oklch(from var(--card) l c h / 0.5); }
+.btn-outline:hover { background: var(--card); border-color: var(--outline-variant); }
+.btn-ghost { color: var(--muted-foreground); }
+.btn-ghost:hover { background: var(--muted); color: var(--foreground); }
+.btn-icon { padding: 0.5rem; width: 2.25rem; height: 2.25rem; justify-content: center; }
+
+/* ============================================================
+   ATTENTION STRIP
+   ============================================================ */
+.attention {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.125rem;
+  border-radius: 14px;
+  background: oklch(from var(--warning) l c h / 0.06);
+  border: 1px solid oklch(from var(--warning) l c h / 0.2);
+  color: var(--foreground);
+  font-size: 13px;
+}
+.attention-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: oklch(from var(--warning) l c h / 0.15);
+  color: var(--warning);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.attention-text { flex: 1; min-width: 0; }
+.attention-text strong { font-weight: 600; }
+.attention-text span { color: var(--muted-foreground); font-size: 12px; display: block; margin-top: 2px; }
+.attention-action {
+  padding: 0.375rem 0.75rem;
+  border-radius: 8px;
+  background: var(--warning);
+  color: oklch(0.15 0 0);
+  font-size: 12px;
+  font-weight: 600;
+  border: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   QUICK FACTS (PulseStrip pattern)
+   ============================================================ */
+.quickfacts-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 1.125rem 1.5rem 0.75rem;
+}
+.quickfacts-header .icon-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: oklch(from var(--primary) l c h / 0.08);
+  color: oklch(from var(--primary) l c h / 0.7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.quickfacts-header h3 {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+.quickfacts-header .badge { margin-left: auto; }
+
+.quickfacts-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+  padding: 0 1.5rem 1.25rem;
+}
+.fact-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: 12px;
+  background: oklch(from var(--card) l c h / 0.5);
+  border: 1px solid var(--glass-border);
+  position: relative;
+  overflow: hidden;
+}
+.fact-tile .fact-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.fact-tile .fact-label svg { width: 11px; height: 11px; }
+.fact-tile .fact-value {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-top: 2px;
+  color: var(--foreground);
+}
+.fact-tile .fact-sub {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+.fact-tile .fact-bar {
+  margin-top: 0.5rem;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--muted);
+  overflow: hidden;
+}
+.fact-tile .fact-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+.fact-value.pos { color: var(--success); }
+.fact-value.neg { color: var(--warning); }
+
+/* ============================================================
+   TABS
+   ============================================================ */
+.tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem;
+  border-radius: 14px;
+  background: oklch(from var(--border) l c h / 0.25);
+  border: 1px solid var(--glass-border);
+  overflow-x: auto;
+  width: max-content;
+}
+.tab-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.tab-trigger svg { width: 14px; height: 14px; }
+.tab-trigger:hover { color: var(--foreground); }
+.tab-trigger.active {
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 0 1px 3px oklch(0 0 0 / 0.05);
+}
+
+.tab-panel { display: none; flex-direction: column; gap: 1rem; }
+.tab-panel.active { display: flex; }
+
+/* ============================================================
+   WIDGET CONTAINER (in tabs)
+   ============================================================ */
+.widget {
+  padding: 1.25rem;
+}
+.widget-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+}
+.widget-header .icon-chip {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: oklch(from var(--primary) l c h / 0.08);
+  color: oklch(from var(--primary) l c h / 0.7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.widget-header h4 {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+  flex: 1;
+}
+.widget-header .actions {
+  display: flex;
+  gap: 0.375rem;
+}
+
+/* ============================================================
+   RESUMO — Split layout
+   ============================================================ */
+.resumo-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.resumo-col { display: flex; flex-direction: column; gap: 1rem; }
+
+/* Data field grid */
+.fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.875rem 1.25rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.field-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.field-value {
+  font-size: 13px;
+  color: var(--foreground);
+  font-weight: 500;
+}
+.field-value.mono { font-variant-numeric: tabular-nums; }
+
+/* Observação — sticky note */
+.obs-note {
+  padding: 1rem 1.125rem;
+  border-radius: 14px;
+  background: oklch(from var(--warning) l c h / 0.05);
+  border: 1px solid oklch(from var(--warning) l c h / 0.15);
+  border-left: 3px solid var(--warning);
+}
+.obs-note .obs-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+.obs-note p {
+  font-size: 13px;
+  color: oklch(from var(--foreground) l c h / 0.85);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+/* Partes list (dentro de resumo) */
+.partes-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.parte-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 12px;
+  background: oklch(from var(--card) l c h / 0.5);
+  border: 1px solid var(--glass-border);
+}
+.parte-role {
+  width: 4px;
+  height: 28px;
+  border-radius: 2px;
+}
+.parte-role.autora { background: var(--info); }
+.parte-role.re { background: var(--warning); }
+.parte-info { flex: 1; min-width: 0; }
+.parte-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.parte-tipo {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Processos vinculados — rows compactos */
+.processo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 12px;
+  background: oklch(from var(--card) l c h / 0.5);
+  border: 1px solid var(--glass-border);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.processo-row:hover { background: var(--card); }
+.processo-row .num {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.processo-row .meta {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+.processo-row .open {
+  color: oklch(from var(--muted-foreground) l c h / 0.5);
+  transition: color 0.15s;
+}
+.processo-row:hover .open { color: var(--primary); }
+
+/* Timeline condensada (dentro de resumo) */
+.timeline-mini { display: flex; flex-direction: column; gap: 0.625rem; }
+.timeline-mini-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 12px;
+}
+.timeline-mini-row .seq {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+}
+.timeline-mini-row .seq .label {
+  color: var(--muted-foreground);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.timeline-mini-row .date { font-size: 10px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Financeiro — inline summary */
+.fin-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
+}
+.fin-summary-tile {
+  padding: 0.625rem 0.875rem;
+  border-radius: 10px;
+  background: oklch(from var(--card) l c h / 0.5);
+  border: 1px solid var(--glass-border);
+}
+.fin-summary-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.fin-summary-value {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+.fin-summary-value.pos { color: var(--success); }
+.fin-summary-value.warn { color: var(--warning); }
+
+/* ============================================================
+   FINANCEIRO — KPI strip + glass list
+   ============================================================ */
+.fin-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.125rem;
+}
+.fin-kpi {
+  padding: 0.875rem 1rem;
+  border-radius: 14px;
+  background: oklch(from var(--card) l c h / 0.5);
+  border: 1px solid var(--glass-border);
+}
+.fin-kpi .lbl {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.fin-kpi .val {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.25rem;
+  line-height: 1;
+}
+.fin-kpi .val.success { color: var(--success); }
+.fin-kpi .val.warning { color: var(--warning); }
+
+.fin-progress {
+  margin-bottom: 1.25rem;
+}
+.fin-progress-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 0.5rem;
+}
+.fin-progress-head .lbl { color: var(--muted-foreground); font-weight: 500; }
+.fin-progress-head .pct { color: var(--primary); font-weight: 700; font-variant-numeric: tabular-nums; }
+.fin-progress-track {
+  height: 6px;
+  border-radius: 6px;
+  background: oklch(from var(--muted) l c h / 0.5);
+  overflow: hidden;
+}
+.fin-progress-track > span {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--primary), oklch(from var(--primary) l c h / 0.7));
+}
+
+/* Lançamentos — glass list */
+.lanca-head {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0 1rem 0.5rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.lanca-row {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 1fr 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: oklch(from var(--card) l c h / 0.5);
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  margin-bottom: 0.375rem;
+  transition: background 0.15s;
+}
+.lanca-row:hover { background: var(--card); }
+.lanca-row .desc { font-weight: 500; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lanca-row .val { font-variant-numeric: tabular-nums; font-weight: 600; }
+.lanca-row .venc { font-variant-numeric: tabular-nums; color: var(--muted-foreground); font-size: 12px; }
+
+/* ============================================================
+   DOCUMENTOS
+   ============================================================ */
+.docs-trabalhista {
+  padding: 1.25rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg,
+      oklch(from var(--primary) l c h / 0.06),
+      oklch(from var(--primary) l c h / 0.02));
+  border: 1px solid oklch(from var(--primary) l c h / 0.2);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.docs-trabalhista .icon-big {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: oklch(from var(--primary) l c h / 0.12);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.docs-trabalhista .body { flex: 1; min-width: 0; }
+.docs-trabalhista h4 {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+.docs-trabalhista p { font-size: 12px; color: var(--muted-foreground); margin-top: 2px; }
+.docs-trabalhista .actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+.doc-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 0.875rem;
+  border-radius: 12px;
+  background: oklch(from var(--card) l c h / 0.5);
+  border: 1px solid var(--glass-border);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.doc-row:hover { background: var(--card); }
+.doc-row .doc-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: oklch(from var(--info) l c h / 0.1);
+  color: var(--info);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.doc-row .doc-name { font-size: 13px; font-weight: 600; color: var(--foreground); }
+.doc-row .doc-meta { font-size: 11px; color: var(--muted-foreground); margin-top: 2px; }
+.doc-row .doc-size { font-size: 11px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   HISTÓRICO — Timeline
+   ============================================================ */
+.hist-month {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: oklch(from var(--muted-foreground) l c h / 0.5);
+  padding: 0.5rem 0 0.5rem 2.5rem;
+}
+.hist-event {
+  display: flex;
+  gap: 0.875rem;
+  padding-bottom: 1.25rem;
+  position: relative;
+}
+.hist-event .dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+  background: var(--card);
+  border: 1px solid var(--glass-border);
+}
+.hist-event .dot svg { width: 14px; height: 14px; }
+.hist-event .dot.success { background: oklch(from var(--success) l c h / 0.1); color: var(--success); }
+.hist-event .dot.info { background: oklch(from var(--info) l c h / 0.1); color: var(--info); }
+.hist-event .dot.warning { background: oklch(from var(--warning) l c h / 0.1); color: var(--warning); }
+.hist-event .dot.primary { background: oklch(from var(--primary) l c h / 0.1); color: var(--primary); }
+.hist-event:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 13.5px;
+  width: 1px;
+  bottom: 0;
+  background: var(--glass-border);
+}
+.hist-event .body { flex: 1; min-width: 0; padding-top: 0.25rem; }
+.hist-event .line { font-size: 13px; display: flex; align-items: center; flex-wrap: wrap; gap: 0.375rem; }
+.hist-event .line strong { font-weight: 500; color: oklch(from var(--foreground) l c h / 0.85); }
+.hist-event .time { font-size: 11px; color: var(--muted-foreground); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.hist-event .reason {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: oklch(from var(--muted) l c h / 0.4);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   DARK MODE TOGGLE (floating)
+   ============================================================ */
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 0.75rem 1.125rem;
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 99;
+}
+.theme-toggle svg { width: 14px; height: 14px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .resumo-split { grid-template-columns: 1fr; }
+  .quickfacts-grid { grid-template-columns: repeat(2, 1fr); }
+  .fin-kpi-strip { grid-template-columns: 1fr; }
+  .parties { grid-template-columns: 1fr; gap: 0.5rem; }
+  .party.passivo { text-align: left; }
+  .party.passivo .party-label { justify-content: flex-start; }
+  .vs-divider { display: none; }
+  .lanca-head, .lanca-row { grid-template-columns: 1fr; }
+  .lanca-head .hide-mobile, .lanca-row .hide-mobile { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- SVG Icons library (hidden, referenced by <use>) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+  <symbol id="i-layout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></symbol>
+  <symbol id="i-sticky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v6h6"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+  <symbol id="i-filedown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- ============================================================
+       BREADCRUMB
+       ============================================================ -->
+  <nav class="breadcrumb">
+    <a href="#"><svg><use href="#i-arrow-left"/></svg> Contratos</a>
+    <span class="sep">/</span>
+    <span class="current">Ajuizamento Trabalhista · Maria Oliveira</span>
+  </nav>
+
+  <!-- ============================================================
+       HERO COCKPIT
+       ============================================================ -->
+  <section class="glass hero">
+    <!-- Identity line -->
+    <div class="hero-identity">
+      <span class="chip">
+        <svg style="width:10px;height:10px"><use href="#i-file-text"/></svg>
+        Contrato #1234
+      </span>
+      <span class="meta">Ajuizamento</span>
+      <span class="dot"></span>
+      <span class="meta">Pró-Êxito</span>
+      <span class="dot"></span>
+      <span class="meta">Trabalhista</span>
+      <span class="dot"></span>
+      <span class="meta">Cadastrado 17/04/2026 · 12 dias no estágio</span>
+    </div>
+
+    <!-- Parties -->
+    <div class="parties">
+      <div class="party autora">
+        <span class="party-label">
+          <span class="chip-mini">Cliente</span>
+          Polo Ativo
+        </span>
+        <span class="party-name">MARIA OLIVEIRA DA SILVA</span>
+        <span class="party-sub">CPF 123.456.789-00</span>
+      </div>
+
+      <div class="vs-divider">×</div>
+
+      <div class="party passivo">
+        <span class="party-label">
+          Polo Passivo
+          <span class="chip-mini" style="background: oklch(from var(--warning) l c h / 0.1); color: var(--warning); border-color: oklch(from var(--warning) l c h / 0.2);">Contrária</span>
+        </span>
+        <span class="party-name">ACME INDÚSTRIA E COMÉRCIO LTDA</span>
+        <span class="party-sub">CNPJ 12.345.678/0001-90 · e outros (2)</span>
+      </div>
+    </div>
+
+    <!-- Status row -->
+    <div class="status-row">
+      <span class="badge badge-warning">
+        <svg><use href="#i-clock"/></svg>
+        Em Contratação
+      </span>
+      <span class="badge badge-primary">Ajuizamento</span>
+      <span class="badge badge-muted">Pró-Êxito</span>
+      <span class="badge badge-info">Trabalhista</span>
+    </div>
+
+    <!-- Actions rail -->
+    <div class="hero-actions">
+      <button class="btn btn-primary">
+        <svg><use href="#i-edit"/></svg>
+        Editar contrato
+      </button>
+      <button class="btn btn-outline">
+        <svg><use href="#i-user"/></svg>
+        Responsável
+      </button>
+      <button class="btn btn-outline">
+        <svg><use href="#i-file-text"/></svg>
+        Gerar peça
+      </button>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost btn-icon" aria-label="Mais opções">
+        <svg><use href="#i-more"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ATTENTION STRIP
+       ============================================================ -->
+  <div class="attention">
+    <div class="attention-icon">
+      <svg><use href="#i-alert"/></svg>
+    </div>
+    <div class="attention-text">
+      <strong>Documentos de contratação pendentes.</strong>
+      <span>4 PDFs trabalhistas prontos para envio. Gere e envie para assinatura do cliente.</span>
+    </div>
+    <button class="attention-action">Enviar para assinar</button>
+  </div>
+
+  <!-- ============================================================
+       QUICK FACTS (PulseStrip unificado)
+       ============================================================ -->
+  <section class="glass">
+    <div class="quickfacts-header">
+      <span class="icon-chip"><svg style="width:14px;height:14px"><use href="#i-git-branch"/></svg></span>
+      <h3>Visão geral</h3>
+      <span class="badge badge-primary">4 meses ativos</span>
+    </div>
+    <div class="quickfacts-grid">
+      <div class="fact-tile">
+        <span class="fact-label"><svg><use href="#i-dollar"/></svg> Valor total</span>
+        <span class="fact-value">R$ 48.500</span>
+        <span class="fact-sub">3 lançamentos</span>
+      </div>
+      <div class="fact-tile">
+        <span class="fact-label"><svg><use href="#i-check-circle"/></svg> Recebido</span>
+        <span class="fact-value pos">R$ 18.200</span>
+        <div class="fact-bar"><span style="width:37%;background:var(--success);"></span></div>
+      </div>
+      <div class="fact-tile">
+        <span class="fact-label"><svg><use href="#i-clock"/></svg> Pendente</span>
+        <span class="fact-value neg">R$ 30.300</span>
+        <div class="fact-bar"><span style="width:63%;background:var(--warning);"></span></div>
+      </div>
+      <div class="fact-tile">
+        <span class="fact-label"><svg><use href="#i-scale"/></svg> Processos</span>
+        <span class="fact-value">2</span>
+        <span class="fact-sub">1 distribuído</span>
+      </div>
+      <div class="fact-tile">
+        <span class="fact-label"><svg><use href="#i-file-text"/></svg> Documentos</span>
+        <span class="fact-value">7</span>
+        <span class="fact-sub">4 trabalhistas</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TABS
+       ============================================================ -->
+  <div class="tabs-bar" role="tablist">
+    <button class="tab-trigger active" data-tab="resumo"><svg><use href="#i-layout"/></svg> Resumo</button>
+    <button class="tab-trigger" data-tab="financeiro"><svg><use href="#i-wallet"/></svg> Financeiro</button>
+    <button class="tab-trigger" data-tab="documentos"><svg><use href="#i-file-text"/></svg> Documentos</button>
+    <button class="tab-trigger" data-tab="historico"><svg><use href="#i-history"/></svg> Histórico</button>
+    <button class="tab-trigger" data-tab="entrevista"><svg><use href="#i-clipboard"/></svg> Entrevista</button>
+  </div>
+
+  <!-- ============================================================
+       TAB RESUMO — Split layout com observações em cima
+       ============================================================ -->
+  <div class="tab-panel active" data-panel="resumo">
+
+    <!-- Observações como "sticky note" (se existir) -->
+    <div class="obs-note">
+      <div class="obs-label">
+        <svg style="width:11px;height:11px"><use href="#i-sticky"/></svg>
+        Observações
+      </div>
+      <p>Cliente solicitou prioridade na distribuição. Já realizou depósito de 30% do honorário pró-labore. Verificar se há pedido de tutela antecipada junto com a inicial.</p>
+    </div>
+
+    <div class="resumo-split">
+      <div class="resumo-col">
+        <!-- Dados do contrato -->
+        <section class="glass widget">
+          <div class="widget-header">
+            <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-file-text"/></svg></span>
+            <h4>Dados do contrato</h4>
+          </div>
+          <div class="fields-grid">
+            <div class="field">
+              <span class="field-label">Tipo</span>
+              <span class="field-value">Ajuizamento</span>
+            </div>
+            <div class="field">
+              <span class="field-label">Cobrança</span>
+              <span class="field-value">Pró-Êxito (20%)</span>
+            </div>
+            <div class="field">
+              <span class="field-label">Segmento</span>
+              <span class="field-value">Trabalhista</span>
+            </div>
+            <div class="field">
+              <span class="field-label">Papel do cliente</span>
+              <span class="field-value">Autora</span>
+            </div>
+            <div class="field">
+              <span class="field-label">Cadastrado em</span>
+              <span class="field-value mono">17/04/2026</span>
+            </div>
+            <div class="field">
+              <span class="field-label">Dias no estágio</span>
+              <span class="field-value mono">12</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Partes envolvidas (lista expandida) -->
+        <section class="glass widget">
+          <div class="widget-header">
+            <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-users"/></svg></span>
+            <h4>Partes envolvidas</h4>
+            <div class="actions">
+              <button class="btn btn-ghost btn-icon" aria-label="Adicionar parte"><svg><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="partes-list">
+            <div class="parte-item">
+              <span class="parte-role autora"></span>
+              <div class="parte-info">
+                <div class="parte-nome">Maria Oliveira da Silva</div>
+                <div class="parte-tipo">Cliente · Polo Ativo</div>
+              </div>
+              <span class="badge badge-info">Autora</span>
+            </div>
+            <div class="parte-item">
+              <span class="parte-role re"></span>
+              <div class="parte-info">
+                <div class="parte-nome">ACME Indústria e Comércio LTDA</div>
+                <div class="parte-tipo">Parte Contrária · Polo Passivo</div>
+              </div>
+              <span class="badge badge-warning">Ré</span>
+            </div>
+            <div class="parte-item">
+              <span class="parte-role re"></span>
+              <div class="parte-info">
+                <div class="parte-nome">Beta Serviços Eireli</div>
+                <div class="parte-tipo">Parte Contrária · Polo Passivo</div>
+              </div>
+              <span class="badge badge-warning">Ré</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="resumo-col">
+        <!-- Processos vinculados -->
+        <section class="glass widget">
+          <div class="widget-header">
+            <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-scale"/></svg></span>
+            <h4>Processos vinculados</h4>
+            <div class="actions">
+              <button class="btn btn-ghost btn-icon" aria-label="Vincular processo"><svg><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;">
+            <div class="processo-row">
+              <div style="flex:1;min-width:0;">
+                <div class="num">0001234-56.2026.5.17.0001</div>
+                <div class="meta">TRT 17 · 1º Grau · Distribuído 02/03/2026</div>
+              </div>
+              <svg class="open" width="16" height="16"><use href="#i-external"/></svg>
+            </div>
+            <div class="processo-row">
+              <div style="flex:1;min-width:0;">
+                <div class="num">0004321-98.2026.5.17.0001</div>
+                <div class="meta">TRT 17 · 1º Grau · Aguardando autuação</div>
+              </div>
+              <svg class="open" width="16" height="16"><use href="#i-external"/></svg>
+            </div>
+          </div>
+        </section>
+
+        <!-- Resumo financeiro -->
+        <section class="glass widget">
+          <div class="widget-header">
+            <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-dollar"/></svg></span>
+            <h4>Financeiro</h4>
+          </div>
+          <div class="fin-summary-grid">
+            <div class="fin-summary-tile">
+              <div class="fin-summary-label">Recebido</div>
+              <div class="fin-summary-value pos">R$ 18.200</div>
+            </div>
+            <div class="fin-summary-tile">
+              <div class="fin-summary-label">Pendente</div>
+              <div class="fin-summary-value warn">R$ 30.300</div>
+            </div>
+          </div>
+          <div class="fin-progress">
+            <div class="fin-progress-head">
+              <span class="lbl">Progresso de recebimento</span>
+              <span class="pct">37%</span>
+            </div>
+            <div class="fin-progress-track"><span style="width:37%;"></span></div>
+          </div>
+        </section>
+
+        <!-- Timeline mini -->
+        <section class="glass widget">
+          <div class="widget-header">
+            <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-history"/></svg></span>
+            <h4>Últimas mudanças</h4>
+          </div>
+          <div class="timeline-mini">
+            <div class="timeline-mini-row">
+              <div class="seq">
+                <span class="label">Em Contratação</span>
+                <svg width="10" height="10" style="color:var(--muted-foreground)"><use href="#i-arrow-right"/></svg>
+                <span class="badge badge-warning">Em Contratação</span>
+              </div>
+              <span class="date">17/04/2026</span>
+            </div>
+            <div class="timeline-mini-row">
+              <div class="seq">
+                <span class="label">-</span>
+                <span class="badge badge-primary">Criado</span>
+              </div>
+              <span class="date">05/04/2026</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TAB FINANCEIRO
+       ============================================================ -->
+  <div class="tab-panel" data-panel="financeiro">
+    <section class="glass widget">
+      <div class="widget-header">
+        <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-dollar"/></svg></span>
+        <h4>Financeiro</h4>
+      </div>
+
+      <div class="fin-kpi-strip">
+        <div class="fin-kpi">
+          <div class="lbl">Valor total</div>
+          <div class="val">R$ 48.500</div>
+        </div>
+        <div class="fin-kpi">
+          <div class="lbl">Recebido</div>
+          <div class="val success">R$ 18.200</div>
+        </div>
+        <div class="fin-kpi">
+          <div class="lbl">Pendente</div>
+          <div class="val warning">R$ 30.300</div>
+        </div>
+      </div>
+
+      <div class="fin-progress">
+        <div class="fin-progress-head">
+          <span class="lbl">Progresso de recebimento</span>
+          <span class="pct">37%</span>
+        </div>
+        <div class="fin-progress-track"><span style="width:37%;"></span></div>
+      </div>
+
+      <div class="lanca-head">
+        <span>Descrição</span>
+        <span>Valor</span>
+        <span class="hide-mobile">Vencimento</span>
+        <span class="hide-mobile">Status</span>
+      </div>
+      <div class="lanca-row">
+        <span class="desc">Honorários iniciais — Pró-Labore</span>
+        <span class="val">R$ 18.200,00</span>
+        <span class="venc hide-mobile">05/04/2026</span>
+        <span class="hide-mobile"><span class="badge badge-success">Recebido</span></span>
+      </div>
+      <div class="lanca-row">
+        <span class="desc">Acordo sucumbencial — Pró-Êxito</span>
+        <span class="val">R$ 20.000,00</span>
+        <span class="venc hide-mobile">30/06/2026</span>
+        <span class="hide-mobile"><span class="badge badge-warning">Pendente</span></span>
+      </div>
+      <div class="lanca-row">
+        <span class="desc">Honorários contratuais — 3ª parcela</span>
+        <span class="val">R$ 10.300,00</span>
+        <span class="venc hide-mobile">15/07/2026</span>
+        <span class="hide-mobile"><span class="badge badge-warning">Pendente</span></span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       TAB DOCUMENTOS
+       ============================================================ -->
+  <div class="tab-panel" data-panel="documentos">
+
+    <!-- Trabalhista CTA -->
+    <div class="docs-trabalhista">
+      <div class="icon-big">
+        <svg><use href="#i-filedown"/></svg>
+      </div>
+      <div class="body">
+        <h4>Documentos de contratação</h4>
+        <p>4 PDFs trabalhistas preenchidos automaticamente com os dados deste contrato.</p>
+      </div>
+      <div class="actions">
+        <button class="btn btn-outline">
+          <svg><use href="#i-filedown"/></svg>
+          Baixar ZIP
+        </button>
+        <button class="btn btn-primary">
+          <svg><use href="#i-send"/></svg>
+          Enviar para assinar
+        </button>
+      </div>
+    </div>
+
+    <!-- Documentos e peças -->
+    <section class="glass widget">
+      <div class="widget-header">
+        <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-file-text"/></svg></span>
+        <h4>Documentos e peças jurídicas</h4>
+        <div class="actions">
+          <button class="btn btn-outline" style="padding: 0.375rem 0.625rem;">
+            <svg><use href="#i-upload"/></svg>
+            Novo
+          </button>
+          <button class="btn btn-outline" style="padding: 0.375rem 0.625rem;">
+            <svg><use href="#i-plus"/></svg>
+            Gerar peça
+          </button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div class="doc-row">
+          <div class="doc-icon"><svg width="14" height="14"><use href="#i-file-text"/></svg></div>
+          <div>
+            <div class="doc-name">Procuração ad judicia.pdf</div>
+            <div class="doc-meta">Enviado por Jordan · 05/04/2026</div>
+          </div>
+          <span class="doc-size">248 KB</span>
+          <svg width="14" height="14" style="color:var(--muted-foreground)"><use href="#i-external"/></svg>
+        </div>
+        <div class="doc-row">
+          <div class="doc-icon" style="background:oklch(from var(--success) l c h / 0.1);color:var(--success);"><svg width="14" height="14"><use href="#i-check-circle"/></svg></div>
+          <div>
+            <div class="doc-name">Petição inicial trabalhista — v2.pdf</div>
+            <div class="doc-meta">Gerada por IA · 12/04/2026 · Revisada</div>
+          </div>
+          <span class="doc-size">1.2 MB</span>
+          <svg width="14" height="14" style="color:var(--muted-foreground)"><use href="#i-external"/></svg>
+        </div>
+        <div class="doc-row">
+          <div class="doc-icon"><svg width="14" height="14"><use href="#i-file-text"/></svg></div>
+          <div>
+            <div class="doc-name">CTPS — Maria Oliveira.pdf</div>
+            <div class="doc-meta">Enviado pelo cliente · 06/04/2026</div>
+          </div>
+          <span class="doc-size">3.4 MB</span>
+          <svg width="14" height="14" style="color:var(--muted-foreground)"><use href="#i-external"/></svg>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       TAB HISTÓRICO
+       ============================================================ -->
+  <div class="tab-panel" data-panel="historico">
+    <section class="glass widget">
+      <div class="widget-header">
+        <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-history"/></svg></span>
+        <h4>Histórico de status</h4>
+      </div>
+
+      <div class="hist-month">abril de 2026</div>
+
+      <div class="hist-event">
+        <div class="dot warning"><svg><use href="#i-clock"/></svg></div>
+        <div class="body">
+          <div class="line">
+            <strong>Status alterado para</strong>
+            <span class="badge badge-warning">Em Contratação</span>
+          </div>
+          <div class="time">17/04/2026 · 14:32 · Jordan Medeiros</div>
+        </div>
+      </div>
+
+      <div class="hist-event">
+        <div class="dot primary"><svg><use href="#i-plus"/></svg></div>
+        <div class="body">
+          <div class="line">
+            <strong>Contrato criado com status</strong>
+            <span class="badge badge-warning">Em Contratação</span>
+          </div>
+          <div class="time">05/04/2026 · 09:15 · Jordan Medeiros</div>
+          <div class="reason">Cliente solicitou ajuizamento de reclamação trabalhista contra ACME Indústria. Contrato inicial firmado em 04/04/2026 presencialmente.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       TAB ENTREVISTA (placeholder minimal)
+       ============================================================ -->
+  <div class="tab-panel" data-panel="entrevista">
+    <section class="glass widget">
+      <div class="widget-header">
+        <span class="icon-chip"><svg style="width:13px;height:13px"><use href="#i-clipboard"/></svg></span>
+        <h4>Entrevista trabalhista</h4>
+        <div class="actions">
+          <button class="btn btn-primary" style="padding: 0.375rem 0.75rem;">
+            <svg><use href="#i-plus"/></svg>
+            Iniciar entrevista
+          </button>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--muted-foreground);line-height:1.55;">
+        Conteúdo desta aba é delegado ao módulo de entrevistas trabalhistas. Mesma moldura glass, mesmos tokens.
+      </p>
+    </section>
+  </div>
+
+</div>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" id="themeToggle">
+  <svg id="themeIcon"><use href="#i-moon"/></svg>
+  <span id="themeLabel">Modo escuro</span>
+</button>
+
+<script>
+// Tab switching
+document.querySelectorAll('.tab-trigger').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.tab-trigger').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === target));
+  });
+});
+
+// Theme toggle
+const themeBtn = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+themeBtn.addEventListener('click', () => {
+  const isDark = document.documentElement.classList.toggle('dark');
+  themeIcon.innerHTML = `<use href="${isDark ? '#i-sun' : '#i-moon'}"/>`;
+  themeLabel.textContent = isDark ? 'Modo claro' : 'Modo escuro';
+});
+</script>
+
+</body>
+</html>

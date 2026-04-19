@@ -39,7 +39,11 @@ const CHIP_DOT_CLASSES: Record<ChipTone, string> = {
 interface PublicStepCardProps {
   /** Título do step */
   title: string
-  /** Descrição curta abaixo do título */
+  /**
+   * @deprecated Subtítulos abaixo do heading foram removidos do design do
+   * wizard público — o chip de progresso + o título já comunicam o contexto.
+   * A prop permanece aceita para compatibilidade, mas é silenciosamente ignorada.
+   */
   description?: string
 
   /** Progresso — número 1-based do step atual */
@@ -79,7 +83,7 @@ interface PublicStepCardProps {
 
 export function PublicStepCard({
   title,
-  description,
+  description: _description,
   currentStep,
   totalSteps,
   stepLabel,
@@ -100,7 +104,6 @@ export function PublicStepCard({
   className,
 }: PublicStepCardProps) {
   const titleId = useId()
-  const descriptionId = useId()
   const contentRef = useRef<HTMLDivElement>(null)
 
   const hasProgress =
@@ -189,8 +192,7 @@ export function PublicStepCard({
 
       <section
         aria-labelledby={titleId}
-        aria-describedby={description ? descriptionId : undefined}
-        className="flex min-h-0 flex-1 flex-col gap-5 px-6 py-5 sm:px-8 sm:py-6"
+        className="flex min-h-0 flex-1 flex-col gap-6 px-6 py-5 **:data-[slot=form-label]:text-[11.5px] **:data-[slot=form-label]:font-medium **:data-[slot=form-label]:tracking-[0.01em] **:data-[slot=form-label]:text-muted-foreground sm:px-8 sm:py-6"
       >
         <header className="flex flex-col gap-2">
           {!hasProgress && chip && (
@@ -215,19 +217,10 @@ export function PublicStepCard({
             id={titleId}
             tabIndex={-1}
             level="page"
-            className="text-[22px] leading-tight tracking-tight outline-none sm:text-[26px]"
+            className="text-[24px] leading-tight tracking-tight outline-none sm:text-[28px]"
           >
             {title}
           </Heading>
-          {description && (
-            <Text
-              id={descriptionId}
-              variant="caption"
-              className="text-muted-foreground text-[14.5px] leading-relaxed"
-            >
-              {description}
-            </Text>
-          )}
         </header>
 
         <div

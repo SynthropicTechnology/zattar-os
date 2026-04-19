@@ -96,31 +96,36 @@ function KanbanColumnContent({
       value={estagioId}
       className="min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 shrink-0"
     >
-      <GlassPanel depth={1} className="flex flex-col gap-2 p-2.5 min-h-28">
-        <div
-          className="flex items-center justify-between px-1 pb-2 border-b-2"
-          style={{ borderColor: cor }}
-        >
+      <div className="flex flex-col gap-2 min-h-28">
+        <div className="flex items-center justify-between px-1 pb-2">
           <div className="flex items-center gap-2 min-w-0">
             <span
-              className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
-              style={{ backgroundColor: cor }}
+              className="inline-block w-2 h-2 rounded-full shrink-0"
+              style={{ backgroundColor: cor, boxShadow: `0 0 10px ${cor}55` }}
               aria-hidden="true"
             />
-            <span className="font-heading text-xs font-semibold text-foreground truncate">
+            <span className="font-heading text-[11px] font-semibold text-foreground/80 uppercase tracking-[0.06em] truncate">
               {nome}
             </span>
           </div>
           <span
-            className="text-[10px] px-1.5 py-0.5 rounded-full bg-border/10 text-muted-foreground tabular-nums shrink-0"
+            className="text-[10px] font-semibold tabular-nums text-muted-foreground/50 shrink-0"
             aria-label={`${contratos.length} contratos`}
           >
             {contratos.length}
           </span>
         </div>
 
+        <div
+          className="h-px w-full shrink-0"
+          style={{
+            background: `linear-gradient(to right, ${cor}40, ${cor}10, transparent)`,
+          }}
+          aria-hidden="true"
+        />
+
         {contratos.length === 0 ? (
-          <div className="flex items-center justify-center h-16 text-[11px] text-muted-foreground/60 border border-dashed border-border/40 rounded-xl">
+          <div className="flex items-center justify-center h-16 text-[11px] text-muted-foreground/45 border border-dashed border-border/30 rounded-xl">
             Nenhum contrato
           </div>
         ) : (
@@ -135,7 +140,7 @@ function KanbanColumnContent({
             </KanbanItem>
           ))
         )}
-      </GlassPanel>
+      </div>
     </KanbanColumn>
   );
 }
@@ -148,19 +153,19 @@ function KanbanBoardSkeleton() {
   return (
     <div className="flex gap-3 overflow-x-auto pb-4 pt-2">
       {Array.from({ length: 4 }).map((_, i) => (
-        <GlassPanel
+        <div
           key={i}
-          depth={1}
-          className="flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 p-2.5"
+          className="flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70"
         >
-          <div className="flex items-center justify-between mb-1">
-            <Skeleton className="h-5 w-32" />
-            <Skeleton className="h-5 w-8 rounded-full" />
+          <div className="flex items-center justify-between px-1 pb-2">
+            <Skeleton className="h-3.5 w-28" />
+            <Skeleton className="h-3 w-5" />
           </div>
+          <Skeleton className="h-px w-full" />
           {Array.from({ length: i % 2 === 0 ? 3 : 2 }).map((_, j) => (
             <Skeleton key={j} className="h-24 w-full rounded-xl" />
           ))}
-        </GlassPanel>
+        </div>
       ))}
     </div>
   );

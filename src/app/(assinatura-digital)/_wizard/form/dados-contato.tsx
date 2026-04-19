@@ -37,7 +37,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Text } from '@/components/ui/typography'
 import FormStepLayout from './form-step-layout'
 
@@ -247,14 +246,11 @@ export default function DadosContato() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-7"
         >
-          {clienteExistente && (
-            <Badge tone="soft" variant="info">
-              Dados importados
-            </Badge>
-          )}
-
           <section className="space-y-5">
-            <Text variant="overline" className="block text-muted-foreground">
+            <Text
+              variant="overline"
+              className="block text-[13px] tracking-widest text-foreground/80"
+            >
               Comunicação
             </Text>
 
@@ -320,7 +316,10 @@ export default function DadosContato() {
           <div className="h-px bg-outline-variant/30" role="separator" />
 
           <section className="space-y-5">
-            <Text variant="overline" className="block text-muted-foreground">
+            <Text
+              variant="overline"
+              className="block text-[13px] tracking-widest text-foreground/80"
+            >
               Endereço
             </Text>
 
@@ -380,25 +379,25 @@ export default function DadosContato() {
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="complemento"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Complemento (opcional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Apto, Bloco, etc."
-                      variant="glass"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="complemento"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Complemento (opcional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Apto, Bloco, etc."
+                        variant="glass"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <FormField
                 control={form.control}
                 name="bairro"
@@ -416,7 +415,9 @@ export default function DadosContato() {
                   </FormItem>
                 )}
               />
+            </div>
 
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto]">
               <FormField
                 control={form.control}
                 name="cidade"
@@ -439,7 +440,7 @@ export default function DadosContato() {
                 control={form.control}
                 name="estado"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="sm:w-32">
                     <FormLabel>Estado</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
