@@ -24,22 +24,35 @@ function SelectValue({
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
 
+type SelectTriggerVariant = "default" | "glass"
+
+const SELECT_TRIGGER_VARIANT_CLASSES: Record<SelectTriggerVariant, string> = {
+  default:
+    "border-input bg-transparent shadow-xs dark:bg-input/30 dark:hover:bg-input/50 rounded-md px-3",
+  glass:
+    "border-outline-variant/60 bg-surface-container-lowest/70 shadow-sm rounded-xl px-4 backdrop-blur-sm hover:border-outline-variant hover:bg-surface-container-lowest focus-visible:border-primary/40 focus-visible:bg-surface-container-lowest focus-visible:ring-2 focus-visible:ring-primary/20 dark:bg-surface-container-low/40 dark:hover:bg-surface-container-low/60 dark:focus-visible:bg-surface-container-low/70 data-[size=default]:h-11",
+}
+
 function SelectTrigger({
   className,
   size = "default",
+  variant = "default",
   children,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default"
+  variant?: SelectTriggerVariant
 }) {
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
+      data-variant={variant}
       className={cn(
-        "border-input data-placeholder:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none ring-0 disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "border data-placeholder:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground aria-invalid:border-destructive flex w-full items-center justify-between gap-2 py-2 text-sm whitespace-nowrap transition-[color,background-color,border-color,box-shadow] outline-none ring-0 disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         // Padronização dentro de DataTableToolbar: h-9 (36px) + bg-card
         "[div[data-slot=data-table-toolbar]_&]:h-9 [div[data-slot=data-table-toolbar]_&]:bg-card",
+        SELECT_TRIGGER_VARIANT_CLASSES[variant],
         className
       )}
       {...props}

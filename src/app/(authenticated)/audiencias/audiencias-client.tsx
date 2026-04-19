@@ -331,6 +331,7 @@ export function AudienciasClient({
           audiencias={audiencias}
           onViewDetail={handleViewDetail}
           search={search}
+          usuarios={initialUsuarios}
         />
       )}
 

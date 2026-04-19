@@ -5,8 +5,7 @@ import { useFormularioStore } from '@/shared/assinatura-digital/store'
 import VerificarCPF from './verificar-cpf'
 import ContratosPendentesStep from './contratos-pendentes-step'
 import DadosIdentidade from './dados-identidade'
-import DadosContatos from './dados-contatos'
-import DadosEndereco from './dados-endereco'
+import DadosContato from './dados-contato'
 import DynamicFormStep from './dynamic-form-step'
 import CapturaFotoStep from '../capture/captura-foto-step'
 import VisualizacaoPdfStep from './visualizacao-pdf-step'
@@ -19,23 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { StepConfig } from '@/shared/assinatura-digital/types/store'
-import {
-  PublicWizardShell,
-  type PublicWizardStep,
-} from '@/shared/assinatura-digital'
-import {
-  STEP_LABELS,
-  STEPS_HIDDEN_FROM_PROGRESS,
-} from '@/shared/assinatura-digital/constants/step-labels'
-
-function formatResumeHint(timestamp: number | null, etapa: number): string | null {
-  if (!timestamp || etapa === 0) return null
-  const diffMs = Date.now() - timestamp
-  const diffMin = Math.floor(diffMs / 60000)
-  if (diffMin < 1) return 'Continuando de onde parou · salvo agora'
-  if (diffMin === 1) return 'Continuando de onde parou · salvo há 1 min'
-  return `Continuando de onde parou · salvo há ${diffMin} min`
-}
+import { PublicWizardShell } from '@/shared/assinatura-digital'
 
 export default function FormularioContainer() {
   const etapaAtual = useFormularioStore((state) => state.etapaAtual)
@@ -49,8 +32,6 @@ export default function FormularioContainer() {
   const formularioFlowConfig = useFormularioStore((state) => state.formularioFlowConfig)
   const contratosPendentes = useFormularioStore((state) => state.contratosPendentes)
   const setGeolocation = useFormularioStore((state) => state.setGeolocation)
-  const resetAll = useFormularioStore((state) => state.resetAll)
-  const timestamp = useFormularioStore((state) => state._timestamp)
 
   const [templateHasMarkdown, setTemplateHasMarkdown] = useState<boolean | null>(null)
   const [hasTemplateError, setHasTemplateError] = useState<boolean>(false)
@@ -104,16 +85,9 @@ export default function FormularioContainer() {
         enabled: true,
       },
       {
-        id: 'contatos',
+        id: 'contato',
         index: currentIndex++,
-        component: 'DadosContatos',
-        required: true,
-        enabled: true,
-      },
-      {
-        id: 'endereco',
-        index: currentIndex++,
-        component: 'DadosEndereco',
+        component: 'DadosContato',
         required: true,
         enabled: true,
       },
@@ -230,10 +204,8 @@ export default function FormularioContainer() {
         return <ContratosPendentesStep />
       case 'DadosIdentidade':
         return <DadosIdentidade />
-      case 'DadosContatos':
-        return <DadosContatos />
-      case 'DadosEndereco':
-        return <DadosEndereco />
+      case 'DadosContato':
+        return <DadosContato />
       case 'DynamicFormStep':
         return <DynamicFormStep />
       case 'VisualizacaoPdfStep':
@@ -286,27 +258,11 @@ export default function FormularioContainer() {
     }
   }
 
-  // Steps visíveis no progress (exclui pendentes/sucesso da barra)
-  const stepItems: PublicWizardStep[] = (stepConfigs ?? [])
-    .filter((c) => !STEPS_HIDDEN_FROM_PROGRESS.includes(c.id))
-    .map((c) => ({ id: c.id, label: STEP_LABELS[c.id] ?? c.component }))
-
   const currentId = stepConfigs?.find((c) => c.index === etapaAtual)?.id ?? 'cpf'
-  const currentIndexInSteps = Math.max(
-    0,
-    stepItems.findIndex((s) => s.id === currentId),
-  )
-
   const isSuccessStep = currentId === 'sucesso'
 
   return (
-    <PublicWizardShell
-      steps={isSuccessStep ? [] : stepItems}
-      currentIndex={currentIndexInSteps}
-      onRestart={etapaAtual > 0 && !isSuccessStep ? resetAll : undefined}
-      resumeHint={formatResumeHint(timestamp, etapaAtual)}
-      tint={isSuccessStep ? 'success' : 'primary'}
-    >
+    <PublicWizardShell tint={isSuccessStep ? 'success' : 'primary'}>
       <StepTransition stepKey={etapaAtual}>{renderEtapa()}</StepTransition>
     </PublicWizardShell>
   )

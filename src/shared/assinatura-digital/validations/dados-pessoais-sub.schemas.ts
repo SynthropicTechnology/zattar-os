@@ -35,6 +35,24 @@ export const enderecoSchema = dadosPessoaisSchema.pick({
   estado: true,
 })
 
+/**
+ * Schema unificado do passo "Contato" — agrupa contatos (email/telefones)
+ * + endereço num único form. Substitui os substeps separados.
+ */
+export const contatoSchema = dadosPessoaisSchema.pick({
+  email: true,
+  celular: true,
+  telefone: true,
+  cep: true,
+  logradouro: true,
+  numero: true,
+  complemento: true,
+  bairro: true,
+  cidade: true,
+  estado: true,
+})
+
 export type IdentidadeFormData = z.infer<typeof identidadeSchema>
 export type ContatosFormData = z.infer<typeof contatosSchema>
 export type EnderecoFormData = z.infer<typeof enderecoSchema>
+export type ContatoFormData = z.infer<typeof contatoSchema>

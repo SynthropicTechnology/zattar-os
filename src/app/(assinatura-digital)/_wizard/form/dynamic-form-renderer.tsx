@@ -238,19 +238,32 @@ export default function DynamicFormRenderer({
     .join('|');
 
   useEffect(() => {
+    const PF_ONLY_TOKENS = [
+      'cpf', 'rg', 'data_nascimento', 'datanascimento', 'nascimento',
+      'estado_civil', 'estadocivil', 'genero', 'sexo', 'nacionalidade',
+      'nome_genitora', 'nomegenitora', 'nome_mae', 'nomemae',
+    ];
+    const PJ_ONLY_TOKENS = [
+      'cnpj', 'razao_social', 'razaosocial', 'nome_fantasia',
+      'nomefantasia', 'inscricao_estadual', 'inscricaoestadual',
+    ];
+
     for (const section of schema.sections) {
       const tipoField = findTipoPessoaField(section.fields);
       if (!tipoField) continue;
       const tipo = normalizeTipoPessoa(formValues[tipoField.id]);
       if (!tipo) continue;
 
-      const fieldToClear = section.fields.find((f) => {
-        const id = f.id.toLowerCase();
-        if (tipo === 'pj') return id.endsWith('_cpf') || id === 'cpf';
-        return id.endsWith('_cnpj') || id === 'cnpj';
+      const tokensToClear = tipo === 'pj' ? PF_ONLY_TOKENS : PJ_ONLY_TOKENS;
+      const fieldsToClear = section.fields.filter((f) => {
+        const id = f.id.toLowerCase().replace(/[-]/g, '_');
+        return tokensToClear.some((t) => id.includes(t) || id.endsWith(`_${t}`));
       });
-      if (fieldToClear && formValues[fieldToClear.id]) {
-        form.setValue(fieldToClear.id, '', { shouldValidate: false, shouldDirty: false });
+
+      for (const field of fieldsToClear) {
+        if (formValues[field.id]) {
+          form.setValue(field.id, '', { shouldValidate: false, shouldDirty: false });
+        }
       }
     }
     // formValues é o objeto de watch — reagir apenas às mudanças dos campos tipo_pessoa
@@ -322,18 +335,17 @@ export default function DynamicFormRenderer({
         name={field.id}
         render={({ field: fieldProps }) => (
           <FormItem>
-            <FormLabel
-              className={field.helpText ? 'flex items-center gap-2' : undefined}
-            >
-              {field.label}
-              {field.helpText && (
-                <Info className="h-3.5 w-3.5 text-muted-foreground" />
-              )}
-            </FormLabel>
+            <FormLabel>{field.label}</FormLabel>
             {renderFieldControl(field, fieldProps)}
             <FormMessage />
             {field.helpText && (
-              <p className="text-xs text-muted-foreground">{field.helpText}</p>
+              <p className="flex items-start gap-1.5 text-xs text-muted-foreground leading-relaxed">
+                <Info
+                  aria-hidden="true"
+                  className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground/70"
+                />
+                <span>{field.helpText}</span>
+              </p>
             )}
           </FormItem>
         )}
@@ -393,7 +405,7 @@ export default function DynamicFormRenderer({
       case FormFieldType.TEXTAREA:
         return (
           <FormControl>
-            <Textarea rows={4} className="glass-field h-auto! min-h-24 py-3" {...commonProps} {...stringFieldProps} />
+            <Textarea rows={4} variant="glass" className="min-h-24" {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
@@ -495,7 +507,7 @@ export default function DynamicFormRenderer({
             disabled={field.disabled || isSubmitting}
           >
             <FormControl>
-              <SelectTrigger className="glass-field">
+              <SelectTrigger variant="glass">
                 <SelectValue
                   placeholder={field.placeholder || 'Selecione'}
                 />
@@ -674,17 +686,52 @@ export default function DynamicFormRenderer({
       return true;
     });
 
-    // Fase 2: heurística tipo_pessoa — esconde CPF se PJ, CNPJ se PF.
-    // Só aplica se houver campo de tipo_pessoa na seção E ele estiver respondido.
+    // Fase 2: heurística tipo_pessoa — cada tipo de pessoa mostra/esconde campos
+    // específicos. Só aplica quando existe campo tipo_pessoa na seção E respondido.
+    //
+    //   PJ (Pessoa Jurídica): esconde CPF, RG, data de nascimento, estado civil,
+    //     gênero, nacionalidade, nome da genitora — campos biográficos de PF.
+    //   PF (Pessoa Física): esconde CNPJ, razão social, nome fantasia —
+    //     campos corporativos de PJ.
     const tipoField = findTipoPessoaField(section.fields);
     const tipo = tipoField ? normalizeTipoPessoa(formValues[tipoField.id]) : null;
     if (tipo) {
+      const hasToken = (id: string, tokens: string[]) =>
+        tokens.some((t) => id.includes(t) || id.endsWith(`_${t}`));
+
+      // Campos biográficos — irrelevantes pra PJ
+      const PF_ONLY_TOKENS = [
+        'cpf',
+        'rg',
+        'data_nascimento',
+        'datanascimento',
+        'nascimento',
+        'estado_civil',
+        'estadocivil',
+        'genero',
+        'gênero',
+        'sexo',
+        'nacionalidade',
+        'nome_genitora',
+        'nomegenitora',
+        'nome_mae',
+        'nomemae',
+      ];
+      // Campos corporativos — irrelevantes pra PF
+      const PJ_ONLY_TOKENS = [
+        'cnpj',
+        'razao_social',
+        'razaosocial',
+        'nome_fantasia',
+        'nomefantasia',
+        'inscricao_estadual',
+        'inscricaoestadual',
+      ];
+
       visibleFields = visibleFields.filter((f) => {
-        const id = f.id.toLowerCase();
-        const isCpf = id.endsWith('_cpf') || id === 'cpf';
-        const isCnpj = id.endsWith('_cnpj') || id === 'cnpj';
-        if (tipo === 'pj' && isCpf) return false;
-        if (tipo === 'pf' && isCnpj) return false;
+        const id = f.id.toLowerCase().replace(/[-]/g, '_');
+        if (tipo === 'pj' && hasToken(id, PF_ONLY_TOKENS)) return false;
+        if (tipo === 'pf' && hasToken(id, PJ_ONLY_TOKENS)) return false;
         return true;
       });
     }

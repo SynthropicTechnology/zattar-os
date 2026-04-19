@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { Check, ChevronDown, X } from 'lucide-react';
+import { ArrowDownAZ, ArrowUpAZ, Check, ChevronDown, X } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Command,
@@ -26,6 +26,8 @@ import { actionListarSegmentos, type Segmento } from '../actions';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
+  type ContratoSortBy,
+  type Ordem,
   type TipoContrato,
   type TipoCobranca,
 } from '../domain';
@@ -38,9 +40,31 @@ export interface ContratosFilters {
   tipoCobranca: string;
 }
 
+export interface ContratosSort {
+  campo: ContratoSortBy;
+  ordem: Ordem;
+}
+
+export const CONTRATOS_SORT_OPTIONS: Array<{ campo: ContratoSortBy; label: string }> = [
+  { campo: 'cadastrado_em', label: 'Data de cadastro' },
+  { campo: 'created_at', label: 'Criado em' },
+  { campo: 'updated_at', label: 'Atualizado em' },
+  { campo: 'status', label: 'Estágio' },
+  { campo: 'tipo_contrato', label: 'Tipo de contrato' },
+  { campo: 'segmento_id', label: 'Segmento' },
+  { campo: 'id', label: 'ID' },
+];
+
+export const DEFAULT_CONTRATOS_SORT: ContratosSort = {
+  campo: 'cadastrado_em',
+  ordem: 'desc',
+};
+
 interface ContratosFilterBarProps {
   filters: ContratosFilters;
   onChange: (filters: ContratosFilters) => void;
+  sort?: ContratosSort;
+  onSortChange?: (sort: ContratosSort) => void;
 }
 
 // ── Shared helpers ─────────────────────────────────────────────────────
@@ -299,9 +323,92 @@ function TipoCobrancaFilter({
   );
 }
 
+// ── Sort Filter ────────────────────────────────────────────────────────
+
+function SortFilter({
+  sort,
+  onChange,
+}: {
+  sort: ContratosSort;
+  onChange: (sort: ContratosSort) => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+
+  const currentOption = CONTRATOS_SORT_OPTIONS.find((o) => o.campo === sort.campo);
+  const label = currentOption ? currentOption.label : 'Ordenar';
+  const SortIcon = sort.ordem === 'desc' ? ArrowDownAZ : ArrowUpAZ;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button type="button">
+          <FilterDropdownTrigger label={label} active open={open}>
+            <SortIcon className="size-3" />
+          </FilterDropdownTrigger>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
+        <div className="p-2 space-y-0.5">
+          <div className="px-2 pt-1 pb-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50">
+            Ordenar por
+          </div>
+          {CONTRATOS_SORT_OPTIONS.map(({ campo, label: optLabel }) => (
+            <button
+              key={campo}
+              type="button"
+              onClick={() => {
+                onChange({ ...sort, campo });
+                setOpen(false);
+              }}
+              className={cn(
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                sort.campo === campo
+                  ? 'bg-primary/8 text-primary'
+                  : 'hover:bg-muted/30 text-muted-foreground/70',
+              )}
+            >
+              <span>{optLabel}</span>
+              {sort.campo === campo && <Check className="size-3 ml-auto" />}
+            </button>
+          ))}
+          <div className="h-px bg-border/40 my-1.5 mx-1" />
+          <div className="px-2 pb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50">
+            Direção
+          </div>
+          {(['desc', 'asc'] as const).map((ord) => (
+            <button
+              key={ord}
+              type="button"
+              onClick={() => {
+                onChange({ ...sort, ordem: ord });
+                setOpen(false);
+              }}
+              className={cn(
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                sort.ordem === ord
+                  ? 'bg-primary/8 text-primary'
+                  : 'hover:bg-muted/30 text-muted-foreground/70',
+              )}
+            >
+              {ord === 'desc' ? <ArrowDownAZ className="size-3" /> : <ArrowUpAZ className="size-3" />}
+              <span>{ord === 'desc' ? 'Mais recente primeiro' : 'Mais antigo primeiro'}</span>
+              {sort.ordem === ord && <Check className="size-3 ml-auto" />}
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 // ── Main Export ────────────────────────────────────────────────────────
 
-export function ContratosFilterBar({ filters, onChange }: ContratosFilterBarProps) {
+export function ContratosFilterBar({
+  filters,
+  onChange,
+  sort,
+  onSortChange,
+}: ContratosFilterBarProps) {
   return (
     <div className="flex items-center gap-2 flex-wrap">
       <SegmentoFilter
@@ -316,6 +423,7 @@ export function ContratosFilterBar({ filters, onChange }: ContratosFilterBarProp
         selected={filters.tipoCobranca}
         onChange={(tipoCobranca) => onChange({ ...filters, tipoCobranca })}
       />
+      {sort && onSortChange && <SortFilter sort={sort} onChange={onSortChange} />}
     </div>
   );
 }

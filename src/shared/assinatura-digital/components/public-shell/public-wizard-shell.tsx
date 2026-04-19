@@ -3,69 +3,53 @@
 import type { ReactNode } from 'react'
 import { AmbientBackdrop } from '@/components/shared/ambient-backdrop'
 import { SkipLink } from '@/components/shared/skip-link'
-import { PublicWizardHeader } from './public-wizard-header'
-import { PublicWizardProgress, type PublicWizardStep } from './public-wizard-progress'
+import { BrandMark } from '@/components/shared/brand-mark'
 
 interface PublicWizardShellProps {
-  steps: PublicWizardStep[]
-  currentIndex: number
-  onRestart?: () => void
-  resumeHint?: string | null
   /** Tonalidade do backdrop. Default: 'primary' */
   tint?: 'primary' | 'success'
   children: ReactNode
+
+  /**
+   * @deprecated Progresso agora vive dentro de `PublicStepCard` via props
+   * `currentStep` / `totalSteps`. Este prop é aceito apenas para compatibilidade
+   * transitória com o fluxo `assinatura/[token]` e é silenciosamente ignorado.
+   */
+  steps?: unknown
+  /** @deprecated Ver `steps`. */
+  currentIndex?: unknown
+  /** @deprecated O botão Recomeçar vive dentro de `PublicStepCard`. */
+  onRestart?: unknown
+  /** @deprecated Resume hint foi removido do shell. */
+  resumeHint?: unknown
 }
 
 export function PublicWizardShell({
-  steps,
-  currentIndex,
-  onRestart,
-  resumeHint,
   tint = 'primary',
   children,
 }: PublicWizardShellProps) {
-  const hasSteps = steps.length > 0
-
   return (
-    <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-surface-dim">
+    <div
+      data-wizard-public=""
+      className="relative flex min-h-dvh w-full flex-col items-center justify-center overflow-hidden bg-surface-dim px-4 py-6 sm:px-6 sm:py-10"
+    >
       <SkipLink />
-      <AmbientBackdrop blurIntensity={55} tint={tint} />
+      <AmbientBackdrop blurIntensity={70} tint={tint} />
 
-      <PublicWizardHeader />
+      <BrandMark
+        variant="auto"
+        size="custom"
+        priority
+        className="relative z-10 mb-1 h-32 w-auto -my-5 sm:mb-2 sm:h-44 sm:-my-7"
+      />
 
-      <div className="relative z-10 flex min-h-0 flex-1">
-        {hasSteps && (
-          <aside
-            aria-label="Progresso do formulário"
-            className="relative z-10 hidden w-72 shrink-0 flex-col border-r border-outline-variant/20 bg-surface-container-lowest/50 px-8 py-10 backdrop-blur-xl lg:flex"
-          >
-            <PublicWizardProgress.Vertical
-              steps={steps}
-              currentIndex={currentIndex}
-              onRestart={onRestart}
-              resumeHint={resumeHint}
-            />
-          </aside>
-        )}
-
-        <main
-          id="main-content"
-          className="relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden"
-          aria-label="Formulário de assinatura digital"
-        >
-          {hasSteps && (
-            <div className="shrink-0 border-b border-outline-variant/20 bg-background/60 backdrop-blur-xl lg:hidden">
-              <PublicWizardProgress.Horizontal
-                steps={steps}
-                currentIndex={currentIndex}
-                onRestart={onRestart}
-                resumeHint={resumeHint}
-              />
-            </div>
-          )}
-          <div className="flex min-h-0 flex-1 flex-col">{children}</div>
-        </main>
-      </div>
+      <main
+        id="main-content"
+        className="relative z-10 flex w-full max-w-130 flex-col"
+        aria-label="Formulário de assinatura digital"
+      >
+        {children}
+      </main>
     </div>
   )
 }

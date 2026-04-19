@@ -1,37 +1,19 @@
 /**
  * Página Kanban de Contratos (Server Component)
  *
- * Exibe o quadro Kanban de contratos por segmento e pipeline.
- * A seleção de segmento é feita no cliente; os dados do kanban
- * são carregados dinamicamente.
+ * Mantida para preservar deep-link a `/app/contratos/kanban`. Agora delega
+ * ao mesmo `ContratosContent` usado em `/app/contratos`, apenas abrindo
+ * inicialmente com a view Kanban.
  */
 
-import { Suspense } from 'react';
-import { PageShell } from '@/components/shared/page-shell';
-import { Skeleton } from '@/components/ui/skeleton';
-import { KanbanContratosClient } from './page-client';
+import type { Metadata } from 'next';
+import { ContratosContent } from '../components/contratos-content';
 
-function KanbanLoading() {
-  return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="flex flex-col gap-2 min-w-70">
-          <Skeleton className="h-10 w-full rounded-lg" />
-          {Array.from({ length: 3 }).map((_, j) => (
-            <Skeleton key={j} className="h-24 w-full rounded-lg" />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}
+export const metadata: Metadata = {
+  title: 'Contratos · Kanban',
+  description: 'Quadro Kanban de contratos organizado por estágio do pipeline.',
+};
 
 export default function ContratosKanbanPage() {
-  return (
-    <PageShell>
-      <Suspense fallback={<KanbanLoading />}>
-        <KanbanContratosClient />
-      </Suspense>
-    </PageShell>
-  );
+  return <ContratosContent initialView="kanban" />;
 }

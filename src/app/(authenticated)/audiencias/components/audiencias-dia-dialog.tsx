@@ -231,7 +231,7 @@ export function AudienciasDiaDialog({
   onSuccess,
 }: AudienciasDiaDialogProps) {
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  const { usuarios } = useUsuarios();
+  const { usuarios } = useUsuarios({ enabled: open });
 
   React.useEffect(() => {
     if (open) setCurrentIndex(0);

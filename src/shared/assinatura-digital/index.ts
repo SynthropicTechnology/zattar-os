@@ -22,8 +22,12 @@ export * from './repository'
 export { useFormularioStore } from './store/formulario-store'
 
 // UI shared components
+// PdfPreviewDynamic é o export canônico (dynamic import com ssr:false internamente).
+// PdfPreview NÃO é re-exportado daqui — importa react-pdf estaticamente, o que
+// causa `ReferenceError: DOMMatrix is not defined` quando o barrel é avaliado em
+// contexto server (ex: qualquer step do wizard importando `sucesso.tsx` que
+// importa deste barrel). Ver src/shared/assinatura-digital/components/pdf/index.ts
 export { PdfPreviewDynamic } from './components/pdf'
-export { default as PdfPreview } from './components/pdf/PdfPreview'
 export { default as CanvasAssinatura } from './components/signature/canvas-assinatura'
 
 // Public wizard shell (rota pública de assinatura digital)

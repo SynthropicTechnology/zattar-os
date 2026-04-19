@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { GlassPanel } from '@/components/shared/glass-panel';
+import { cn } from '@/lib/utils';
 import { Loader2, X, Trash2, UserRound, ArrowRightLeft, FolderKanban, CheckSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -64,37 +64,53 @@ export function ContratosBulkActionsBar({
 }: ContratosBulkActionsBarProps) {
   if (selectedCount === 0) return null;
 
+  const actionClass =
+    'inline-flex items-center gap-1.5 rounded-lg border border-border/15 bg-background/40 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground/80 transition-colors hover:border-border/40 hover:bg-muted/30 hover:text-foreground cursor-pointer';
+
   return (
-    <GlassPanel depth={2} className="flex flex-wrap items-center gap-2 px-3.5 py-2">
-      <div className="flex items-center gap-2 text-sm font-medium whitespace-nowrap text-primary">
+    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/15 bg-primary/5 px-3 py-1.5">
+      <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-primary whitespace-nowrap">
         <CheckSquare className="size-3.5" aria-hidden="true" />
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </div>
 
-      <div className="flex flex-wrap items-center gap-1 ml-2">
-        <Button variant="outline" size="sm" className="rounded-lg" onClick={onAlterarStatus}>
-          <ArrowRightLeft className="size-3.5" />
+      <span className="h-3.5 w-px bg-primary/15" aria-hidden="true" />
+
+      <div className="flex flex-wrap items-center gap-1">
+        <button type="button" onClick={onAlterarStatus} className={actionClass}>
+          <ArrowRightLeft className="size-3" />
           Alterar Status
-        </Button>
-        <Button variant="outline" size="sm" className="rounded-lg" onClick={onAtribuirResponsavel}>
-          <UserRound className="size-3.5" />
+        </button>
+        <button type="button" onClick={onAtribuirResponsavel} className={actionClass}>
+          <UserRound className="size-3" />
           Responsável
-        </Button>
-        <Button variant="outline" size="sm" className="rounded-lg" onClick={onAlterarSegmento}>
-          <FolderKanban className="size-3.5" />
+        </button>
+        <button type="button" onClick={onAlterarSegmento} className={actionClass}>
+          <FolderKanban className="size-3" />
           Segmento
-        </Button>
-        <Button variant="outline" size="sm" className="rounded-lg text-destructive hover:text-destructive" onClick={onExcluir}>
-          <Trash2 className="size-3.5" />
+        </button>
+        <button
+          type="button"
+          onClick={onExcluir}
+          className={cn(
+            actionClass,
+            'border-destructive/20 text-destructive/80 hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive',
+          )}
+        >
+          <Trash2 className="size-3" />
           Excluir
-        </Button>
+        </button>
       </div>
 
-      <Button variant="ghost" size="sm" onClick={onClearSelection} className="ml-auto rounded-lg">
-        <X className="size-3.5" />
+      <button
+        type="button"
+        onClick={onClearSelection}
+        className="ml-auto inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-muted-foreground/60 transition-colors hover:bg-muted/30 hover:text-foreground cursor-pointer"
+      >
+        <X className="size-3" />
         Limpar
-      </Button>
-    </GlassPanel>
+      </button>
+    </div>
   );
 }
 

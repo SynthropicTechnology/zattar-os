@@ -12,7 +12,6 @@
 // ============================================================================
 export {
   getContratosColumns,
-  ContratosTableWrapper,
   ContratoForm,
   ContratoDeleteDialog,
   SegmentosDialog,
@@ -27,6 +26,9 @@ export {
   ContratosContent,
   ContratosPulseStrip,
   ContratosPipelineStepper,
+  ContratosListWrapper,
+  ContratosGlassList,
+  ContratosKanbanView,
 } from './components';
 
 export type {

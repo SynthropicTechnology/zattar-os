@@ -1,30 +1,25 @@
 'use client';
 
 /**
- * CONTRATOS FEATURE - ContratosTableWrapper
+ * ContratosListWrapper — Orquestrador Glass Briefing da lista de contratos.
+ * ============================================================================
+ * Substitui o `ContratosTableWrapper` (DataTable/TanStack) por uma lista no
+ * padrão Audiências/Expedientes:
  *
- * Componente Client que encapsula a tabela de contratos.
- * Recebe dados iniciais do Server Component e gerencia:
- * - Estado de busca e filtros
- * - Paginação client-side com refresh via Server Actions
- * - Sheets de criação, edição e visualização
+ *   ContratosGlassList → server-side pagination → bulk actions bar → dialogs
  *
- * Implementação seguindo o padrão DataShell.
- * Referência: src/app/(authenticated)/partes/components/clientes/clientes-table-wrapper.tsx
+ * Recebe busca/filtros/ordenação controlados externamente pelo
+ * `ContratosContent`. Mantém integração completa com ações em massa, dialogs
+ * de criação, edição, exclusão, geração de peça e agent context do Copilot.
+ * ============================================================================
  */
 
 import * as React from 'react';
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import { useDebounce } from '@/hooks/use-debounce';
-import {
-  DataShell,
-  DataTable,
-  DataPagination,
-} from '@/components/shared/data-shell';
-import type { Table as TanstackTable, SortingState, RowSelectionState } from '@tanstack/react-table';
+import { DataPagination } from '@/components/shared/data-shell';
 
-import { getContratosColumns } from './columns';
-import type { ContratosTableMeta } from './columns';
+import { ContratosGlassList } from './contratos-glass-list';
 import { ContratoForm } from './contrato-form';
 import { ContratoDeleteDialog } from './contrato-delete-dialog';
 import {
@@ -35,6 +30,7 @@ import {
   ExcluirMassaDialog,
 } from './contratos-bulk-actions';
 import { GerarPecaDialog } from '@/app/(authenticated)/pecas-juridicas';
+
 import type {
   Contrato,
   ListarContratosParams,
@@ -51,98 +47,86 @@ import {
 } from '../actions';
 
 // =============================================================================
-// TIPOS
+// TYPES
 // =============================================================================
 
-interface ContratosTableWrapperProps {
-  initialData: Contrato[];
-  initialPagination: PaginationInfo | null;
-  clientesOptions: ClienteInfo[];
-  partesContrariasOptions: ClienteInfo[];
+export interface ContratosListWrapperProps {
+  initialData?: Contrato[];
+  initialPagination?: PaginationInfo | null;
+  clientesOptions?: ClienteInfo[];
+  partesContrariasOptions?: ClienteInfo[];
   usuariosOptions?: ClienteInfo[];
   segmentosOptions?: Array<{ id: number; nome: string }>;
+
   /** Filtro de status externo (ex.: vindo do PipelineStepper). null = sem filtro. */
   statusFilter?: string | null;
-  /** Controlled open state for the create dialog (lifted from parent). */
+
+  /** Controlled open state para o dialog de criação. */
   createOpen?: boolean;
-  /** Callback when the create dialog open state changes. */
   onCreateOpenChange?: (open: boolean) => void;
-  /**
-   * Oculta o DataTableToolbar interno e aceita busca/filtros controlados
-   * externamente. Usado quando o orquestrador pai (ContratosContent)
-   * renderiza o próprio filter-bar Glass Briefing.
-   */
-  hideToolbar?: boolean;
-  externalBusca?: string;
-  externalSegmentoId?: string;
-  externalTipoContrato?: string;
-  externalTipoCobranca?: string;
+
+  /** Filtros controlados pelo orquestrador (ContratosContent). */
+  busca?: string;
+  segmentoId?: string;
+  tipoContrato?: string;
+  tipoCobranca?: string;
+
+  /** Ordenação controlada pelo orquestrador. */
+  ordenarPor?: ContratoSortBy;
+  ordem?: Ordem;
 }
 
 // =============================================================================
-// COMPONENTE PRINCIPAL
+// MAIN
 // =============================================================================
 
-export function ContratosTableWrapper({
-  initialData,
-  initialPagination,
-  clientesOptions,
-  partesContrariasOptions,
+export function ContratosListWrapper({
+  initialData = [],
+  initialPagination = null,
+  clientesOptions = [],
+  partesContrariasOptions = [],
   usuariosOptions = [],
   segmentosOptions = [],
   statusFilter: externalStatusFilter,
   createOpen: externalCreateOpen,
   onCreateOpenChange: externalOnCreateOpenChange,
-  hideToolbar = false,
-  externalBusca,
-  externalSegmentoId,
-  externalTipoContrato,
-  externalTipoCobranca,
-}: ContratosTableWrapperProps) {
-
-  // ---------- Estado dos Dados ----------
+  busca: externalBusca,
+  segmentoId: externalSegmentoId,
+  tipoContrato: externalTipoContrato,
+  tipoCobranca: externalTipoCobranca,
+  ordenarPor: externalOrdenarPor,
+  ordem: externalOrdem,
+}: ContratosListWrapperProps) {
+  // ── Estado dos dados ─────────────────────────────────────────────────────
   const [contratos, setContratos] = React.useState<Contrato[]>(initialData);
-  const [table, setTable] = React.useState<TanstackTable<Contrato> | null>(null);
-  const density: 'compact' | 'standard' | 'relaxed' = 'standard';
 
-  // Opções dinâmicas (para evitar fallback "Cliente #ID" quando mudar de página/refetch)
   const [clientesOptionsState, setClientesOptionsState] = React.useState<ClienteInfo[]>(clientesOptions);
   const [partesContrariasOptionsState, setPartesContrariasOptionsState] =
     React.useState<ClienteInfo[]>(partesContrariasOptions);
   const [usuariosOptionsState, setUsuariosOptionsState] = React.useState<ClienteInfo[]>(usuariosOptions);
+  const [segmentos] = React.useState(segmentosOptions);
 
-  // ---------- Estado de Paginação ----------
-  const [pageIndex, setPageIndex] = React.useState(
-    initialPagination ? initialPagination.page - 1 : 0
-  );
-  const [pageSize, setPageSize] = React.useState(
-    initialPagination ? initialPagination.limit : 50
-  );
-  const [total, setTotal] = React.useState(
-    initialPagination ? initialPagination.total : 0
-  );
-  const [totalPages, setTotalPages] = React.useState(
-    initialPagination ? initialPagination.totalPages : 0
-  );
+  // ── Paginação ────────────────────────────────────────────────────────────
+  const [pageIndex, setPageIndex] = React.useState(initialPagination ? initialPagination.page - 1 : 0);
+  const [pageSize, setPageSize] = React.useState(initialPagination ? initialPagination.limit : 50);
+  const [total, setTotal] = React.useState(initialPagination ? initialPagination.total : 0);
+  const [totalPages, setTotalPages] = React.useState(initialPagination ? initialPagination.totalPages : 0);
 
-  // ---------- Estado de Loading/Error ----------
+  // ── Loading / error ──────────────────────────────────────────────────────
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const [, setError] = React.useState<string | null>(null);
 
-  // ---------- Estado de Filtros ----------
-  const [busca, setBusca] = React.useState('');
-  const [segmentoId, setSegmentoId] = React.useState<string>('');
-  const [tipoContrato, setTipoContrato] = React.useState<string>('');
-  const [tipoCobranca, setTipoCobranca] = React.useState<string>('');
-  const [status, setStatus] = React.useState<string>('');
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  // ── Filtros (sincronizados com props externas) ───────────────────────────
+  const [busca, setBusca] = React.useState(externalBusca ?? '');
+  const [segmentoId, setSegmentoId] = React.useState<string>(externalSegmentoId ?? '');
+  const [tipoContrato, setTipoContrato] = React.useState<string>(externalTipoContrato ?? '');
+  const [tipoCobranca, setTipoCobranca] = React.useState<string>(externalTipoCobranca ?? '');
+  const [status, setStatus] = React.useState<string>(externalStatusFilter ?? '');
 
-  const [segmentos, _setSegmentos] = React.useState(segmentosOptions);
+  // ── Seleção em massa (Set<number>) ───────────────────────────────────────
+  const [selectedIds, setSelectedIds] = React.useState<Set<number>>(new Set());
 
-  // ---------- Estado de Seleção (Ações em Massa) ----------
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-
-  // ---------- Estado de Dialogs/Sheets ----------
+  // ── Dialogs ──────────────────────────────────────────────────────────────
   const [internalCreateOpen, setInternalCreateOpen] = React.useState(false);
   const createOpen = externalCreateOpen ?? internalCreateOpen;
   const setCreateOpen = externalOnCreateOpenChange ?? setInternalCreateOpen;
@@ -151,18 +135,17 @@ export function ContratosTableWrapper({
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [contratoSelecionado, setContratoSelecionado] = React.useState<Contrato | null>(null);
 
-  // Dialogs de ações em massa
   const [bulkStatusOpen, setBulkStatusOpen] = React.useState(false);
   const [bulkResponsavelOpen, setBulkResponsavelOpen] = React.useState(false);
   const [bulkSegmentoOpen, setBulkSegmentoOpen] = React.useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = React.useState(false);
 
-  // Debounce da busca (500ms)
+  // ── Debounce da busca ────────────────────────────────────────────────────
   const buscaDebounced = useDebounce(busca, 500);
 
-  // ── Sync filtro externo de status (PipelineStepper) → estado interno ──
+  // ── Sync filtros externos → internos (reseta paginação) ──────────────────
   React.useEffect(() => {
-    if (externalStatusFilter === undefined) return; // prop não fornecida — ignorar
+    if (externalStatusFilter === undefined) return;
     const next = externalStatusFilter ?? '';
     setStatus((prev) => {
       if (prev === next) return prev;
@@ -171,7 +154,6 @@ export function ContratosTableWrapper({
     });
   }, [externalStatusFilter]);
 
-  // ── Sync busca/filtros externos (ContratosContent) → estado interno ──
   React.useEffect(() => {
     if (externalBusca === undefined) return;
     setBusca((prev) => {
@@ -208,44 +190,25 @@ export function ContratosTableWrapper({
     });
   }, [externalTipoCobranca]);
 
-  // ── Copilot: expor contexto de contratos ──
-  useAgentContext({
-    description: 'Dados da tela de contratos: total, filtros ativos e página atual',
-    value: {
-      total_contratos: total,
-      pagina: pageIndex + 1,
-      total_paginas: totalPages,
-      contratos_visiveis: contratos.length,
-      filtros_ativos: {
-        busca: busca || null,
-        tipo_contrato: tipoContrato || null,
-        tipo_cobranca: tipoCobranca || null,
-        status: status || null,
-        segmento: segmentoId || null,
-      },
-      carregando: isLoading,
-    },
-  });
+  // ── Maps para lookup O(1) ────────────────────────────────────────────────
+  const clientesMap = React.useMemo(
+    () => new Map(clientesOptionsState.map((c) => [c.id, c])),
+    [clientesOptionsState],
+  );
+  const partesContrariasMap = React.useMemo(
+    () => new Map(partesContrariasOptionsState.map((p) => [p.id, p])),
+    [partesContrariasOptionsState],
+  );
+  const usuariosMap = React.useMemo(
+    () => new Map(usuariosOptionsState.map((u) => [u.id, u])),
+    [usuariosOptionsState],
+  );
+  const segmentosMap = React.useMemo(
+    () => new Map(segmentos.map((s) => [s.id, { nome: s.nome }])),
+    [segmentos],
+  );
 
-  // ---------- Maps para lookup O(1) ----------
-  const clientesMap = React.useMemo(() => {
-    return new Map(clientesOptionsState.map((c) => [c.id, c]));
-  }, [clientesOptionsState]);
-
-  const partesContrariasMap = React.useMemo(() => {
-    return new Map(partesContrariasOptionsState.map((p) => [p.id, p]));
-  }, [partesContrariasOptionsState]);
-
-  const usuariosMap = React.useMemo(() => {
-    return new Map(usuariosOptionsState.map((u) => [u.id, u]));
-  }, [usuariosOptionsState]);
-
-  const segmentosMap = React.useMemo(() => {
-    return new Map(segmentos.map((s) => [s.id, { nome: s.nome }]));
-  }, [segmentos]);
-
-  // Refs para acessar os valores atuais das options sem incluí-los como deps do useEffect
-  // (evita loop: efeito atualiza options → options mudam → efeito re-executa)
+  // ── Refs para uso nas resoluções assíncronas ─────────────────────────────
   const clientesOptionsRef = React.useRef(clientesOptionsState);
   clientesOptionsRef.current = clientesOptionsState;
   const partesContrariasOptionsRef = React.useRef(partesContrariasOptionsState);
@@ -253,13 +216,10 @@ export function ContratosTableWrapper({
   const usuariosOptionsRef = React.useRef(usuariosOptionsState);
   usuariosOptionsRef.current = usuariosOptionsState;
 
-  // Completar nomes faltantes quando contratos mudam via refetch (paginação/filtros).
-  // Pula o render inicial: as entities já foram pré-carregadas pelo Server Component.
-  // Usa comparação de referência para ser StrictMode-safe (ref preserva mesma referência).
+  // Completar nomes faltantes quando contratos mudam via refetch.
   const prevContratosRef = React.useRef(contratos);
 
   React.useEffect(() => {
-    // No mount e StrictMode remount, contratos === prevContratosRef.current (mesma referência)
     if (prevContratosRef.current === contratos) return;
     prevContratosRef.current = contratos;
 
@@ -271,26 +231,24 @@ export function ContratosTableWrapper({
       const currentUsuarios = new Set(usuariosOptionsRef.current.map((u) => u.id));
 
       const missingClienteIds = Array.from(
-        new Set(contratos.map((c) => c.clienteId).filter((id) => !currentClientes.has(id)))
+        new Set(contratos.map((c) => c.clienteId).filter((id) => !currentClientes.has(id))),
       );
-
       const missingParteContrariaIds = Array.from(
         new Set(
           contratos
             .flatMap((c) => c.partes ?? [])
             .filter((p) => p.tipoEntidade === 'parte_contraria')
             .map((p) => p.entidadeId)
-            .filter((id) => !currentPartes.has(id))
-        )
+            .filter((id) => !currentPartes.has(id)),
+        ),
       );
-
       const missingUsuarioIds = Array.from(
         new Set(
           contratos
             .map((c) => c.responsavelId)
             .filter((id): id is number => typeof id === 'number' && id > 0)
-            .filter((id) => !currentUsuarios.has(id))
-        )
+            .filter((id) => !currentUsuarios.has(id)),
+        ),
       );
 
       if (!missingClienteIds.length && !missingParteContrariaIds.length && !missingUsuarioIds.length) return;
@@ -300,7 +258,6 @@ export function ContratosTableWrapper({
         partesContrariasIds: missingParteContrariaIds,
         usuariosIds: missingUsuarioIds,
       });
-
       if (cancelled || !result.success) return;
 
       const appendUnique = (prev: ClienteInfo[], incoming: ClienteInfo[]) => {
@@ -321,49 +278,30 @@ export function ContratosTableWrapper({
     };
 
     void run();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [contratos]);
 
-  // ---------- Helpers ----------
-  const getSortParams = React.useCallback((sortingState: SortingState): { ordenarPor?: ContratoSortBy; ordem?: Ordem } => {
-    if (sortingState.length === 0) return {};
-
-    const { id, desc } = sortingState[0];
-    const ordem = desc ? 'desc' : 'asc';
-
-    switch (id) {
-      case 'cadastradoEm':
-        return { ordenarPor: 'cadastrado_em', ordem };
-      case 'createdAt':
-        return { ordenarPor: 'created_at', ordem };
-      case 'updatedAt':
-        return { ordenarPor: 'updated_at', ordem };
-      case 'id':
-        return { ordenarPor: 'id', ordem };
-      default:
-        return {};
-    }
-  }, []);
-
-  // ---------- Refetch Function ----------
+  // ── Refetch ──────────────────────────────────────────────────────────────
   const refetch = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
       const params: ListarContratosParams = {
-        pagina: pageIndex + 1,  // API usa 1-based
+        pagina: pageIndex + 1,
         limite: pageSize,
         busca: buscaDebounced || undefined,
         segmentoId: segmentoId ? Number(segmentoId) : undefined,
         tipoContrato: (tipoContrato || undefined) as TipoContrato | undefined,
         tipoCobranca: (tipoCobranca || undefined) as TipoCobranca | undefined,
         status: (status || undefined) as StatusContrato | undefined,
-        ...getSortParams(sorting),
+        ordenarPor: externalOrdenarPor,
+        ordem: externalOrdem,
       };
 
       const result = await actionListarContratos(params);
-
       if (result.success) {
         const data = result.data as { data: Contrato[]; pagination: PaginationInfo };
         setContratos(data.data);
@@ -377,30 +315,77 @@ export function ContratosTableWrapper({
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, getSortParams]);
+  }, [
+    pageIndex,
+    pageSize,
+    buscaDebounced,
+    segmentoId,
+    tipoContrato,
+    tipoCobranca,
+    status,
+    externalOrdenarPor,
+    externalOrdem,
+  ]);
 
-  // ---------- Refetch reativo a filtros ----------
-  // Usa snapshot dos valores anteriores para:
-  // 1. Pular o render inicial quando `initialData` já veio hidratado
-  // 2. Disparar fetch no mount quando chamado sem dados iniciais (ex: ContratosContent)
-  // 3. Funcionar corretamente com React StrictMode (refs persistem entre mount/unmount)
+  // ── Refetch reativo ──────────────────────────────────────────────────────
   const prevFiltersRef = React.useRef<string | null>(null);
   const hasInitialData = initialData.length > 0;
 
   React.useEffect(() => {
-    const filterKey = JSON.stringify([pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting]);
-
+    const filterKey = JSON.stringify([
+      pageIndex,
+      pageSize,
+      buscaDebounced,
+      segmentoId,
+      tipoContrato,
+      tipoCobranca,
+      status,
+      externalOrdenarPor ?? '',
+      externalOrdem ?? '',
+    ]);
     if (prevFiltersRef.current === filterKey) return;
-
     const isInitial = prevFiltersRef.current === null;
     prevFiltersRef.current = filterKey;
-
-    if (isInitial && hasInitialData) return; // dados já vieram hidratados do server
-
+    if (isInitial && hasInitialData) return;
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, refetch, hasInitialData]);
+  }, [
+    pageIndex,
+    pageSize,
+    buscaDebounced,
+    segmentoId,
+    tipoContrato,
+    tipoCobranca,
+    status,
+    externalOrdenarPor,
+    externalOrdem,
+    refetch,
+    hasInitialData,
+  ]);
 
-  // ---------- Handlers ----------
+  // ── Copilot context ──────────────────────────────────────────────────────
+  useAgentContext({
+    description: 'Dados da tela de contratos: total, filtros ativos e página atual',
+    value: {
+      total_contratos: total,
+      pagina: pageIndex + 1,
+      total_paginas: totalPages,
+      contratos_visiveis: contratos.length,
+      filtros_ativos: {
+        busca: busca || null,
+        tipo_contrato: tipoContrato || null,
+        tipo_cobranca: tipoCobranca || null,
+        status: status || null,
+        segmento: segmentoId || null,
+      },
+      ordenacao: {
+        campo: externalOrdenarPor ?? null,
+        ordem: externalOrdem ?? null,
+      },
+      carregando: isLoading,
+    },
+  });
+
+  // ── Handlers ─────────────────────────────────────────────────────────────
   const handleEdit = React.useCallback((contrato: Contrato) => {
     setContratoSelecionado(contrato);
     setEditOpen(true);
@@ -427,111 +412,85 @@ export function ContratosTableWrapper({
     setCreateOpen(false);
   }, [refetch, setCreateOpen]);
 
-  // ---------- Seleção em Massa ----------
-  const selectedIds = React.useMemo(() => {
-    return Object.keys(rowSelection)
-      .filter((key) => rowSelection[key])
-      .map(Number)
-      .filter((id) => Number.isFinite(id) && id > 0);
-  }, [rowSelection]);
+  const toggleSelect = React.useCallback((id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
-  const selectedCount = selectedIds.length;
+  const toggleSelectAll = React.useCallback(() => {
+    setSelectedIds((prev) => {
+      const pageIds = contratos.map((c) => c.id);
+      const allOnPage = pageIds.every((id) => prev.has(id));
+      if (allOnPage) {
+        const next = new Set(prev);
+        pageIds.forEach((id) => next.delete(id));
+        return next;
+      }
+      const next = new Set(prev);
+      pageIds.forEach((id) => next.add(id));
+      return next;
+    });
+  }, [contratos]);
+
+  const selectedArray = React.useMemo(() => Array.from(selectedIds), [selectedIds]);
+  const selectedCount = selectedArray.length;
 
   const handleBulkSuccess = React.useCallback(() => {
-    setRowSelection({});
+    setSelectedIds(new Set());
     refetch();
   }, [refetch]);
 
-  const getRowId = React.useCallback((row: Contrato) => String(row.id), []);
-
-  // ---------- Columns (Memoized) ----------
-  const columns = React.useMemo(
-    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca, handleDelete),
-    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca, handleDelete]
-  );
-
-  // ---------- Ocultar coluna ID por padrão ----------
-  React.useEffect(() => {
-    if (table) {
-      table.setColumnVisibility((prev) => ({
-        ...prev,
-        id: false,
-        createdAt: false,
-        updatedAt: false,
-        observacoes: false,
-      }));
-    }
-  }, [table]);
-
-  // ---------- Render ----------
-  // Nota: o toolbar (busca, filtros, view toggle) é renderizado pelo
-  // `ContratosContent` externamente. Aqui ficamos apenas com DataTable +
-  // Pagination + BulkActions, em estilo Glass Briefing.
-  void hideToolbar; // mantido por compatibilidade da API externa
+  // ── Render ───────────────────────────────────────────────────────────────
   return (
     <>
-      <DataShell
-        footer={
-          totalPages > 0 ? (
-            <DataPagination
-              pageIndex={pageIndex}
-              pageSize={pageSize}
-              total={total}
-              totalPages={totalPages}
-              onPageChange={setPageIndex}
-              onPageSizeChange={setPageSize}
-              isLoading={isLoading}
-            />
-          ) : null
-        }
-      >
+      <div className="space-y-3">
         {selectedCount > 0 && (
-          <div className="px-3 py-2">
-            <ContratosBulkActionsBar
-              selectedCount={selectedCount}
-              onClearSelection={() => setRowSelection({})}
-              onAlterarStatus={() => setBulkStatusOpen(true)}
-              onAtribuirResponsavel={() => setBulkResponsavelOpen(true)}
-              onAlterarSegmento={() => setBulkSegmentoOpen(true)}
-              onExcluir={() => setBulkDeleteOpen(true)}
-            />
-          </div>
+          <ContratosBulkActionsBar
+            selectedCount={selectedCount}
+            onClearSelection={() => setSelectedIds(new Set())}
+            onAlterarStatus={() => setBulkStatusOpen(true)}
+            onAtribuirResponsavel={() => setBulkResponsavelOpen(true)}
+            onAlterarSegmento={() => setBulkSegmentoOpen(true)}
+            onExcluir={() => setBulkDeleteOpen(true)}
+          />
         )}
-        <DataTable
-          data={contratos}
-          columns={columns}
-          pagination={{
-            pageIndex,
-            pageSize,
-            total,
-            totalPages,
-            onPageChange: setPageIndex,
-            onPageSizeChange: setPageSize,
-          }}
-          sorting={sorting}
-          onSortingChange={(next) => {
-            setSorting(next);
-            // Ao mudar ordenação, voltar para a primeira página (server-side sorting)
-            setPageIndex(0);
-          }}
-          rowSelection={{
-            state: rowSelection,
-            onRowSelectionChange: setRowSelection,
-            getRowId,
-          }}
+
+        <ContratosGlassList
+          contratos={contratos}
           isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<Contrato>)}
-          emptyMessage="Nenhum contrato encontrado."
-          options={{
-            meta: {
-              usuarios: usuariosOptionsState,
-              onSuccessAction: refetch,
-            } satisfies ContratosTableMeta,
-          }}
+          clientesMap={clientesMap}
+          partesContrariasMap={partesContrariasMap}
+          usuariosMap={usuariosMap}
+          segmentosMap={segmentosMap}
+          usuarios={usuariosOptionsState}
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+          onToggleSelectAll={toggleSelectAll}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onGerarPeca={handleGerarPeca}
+          onResponsavelChanged={refetch}
         />
-      </DataShell>
+
+        {totalPages > 0 && (
+          <DataPagination
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            total={total}
+            totalPages={totalPages}
+            onPageChange={setPageIndex}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setPageIndex(0);
+            }}
+            isLoading={isLoading}
+          />
+        )}
+      </div>
 
       {/* Sheet de criação */}
       <ContratoForm
@@ -570,9 +529,7 @@ export function ContratosTableWrapper({
             setGerarPecaOpen(open);
             if (!open) setContratoSelecionado(null);
           }}
-          onSuccess={() => {
-            refetch();
-          }}
+          onSuccess={refetch}
         />
       )}
 
@@ -585,37 +542,35 @@ export function ContratosTableWrapper({
             setDeleteOpen(open);
             if (!open) setContratoSelecionado(null);
           }}
-          onSuccess={() => {
-            refetch();
-          }}
+          onSuccess={refetch}
         />
       )}
 
-      {/* Dialogs de ações em massa */}
+      {/* Bulk dialogs */}
       <AlterarStatusMassaDialog
         open={bulkStatusOpen}
         onOpenChange={setBulkStatusOpen}
-        selectedIds={selectedIds}
+        selectedIds={selectedArray}
         onSuccess={handleBulkSuccess}
       />
       <AtribuirResponsavelMassaDialog
         open={bulkResponsavelOpen}
         onOpenChange={setBulkResponsavelOpen}
-        selectedIds={selectedIds}
+        selectedIds={selectedArray}
         usuarios={usuariosOptionsState}
         onSuccess={handleBulkSuccess}
       />
       <AlterarSegmentoMassaDialog
         open={bulkSegmentoOpen}
         onOpenChange={setBulkSegmentoOpen}
-        selectedIds={selectedIds}
+        selectedIds={selectedArray}
         segmentos={segmentosOptions}
         onSuccess={handleBulkSuccess}
       />
       <ExcluirMassaDialog
         open={bulkDeleteOpen}
         onOpenChange={setBulkDeleteOpen}
-        selectedIds={selectedIds}
+        selectedIds={selectedArray}
         onSuccess={handleBulkSuccess}
       />
     </>

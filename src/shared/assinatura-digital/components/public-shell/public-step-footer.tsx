@@ -52,10 +52,10 @@ export function PublicStepFooter({
         {showPrevious && (
           <Button
             type="button"
-            variant="outline"
+            variant="glass-outline"
             onClick={onPrevious}
             disabled={isPreviousDisabled || isLoading}
-            className="h-12 flex-1 gap-1 sm:flex-initial sm:min-w-28 cursor-pointer border-outline-variant/60 bg-surface-container-lowest/70 backdrop-blur-sm hover:bg-surface-container-lowest hover:border-outline-variant active:scale-[0.98] transition-colors"
+            className="h-12 flex-1 gap-1 sm:flex-initial sm:min-w-28 cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
             {previousLabel}

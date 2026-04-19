@@ -101,7 +101,14 @@ const nextConfig: NextConfig = {
     "playwright-core",
     // PDF libraries need legacy builds for Node.js environments
     "pdf-lib",
-    "pdfjs-dist",
+    // NOTA: pdfjs-dist REMOVIDO de serverExternalPackages (2026-04).
+    // Motivo: quando listado aqui, Turbopack tenta resolver `pdfjs-dist/build/pdf.mjs`
+    // (build browser) no server, gerando `ReferenceError: DOMMatrix is not defined`
+    // e derrubando o processo. O pacote só é usado:
+    //  1. Client-side via react-pdf (PdfPreview.tsx com 'use client' + dynamic ssr:false)
+    //  2. Server-side com path explícito `pdfjs-dist/legacy/build/pdf.mjs` em
+    //     src/lib/ai/services/extraction.service.ts (import lazy + guard typeof window)
+    // Ambos os usos já evitam a build browser no server — a entrada aqui era armadilha.
     "@pdfjs-dist/font-data",
     "pdf-parse",
     // Redis client - Node.js only, should not be bundled for client

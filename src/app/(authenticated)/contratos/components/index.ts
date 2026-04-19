@@ -6,11 +6,18 @@
  */
 
 export { getContratosColumns } from "./columns";
-export { ContratosTableWrapper } from "./contratos-table-wrapper";
 export { ContratoForm } from "./contrato-form";
 export { SegmentosDialog } from "./segmentos-dialog";
 export { SegmentosFilter } from "./segmentos-filter";
 export { ContratoDeleteDialog } from "./contrato-delete-dialog";
+
+// ─── Glass Briefing List ─────────────────────────────────────────────────────
+export { ContratosListWrapper } from './contratos-list-wrapper';
+export type { ContratosListWrapperProps } from './contratos-list-wrapper';
+export { ContratosGlassList } from './contratos-glass-list';
+export type { ContratosGlassListProps } from './contratos-glass-list';
+export { ContratosKanbanView } from './contratos-kanban-view';
+export type { ContratosKanbanViewProps } from './contratos-kanban-view';
 
 // ─── Pipeline UI Components ───────────────────────────────────────────────────
 export { ContratoCard } from './contrato-card';

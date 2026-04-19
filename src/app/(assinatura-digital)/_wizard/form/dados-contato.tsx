@@ -3,18 +3,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Info } from 'lucide-react'
 import { toast } from 'sonner'
 
 import {
-  enderecoSchema,
-  type EnderecoFormData,
+  contatoSchema,
+  type ContatoFormData,
 } from '@/shared/assinatura-digital/validations/dados-pessoais-sub.schemas'
 import { dadosPessoaisSchema } from '@/shared/assinatura-digital/validations/dados-pessoais.schema'
+import { InputTelefone } from '@/components/ui/input-telefone'
 import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos'
 import { useFormularioStore } from '@/shared/assinatura-digital/store'
 import { apiFetch } from '@/lib/http/api-fetch'
 import {
+  formatTelefone,
   parseCPF,
   parseTelefone,
   parseCEP,
@@ -37,9 +38,15 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Text } from '@/components/ui/typography'
 import FormStepLayout from './form-step-layout'
 
-export default function DadosEndereco() {
+/**
+ * Step consolidado de contato — unifica os antigos "Contatos" (email/telefones)
+ * e "Endereço" (CEP/rua/etc) num único form com seções visuais.
+ * Ponto único de persistência via saveClient, antes gerido por DadosEndereco.
+ */
+export default function DadosContato() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
@@ -56,9 +63,18 @@ export default function DadosEndereco() {
 
   const clienteExistente = dadosCPF?.clienteExistente ?? false
 
-  const defaultValues: EnderecoFormData = useMemo(() => {
+  const defaultValues: ContatoFormData = useMemo(() => {
     const cliente = dadosCPF?.dadosCliente
     return {
+      email: dadosPessoaisDraft?.email ?? cliente?.email ?? '',
+      celular: formatTelefone(
+        dadosPessoaisDraft?.celular ?? cliente?.celular ?? '',
+      ),
+      telefone: cliente?.telefone
+        ? formatTelefone(dadosPessoaisDraft?.telefone ?? cliente.telefone)
+        : dadosPessoaisDraft?.telefone
+          ? formatTelefone(dadosPessoaisDraft.telefone)
+          : '',
       cep: dadosPessoaisDraft?.cep ?? cliente?.cep ?? '',
       logradouro: dadosPessoaisDraft?.logradouro ?? cliente?.logradouro ?? '',
       numero: dadosPessoaisDraft?.numero ?? cliente?.numero ?? '',
@@ -71,14 +87,14 @@ export default function DadosEndereco() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const form = useForm<EnderecoFormData>({
-    resolver: zodResolver(enderecoSchema),
+  const form = useForm<ContatoFormData>({
+    resolver: zodResolver(contatoSchema),
     mode: 'onChange',
     defaultValues,
   })
 
   const watched = form.watch()
-  const isValid = enderecoSchema.safeParse(watched).success
+  const isValid = contatoSchema.safeParse(watched).success
 
   useEffect(() => {
     if (clienteExistente) {
@@ -98,7 +114,7 @@ export default function DadosEndereco() {
     form.setFocus('numero')
   }
 
-  const onSubmit = async (data: EnderecoFormData) => {
+  const onSubmit = async (data: ContatoFormData) => {
     if (!segmentoId || !formularioId) {
       toast.error('Erro de contexto', {
         description: 'Contexto do formulário não carregado. Recarregue a página.',
@@ -106,11 +122,9 @@ export default function DadosEndereco() {
       return
     }
 
-    // Merge final do draft com os dados deste substep
     mergeDadosPessoaisDraft(data)
     const draft = { ...(useFormularioStore.getState().dadosPessoaisDraft ?? {}) }
 
-    // Valida o schema completo antes de persistir
     const fullParse = dadosPessoaisSchema.safeParse(draft)
     if (!fullParse.success) {
       toast.error('Dados incompletos', {
@@ -195,13 +209,12 @@ export default function DadosEndereco() {
         endereco_uf: fullData.estado ?? '',
       })
 
-      // Limpa draft após persistência bem-sucedida
       resetDadosPessoaisDraft()
 
-      toast.success('Sucesso', { description: 'Dados salvos com sucesso!' })
+      toast.success('Dados salvos', { description: 'Contatos e endereço atualizados.' })
       proximaEtapa()
     } catch (error) {
-      console.error('Erro ao salvar dados pessoais:', error)
+      console.error('Erro ao salvar dados de contato:', error)
       toast.error('Erro ao salvar dados', {
         description:
           error instanceof Error
@@ -215,24 +228,24 @@ export default function DadosEndereco() {
 
   return (
     <FormStepLayout
-      title={clienteExistente ? 'Confirme seu endereço' : 'Endereço'}
+      title={clienteExistente ? 'Confirme seus contatos' : 'Contato'}
       description={
         clienteExistente
-          ? 'Revise seu endereço e finalize os dados cadastrais.'
-          : 'Onde você reside'
+          ? 'Revise e-mail, telefone e endereço. Edite se necessário.'
+          : 'Como entramos em contato e onde você reside.'
       }
       onPrevious={etapaAnterior}
-      nextLabel={clienteExistente ? 'Confirmar e salvar' : 'Salvar e continuar'}
+      nextLabel={clienteExistente ? 'Confirmar e continuar' : 'Salvar e continuar'}
       isNextDisabled={isSubmitting || !isValid}
       isPreviousDisabled={isSubmitting}
       isLoading={isSubmitting}
-      formId="endereco-form"
+      formId="contato-form"
     >
       <Form {...form}>
         <form
-          id="endereco-form"
+          id="contato-form"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6"
+          className="space-y-7"
         >
           {clienteExistente && (
             <Badge tone="soft" variant="info">
@@ -240,39 +253,23 @@ export default function DadosEndereco() {
             </Badge>
           )}
 
-          <FormField
-            control={form.control}
-            name="cep"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2">
-                  CEP
-                  <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                </FormLabel>
-                <FormControl>
-                  <InputCEP
-                    placeholder="00000-000"
-                    className="glass-field"
-                    onAddressFound={handleAddressFound}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <section className="space-y-5">
+            <Text variant="overline" className="block text-muted-foreground">
+              Comunicação
+            </Text>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <FormField
               control={form.control}
-              name="logradouro"
+              name="email"
               render={({ field }) => (
-                <FormItem className="sm:col-span-2">
-                  <FormLabel>Logradouro</FormLabel>
+                <FormItem>
+                  <FormLabel>E-mail</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Rua, Avenida, etc."
-                      className="glass-field"
+                      type="email"
+                      inputMode="email"
+                      placeholder="seu@email.com"
+                      variant="glass"
                       {...field}
                     />
                   </FormControl>
@@ -281,107 +278,191 @@ export default function DadosEndereco() {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="numero"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Número</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Número"
-                      className="glass-field"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
-            name="complemento"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Complemento (opcional)</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Apto, Bloco, etc."
-                    className="glass-field"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="bairro"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bairro</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Bairro"
-                      className="glass-field"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="cidade"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cidade</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Cidade"
-                      className="glass-field"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="estado"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Estado</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="celular"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Celular</FormLabel>
                     <FormControl>
-                      <SelectTrigger className="glass-field">
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
+                      <InputTelefone
+                        mode="cell"
+                        placeholder="(00) 00000-0000"
+                        {...field}
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {Object.entries(ESTADOS_BRASILEIROS)
-                        .sort((a, b) => a[1].localeCompare(b[1]))
-                        .map(([uf, nome]) => (
-                          <SelectItem key={uf} value={uf}>
-                            {nome}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="telefone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Telefone (opcional)</FormLabel>
+                    <FormControl>
+                      <InputTelefone
+                        mode="landline"
+                        placeholder="(00) 0000-0000"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </section>
+
+          <div className="h-px bg-outline-variant/30" role="separator" />
+
+          <section className="space-y-5">
+            <Text variant="overline" className="block text-muted-foreground">
+              Endereço
+            </Text>
+
+            <FormField
+              control={form.control}
+              name="cep"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CEP</FormLabel>
+                  <FormControl>
+                    <InputCEP
+                      placeholder="00000-000"
+                      onAddressFound={handleAddressFound}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="logradouro"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Logradouro</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Rua, Avenida, etc."
+                        variant="glass"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="numero"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Número</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Número"
+                        variant="glass"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="complemento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Complemento (opcional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Apto, Bloco, etc."
+                      variant="glass"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="bairro"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bairro</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Bairro"
+                        variant="glass"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="cidade"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cidade</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Cidade"
+                        variant="glass"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="estado"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estado</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger variant="glass">
+                          <SelectValue placeholder="UF" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(ESTADOS_BRASILEIROS)
+                          .sort((a, b) => a[1].localeCompare(b[1]))
+                          .map(([uf, nome]) => (
+                            <SelectItem key={uf} value={uf}>
+                              {nome}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </section>
         </form>
       </Form>
     </FormStepLayout>

@@ -173,7 +173,7 @@ export default function VerificarCPF() {
                     placeholder="000.000.000-00"
                     disabled={isValidating}
                     autoFocus={true}
-                    className="h-14 text-lg tracking-wide"
+                    className="glass-field h-14 text-lg tracking-wide"
                     {...field}
                   />
                 </FormControl>

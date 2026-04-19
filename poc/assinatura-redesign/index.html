@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assinatura Digital — Redesign POC · Centered Glass Mono</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   ZATTAROS · ASSINATURA DIGITAL — POC "Centered Glass Mono"
+   Um único card centralizado. Mesmo layout desktop e mobile.
+   Progresso, navegação e conteúdo contidos no card.
+   Zero sidebar, zero header bar, zero footer bar.
+   ================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Glass Briefing — tokens extraídos de src/app/globals.css (light) */
+  --background: oklch(0.96 0.01 281);
+  --foreground: oklch(0.15 0.01 281);
+  --primary: oklch(0.48 0.26 281);
+  --primary-foreground: oklch(1 0 0);
+  --muted: oklch(0.92 0.01 281);
+  --muted-foreground: oklch(0.42 0.01 281);
+  --border: oklch(0.87 0.01 281);
+  --input: oklch(0.87 0.01 281);
+  --success: oklch(0.55 0.18 145);
+  --destructive: oklch(0.55 0.22 25);
+
+  --surface-dim: oklch(0.90 0.005 281);
+  --surface-container-lowest: oklch(1 0 0);
+  --outline-variant: oklch(0.78 0.01 281);
+
+  --radius: 0.5rem;
+  --radius-card: 20px;
+  --radius-input: 12px;
+  --radius-pill: 999px;
+
+  /* Fontes */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --font-display: 'Manrope', sans-serif;
+
+  /* Sombras glass */
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04),
+                 0 12px 32px -12px oklch(0.15 0.1 281 / 0.18),
+                 0 32px 64px -32px oklch(0.15 0.1 281 / 0.12);
+  --shadow-btn: 0 1px 2px oklch(0 0 0 / 0.06),
+                0 4px 12px -4px oklch(0.48 0.26 281 / 0.3);
+}
+
+.dark {
+  --background: oklch(0.17 0.005 281);
+  --foreground: oklch(0.98 0 0);
+  --primary: oklch(0.70 0.20 281);
+  --primary-foreground: oklch(0.10 0.03 281);
+  --muted: oklch(0.22 0.005 281);
+  --muted-foreground: oklch(0.65 0.005 281);
+  --border: oklch(1 0 0 / 0.12);
+  --input: oklch(1 0 0 / 0.08);
+  --success: oklch(0.70 0.18 145);
+  --destructive: oklch(0.65 0.22 25);
+  --surface-dim: oklch(0.12 0.005 281);
+  --surface-container-lowest: oklch(0.06 0.005 281);
+  --outline-variant: oklch(0.35 0.005 281);
+
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.3),
+                 0 24px 64px -16px oklch(0 0 0 / 0.6),
+                 inset 0 1px 0 oklch(1 0 0 / 0.05);
+}
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--surface-dim);
+  color: var(--foreground);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: background 300ms ease, color 300ms ease;
+}
+
+/* ── Ambient backdrop ───────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 40% 50% at 20% 20%, color-mix(in oklch, var(--primary) 22%, transparent), transparent 70%),
+    radial-gradient(ellipse 35% 40% at 80% 80%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in oklch, var(--foreground) 8%, transparent) 1px, transparent 0);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 80%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+@keyframes drift {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-4%, 3%); }
+}
+
+/* ── Brand mark acima do card ───────────────────────── */
+.brand-mark {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-mark::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px var(--primary);
+}
+
+/* ── Card principal ─────────────────────────────────── */
+.card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 480px;
+  background: color-mix(in oklch, var(--surface-container-lowest) 85%, transparent);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid color-mix(in oklch, var(--outline-variant) 50%, transparent);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: min(720px, calc(100svh - 140px));
+}
+
+/* ── Progress region ────────────────────────────────── */
+.progress {
+  padding: 20px 28px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.progress-bar {
+  height: 3px;
+  background: color-mix(in oklch, var(--outline-variant) 40%, transparent);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 10px color-mix(in oklch, var(--primary) 50%, transparent);
+  transition: width 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-meta__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-meta__index {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.progress-meta__restart {
+  background: none;
+  border: none;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms ease;
+}
+
+.progress-meta__restart:hover {
+  background: color-mix(in oklch, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
+.progress-meta__restart:active { transform: scale(0.94); }
+
+.progress-meta__restart svg { width: 14px; height: 14px; }
+
+/* ── Content body ───────────────────────────────────── */
+.content {
+  padding: 20px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--outline-variant) 60%, transparent) transparent;
+}
+
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--outline-variant) 60%, transparent);
+  border-radius: 999px;
+}
+
+.step-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-heading__title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.step-heading__desc {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+/* ── Forms ──────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid-3 { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 12px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field__input,
+.field__textarea,
+.field__select {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--foreground);
+  background: color-mix(in oklch, var(--surface-container-lowest) 60%, transparent);
+  border: 1px solid color-mix(in oklch, var(--outline-variant) 60%, transparent);
+  border-radius: var(--radius-input);
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  outline: none;
+}
+
+.field__input:focus,
+.field__textarea:focus,
+.field__select:focus {
+  border-color: var(--primary);
+  background: color-mix(in oklch, var(--surface-container-lowest) 90%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 14%, transparent);
+}
+
+.field__input::placeholder { color: color-mix(in oklch, var(--muted-foreground) 70%, transparent); }
+
+.field--cpf .field__input {
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  padding: 14px 16px;
+}
+
+/* ── Radio cards (step Ação) ────────────────────────── */
+.radio-group { display: flex; flex-direction: column; gap: 8px; }
+
+.radio-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid color-mix(in oklch, var(--outline-variant) 60%, transparent);
+  background: color-mix(in oklch, var(--surface-container-lowest) 40%, transparent);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.radio-card:hover {
+  border-color: color-mix(in oklch, var(--primary) 40%, transparent);
+  background: color-mix(in oklch, var(--surface-container-lowest) 70%, transparent);
+}
+
+.radio-card[data-checked="true"] {
+  border-color: var(--primary);
+  background: color-mix(in oklch, var(--primary) 8%, transparent);
+}
+
+.radio-card__dot {
+  width: 18px; height: 18px;
+  border: 1.5px solid color-mix(in oklch, var(--outline-variant) 80%, transparent);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 160ms ease;
+}
+
+.radio-card[data-checked="true"] .radio-card__dot { border-color: var(--primary); }
+
+.radio-card[data-checked="true"] .radio-card__dot::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+.radio-card__body { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.radio-card__title { font-size: 14px; font-weight: 600; color: var(--foreground); }
+.radio-card__desc { font-size: 12.5px; color: var(--muted-foreground); line-height: 1.4; }
+
+/* ── Review list (step 6) ───────────────────────────── */
+.review-list { display: flex; flex-direction: column; gap: 4px; }
+
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--outline-variant) 30%, transparent);
+  font-size: 14px;
+}
+
+.review-row:last-child { border-bottom: none; }
+.review-row__label { color: var(--muted-foreground); font-size: 12.5px; }
+.review-row__value { color: var(--foreground); font-weight: 500; text-align: right; }
+
+/* ── Selfie upload ──────────────────────────────────── */
+.selfie-area {
+  aspect-ratio: 1;
+  max-width: 220px;
+  margin: 0 auto;
+  border: 1.5px dashed color-mix(in oklch, var(--outline-variant) 70%, transparent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted-foreground);
+  background: color-mix(in oklch, var(--primary) 4%, transparent);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.selfie-area:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: color-mix(in oklch, var(--primary) 8%, transparent);
+}
+
+.selfie-area[data-captured="true"] {
+  border-style: solid;
+  border-color: var(--success);
+  color: var(--success);
+  background: color-mix(in oklch, var(--success) 10%, transparent);
+}
+
+.selfie-area svg { width: 36px; height: 36px; }
+.selfie-area__label { font-size: 13px; font-weight: 500; }
+
+/* ── Termos ─────────────────────────────────────────── */
+.terms-text {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 14px;
+  background: color-mix(in oklch, var(--muted) 40%, transparent);
+  border-radius: var(--radius-input);
+  border: 1px solid color-mix(in oklch, var(--outline-variant) 40%, transparent);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.checkbox-row input[type="checkbox"] {
+  appearance: none;
+  width: 18px; height: 18px;
+  border: 1.5px solid color-mix(in oklch, var(--outline-variant) 80%, transparent);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 2px;
+  position: relative;
+  flex-shrink: 0;
+  background: color-mix(in oklch, var(--surface-container-lowest) 50%, transparent);
+  transition: all 160ms ease;
+}
+
+.checkbox-row input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.checkbox-row input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--primary-foreground);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.checkbox-row__label { font-size: 13.5px; color: var(--foreground); line-height: 1.5; }
+
+/* ── Signature canvas ───────────────────────────────── */
+.signature-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.signature-canvas {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  background: color-mix(in oklch, var(--surface-container-lowest) 80%, transparent);
+  border: 1.5px solid color-mix(in oklch, var(--outline-variant) 60%, transparent);
+  border-radius: var(--radius-input);
+  touch-action: none;
+  cursor: crosshair;
+  display: block;
+}
+
+.signature-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.signature-hint {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.signature-clear {
+  background: none;
+  border: none;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 160ms ease;
+}
+
+.signature-clear:hover {
+  color: var(--destructive);
+  background: color-mix(in oklch, var(--destructive) 10%, transparent);
+}
+
+/* ── Success state ──────────────────────────────────── */
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 16px 0 8px;
+}
+
+.success-state__icon {
+  width: 72px; height: 72px;
+  background: color-mix(in oklch, var(--success) 14%, transparent);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--success);
+  animation: popIn 480ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.success-state__icon svg { width: 36px; height: 36px; }
+
+@keyframes popIn {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.success-state__title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--foreground);
+}
+
+.success-state__desc {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+/* ── Footer buttons (inside card) ───────────────────── */
+.actions {
+  padding: 16px 28px 24px;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  border-top: 1px solid color-mix(in oklch, var(--outline-variant) 30%, transparent);
+  background: color-mix(in oklch, var(--surface-container-lowest) 40%, transparent);
+}
+
+.btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14.5px;
+  padding: 12px 20px;
+  border-radius: var(--radius-input);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 160ms ease;
+  min-height: 46px;
+  letter-spacing: -0.005em;
+}
+
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn--primary {
+  flex: 1;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--primary) 92%, black);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px oklch(0 0 0 / 0.06),
+              0 8px 20px -4px color-mix(in oklch, var(--primary) 40%, transparent);
+}
+
+.btn--primary:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--foreground);
+  border-color: color-mix(in oklch, var(--outline-variant) 60%, transparent);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--muted) 60%, transparent);
+  border-color: color-mix(in oklch, var(--outline-variant) 90%, transparent);
+}
+
+.btn svg { width: 16px; height: 16px; }
+
+/* ── Security footer (below card) ───────────────────── */
+.security-note {
+  position: relative;
+  z-index: 2;
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--muted-foreground);
+  letter-spacing: 0.02em;
+}
+
+.security-note svg { width: 12px; height: 12px; }
+
+/* ── Theme toggle (dev) ─────────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  background: color-mix(in oklch, var(--surface-container-lowest) 60%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in oklch, var(--outline-variant) 50%, transparent);
+  border-radius: var(--radius-pill);
+  color: var(--foreground);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 160ms ease;
+}
+
+.theme-toggle:hover { background: color-mix(in oklch, var(--surface-container-lowest) 85%, transparent); }
+.theme-toggle svg { width: 14px; height: 14px; }
+
+/* ── Step transitions ───────────────────────────────── */
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: stepIn 320ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive adjustments (mantém layout único) ───── */
+@media (max-width: 480px) {
+  body { padding: 16px; }
+  .card { max-height: calc(100svh - 96px); }
+  .progress { padding: 16px 20px 0; }
+  .content { padding: 16px 20px 20px; }
+  .actions { padding: 12px 20px 18px; }
+  .step-heading__title { font-size: 22px; }
+  .form-grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Accessibility ──────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  body::before { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema">
+  <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+  <span id="themeLabel">Escuro</span>
+</button>
+
+<div class="brand-mark">zattar.</div>
+
+<main class="card" id="card" aria-label="Assinatura digital">
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuemin="1" aria-valuemax="9" aria-valuenow="1">
+      <div class="progress-bar__fill" id="progressFill" style="width: 11.1%"></div>
+    </div>
+    <div class="progress-meta">
+      <div class="progress-meta__label">
+        <span class="progress-meta__index" id="progressIndex">1 de 9</span>
+        <span id="progressStepLabel">· CPF</span>
+      </div>
+      <button class="progress-meta__restart" id="restartBtn" type="button" aria-label="Recomeçar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7"/>
+          <polyline points="3 4 3 10 9 10"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+    <!-- renderizado dinamicamente via JS -->
+  </div>
+
+  <div class="actions" id="actions">
+    <!-- renderizado dinamicamente via JS -->
+  </div>
+</main>
+
+<div class="security-note">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </svg>
+  <span>Protegido por criptografia · LGPD</span>
+</div>
+
+<script>
+/* ================================================================
+   ESTADO + RENDER
+   ================================================================ */
+
+const STEPS = [
+  { id: 'cpf',       label: 'CPF' },
+  { id: 'identidade',label: 'Identidade' },
+  { id: 'contatos',  label: 'Contatos' },
+  { id: 'endereco',  label: 'Endereço' },
+  { id: 'acao',      label: 'Ação' },
+  { id: 'revisao',   label: 'Revisão' },
+  { id: 'selfie',    label: 'Selfie' },
+  { id: 'termos',    label: 'Termos' },
+  { id: 'assinar',   label: 'Assinar' },
+];
+
+const state = {
+  index: 0,
+  dados: {
+    cpf: '',
+    nome: '',
+    rg: '',
+    nascimento: '',
+    email: '',
+    telefone: '',
+    cep: '',
+    rua: '',
+    numero: '',
+    bairro: '',
+    cidade: '',
+    uf: '',
+    acao: '',
+    selfieCaptured: false,
+    termosAceitos: false,
+    assinatura: false,
+  },
+  completed: false,
+};
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const content = $('#content');
+const actions = $('#actions');
+
+/* ── Máscara CPF ───────────────────────────────────── */
+function maskCPF(v) {
+  return v.replace(/\D/g, '').slice(0, 11)
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function maskPhone(v) {
+  return v.replace(/\D/g, '').slice(0, 11)
+    .replace(/(\d{2})(\d)/, '($1) $2')
+    .replace(/(\d{5})(\d)/, '$1-$2');
+}
+
+function maskCEP(v) {
+  return v.replace(/\D/g, '').slice(0, 8).replace(/(\d{5})(\d)/, '$1-$2');
+}
+
+/* ── Validação por etapa ───────────────────────────── */
+function isStepValid() {
+  const d = state.dados;
+  switch (STEPS[state.index].id) {
+    case 'cpf':        return d.cpf.replace(/\D/g, '').length === 11;
+    case 'identidade': return d.nome.trim().length >= 3 && d.rg.trim() && d.nascimento;
+    case 'contatos':   return /.+@.+\..+/.test(d.email) && d.telefone.replace(/\D/g,'').length >= 10;
+    case 'endereco':   return d.cep.replace(/\D/g,'').length === 8 && d.rua && d.numero && d.cidade && d.uf;
+    case 'acao':       return !!d.acao;
+    case 'revisao':    return true;
+    case 'selfie':     return d.selfieCaptured;
+    case 'termos':     return d.termosAceitos;
+    case 'assinar':    return d.assinatura;
+    default:           return true;
+  }
+}
+
+/* ── Render progress ───────────────────────────────── */
+function renderProgress() {
+  const pct = ((state.index + 1) / STEPS.length) * 100;
+  $('#progressFill').style.width = pct + '%';
+  $('#progressIndex').textContent = `${state.index + 1} de ${STEPS.length}`;
+  $('#progressStepLabel').textContent = `· ${STEPS[state.index].label}`;
+  $('.progress-bar').setAttribute('aria-valuenow', state.index + 1);
+}
+
+/* ── Render actions ────────────────────────────────── */
+function renderActions() {
+  const isFirst = state.index === 0;
+  const isLast = state.index === STEPS.length - 1;
+  const valid = isStepValid();
+
+  if (state.completed) {
+    actions.innerHTML = `
+      <button class="btn btn--primary" id="restartFull" type="button">
+        Nova assinatura
+      </button>
+    `;
+    $('#restartFull').addEventListener('click', fullRestart);
+    return;
+  }
+
+  actions.innerHTML = `
+    ${!isFirst ? `
+      <button class="btn btn--ghost" id="prevBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar
+      </button>` : ''}
+    <button class="btn btn--primary" id="nextBtn" type="button" ${valid ? '' : 'disabled'}>
+      ${isLast ? 'Concluir assinatura' : 'Continuar'}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  `;
+  if (!isFirst) $('#prevBtn').addEventListener('click', goPrev);
+  $('#nextBtn').addEventListener('click', goNext);
+}
+
+/* ── Render step content ───────────────────────────── */
+function renderContent() {
+  if (state.completed) {
+    content.innerHTML = `
+      <div class="step-content success-state">
+        <div class="success-state__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h2 class="success-state__title">Assinatura concluída</h2>
+        <p class="success-state__desc">Seu contrato foi assinado com sucesso. Uma cópia será enviada para ${state.dados.email || 'seu e-mail'} em instantes.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const id = STEPS[state.index].id;
+  content.innerHTML = `<div class="step-content" id="stepContent"></div>`;
+  const root = $('#stepContent');
+
+  switch (id) {
+    case 'cpf':        renderCPF(root); break;
+    case 'identidade': renderIdentidade(root); break;
+    case 'contatos':   renderContatos(root); break;
+    case 'endereco':   renderEndereco(root); break;
+    case 'acao':       renderAcao(root); break;
+    case 'revisao':    renderRevisao(root); break;
+    case 'selfie':     renderSelfie(root); break;
+    case 'termos':     renderTermos(root); break;
+    case 'assinar':    renderAssinar(root); break;
+  }
+}
+
+/* ── Steps ──────────────────────────────────────────── */
+function renderCPF(root) {
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Informe seu CPF</h1>
+      <p class="step-heading__desc">Vamos localizar ou criar seu cadastro. Nenhuma consulta de crédito é feita.</p>
+    </div>
+    <form class="form" autocomplete="off" onsubmit="event.preventDefault();">
+      <div class="field field--cpf">
+        <label class="field__label" for="cpf">CPF</label>
+        <input class="field__input" id="cpf" type="text" inputmode="numeric"
+          placeholder="000.000.000-00" value="${state.dados.cpf}" autofocus>
+      </div>
+    </form>
+  `;
+  $('#cpf').addEventListener('input', (e) => {
+    e.target.value = maskCPF(e.target.value);
+    state.dados.cpf = e.target.value;
+    renderActions();
+  });
+}
+
+function renderIdentidade(root) {
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Seus dados pessoais</h1>
+      <p class="step-heading__desc">Informe nome completo, RG e data de nascimento.</p>
+    </div>
+    <form class="form" onsubmit="event.preventDefault();">
+      <div class="field">
+        <label class="field__label" for="nome">Nome completo</label>
+        <input class="field__input" id="nome" type="text" value="${state.dados.nome}" autofocus>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="rg">RG</label>
+          <input class="field__input" id="rg" type="text" value="${state.dados.rg}">
+        </div>
+        <div class="field">
+          <label class="field__label" for="nascimento">Nascimento</label>
+          <input class="field__input" id="nascimento" type="date" value="${state.dados.nascimento}">
+        </div>
+      </div>
+    </form>
+  `;
+  ['nome','rg','nascimento'].forEach(k => {
+    $('#' + k).addEventListener('input', (e) => {
+      state.dados[k] = e.target.value;
+      renderActions();
+    });
+  });
+}
+
+function renderContatos(root) {
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Como te localizamos?</h1>
+      <p class="step-heading__desc">Usaremos esses contatos para enviar a cópia assinada.</p>
+    </div>
+    <form class="form" onsubmit="event.preventDefault();">
+      <div class="field">
+        <label class="field__label" for="email">E-mail</label>
+        <input class="field__input" id="email" type="email" placeholder="voce@email.com" value="${state.dados.email}" autofocus>
+      </div>
+      <div class="field">
+        <label class="field__label" for="telefone">Telefone</label>
+        <input class="field__input" id="telefone" type="tel" inputmode="numeric" placeholder="(11) 99999-9999" value="${state.dados.telefone}">
+      </div>
+    </form>
+  `;
+  $('#email').addEventListener('input', (e) => { state.dados.email = e.target.value; renderActions(); });
+  $('#telefone').addEventListener('input', (e) => {
+    e.target.value = maskPhone(e.target.value);
+    state.dados.telefone = e.target.value;
+    renderActions();
+  });
+}
+
+function renderEndereco(root) {
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Seu endereço</h1>
+      <p class="step-heading__desc">Preenchido automaticamente pelo CEP quando possível.</p>
+    </div>
+    <form class="form" onsubmit="event.preventDefault();">
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field__label" for="cep">CEP</label>
+          <input class="field__input" id="cep" type="text" inputmode="numeric" placeholder="00000-000" value="${state.dados.cep}" autofocus>
+        </div>
+        <div class="field">
+          <label class="field__label" for="uf">UF</label>
+          <input class="field__input" id="uf" type="text" maxlength="2" value="${state.dados.uf}">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="rua">Rua</label>
+        <input class="field__input" id="rua" type="text" value="${state.dados.rua}">
+      </div>
+      <div class="form-grid-3">
+        <div class="field">
+          <label class="field__label" for="bairro">Bairro</label>
+          <input class="field__input" id="bairro" type="text" value="${state.dados.bairro}">
+        </div>
+        <div class="field">
+          <label class="field__label" for="numero">Número</label>
+          <input class="field__input" id="numero" type="text" value="${state.dados.numero}">
+        </div>
+        <div class="field">
+          <label class="field__label" for="cidade">Cidade</label>
+          <input class="field__input" id="cidade" type="text" value="${state.dados.cidade}">
+        </div>
+      </div>
+    </form>
+  `;
+  ['cep','uf','rua','bairro','numero','cidade'].forEach(k => {
+    $('#' + k).addEventListener('input', (e) => {
+      if (k === 'cep') e.target.value = maskCEP(e.target.value);
+      if (k === 'uf') e.target.value = e.target.value.toUpperCase();
+      state.dados[k] = e.target.value;
+      renderActions();
+    });
+  });
+}
+
+function renderAcao(root) {
+  const opts = [
+    { id: 'procuracao', title: 'Procuração', desc: 'Outorgar poderes a um representante legal.' },
+    { id: 'contrato',   title: 'Contrato de Honorários', desc: 'Assinar contrato padrão com o escritório.' },
+    { id: 'declaracao', title: 'Declaração', desc: 'Atestar condição, renda ou fato específico.' },
+  ];
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Qual o tipo de documento?</h1>
+      <p class="step-heading__desc">Selecione o que será assinado neste fluxo.</p>
+    </div>
+    <div class="radio-group">
+      ${opts.map(o => `
+        <div class="radio-card" data-id="${o.id}" data-checked="${state.dados.acao === o.id}" role="radio" tabindex="0" aria-checked="${state.dados.acao === o.id}">
+          <span class="radio-card__dot" aria-hidden="true"></span>
+          <div class="radio-card__body">
+            <span class="radio-card__title">${o.title}</span>
+            <span class="radio-card__desc">${o.desc}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  root.querySelectorAll('.radio-card').forEach(el => {
+    const pick = () => {
+      state.dados.acao = el.dataset.id;
+      root.querySelectorAll('.radio-card').forEach(c => {
+        c.dataset.checked = c.dataset.id === state.dados.acao;
+        c.setAttribute('aria-checked', c.dataset.id === state.dados.acao);
+      });
+      renderActions();
+    };
+    el.addEventListener('click', pick);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+  });
+}
+
+function renderRevisao(root) {
+  const d = state.dados;
+  const rows = [
+    ['CPF', d.cpf],
+    ['Nome', d.nome],
+    ['RG', d.rg],
+    ['Nascimento', d.nascimento],
+    ['E-mail', d.email],
+    ['Telefone', d.telefone],
+    ['Endereço', [d.rua, d.numero, d.bairro, d.cidade, d.uf].filter(Boolean).join(', ')],
+    ['Documento', {
+      procuracao: 'Procuração',
+      contrato: 'Contrato de Honorários',
+      declaracao: 'Declaração'
+    }[d.acao] || '—'],
+  ];
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Revise suas informações</h1>
+      <p class="step-heading__desc">Confira os dados antes de prosseguir. Você ainda pode voltar e editar.</p>
+    </div>
+    <div class="review-list">
+      ${rows.map(([k,v]) => `
+        <div class="review-row">
+          <span class="review-row__label">${k}</span>
+          <span class="review-row__value">${v || '—'}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderSelfie(root) {
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Verificação facial</h1>
+      <p class="step-heading__desc">Tire uma selfie para confirmar sua identidade. A imagem é usada apenas para validação.</p>
+    </div>
+    <div class="selfie-area" id="selfieBox" data-captured="${state.dados.selfieCaptured}" role="button" tabindex="0" aria-label="Capturar selfie">
+      ${state.dados.selfieCaptured
+        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="selfie-area__label">Selfie capturada</span>`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span class="selfie-area__label">Toque para capturar</span>`}
+    </div>
+  `;
+  const box = $('#selfieBox');
+  const capture = () => {
+    state.dados.selfieCaptured = !state.dados.selfieCaptured;
+    renderContent();
+    renderActions();
+  };
+  box.addEventListener('click', capture);
+  box.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); capture(); } });
+}
+
+function renderTermos(root) {
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Termos e condições</h1>
+      <p class="step-heading__desc">Leia o documento abaixo e confirme a ciência para prosseguir.</p>
+    </div>
+    <div class="terms-text" tabindex="0">
+      <strong>1. Objeto.</strong> O presente documento tem por objeto a prestação de serviços jurídicos especializados, conforme descrito na proposta previamente acordada entre as partes.<br><br>
+      <strong>2. Honorários.</strong> Os honorários serão pagos conforme cronograma próprio, reajustados anualmente pelo IPCA, em caso de continuidade do vínculo contratual.<br><br>
+      <strong>3. Confidencialidade.</strong> As partes obrigam-se a manter sigilo absoluto sobre todas as informações trocadas no âmbito deste contrato, sob pena de responsabilização civil e criminal.<br><br>
+      <strong>4. LGPD.</strong> O tratamento de dados pessoais observará a Lei nº 13.709/2018, com finalidade exclusiva de execução do presente contrato.<br><br>
+      <strong>5. Foro.</strong> Elegem as partes o foro da comarca da capital do estado, com renúncia expressa a qualquer outro.
+    </div>
+    <label class="checkbox-row">
+      <input type="checkbox" id="termos" ${state.dados.termosAceitos ? 'checked' : ''}>
+      <span class="checkbox-row__label">Li e concordo com os termos acima, estando ciente dos meus direitos e obrigações.</span>
+    </label>
+  `;
+  $('#termos').addEventListener('change', (e) => {
+    state.dados.termosAceitos = e.target.checked;
+    renderActions();
+  });
+}
+
+function renderAssinar(root) {
+  root.innerHTML = `
+    <div class="step-heading">
+      <h1 class="step-heading__title">Sua assinatura</h1>
+      <p class="step-heading__desc">Assine no espaço abaixo. Você pode usar o dedo no celular ou o mouse no computador.</p>
+    </div>
+    <div class="signature-area">
+      <canvas class="signature-canvas" id="sigCanvas"></canvas>
+      <div class="signature-actions">
+        <span class="signature-hint">Assine acima</span>
+        <button type="button" class="signature-clear" id="sigClear">Limpar</button>
+      </div>
+    </div>
+  `;
+  initSignature();
+}
+
+/* ── Signature pad ─────────────────────────────────── */
+function initSignature() {
+  const canvas = $('#sigCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--foreground').trim() || '#000';
+  }
+  resize();
+
+  let drawing = false;
+  let hasInk = false;
+  let last = null;
+
+  function pos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const p = e.touches ? e.touches[0] : e;
+    return { x: p.clientX - rect.left, y: p.clientY - rect.top };
+  }
+  function start(e) { e.preventDefault(); drawing = true; last = pos(e); }
+  function move(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const p = pos(e);
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    last = p;
+    if (!hasInk) {
+      hasInk = true;
+      state.dados.assinatura = true;
+      renderActions();
+    }
+  }
+  function end() { drawing = false; }
+
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', end);
+
+  $('#sigClear').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasInk = false;
+    state.dados.assinatura = false;
+    renderActions();
+  });
+}
+
+/* ── Nav ───────────────────────────────────────────── */
+function goNext() {
+  if (!isStepValid()) return;
+  if (state.index < STEPS.length - 1) {
+    state.index++;
+    renderAll();
+  } else {
+    state.completed = true;
+    renderAll();
+  }
+}
+
+function goPrev() {
+  if (state.index > 0) {
+    state.index--;
+    renderAll();
+  }
+}
+
+function fullRestart() {
+  Object.keys(state.dados).forEach(k => {
+    state.dados[k] = typeof state.dados[k] === 'boolean' ? false : '';
+  });
+  state.index = 0;
+  state.completed = false;
+  renderAll();
+}
+
+$('#restartBtn').addEventListener('click', () => {
+  if (confirm('Recomeçar do início? Os dados desta sessão serão descartados.')) fullRestart();
+});
+
+function renderAll() {
+  renderProgress();
+  renderContent();
+  renderActions();
+}
+
+/* ── Theme toggle ──────────────────────────────────── */
+const themeBtn = $('#themeToggle');
+const themeLabel = $('#themeLabel');
+themeBtn.addEventListener('click', () => {
+  document.documentElement.classList.toggle('dark');
+  const isDark = document.documentElement.classList.contains('dark');
+  themeLabel.textContent = isDark ? 'Claro' : 'Escuro';
+});
+
+/* ── Keyboard: Enter avança ────────────────────────── */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    const tag = document.activeElement?.tagName;
+    if (tag === 'TEXTAREA') return;
+    if (isStepValid()) {
+      e.preventDefault();
+      goNext();
+    }
+  }
+});
+
+/* ── Boot ──────────────────────────────────────────── */
+renderAll();
+</script>
+</body>
+</html>

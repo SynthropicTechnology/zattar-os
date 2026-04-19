@@ -1974,6 +1974,42 @@ body[data-theme-content-layout="centered"] .content-container {
     @apply bg-surface-variant/60 backdrop-blur-[20px];
   }
 
+  /* Focus ring Glass Briefing — aplicado quando ancestor tem [data-wizard-public].
+     Unifica shadcn default (ring-ring/50) com tokens primary pra coerência visual
+     na navegação por teclado dentro do wizard público. */
+  [data-wizard-public] *:focus-visible {
+    --tw-ring-color: color-mix(in oklch, var(--primary) 25%, transparent);
+  }
+  [data-wizard-public] [data-slot="button"]:focus-visible,
+  [data-wizard-public] [data-slot="select-trigger"]:focus-visible {
+    outline: 2px solid color-mix(in oklch, var(--primary) 30%, transparent);
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar thin — aplicável a qualquer container com overflow.
+     Usa tokens de design system, adapta light/dark automaticamente via CSS vars.
+     Firefox usa scrollbar-* properties; Chrome/Safari usam ::-webkit-scrollbar.
+     Aplicado por default no PublicStepCard overflow-y-auto e sidebar do wizard. */
+  .scrollbar-glass {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--outline-variant) 50%, transparent) transparent;
+  }
+  .scrollbar-glass::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-glass::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-glass::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--outline-variant) 50%, transparent);
+    border-radius: 9999px;
+    transition: background-color 200ms;
+  }
+  .scrollbar-glass::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+
   /* Field Glass — input/textarea/trigger styling alinhado ao Glass Briefing.
      Use junto de className para sobrescrever bordas, fundos e altura herdados
      de wrappers que ainda usam classes hardcoded do shadcn (InputCPF, InputCNPJ,

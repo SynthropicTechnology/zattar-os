@@ -145,7 +145,7 @@ export function AudienciaDetailDialog({
 
   const [ataOpen, setAtaOpen] = React.useState(false);
 
-  const { usuarios } = useUsuarios();
+  const { usuarios } = useUsuarios({ enabled: open });
 
   const shouldFetch = !!audienciaId && !audienciaProp;
 

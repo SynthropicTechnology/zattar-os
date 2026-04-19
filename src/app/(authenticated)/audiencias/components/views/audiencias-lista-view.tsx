@@ -13,10 +13,18 @@ import { AudienciasGlassList } from '../audiencias-glass-list';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
+interface UsuarioOption {
+  id: number;
+  nomeExibicao?: string;
+  nomeCompleto?: string;
+  avatarUrl?: string | null;
+}
+
 export interface AudienciasListaViewProps {
   audiencias: Audiencia[];
   onViewDetail: (audiencia: Audiencia) => void;
   search?: string;
+  usuarios: UsuarioOption[];
 }
 
 // ─── Component ────────────────────────────────────────────────────────────
@@ -25,6 +33,7 @@ export function AudienciasListaView({
   audiencias,
   onViewDetail,
   search,
+  usuarios,
 }: AudienciasListaViewProps) {
   const filtered = search
     ? audiencias.filter((a) =>
@@ -39,6 +48,7 @@ export function AudienciasListaView({
       audiencias={filtered}
       isLoading={false}
       onView={onViewDetail}
+      usuarios={usuarios}
     />
   );
 }

@@ -39,7 +39,6 @@ import {
 } from '../domain';
 import { actionAtualizarObservacoes } from '../actions';
 import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
-import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { calcPrepItems, calcPrepScore } from './prep-score';
 
 // =============================================================================
@@ -50,10 +49,18 @@ export interface AudienciaComResponsavel extends Audiencia {
   responsavelNome?: string | null;
 }
 
+interface UsuarioOption {
+  id: number;
+  nomeExibicao?: string;
+  nomeCompleto?: string;
+  avatarUrl?: string | null;
+}
+
 interface AudienciasGlassListProps {
   audiencias: AudienciaComResponsavel[];
   isLoading: boolean;
   onView: (audiencia: AudienciaComResponsavel) => void;
+  usuarios: UsuarioOption[];
 }
 
 // =============================================================================
@@ -159,12 +166,12 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
 function GlassRow({
   audiencia,
   onView,
+  usuarios,
 }: {
   audiencia: AudienciaComResponsavel;
   onView: () => void;
+  usuarios: UsuarioOption[];
 }) {
-  const { usuarios } = useUsuarios();
-
   const [editingObs, setEditingObs] = React.useState(false);
   const [obsDraft, setObsDraft] = React.useState('');
   const [savingObs, setSavingObs] = React.useState(false);
@@ -525,7 +532,7 @@ function EmptyState() {
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasGlassList({ audiencias, isLoading, onView }: AudienciasGlassListProps) {
+export function AudienciasGlassList({ audiencias, isLoading, onView, usuarios }: AudienciasGlassListProps) {
   if (isLoading) return <ListSkeleton />;
   if (audiencias.length === 0) return <EmptyState />;
 
@@ -533,7 +540,7 @@ export function AudienciasGlassList({ audiencias, isLoading, onView }: Audiencia
     <TooltipProvider>
       <div className="flex flex-col gap-2">
         {audiencias.map((aud) => (
-          <GlassRow key={aud.id} audiencia={aud} onView={() => onView(aud)} />
+          <GlassRow key={aud.id} audiencia={aud} onView={() => onView(aud)} usuarios={usuarios} />
         ))}
       </div>
     </TooltipProvider>
